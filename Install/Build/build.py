@@ -195,6 +195,10 @@ def compile_tools():
     if prefs['arch'] == 'x64':
         tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
                       os.path.join(GME_ROOT, 'Tools', 'DumpWMF', 'bin', 'Release', 'DumpWMF.dll')])
+        import _winreg
+        with _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, r"CLSID\{A051FEEA-E310-3F6A-8D71-A55E3F4F2E14}", 0, _winreg.KEY_WRITE | _winreg.KEY_WOW64_64KEY) as key:
+            _winreg.SetValueEx(key, "AppID", 0, _winreg.REG_SZ, "{461F30AF-3BF0-11D4-B3F0-005004D38590}")
+
         tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
                       os.path.join(GME_ROOT, 'SDK', 'DotNet', 'DsmlGenerator', 'CSharpDsmlGenerator', 'bin', 'Release', 'CSharpDSMLGenerator.dll')])
         return

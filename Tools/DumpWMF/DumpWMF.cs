@@ -17,6 +17,7 @@ namespace DumpWMF
     // import win32com.client; win32com.client.DispatchEx("MGA.DumpWMF").DumpWMFs(r'C:\Users\ksmyth\Desktop\tmp', [panel for panel in gme.Panels if panel.Name == 'Browser'][0].Interface.GetSelectedMgaObjects().Item(1))
 
     [ComVisible(true),
+    Guid("A051FEEA-E310-3F6A-8D71-A55E3F4F2E14"),
     ProgId("MGA.DumpWMF")]
     public class DumpWMF
     {
