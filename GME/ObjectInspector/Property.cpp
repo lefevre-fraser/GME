@@ -673,27 +673,28 @@ void CProperty::CreateConnectionList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<
 		// Querying source side information - strSource
 		COMTHROW( ccpMgaSimpleConn->get_Src(&ccpTempFCO) );
 		ASSERT(ccpTempFCO != NULL);
-		if( !ccpTempFCO) 
-			continue;
-		COMTHROW( ccpTempFCO->get_Name(&bstrTemp) );
-
-		objtype_enum oeParentObjType;
 		CComPtr<IMgaObject> ccpParentSrc;
-		COMTHROW( ccpTempFCO->GetParent(&ccpParentSrc, &oeParentObjType) );
+		if (ccpTempFCO) 
+		{
+			COMTHROW( ccpTempFCO->get_Name(&bstrTemp) );
 
-		ASSERT( ccpParentSrc != NULL );
-		CString strSrcName=bstrTemp;
+			objtype_enum oeParentObjType;
+			COMTHROW( ccpTempFCO->GetParent(&ccpParentSrc, &oeParentObjType) );
+
+			ASSERT( ccpParentSrc != NULL );
+			CString strSrcName=bstrTemp;
 	
-		// Setting dirty
-		if(bIsFirst)
-		{
-			strSource=strSrcName;
-		}
-		else
-		{
-			if(strSource!=strSrcName)
+			// Setting dirty
+			if(bIsFirst)
 			{
-				bIsSourceDirty=true;
+				strSource=strSrcName;
+			}
+			else
+			{
+				if(strSource!=strSrcName)
+				{
+					bIsSourceDirty=true;
+				}
 			}
 		}
 		
@@ -703,54 +704,56 @@ void CProperty::CreateConnectionList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<
 		// Querying destination side information - strDest
 		COMTHROW( ccpMgaSimpleConn->get_Dst(&ccpTempFCO) );
 		ASSERT(ccpTempFCO != NULL);
-		if( !ccpTempFCO) 
-			continue;
-
-		COMTHROW( ccpTempFCO->get_Name(&bstrTemp) );
-
 		CComPtr<IMgaObject> ccpParentDst;
-		COMTHROW( ccpTempFCO->GetParent(&ccpParentDst, &oeParentObjType) );
-
-		ASSERT( ccpParentDst != NULL );
-		CString strDstName=bstrTemp;
-
-		// Setting dirty
-		if(bIsFirst)
+		if(ccpTempFCO)
 		{
-			strDest=strDstName;
-		}
-		else
-		{
-			if(strDest!=strDstName)
+			COMTHROW( ccpTempFCO->get_Name(&bstrTemp) );
+
+			objtype_enum oeParentObjType;
+			COMTHROW( ccpTempFCO->GetParent(&ccpParentDst, &oeParentObjType) );
+
+			ASSERT( ccpParentDst != NULL );
+			CString strDstName=bstrTemp;
+
+			// Setting dirty
+			if(bIsFirst)
 			{
-				bIsDestDirty=true;
+				strDest=strDstName;
+			}
+			else
+			{
+				if(strDest!=strDstName)
+				{
+					bIsDestDirty=true;
+				}
 			}
 		}
 
 		bstrTemp.Empty();
 		ccpTempFCO = NULL;
 
-		VARIANT_BOOL vtbIsParentsEqual=VARIANT_FALSE;
-  		COMTHROW( ccpParentSrc->get_IsEqual(ccpParentDst, &vtbIsParentsEqual) );
+		CString strSrcPortName = _T("-");
+		CString strDstPortName = _T("-");
 
-		CString strSrcPortName;
-		CString strDstPortName;
-		if (vtbIsParentsEqual != VARIANT_FALSE)  // If parents are equal
+		if (ccpParentSrc && ccpParentDst)
 		{
+			VARIANT_BOOL vtbIsParentsEqual=VARIANT_FALSE;
+  			COMTHROW( ccpParentSrc->get_IsEqual(ccpParentDst, &vtbIsParentsEqual) );
 
-			strSrcPortName =_T("-");
-			strDstPortName =_T("-");
-		} 
-		else 
-		{
+			if (vtbIsParentsEqual != VARIANT_FALSE)  // If parents are equal
+			{
+			} 
+			else 
+			{
 
-			bstrTemp.Empty();
-			COMTHROW( ccpParentSrc->get_Name(&bstrTemp) );
-			strSrcPortName = bstrTemp;
+				bstrTemp.Empty();
+				COMTHROW( ccpParentSrc->get_Name(&bstrTemp) );
+				strSrcPortName = bstrTemp;
 
-			bstrTemp.Empty();
-			COMTHROW( ccpParentDst->get_Name(&bstrTemp) );
-			strDstPortName = bstrTemp;
+				bstrTemp.Empty();
+				COMTHROW( ccpParentDst->get_Name(&bstrTemp) );
+				strDstPortName = bstrTemp;
+			}
 		}
 
 		// Setting dirty
