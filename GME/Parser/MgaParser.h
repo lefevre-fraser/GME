@@ -31,8 +31,8 @@ class CompareCComObj
 class ATL_NO_VTABLE CMgaParser : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaParser, &CLSID_MgaParser>,
-	public ISupportErrorInfoImpl2<&IID_IMgaParser, &IID_IMgaParser2>,
-	public IDispatchImpl<IMgaParser2, &IID_IMgaParser2, &LIBID_MGAParserLib, 1, 1>,
+	public ISupportErrorInfoImpl3<&IID_IMgaParser, &IID_IMgaParser2, &IID_IMgaParser3>,
+	public IDispatchImpl<IMgaParser3, &IID_IMgaParser3, &LIBID_MGAParserLib, 1, 1>,
 	public IGMEVersionInfoImpl,
 	public CGenParser
 {
@@ -47,9 +47,10 @@ DECLARE_REGISTRY_RESOURCEID(IDR_MGAPARSER)
 DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 BEGIN_COM_MAP(CMgaParser)
-	COM_INTERFACE_ENTRY2(IMgaParser, IMgaParser2)
-	COM_INTERFACE_ENTRY2(IDispatch, IMgaParser2)
+	COM_INTERFACE_ENTRY2(IMgaParser, IMgaParser3)
+	COM_INTERFACE_ENTRY2(IDispatch, IMgaParser3)
 	COM_INTERFACE_ENTRY(IMgaParser2)
+	COM_INTERFACE_ENTRY2(IMgaParser3, IMgaParser3)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
 END_COM_MAP()
@@ -272,6 +273,24 @@ public:
 
 
 	void StartClipboardInfo(const attributes_type &attributes);
+
+	STDMETHOD(get_Resolver)(IMgaResolver **MgaResolver) {
+		if (this->resolver)
+		{
+			resolver->AddRef();
+		}
+		*MgaResolver = this->resolver;
+		return S_OK;
+	}
+    STDMETHOD(put_Resolver)(IMgaResolver *MgaResolver)
+	{
+		if (this->resolver)
+		{
+			this->resolver.Release();
+		}
+		this->resolver = MgaResolver;
+		return S_OK;
+	}
 
 	protected:
 		static CComPtr<IGMEOLEApp>	get_GME(CComObjPtr<IMgaProject> project);

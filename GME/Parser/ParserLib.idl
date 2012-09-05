@@ -4,7 +4,7 @@ import "ocidl.idl";
 
 import "Parser.idl";
 import "Core.idl";
-
+import "MgaUtil.idl";
 
 // --------------------------- Parser Library
 
@@ -21,6 +21,7 @@ library MGAParserLib
 	importlib("CoreLib.tlb");
 	importlib("MetaLib.tlb");
 	importlib("MgaLib.tlb");
+	importlib("MgaUtilLib.tlb");
 
 	enum inserttype_enum;
 
@@ -52,7 +53,8 @@ library MGAParserLib
 	]
 	coclass MgaParser
 	{
-		[default] interface IMgaParser2;
+		[default] interface IMgaParser3;
+		interface IMgaParser2;
 		interface IMgaParser;
 		interface IGMEVersionInfo;
 	};

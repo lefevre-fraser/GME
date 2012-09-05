@@ -23,8 +23,6 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 {
 	try
 	{
-		CloseAll();
-
 		ASSERT( metaproject == NULL );
 		COMTHROW( metaproject.CoCreateInstance(L"Mga.MgaMetaProject") );
 

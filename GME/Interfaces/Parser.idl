@@ -4,6 +4,7 @@ import "ocidl.idl";
 #include "InterfaceVersion.h"
 
 import "Mga.idl";
+import "MgaUtil.idl";
 
 // --------------------------- Parser IDL
 
@@ -107,4 +108,19 @@ interface IMgaParser2 : IMgaParser
 	HRESULT ParseProject2([in] IMgaProject *p, [in] BSTR xmlfile, ULONGLONG hwndParent);
 	HRESULT ParseFCOs2([in] IMgaObject *here, [in] BSTR xmlfile, ULONGLONG hwndParent);
 	HRESULT GetXMLParadigm([in] BSTR xmlfile, [out] BSTR *Paradigm);
+};
+
+[
+	object,
+	uuid("5CAB528B-474B-4C52-BE40-74FF29AFBB58"),
+	dual,
+	helpstring("IMgaParser3 Interface"),
+	pointer_default(unique)
+]
+interface IMgaParser3 : IMgaParser2
+{
+	[propget]
+	HRESULT Resolver([out, retval] IMgaResolver** MgaResolver);
+	[propput]
+	HRESULT Resolver([in] IMgaResolver* MgaResolver);
 };

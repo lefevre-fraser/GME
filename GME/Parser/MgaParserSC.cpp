@@ -20,8 +20,6 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 
 	try
 	{
-		CloseAll();
-
 		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
 		COMTHROW( progress->SetTitle(_bstr_t(L"Importing SmartCopied XML data...")) );
 		COMTHROW( progress->StartProgressDialog(NULL) );

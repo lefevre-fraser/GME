@@ -18,8 +18,6 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 
 	try
 	{
-		CloseAll();
-
 		COMTHROW( progress.CoCreateInstance(L"Mga.MgaProgressDlg") );
 		COMTHROW( progress->SetTitle(_bstr_t(L"Importing CopyClosured XML data...")) );
 		COMTHROW( progress->StartProgressDialog(NULL) );

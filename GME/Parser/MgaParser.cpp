@@ -25,8 +25,6 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 
 	try
 	{
-		CloseAll();
-
 		HWND hwndParent = (HWND)hwndParent_;
 		if (hwndParent != 0)
 		{
@@ -55,8 +53,11 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 		project_prefs = project_prefs_orig | MGAPREF_IGNORECONNCHECKS;
 		COMTHROW( p->put_Preferences(project_prefs) );
 
-		COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver") );
-		ASSERT( resolver != NULL );
+		if (resolver == NULL)
+		{
+			COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver") );
+			ASSERT( resolver != NULL );
+		}
 
 		project = p;
 
@@ -169,8 +170,6 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 
 	try
 	{
-		CloseAll();
-
 		HWND hwndParent = (HWND)hwndParent_;
 		if (hwndParent != 0)
 		{
@@ -206,8 +205,11 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 		project_prefs = project_prefs_orig | MGAPREF_IGNORECONNCHECKS;
 		COMTHROW( project->put_Preferences(project_prefs) );
 
-		COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver") );
-		ASSERT( resolver != NULL );
+		if (resolver == NULL)
+		{
+			COMTHROW( resolver.CoCreateInstance(L"Mga.MgaResolver") );
+			ASSERT( resolver != NULL );
+		}
 
 		CopyTo(filename, xmlfile);
 
@@ -333,8 +335,6 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 
 	try
 	{
-		CloseAll();
-
 		CopyTo(filename, xmlfile);
 
 		XMLPlatformUtilsTerminate_RAII term;
@@ -1772,8 +1772,6 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 {
 	try
 	{
-		CloseAll();
-
 		CopyTo(filename, xmlfile);
 
 		XMLPlatformUtilsTerminate_RAII term;

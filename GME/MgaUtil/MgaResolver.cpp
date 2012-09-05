@@ -592,6 +592,8 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 				}
 
 			}
+			if (!this->mb_is_interactive)
+				return RESOLV_ERR_get_KindByStr;
 			// update mapping
 			this->map_put_KindByStr(parent_mf.p, kind, objtype, *p);
 
@@ -895,6 +897,9 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 							kind, objtype, role, aspect, *p);
 
 						return S_OK;
+					}
+					if (!this->mb_is_interactive) {
+						return RESOLV_ERR_get_RoleByStr;
 					}
 
 					// else, check each possible aspect
