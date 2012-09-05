@@ -14,6 +14,8 @@
 #include "OCLFeature.h"
 #include "OCLSignature.h"
 
+#include <memory>
+
 namespace OclMeta
 {
 	class Type;

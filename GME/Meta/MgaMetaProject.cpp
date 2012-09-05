@@ -3,6 +3,7 @@
 #include "MgaMetaProject.h"
 #include "MgaMetaFolder.h"
 #include <time.h>
+#include <functional>
 
 // ------- CurrentTime
 

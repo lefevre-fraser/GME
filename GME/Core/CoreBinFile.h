@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 #include "windows.h"
 class membuf

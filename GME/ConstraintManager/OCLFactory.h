@@ -11,6 +11,8 @@
 #include "OCLSignature.h"
 #include "OCLFeature.h"
 
+#include <memory>
+
 namespace OclMeta {
 	class Type;
 	class TypeManager;

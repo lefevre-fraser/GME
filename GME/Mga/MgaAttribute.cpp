@@ -761,7 +761,7 @@ STDMETHODIMP CMgaRegNode::get_SubNodes( VARIANT_BOOL virtuals, IMgaRegNodes **pV
 							if (mypath != L"")
 								COMTHROW(subpath.Append("/"));
 							COMTHROW(subpath.Append(path));
-							paths.insert(subpath);
+							paths.insert(std::wstring(subpath));
 						} MGACOLL_ITERATE_END;
 					}
 				}

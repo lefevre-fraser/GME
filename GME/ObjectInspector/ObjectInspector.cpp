@@ -10,7 +10,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-CObjectInspectorApp NEAR theApp;
+CObjectInspectorApp theApp;
 
 const GUID CDECL BASED_CODE _tlid =
 		{ 0x92b54998, 0x8e88, 0x41a2, { 0x92, 0x4f, 0x73, 0x54, 0xca, 0xd1, 0x45, 0x65 } };
@@ -23,6 +23,7 @@ const WORD _wVerMinor = 0;
 
 BOOL CObjectInspectorApp::InitInstance()
 {
+#if _MSC_VER < 1700
 	// See MSDN example code for CWinApp::InitInstance: http://msdn.microsoft.com/en-us/library/ae6yx0z0.aspx
 	// MFC module state handling code is changed with VC80.
 	// We follow the Microsoft's suggested way, but in case of any trouble the set the
@@ -48,6 +49,7 @@ BOOL CObjectInspectorApp::InitInstance()
 	{
 		AfxSetAmbientActCtx(FALSE);
 	}
+#endif
 
 	BOOL bInit = COleControlModule::InitInstance();
 

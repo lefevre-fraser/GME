@@ -117,7 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>mfcs100d.lib;xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfcs$(PlatformToolsetVersion)d.lib;xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\XmlBackEnd.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -206,7 +206,7 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>mfcs100.lib;xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfcs$(PlatformToolsetVersion).lib;xerces-c_3.lib;comsvcs.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\subv_$(Configuration);../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>

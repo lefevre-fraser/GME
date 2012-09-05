@@ -252,7 +252,12 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="Search.odl" />
+    <Midl Include="Search.odl">
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">unused_%(Filename).h</HeaderFileName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">unused_%(Filename).h</HeaderFileName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">unused_%(Filename).h</HeaderFileName>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">unused_%(Filename).h</HeaderFileName>
+    </Midl>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attribute.h" />

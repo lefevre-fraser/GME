@@ -35,12 +35,15 @@
 //  database classes
 #include <afxdb.h>			// MFC database classes
 
+#include "Mga.h"
+
 
 #include "CommonError.h"
 #include "CommonSmart.h"
 #include "CommonMfc.h"
 #include "CommonMgaTrukk.h"
 
+#include "Resource.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

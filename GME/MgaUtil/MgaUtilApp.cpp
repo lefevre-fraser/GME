@@ -114,6 +114,7 @@ STDAPI DllUnregisterServer(void)
 
 BOOL CMgaUtilApp::InitInstance()
 {
+#if _MSC_VER < 1700
 	// See MSDN example code for CWinApp::InitInstance: http://msdn.microsoft.com/en-us/library/ae6yx0z0.aspx
 	// MFC module state handling code is changed with VC80.
 	// We follow the Microsoft's suggested way, but in case of any trouble the set the
@@ -139,6 +140,7 @@ BOOL CMgaUtilApp::InitInstance()
 	{
 		AfxSetAmbientActCtx(FALSE);
 	}
+#endif
 
 	if (!InitATL())
 		return FALSE;
