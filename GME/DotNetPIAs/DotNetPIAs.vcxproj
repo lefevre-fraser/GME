@@ -18,11 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
-      <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{57E1446E-6F58-44CD-B381-5D6A7F0509EB}</ProjectGuid>
     <RootNamespace>DotNetPIAs</RootNamespace>
