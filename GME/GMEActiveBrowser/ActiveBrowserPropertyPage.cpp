@@ -2341,7 +2341,8 @@ void CAggregatePropertyPage::GotoIUnk(BSTR Id)
 			itemcount++;
 			do
 			{
-				COMTHROW(iitem->GetParent(&parent));
+				objtype_enum objtype;
+				COMTHROW(iitem->GetParent(&parent, &objtype));
 				_bstr_t bstrid;
 				COMTHROW(parent->get_ID(bstrid.GetAddress()));
 				id = bstrid;
@@ -2442,7 +2443,8 @@ void CAggregatePropertyPage::GotoIUnkPtr( IMgaObject * p_obj)
 
 			do
 			{
-				COMTHROW( iitem->GetParent( &parent));
+				objtype_enum objtype;
+				COMTHROW(iitem->GetParent(&parent, &objtype));
 
 				// coll of ptrs
 				COMTHROW( coll->Append( parent));

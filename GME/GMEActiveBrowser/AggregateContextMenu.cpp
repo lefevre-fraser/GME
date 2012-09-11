@@ -224,7 +224,15 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 						pMgaContext->BeginTransaction(false);
 
 						COMTHROW( ccpParentModel->CreateChildObject(ccpMetaRole,&ccpNewFCO) );
-						COMTHROW( ccpNewFCO->put_Name(bszDispName) );
+						if (ccpMetaRole->Name == ccpMetaRole->Kind->Name)
+						{
+							ccpNewFCO->Name = ccpMetaRole->Kind->DisplayedName;
+						}
+						else
+						{
+							ccpNewFCO->Name = ccpMetaRole->DisplayedName;
+						}
+
 						// Ending transaction
 						pMgaContext->CommitTransaction();
 					}

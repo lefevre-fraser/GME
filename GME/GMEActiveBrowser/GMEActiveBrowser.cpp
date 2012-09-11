@@ -4,7 +4,6 @@
 #include "GMEActiveBrowser.h"
 #include <initguid.h>
 #include "GMEActiveBrowser_i.c"
-#include "Gme_i.c"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
