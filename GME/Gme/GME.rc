@@ -478,7 +478,7 @@ BEGIN
         END
         MENUITEM "Delete",                      ID_SELFCNTX_DELETE
         MENUITEM SEPARATOR
-        MENUITEM "Interpret",                   ID_CNTX_INTERPRET
+        MENUITEM "Interpret...",                   ID_CNTX_INTERPRET
         MENUITEM "Check",                       ID_CNTX_CHECK
         MENUITEM "Locate",                      ID_CNTX_LOCATE
         MENUITEM SEPARATOR
