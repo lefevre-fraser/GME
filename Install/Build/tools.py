@@ -127,7 +127,9 @@ def build_VS(sln_path, config_name, arch=None, msbuild=MSBUILD):
     import subprocess
     # , '/fl', '/flp:Verbosity=diagnostic'
     # , '/m'
-    args = [msbuild, sln_path, '/t:' + ("Clean;" * prefs['clean']) + 'Build', '/p:Configuration=' + config_name + (';Platform=x64' if arch == 'x64' else '') ]
+    args = [msbuild, sln_path, '/m', '/t:' + ("Clean;" * prefs['clean']) + 'Build', 
+         '/p:VisualStudioVersion=%s.0;PlatformToolset=v%s0;Configuration=%s' % (prefs['toolset'], prefs['toolset'], config_name) +
+        (';Platform=x64' if arch == 'x64' else '') ]
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
         import sys

@@ -140,11 +140,8 @@ def compile_GME_PGO_Instrument():
     except OSError as exc:
         if exc.errno != errno.EEXIST:
             raise
-    pfx86 = os.environ.get('ProgramFiles(x86)', os.environ['ProgramFiles'])
-    if prefs['arch'] == 'x64':
-        copy_if_newer(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\amd64\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
-    else:
-        copy_if_newer(os.path.join(pfx86, r"Microsoft Visual Studio 10.0\VC\bin\pgort100.dll"), os.path.join(_Release_PGO_dir(), 'pgort100.dll'))
+    VC_path = os.path.join(prefs['VS_dir'], r"VC\bin\%s" % (prefs['arch'] == 'x64' and 'amd64\\' or ''))
+    copy_if_newer(os.path.join(VC_path, r"pgort%s0.dll" % prefs['toolset']), os.path.join(_Release_PGO_dir(), 'pgort%s0.dll' % prefs['toolset']))
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
     tools.build_VS(sln_file, "Release_PGO_Instrument")
     cmd_dir = os.path.join(GME_ROOT, "GME")
@@ -459,6 +456,12 @@ prefs["version_string"] = ".".join([str(prefs["version_major"]),
                                    ( [ str(prefs["version_build"]) ] if prefs["version_build"] != 0 else [] ))
 
 print "Building GME version " + prefs["version_string"] + " " + prefs["arch"]
+
+_pfx86 = os.environ.get('ProgramFiles(x86)', os.environ['ProgramFiles'])
+if prefs['toolset'] == '11':
+    prefs['VS_dir'] = os.path.join(_pfx86, r"Microsoft Visual Studio 11.0")
+else:
+    prefs['VS_dir'] = os.path.join(_pfx86, r"Microsoft Visual Studio 10.0")
 
 try:
     for i in range(len(build_steps)):

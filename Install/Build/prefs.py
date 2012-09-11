@@ -19,4 +19,5 @@ prefs = {
 	"version_patch" : time.localtime()[2],
 	"version_build" : 0,
 	"arch" : "x86",
+	"toolset": "10",
 	}
