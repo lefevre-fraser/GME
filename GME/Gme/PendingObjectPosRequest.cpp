@@ -27,12 +27,6 @@ CPendingObjectPosRequest::~CPendingObjectPosRequest()
 
 void CPendingObjectPosRequest::Execute(CGMEView *view)
 {
-	// DEBUG
-	// CString tmp;
-	// tmp.Format("Object: %s, position: %d:%d, apsect: %d", object->name, (int)position.x, (int)position.y, (int)aspect);
-	// AfxMessageBox(tmp);
-	// return;
-
 	// TRACE("\tXV: Pending request execute:");
 	VERIFY(view->inTransaction);
 	if (!object)
@@ -42,7 +36,6 @@ void CPendingObjectPosRequest::Execute(CGMEView *view)
 	if(aspect < 0)
 		aspect = object->GetParentAspect();
 	VERIFY(aspect >= 0);
-	::SetCenter(location, position);
 	// TRACE(" object: %s, mgaptr: %p, location: %d-%d\n", object->name, object->mgaFco, (int)location.TopLeft().x, (int)location.TopLeft().y);
 	try {
 
@@ -57,7 +50,7 @@ void CPendingObjectPosRequest::Execute(CGMEView *view)
 		CComPtr<IMgaMetaAspect> mAspect;
 		COMTHROW(mBase.QueryInterface(&mAspect));
 		(object->mgaFco)->get_Part(mAspect,&part);
-		COMTHROW(part->SetGmeAttrs(0,location.TopLeft().x,location.TopLeft().y));
+		COMTHROW(part->SetGmeAttrs(0, location.left, location.top));
 		// TRACE(" \t\tEXECUTED\n");
 	}
 	catch(hresult_exception &) {

@@ -27,15 +27,7 @@ CModelGrid modelGrid;
 
 /////////////////////////////// Helper functions /////////////////////////////////
 
-void SetLocation(CRect& location, CPoint pt)
-{
-	CSize s = location.Size();
-	location.top = pt.y;
-	location.left = pt.x;
-	SetSize(location, s);
-}
-
-void SetSize(CRect& location, CSize s)
+static void SetSize(CRect& location, CSize s)
 {
 	location.left = max(GME_GRID_SIZE, location.left / GME_GRID_SIZE * GME_GRID_SIZE);
 	location.top = max(GME_GRID_SIZE, location.top / GME_GRID_SIZE * GME_GRID_SIZE);
@@ -43,36 +35,12 @@ void SetSize(CRect& location, CSize s)
 	location.bottom = location.top + s.cy;
 }
 
-void SetCenter(CRect& location, CPoint pt)
+void SetLocation(CRect& location, CPoint pt)
 {
-	ASSERT((pt.x % GME_GRID_SIZE) == 0);
-	ASSERT((pt.y % GME_GRID_SIZE) == 0);
-	CSize size = location.Size();
-	int dx = size.cx / 2;
-	int dy = size.cy / 2;
-	while(pt.x - dx <= 0)
-		pt.x += GME_GRID_SIZE;
-	while(pt.y - dy <= 0)
-		pt.y += GME_GRID_SIZE;
-	int x1 = pt.x - dx;
-	int y1 = pt.y - dy;
-	location.left = x1;
-	location.right = x1 + size.cx;
-	location.top = y1;
-	location.bottom = y1 + size.cy;
-}
-
-void SetCenterNoMga(CRect& location, CPoint pt)
-{
-	CSize size = location.Size();
-	int dx = size.cx / 2;
-	int dy = size.cy / 2;
-	int x1 = pt.x - dx;
-	int y1 = pt.y - dy;
-	location.left = x1;
-	location.right = x1 + size.cx;
-	location.top = y1;
-	location.bottom = y1 + size.cy;
+	CSize s = location.Size();
+	location.top = pt.y;
+	location.left = pt.x;
+	SetSize(location, s);
 }
 
 //////////////////////////////////// CGuiAspect /////////////////////////////
@@ -1319,19 +1287,15 @@ void CGuiObject::GetDecoratorStr(CString& decorStr)
 		decorStr = GME_DEFAULT_DECORATOR;
 }
 
-void CGuiObject::SetCenter(CPoint& pt, int aspect, bool doMga)
+void CGuiObject::SetObjectLocation(CRect& rect, int aspect, bool doMga)
 {
 	if(aspect < 0)
 		aspect = parentAspect;
 	VERIFY(aspect >= 0);
 	VERIFY(guiAspects[aspect] != NULL);
 	CRect loc = guiAspects[aspect]->GetLocation();
-	if (IsReal()) {
-		::SetCenter(loc,pt);
-	}
-	else {
-		::SetCenterNoMga(loc, pt);
-	}
+	// if (IsReal()) {
+	loc.MoveToXY(rect.left, rect.top);
 	guiAspects[aspect]->SetLocation(loc);
 	if(IsReal() && doMga)
 		WriteLocation(aspect);
@@ -1764,12 +1728,13 @@ void CGuiObject::ShiftModels(CGuiObjectList& objList, CPoint& shiftBy)
 	while(pos) {
 		CGuiObject* obj = objList.GetNext(pos);
 		VERIFY(obj->IsVisible());
-		CPoint point = obj->GetCenter() + shiftBy;
-		if(!modelGrid.GetClosestAvailable(obj, point)) {
+		CRect rect = obj->GetLocation();
+		rect.MoveToXY(rect.left + shiftBy.x, rect.top + shiftBy.y);
+		if(!modelGrid.GetClosestAvailable(obj, rect)) {
 			AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 			return;
 		}
-		obj->SetCenter(point);
+		obj->SetLocation(rect);
 		modelGrid.Set(obj);
 	}
 }

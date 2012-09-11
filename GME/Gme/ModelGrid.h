@@ -23,7 +23,7 @@ public:
 	void Reset(CGuiObject *model);
 
 	bool IsAvailable(CGuiObject *model, int aspIdx = -1);
-	bool GetClosestAvailable(CGuiObject *model,CPoint &pt, int aspIdx = -1);//last param introd by zolmol
+	bool GetClosestAvailable(CGuiObject *model, CRect &pt, int aspIdx = -1);//last param introd by zolmol
 	
 	bool CanNudge(CGuiObject *model,int right,int down);	
 
@@ -33,12 +33,11 @@ private:
 	void Reset(int x,int y);
 	bool IsAvailable(int x,int y);
 
-	void Set(CSize &size, CPoint &center, bool reset = FALSE);
-
-	bool IsAvailable(CPoint pt,CSize size);
+	void Set(CRect& rect, bool reset = FALSE);
+	bool IsAvailable(const CRect& rect);
 	bool IsAvailableG(CPoint &pt,CSize &size);
 
-	bool GetClosestAvailable(CSize size,CPoint &pt);
+	bool GetClosestAvailable(CRect& rect);
 };
 
 #endif // whole file

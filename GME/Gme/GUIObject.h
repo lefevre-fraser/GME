@@ -14,8 +14,6 @@ class CAnnotatorEventSink;
 extern CModelGrid modelGrid;
 
 void SetLocation(CRect& location, CPoint pt);
-void SetSize(CRect& location, CSize s);
-void SetCenter(CRect& location, CPoint pt);
 
 class CGuiBase : public CObject
 {
@@ -247,7 +245,7 @@ public:
 	const CRect& GetNameLocation(int aspect = -1)		{ aspect = (aspect < 0) ? parentAspect : aspect;  return guiAspects[aspect]->GetNameLocation(); }
 	CSize GetSize(int aspect = -1)						{ return GetLocation(aspect).Size(); }
 	CPoint GetCenter()									{ CRect rect = GetLocation(); return rect.CenterPoint();}
-	void SetCenter(CPoint& pt, int aspect = -1, bool doMga = true);
+	void SetObjectLocation(CRect& rect, int aspect = -1, bool doMga = true);
 	void SetSize(CSize& s, int aspect = -1, bool doMga = true);
 	void SetAllSizes(CSize& s, bool doMga = true);
 	void SetLocation(CRect& r, int aspect = -1, bool doMga = true);

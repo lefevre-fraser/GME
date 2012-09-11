@@ -15,14 +15,13 @@ class CPendingObjectPosRequest : public CPendingRequest
 {
 public:
 	void Execute(CGMEView *view);
-	CPendingObjectPosRequest(CGuiObject *obj, CPoint pos, CRect loc, int asp) : object(obj), position(pos), location(loc), aspect(asp){}
+	CPendingObjectPosRequest(CGuiObject *obj, CRect loc, int asp) : object(obj), location(loc), aspect(asp){}
 	virtual ~CPendingObjectPosRequest();
 	
 	CGuiObject * object;
 
 protected:
 	int aspect;
-	CPoint position;
 	CRect location;
 };
 

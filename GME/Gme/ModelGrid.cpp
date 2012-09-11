@@ -85,12 +85,12 @@ void CModelGrid::Clear()
 	view = 0;
 }
 
-bool CModelGrid::IsAvailableG(CPoint &pt,CSize &halfSize)  // centerpoint!
+bool CModelGrid::IsAvailableG(CPoint &pt,CSize &size)
 {
-	int startx = pt.x - halfSize.cx;
-	int starty = pt.y - halfSize.cy;
-	int endx = pt.x + halfSize.cx;
-	int endy = pt.y + halfSize.cy;
+	int startx = pt.x;
+	int starty = pt.y;
+	int endx = pt.x + size.cx;
+	int endy = pt.y + size.cy;
 	// Hack to prevent labels from overlapping
 	starty -= 2;
 	if(startx < 0 || starty < 0 || endx >= GME_MAX_GRID_DIM || endy >= GME_MAX_GRID_DIM)
@@ -103,13 +103,11 @@ bool CModelGrid::IsAvailableG(CPoint &pt,CSize &halfSize)  // centerpoint!
 }
 
 
-#define FindStartEnd(pt,size,chk)											\
-	pt.x = (pt.x / GME_GRID_SIZE) * GME_GRID_SIZE;							\
-	pt.y = (pt.y / GME_GRID_SIZE) * GME_GRID_SIZE;							\
-	int startx = (pt.x - size.cx / 2 - 1) / GME_GRID_SIZE;					\
-	int starty = (pt.y - size.cy / 2 - 1) / GME_GRID_SIZE;					\
-	int endx = (pt.x + size.cx / 2 + GME_GRID_SIZE) / GME_GRID_SIZE;		\
-	int endy = (pt.y + size.cy / 2 + GME_GRID_SIZE) / GME_GRID_SIZE;		\
+#define FindStartEnd(rect,chk)											\
+	int startx = (rect.left / GME_GRID_SIZE); \
+	int starty = (rect.top / GME_GRID_SIZE); \
+	int endx = ((rect.right + GME_GRID_SIZE - 1) / GME_GRID_SIZE); \
+	int endy = ((rect.bottom + GME_GRID_SIZE - 1) / GME_GRID_SIZE); \
 	if(chk) {																\
 		ASSERT(startx >= 0);												\
 		ASSERT(starty >= 0);												\
@@ -118,9 +116,9 @@ bool CModelGrid::IsAvailableG(CPoint &pt,CSize &halfSize)  // centerpoint!
 	}
 
 
-bool CModelGrid::IsAvailable(CPoint pt,CSize size)  // centerpoint!
+bool CModelGrid::IsAvailable(const CRect& rect)
 {
-	FindStartEnd(pt,size,0);
+	FindStartEnd(rect,0);
 	if(startx < 0 || starty < 0 || endx >= GME_MAX_GRID_DIM || endy >= GME_MAX_GRID_DIM)
 		return false;
 	for(int y = starty; y < endy; y++)
@@ -133,24 +131,26 @@ bool CModelGrid::IsAvailable(CPoint pt,CSize size)  // centerpoint!
 
 #define	test_and_return_if_found()					\
 			if(IsAvailableG(test,size)) {			\
-				pt.x = test.x * GME_GRID_SIZE;		\
-				pt.y = test.y * GME_GRID_SIZE;		\
+				rect.MoveToXY(test.x * GME_GRID_SIZE, test.y * GME_GRID_SIZE);		\
 				return TRUE;						\
 			}
 
-bool CModelGrid::GetClosestAvailable(CSize size,CPoint &pt) // centerpoint!
+bool CModelGrid::GetClosestAvailable(CRect& rect)
 {
-	if(IsAvailable(pt,size)) {
-		pt.x = (pt.x / GME_GRID_SIZE) * GME_GRID_SIZE;
-		pt.y = (pt.y / GME_GRID_SIZE) * GME_GRID_SIZE;
+	if(IsAvailable(rect)) {
+		rect.MoveToXY((rect.left / GME_GRID_SIZE) * GME_GRID_SIZE,
+			(rect.top / GME_GRID_SIZE) * GME_GRID_SIZE);
 		return TRUE;
 	}
+
+	CPoint pt = rect.TopLeft();
 	pt.x /= GME_GRID_SIZE;
 	pt.y /= GME_GRID_SIZE;
 	pt.x = max(0,min(GME_MAX_GRID_DIM - 1,pt.x));
 	pt.y = max(0,min(GME_MAX_GRID_DIM - 1,pt.y));
-	size.cx = (size.cx / 2 + GME_GRID_SIZE) / GME_GRID_SIZE;
-	size.cy = (size.cy / 2 + GME_GRID_SIZE) / GME_GRID_SIZE;
+	CSize size = rect.Size();
+	size.cx = (size.cx + GME_GRID_SIZE - 1) / GME_GRID_SIZE;
+	size.cy = (size.cy + GME_GRID_SIZE - 1) / GME_GRID_SIZE;
 	CPoint test = pt;
 	for(int rad = 1; rad < GME_MAX_GRID_DIM; rad++) {
 		test.x = pt.x - rad;
@@ -174,9 +174,9 @@ bool CModelGrid::GetClosestAvailable(CSize size,CPoint &pt) // centerpoint!
 }
 
 
-void CModelGrid::Set(CSize &size, CPoint &center, bool reset)
+void CModelGrid::Set(CRect& rect, bool reset)
 {
-	FindStartEnd(center,size,1);
+	FindStartEnd(rect,1);
 	for(int y = starty; y < endy; y++)
 		for(int x = startx; x < endx; x++)
 			reset ? Reset(x,y) : Set(x,y);
@@ -196,15 +196,11 @@ Mod by ZolMol:  If called from CGMEView::SyncOnGrid then
 void CModelGrid::Set(CGuiObject *model,bool reset, int aspIdx)
 {
 	CRect loc = model->GetLocation( aspIdx);
-	CPoint pt = loc.CenterPoint();
-	CSize s = loc.Size();
-	Set(s,pt,reset);
+	Set(loc,reset);
 
 	if (theApp.labelAvoidance) {
 		loc = model->GetNameLocation( aspIdx);
-		pt = loc.CenterPoint();
-		s = loc.Size();
-		Set(s,pt,reset);
+		Set(loc, reset);
 	}
 }
 
@@ -216,11 +212,11 @@ void CModelGrid::Reset(CGuiObject *model)
 bool CModelGrid::IsAvailable(CGuiObject *model, int aspIdx) 
 {
 	CRect rect = model->GetLocation(aspIdx);
-	bool avail = modelGrid.IsAvailable(rect.CenterPoint(), rect.Size());
+	bool avail = modelGrid.IsAvailable(rect);
 
 	if (theApp.labelAvoidance) {
 		rect = model->GetNameLocation(aspIdx);
-		avail = avail && modelGrid.IsAvailable(rect.CenterPoint(), rect.Size());
+		avail = avail && modelGrid.IsAvailable(rect);
 	}
 
 	return avail;
@@ -232,28 +228,9 @@ Mod by ZolMol:  If called from CGMEView::SyncOnGrid then
 				calling GetLocation or GetNameLocation with default parameter might
 				cause null ptr dereferencing
 */
-bool CModelGrid::GetClosestAvailable(CGuiObject *model,CPoint &pt, int aspIdx)
+bool CModelGrid::GetClosestAvailable(CGuiObject *model, CRect &rect, int aspIdx)
 {
-	CRect unionLoc;
-	CRect loc = model->GetLocation( aspIdx);
-	if (theApp.labelAvoidance) {
-		CRect nameLoc = model->GetNameLocation( aspIdx);
-		unionLoc.UnionRect(&loc, &nameLoc);
-	}
-	else {
-		unionLoc = loc;
-	}
-	
-	CSize offset = unionLoc.CenterPoint() - loc.CenterPoint();
-
-	offset.cx -= offset.cx % GME_GRID_SIZE;
-	offset.cy -= offset.cy % GME_GRID_SIZE;
-
-	pt += offset;
-
-	bool ret = GetClosestAvailable(unionLoc.Size(), pt);
-
-	pt -= offset;
+	bool ret = GetClosestAvailable(rect);
 
 	return ret;
 }
@@ -268,7 +245,7 @@ bool CModelGrid::CanNudge(CGuiObject *model,int right,int down)
 	r.left += right;
 	r.top += down;
 	r.bottom += down;
-	bool can = IsAvailable(r.CenterPoint(),r.Size());
+	bool can = IsAvailable(r);
 
 	if (theApp.labelAvoidance) {
 		r = model->GetNameLocation();
@@ -276,7 +253,7 @@ bool CModelGrid::CanNudge(CGuiObject *model,int right,int down)
 		r.left += right;
 		r.top += down;
 		r.bottom += down;
-		can = can && IsAvailable(r.CenterPoint(),r.Size());
+		can = can && IsAvailable(r);
 	}
 
 	return can;

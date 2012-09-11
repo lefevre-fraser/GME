@@ -3996,21 +3996,21 @@ void CGMEView::FillModelGrid()
 		obj = fco->dynamic_cast_CGuiObject();
 		if(!obj || !obj->IsVisible())
 			continue;
-		CPoint pt = obj->GetLocation().CenterPoint();
 		if(!modelGrid.IsAvailable(obj)) {
-			if(!modelGrid.GetClosestAvailable(obj,pt)) {
+			CRect loc = obj->GetLocation();
+			if(!modelGrid.GetClosestAvailable(obj, loc)) {
 				AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 				EndWaitCursor();
 				return;
 			}
-			// obj->SetCenter(pt);
+			// ASSERT(modelGrid.IsAvailable(loc));
 			if (!executingPendingRequests && !IsInstance()) {
-				CPendingObjectPosRequest *req = new CPendingObjectPosRequest(obj, pt, obj->GetLocation(), obj->GetParentAspect());
+				CPendingObjectPosRequest *req = new CPendingObjectPosRequest(obj, loc, obj->GetParentAspect());
 				pendingRequests.AddHead(req);
 				postPendingRequestEvent = true;
 			}
 
-			obj->SetCenter(pt, -1, false);
+			obj->SetObjectLocation(loc, -1, false);
 		}
 		modelGrid.Set(obj);
 	}
@@ -8867,15 +8867,15 @@ void CGMEView::SyncAspects(CGuiMetaAspect *srcAspect, CGuiMetaAspectList &dstAsp
 void CGMEView::SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexTo)
 {
 	// aspectIndexTo might be equal with aspectIndexFrom
-	CPoint center = obj->GetLocation(aspectIndexFrom).CenterPoint();//take the pos from the aspFrom (source) aspect
+	CRect loc = obj->GetLocation(aspectIndexFrom);//take the pos from the aspFrom (source) aspect
 
 	if (!modelGrid.IsAvailable(obj, aspectIndexFrom)) {//is enough space to occupy the pos taken from the aspFrom aspect?
-		if (!modelGrid.GetClosestAvailable(obj, center, aspectIndexTo)) { // if cannot get any position close to the position got above
+		if (!modelGrid.GetClosestAvailable(obj, loc, aspectIndexTo)) { // if cannot get any position close to the position got above
 			AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 			throw hresult_exception();
 		}
 	}
-	obj->SetCenter(center, aspectIndexTo);
+	obj->SetLocation(loc, aspectIndexTo);
 	modelGrid.Set(obj, FALSE, aspectIndexTo);
 }
 

@@ -136,14 +136,9 @@ void CGMEDataDescriptor::Draw(CDC *pDC,CPoint &pt)
 
 		// Emulate the grid.
 		long gs = GME_GRID_SIZE;
-		align.x = (align.x % gs);
-		align.y = (align.y % gs);
+		rect.MoveToXY(rect.left / gs * gs, rect.top / gs * gs);
 
-		
-		rect.OffsetRect(-align.x, -align.y);
-		// rect.OffsetRect(-offset.x, -offset.y);
 		pDC->DrawFocusRect(&rect);
-
 	}
 	
 	pos = annRects.GetHeadPosition();
