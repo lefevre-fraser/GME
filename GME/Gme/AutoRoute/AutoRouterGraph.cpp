@@ -452,6 +452,7 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 	ASSERT( ret.IsEmpty() );
 
 	CPoint& thestart = start;
+	POSITION retend = NULL;
 
 	while( start != end )
 	{
@@ -462,13 +463,17 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 		ASSERT( dir1 == GetMajorDir(end-start) );
 		ASSERT( dir2 == Dir_None || dir2 == GetMinorDir(end-start) );
 
-		if( ret.IsEmpty() && dir2 == hintstartdir && dir2 != Dir_None )
+		if( retend == NULL && dir2 == hintstartdir && dir2 != Dir_None )
 		{
+			// i.e. std::swap(dir1, dir2);
 			dir2 = dir1;
 			dir1 = hintstartdir;
 		}
 
-		ret.AddTail(start);
+		if (retend == NULL)
+			retend = ret.AddTail(start);
+		else
+			retend = ret.InsertAfter(retend, start);
 		CPoint old = start;
 
 		CAutoRouterBox* box = GoToNextBox(start, dir1, end);
@@ -486,6 +491,7 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 			{
 				ASSERT( !IsPointInDirFrom(start, rect, dir2) );
 				GoToNextBox(start, dir2, end);
+				// this assert fails if two boxes are adjacent, and a connection wants to go between
 				ASSERT( IsPointInDirFrom(start, rect, dir2) );
 			}
 			else
@@ -517,7 +523,8 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 				GetPointCoord(start, dir2) = GetRectOuterCoord(rect, dir2);
 
 				ASSERT( start != old );
-				ret.AddTail(start);
+				ASSERT(retend != NULL);
+				retend = ret.InsertAfter(retend, start);
 
 				old = start;
 
