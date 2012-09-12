@@ -5,7 +5,6 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <ModuleDefinitionFile>.\Mga.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <BaseAddress>0x60600000</BaseAddress>
