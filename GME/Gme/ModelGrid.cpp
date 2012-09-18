@@ -92,11 +92,11 @@ bool CModelGrid::IsAvailableG(CPoint &pt,CSize &size)
 	int endx = pt.x + size.cx;
 	int endy = pt.y + size.cy;
 	// Hack to prevent labels from overlapping
-	starty -= 2;
+	//starty -= 2;
 	if(startx < 0 || starty < 0 || endx >= GME_MAX_GRID_DIM || endy >= GME_MAX_GRID_DIM)
 		return false;
-	for(int i = starty; i < endy; i++)
-		for(int j = startx; j < endx; j++)
+	for(int i = starty; i <= endy; i++)
+		for(int j = startx; j <= endx; j++)
 			if(!IsAvailable(j,i))
 				return false;
 	return true;
@@ -121,8 +121,8 @@ bool CModelGrid::IsAvailable(const CRect& rect)
 	FindStartEnd(rect,0);
 	if(startx < 0 || starty < 0 || endx >= GME_MAX_GRID_DIM || endy >= GME_MAX_GRID_DIM)
 		return false;
-	for(int y = starty; y < endy; y++)
-		for(int x = startx; x < endx; x++)
+	for(int y = starty; y <= endy; y++)
+		for(int x = startx; x <= endx; x++)
 			if(!IsAvailable(x,y))
 				return false;
 	return true;
@@ -177,8 +177,8 @@ bool CModelGrid::GetClosestAvailable(CRect& rect)
 void CModelGrid::Set(CRect& rect, bool reset)
 {
 	FindStartEnd(rect,1);
-	for(int y = starty; y < endy; y++)
-		for(int x = startx; x < endx; x++)
+	for(int y = starty; y <= endy; y++)
+		for(int x = startx; x <= endx; x++)
 			reset ? Reset(x,y) : Set(x,y);
 }
 
