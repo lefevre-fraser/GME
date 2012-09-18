@@ -144,6 +144,15 @@ namespace OclCommonEx {
 		return GetObjectName( spMeta );
 	}
 
+	std::string GetObjectDisplayedName(CComPtr<IMgaObject>& spObject)
+	{
+		CComPtr<IMgaMetaBase> spMeta;
+		COMTHROW( spObject->get_MetaBase( &spMeta ) );
+		_bstr_t name;
+		COMTHROW(spMeta->get_Name(name.GetAddress()));
+		return static_cast<const char*>(name);
+	}
+
 	std::string GetFCORole( CComPtr<IMgaFCO> spFCO )
 	{
 		CComPtr<IMgaMetaRole> spMetaRole;

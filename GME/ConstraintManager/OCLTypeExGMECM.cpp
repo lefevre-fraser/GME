@@ -310,6 +310,17 @@ namespace OclGmeCM
 		}
 	};
 
+	ATTRIBUTE( TObject_KindDisplayedName )
+	{
+		void operator()()
+		{
+			DECL_GMEOBJECT( spThis, GetThis() );
+			if ( ! spThis.p )
+				ThrowException( "Object is null." );
+			SetResult( CREATE_STRING( GetTypeManager(), OclCommonEx::GetObjectDisplayedName( spThis ) ) );
+		}
+	};
+
 	ATTRIBUTE( TObject_StereotypeName )
 	{
 		void operator()()
@@ -402,6 +413,12 @@ namespace OclGmeCM
 		if ( strName == "kindName" ) {
 			vecType.push_back( "ocl::String" );
 			vecFeatures.push_back( new OclMeta::Attribute( strName, vecType, new TObject_KindName(), false ) );
+			return;
+		}
+
+		if ( strName == "kindDisplayedName" ) {
+			vecType.push_back( "ocl::String" );
+			vecFeatures.push_back( new OclMeta::Attribute( strName, vecType, new TObject_KindDisplayedName(), false ) );
 			return;
 		}
 

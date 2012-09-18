@@ -60,6 +60,7 @@ namespace OclCommonEx {
 	std::string GetConnPointRole( CComPtr<IMgaConnPoint> spCP );
 
 	std::string GetObjectKind( CComPtr<IMgaObject> spObject );
+	std::string GetObjectDisplayedName(CComPtr<IMgaObject>& spObject);
 
 	std::string GetFCORole( CComPtr<IMgaFCO> spFCO );
 
