@@ -1860,7 +1860,7 @@ void CGMEApp::OnFileNew()
 		CMgaOpenDlg dlg(CMgaOpenDlg::NewDialog);
 
 		CComObjPtr<IMgaLauncher> launcher;
-		COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
+		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher", 0, CLSCTX_INPROC_SERVER) );
 
 	meta_label:
 		HRESULT hr = launcher->MetaDlg(METADLG_NEWFILE);
@@ -2506,7 +2506,7 @@ void CGMEApp::OnFileRegparadigms()
 	MSGTRY
 	{
 		CComPtr<IMgaLauncher> launcher;
-		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher") );
+		COMTHROW( launcher.CoCreateInstance(L"Mga.MgaLauncher", 0, CLSCTX_INPROC_SERVER) );
 
 		while(1) {
 			HRESULT hr = launcher->MetaDlg(METADLG_PARREG);
