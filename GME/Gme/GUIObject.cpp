@@ -2008,9 +2008,9 @@ CString CReference::GetInfoText(CString &name)
 {
 	CString txt;
 	if(IsNull())
-		txt = name + _T(" -> null ");
+		txt = name + L" \u2192 null ";
 	else
-		txt.Format(_T("%s -> %s (%s) "), name, targetName, targetKindDisplayedName);
+		txt.Format(L"%s \u2192 %s (%s) ", name, targetName, targetKindDisplayedName);
 	return CString(txt);
 }
 ///////////////////////////////////////
