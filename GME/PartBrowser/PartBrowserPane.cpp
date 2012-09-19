@@ -177,7 +177,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 		return;
 	}
 	std::sort(pdt.begin(), pdt.end(), [](const PartWithDecorator& a, const PartWithDecorator& b){ return a.name < b.name; });
-	pdts.push_back(pdt);
+	pdts.push_back(std::move(pdt));
 }
 
 void CPartBrowserPane::DestroyDecorators(void)

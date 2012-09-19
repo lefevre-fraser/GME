@@ -22,6 +22,26 @@ public:
 	CString										name;	// Calculated, cached for speedup
 	CComPtr<IMgaDecorator>						decorator;
 	CComPtr<IMgaElementDecorator>				newDecorator;
+
+	PartWithDecorator operator=(PartWithDecorator&& that)
+	{
+		if (this != &that)
+		{
+			this->part = std::move(that.part);
+			this->name = std::move(that.name);
+			this->decorator = std::move(that.decorator);
+			this->newDecorator = std::move(that.newDecorator);
+		}
+		return *this;
+	}
+	PartWithDecorator(PartWithDecorator&& that)
+		: part(std::move(that.part)),
+		name(std::move(that.name)),
+		decorator(std::move(that.decorator)),
+		newDecorator(std::move(that.newDecorator))
+	{
+	}
+	PartWithDecorator() {}
 };
 
 
