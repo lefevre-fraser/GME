@@ -144,12 +144,15 @@ void CChildFrame::OnClose()
 	sendEvent = true;
 
 	if(doClose)
+		// CFramewWnd::OnClose calls CMDIChildWnd::DestroyWindow
 		CMDIChildWndEx::OnClose();
 
 	// CMDIChildWndEx::OnClose: when the last ChildWnd is closed
 	// the document is considered closed and the title changes to Paradigm
 	// that's why we call this:
 	theApp.UpdateMainTitle();
+
+// 	DestroyWindow();
 }
 
 void CChildFrame::OnSize(UINT nType, int cx, int cy)

@@ -14,6 +14,7 @@
 
 class CModelPropertiesDlgBar : public CPaneDialog
 {
+	DECLARE_DYNCREATE(CModelPropertiesDlgBar)
 // Construction
 public:
 	CModelPropertiesDlgBar();   // standard constructor

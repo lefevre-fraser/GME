@@ -15,6 +15,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CModelPropertiesDlgBar dialog
 
+IMPLEMENT_DYNCREATE(CModelPropertiesDlgBar, CPaneDialog)
+
+
 CModelPropertiesDlgBar::CModelPropertiesDlgBar()
 : CPaneDialog()
 {

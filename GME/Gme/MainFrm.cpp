@@ -660,6 +660,18 @@ void CMainFrame::ActivateView(CView *view)
 		frame->ActivateFrame(frame->IsIconic() ? SW_SHOWNORMAL : -1);
 }
 
+struct AccessProtectedKludge : public CMDIClientAreaWnd 
+{
+	CObList& get()
+	{
+		return m_lstRemovedTabbedGroups;
+	}
+	static CObList& get(CMDIClientAreaWnd& clientarea)
+	{
+		return ((AccessProtectedKludge*)(&clientarea))->get();
+	}
+};
+
 void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 {
 	CMultiDocTemplate *docTemplate = theApp.pDocTemplate;
@@ -685,6 +697,20 @@ void CMainFrame::CreateNewView(CView *view, CComPtr<IMgaModel>& model)
 
 		m_wndClientArea.UpdateMDITabbedGroups(FALSE);  // The framework by default calls this via OnUpdateFrameTitle 
 		                                              // (overloaded in our implementation without calling the base class intentionally)
+
+		// n.b. m_wndClientArea is long-lived, but puts closed tab groups in .m_lstRemovedTabbedGroups
+		// delete them here to prevent a resource leak
+		// FIXME: this should run when the last tab is closed
+		CObList& m_lstRemovedTabbedGroups = AccessProtectedKludge::get(m_wndClientArea);
+		while (!m_lstRemovedTabbedGroups.IsEmpty())
+		{
+			CMFCTabCtrl* pWnd= DYNAMIC_DOWNCAST(CMFCTabCtrl, m_lstRemovedTabbedGroups.RemoveTail());
+			if (pWnd != NULL)
+			{
+				pWnd->DestroyWindow();
+				delete pWnd;
+			}
+		}
 
 		CGMEView* newGmeview = CGMEView::GetActiveView();
 
