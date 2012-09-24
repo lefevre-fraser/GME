@@ -956,7 +956,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 				} // eo if (count == 1)
 
 				CList<int, int> valid_role_map;
-				CDialogList cdl(_T("Resolve Role Type"), CDialogList::CHKTEXT_ONETIMER);
+				CDialogList cdl(_T("Resolve Role Type"), CDialogList::CHKTEXT_ONETIMER); // TODO support ignore button
 
 				for (int z = 1; z <= role_count; z++) {
 
@@ -1077,23 +1077,23 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 			CString sz_format_tmp;
 
 			sz_format_tmp.Format(	_T("Paradigm Violation!  Cannot create within parent model '%s' ")
-									_T("of type '%s' a child "),
+									_T("of type '%s' a child"),
 									(BSTR) parent_name,
 									(BSTR) mparent_name);
 			sz_format+=sz_format_tmp;
 
 			if (CString(kind) != _T("")) {
-				sz_format_tmp.Format(_T("with kind '%s' "), kind);
+				sz_format_tmp.Format(_T(" with kind '%s'"), kind);
 				sz_format+=sz_format_tmp;
 			}
 
 			if (objtype != OBJTYPE_NULL) {
-				sz_format_tmp.Format(_T("of type %s "), helper_ObjTypeStr(objtype));
+				sz_format_tmp.Format(_T(" of type %s"), helper_ObjTypeStr(objtype));
 				sz_format+=sz_format_tmp;
 			}
 
 			if (CString(aspect) != _T("")) {
-				sz_format_tmp.Format(_T("in aspect '%s'"), aspect);
+				sz_format_tmp.Format(_T(" in aspect '%s'"), aspect);
 				sz_format+=sz_format_tmp;
 			}
 							
