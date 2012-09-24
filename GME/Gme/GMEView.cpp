@@ -337,8 +337,10 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_FILE_CLOSE, OnFileClose)
 	ON_COMMAND(ID_CONNCNTX_PROPERTIES, OnConncntxProperties)
 	ON_COMMAND(ID_CONNCNTX_DELETE, OnConncntxDelete)
+	ON_COMMAND(ID_CONNCNTX_REVERSE, OnConncntxReverse)
+	ON_UPDATE_COMMAND_UI(ID_CONNCNTX_REVERSE, OnUpdateConncntxReverse)
 	ON_COMMAND(ID_CONNCNTX_FOLLOW, OnConnCntxFollow)
-	ON_COMMAND(ID_CONNCNTX_REVERSE, OnConnCntxRevfollow)
+	ON_COMMAND(ID_CONNCNTX_JUMP_SRC, OnConnCntxRevfollow)
 	ON_COMMAND(ID_PORTCNTX_FOLLOWCONNECTION, OnPortCntxFollowConnection)
 	ON_COMMAND(ID_PORTCNTX_REVERSECONNECTION, OnPortCntxRevfollowConnection)
 	ON_COMMAND(ID_CNTX_FOLLOWCONNECTION, OnCntxFollowConnection)
@@ -7732,6 +7734,121 @@ void CGMEView::TryToExecutePendingRequests(void)
 void CGMEView::OnConncntxProperties()
 {
 	OnContextProperties(); // We now use the Launcher COM interface.
+}
+
+static bool CanReverseConnection(CString& srcKind, CString& dstKind, IMgaMetaConnectionPtr& meta)
+{
+	for (int i = 1; i <= meta->Joints->Count; i++)
+	{
+		IMgaMetaConnJointPtr joint = meta->Joints->GetItem(i);
+		bool srcFound = false;
+		bool dstFound = false;
+		for (int j = 1; j <= joint->PointerSpecs->Count; j++)
+		{
+			IMgaMetaPointerSpecPtr spec = joint->PointerSpecs->GetItem(j);
+			_bstr_t specName = spec->Name;
+			for (int k = 1; k <= spec->Items->Count; k++)
+			{
+				IMgaMetaPointerItemPtr item = spec->Items->GetItem(k);
+				if (wcscmp(specName.GetBSTR(), L"src") == 0)
+				{
+					if (wcscmp(dstKind, item->Desc) == 0)
+					{
+						srcFound = true;
+					}
+				}
+				else if (wcscmp(specName.GetBSTR(), L"dst") == 0)
+				{
+					if (wcscmp(srcKind, item->Desc) == 0)
+					{
+						dstFound = true;
+					}
+				}
+			}
+		}
+		if (srcFound && dstFound)
+			return true;
+	}
+	return false;
+}
+
+void CGMEView::OnConncntxReverse()
+{
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnConncntxReverse in ")+path+name+_T("\r\n"));
+	if (isType) {
+		CGuiConnection* conn = NULL;
+		if (contextSelection)
+			conn = contextSelection->dynamic_cast_CGuiConnection();
+		else
+		{
+			ASSERT(false); // should only get here thru connection context menu
+			return;
+		}
+		MSGTRY
+		{
+			//CString srcKind = conn->srcPort ? static_cast<const TCHAR*>(conn->srcPort->metaFco->Name) : conn->src->kindName;
+			//CString dstKind = conn->dstPort ? static_cast<const TCHAR*>(conn->dstPort->metaFco->Name) : conn->dst->kindName;
+			//IMgaMetaConnectionPtr meta = conn->metaFco.p;
+			//CanReverseConnection(srcKind, dstKind, meta) ? TRUE : FALSE;
+			BeginTransaction();
+			IMgaSimpleConnectionPtr connection = conn->mgaFco.p;
+			IMgaFCOPtr src = connection->Src;
+			IMgaFCOPtr dst = connection->Dst;
+			IMgaFCOsPtr srcRefs = connection->SrcReferences;
+			IMgaFCOsPtr dstRefs = connection->DstReferences;
+
+			long oldprefs = connection->Project->Preferences;
+			try {
+				connection->Project->Preferences = connection->Project->Preferences | MGAPREF_IGNORECONNCHECKS;
+				// n.b. need to disconnect first, as self-connection is often illegal
+				connection->__SetSrc(NULL, NULL);
+				connection->__SetDst(NULL, NULL);
+			} catch (...) {
+				connection->Project->Preferences = oldprefs;
+				throw;
+			}
+			connection->__SetSrc(dstRefs, dst);
+			connection->__SetDst(srcRefs, src);
+			_bstr_t autoroutePrefKey = _bstr_t(L"autorouterPref");
+			_bstr_t autoroutePref = connection->RegistryValue[autoroutePrefKey];
+			if (autoroutePref.length())
+			{
+				wchar_t* dir = autoroutePref.GetBSTR();
+				while (*dir)
+				{
+					if (isupper(*dir))
+					{
+						*dir = tolower(*dir);
+					}
+					else if (islower(*dir))
+					{
+						*dir = toupper(*dir);
+					}
+					dir++;
+				}
+				connection->RegistryValue[autoroutePrefKey] = autoroutePref;
+			}
+			CommitTransaction();
+		} MSGCATCH(L"Could not delete connection", ;)
+		contextSelection = 0;
+		contextPort = 0;
+	}
+}
+
+void CGMEView::OnUpdateConncntxReverse(CCmdUI* pCmdUI)
+{
+	BOOL enable = FALSE;
+	if (isType && contextSelection) {
+		CGuiConnection* conn = contextSelection->dynamic_cast_CGuiConnection();
+		CString srcKind = conn->srcPort ? static_cast<const TCHAR*>(conn->srcPort->metaFco->Name) : conn->src->kindName;
+		CString dstKind = conn->dstPort ? static_cast<const TCHAR*>(conn->dstPort->metaFco->Name) : conn->dst->kindName;
+		if (conn) {
+			IMgaMetaConnectionPtr meta = conn->metaFco.p;
+			enable = CanReverseConnection(srcKind, dstKind, meta) ? TRUE : FALSE;
+			enable = TRUE;
+		}
+	}
+	pCmdUI->Enable(enable);
 }
 
 void CGMEView::OnConncntxDelete()

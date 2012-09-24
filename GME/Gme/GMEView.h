@@ -484,6 +484,8 @@ protected:
 	afx_msg void OnFileClose();
 	afx_msg void OnConncntxProperties();
 	afx_msg void OnConncntxDelete();
+	afx_msg void OnConncntxReverse();
+	afx_msg void OnUpdateConncntxReverse(CCmdUI* pCmdUI);
 	afx_msg void OnConnCntxFollow();
 	afx_msg void OnConnCntxRevfollow();
 	afx_msg void OnCntxClear();

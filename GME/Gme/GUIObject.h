@@ -97,6 +97,7 @@ public:
 	CGuiAspect* parent;
 	CGuiConnectionList inConns;
 	CGuiConnectionList outConns;
+	CComPtr<IMgaMetaFCO> metaFco;
 
 private:
 	bool autorouterPrefs[GME_AR_NUM];
@@ -218,9 +219,9 @@ public:
 	CString roleName;
 	CString kindDisplayedName;
 	CString roleDisplayedName;
+	CComPtr<IMgaMetaFCO> metaFco;
 
 protected:
-	CComPtr<IMgaMetaFCO> metaFco;
 	int numParentAspects;
 	int parentAspect;
 	bool grayedOut;

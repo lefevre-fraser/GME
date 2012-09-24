@@ -530,10 +530,11 @@ BEGIN
         END
         MENUITEM SEPARATOR
         MENUITEM "Delete",                      ID_CONNCNTX_DELETE
+        MENUITEM "Reverse connection direction", ID_CONNCNTX_REVERSE
         MENUITEM SEPARATOR
         MENUITEM "Help",                        ID_CNTX_HELP
         MENUITEM SEPARATOR
-        MENUITEM "Jump to Source",              ID_CONNCNTX_REVERSE
+        MENUITEM "Jump to Source",              ID_CONNCNTX_JUMP_SRC
         MENUITEM "Jump to Destination",         ID_CONNCNTX_FOLLOW
         MENUITEM SEPARATOR
         MENUITEM "Try to apply horizontal/vertical snap along the whole connection", ID_TRYTOSNAPHORZVERTPATH

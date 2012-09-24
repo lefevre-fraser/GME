@@ -405,7 +405,7 @@
 #define ID_BUTTON33044                  33044
 #define ID_VIEW_CLEARCONSOLE            33045
 #define ID_CONNCNTX_FOLLOW              33048
-#define ID_CONNCNTX_REVERSE             33050
+#define ID_CONNCNTX_JUMP_SRC             33050
 #define ID_CNTX_FOLLOWCONNECTION        33051
 #define ID_CNTX_REVERSECONNECTION       33053
 #define ID_JUMPALONGCONN                33055
@@ -508,6 +508,7 @@
 #define ID_FILE_INTERPRET48  33258
 #define ID_FILE_INTERPRET49  33259
 #define ID_FILE_INTERPRET_LAST ID_FILE_INTERPRET49
+#define ID_CONNCNTX_REVERSE              33270
 
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
@@ -522,7 +523,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        225
-#define _APS_NEXT_COMMAND_VALUE         33113
+#define _APS_NEXT_COMMAND_VALUE         33271
 #define _APS_NEXT_CONTROL_VALUE         1132
 #define _APS_NEXT_SYMED_VALUE           119
 #endif
