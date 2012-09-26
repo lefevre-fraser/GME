@@ -1555,9 +1555,10 @@ CGuiPort* CGuiObject::FindPort(CPoint& pt, bool lookNearToo)
 		if (!mgaFco.IsEqualObject(port->mgaFco))
 		{
 			CRect r = port->GetLocation() + GetLocation().TopLeft();
+			r.InflateRect(1, 1); // consider mouseover on red outline too
 			CRect rInflated = r;
 			rInflated.InflateRect(3, 3);
-			if (r.PtInRect(pt) == TRUE || lookNearToo && rInflated.PtInRect(pt) == TRUE)
+			if (r.PtInRect(pt) == TRUE || (lookNearToo && rInflated.PtInRect(pt) == TRUE))
 			{
 				CSize psize = port->GetLocation().Size();
 				if (found)
