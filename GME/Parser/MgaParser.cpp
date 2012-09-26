@@ -1097,8 +1097,8 @@ void CMgaParser::StartModel(const attributes_type &attributes)
 		else
 		{
 			CComObjPtr<IMgaMetaFCO> meta;
-			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
-				OBJTYPE_MODEL, PutOut(meta)) );
+			meta = resolver->KindByStr[prev, PutInBstrAttr(attributes, _T("kind")), 
+				OBJTYPE_MODEL];
 			ASSERT( meta != NULL );
 
 			COMTHROW( prev->CreateRootObject(meta, PutOut(model)) );
@@ -1173,8 +1173,7 @@ void CMgaParser::StartAtom(const attributes_type &attributes)
 		else
 		{
 			CComObjPtr<IMgaMetaFCO> meta;
-			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")),
-				OBJTYPE_ATOM, PutOut(meta)) );
+			meta = resolver->KindByStr[prev, PutInBstrAttr(attributes, _T("kind")), OBJTYPE_ATOM];
 			ASSERT( meta != NULL );
 
 			preparerelid(attributes);
@@ -1190,9 +1189,9 @@ void CMgaParser::StartAtom(const attributes_type &attributes)
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
-		COMTHROW( resolver->get_RoleByStr(prev, 
+		role = resolver->RoleByStr[prev, 
 			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_ATOM,
-			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("role")), _bstr_t()];
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -1323,8 +1322,7 @@ void CMgaParser::StartConnection(const attributes_type &attributes)
 		else
 		{
 			CComObjPtr<IMgaMetaFCO> meta;
-			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
-				OBJTYPE_CONNECTION, PutOut(meta)) );
+			meta = resolver->KindByStr[prev, PutInBstrAttr(attributes, _T("kind")), OBJTYPE_CONNECTION];
 			ASSERT( meta != NULL );
 
 			COMTHROW( prev->CreateRootObject(meta, PutOut(conn)) );
@@ -1338,9 +1336,9 @@ void CMgaParser::StartConnection(const attributes_type &attributes)
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
-		COMTHROW( resolver->get_RoleByStr(prev, 
+		role = resolver->RoleByStr[prev, 
 			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_CONNECTION,
-			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("role")), _bstr_t()];
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -1512,8 +1510,7 @@ void CMgaParser::StartReference(const attributes_type &attributes)
 		else
 		{
 			CComObjPtr<IMgaMetaFCO> meta;
-			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
-				OBJTYPE_REFERENCE, PutOut(meta)) );
+			meta = resolver->KindByStr[prev, PutInBstrAttr(attributes, _T("kind")), OBJTYPE_REFERENCE];
 			ASSERT( meta != NULL );
 
 			COMTHROW( prev->CreateRootObject(meta, PutOut(fco)) );
@@ -1527,9 +1524,9 @@ void CMgaParser::StartReference(const attributes_type &attributes)
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
-		COMTHROW( resolver->get_RoleByStr(prev, 
+		role = resolver->RoleByStr[prev, 
 			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_REFERENCE,
-			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("role")), _bstr_t()];
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )
@@ -1618,8 +1615,7 @@ void CMgaParser::StartSet(const attributes_type &attributes)
 		else
 		{
 			CComObjPtr<IMgaMetaFCO> meta;
-			COMTHROW( resolver->get_KindByStr(prev, PutInBstrAttr(attributes, _T("kind")), 
-				OBJTYPE_SET, PutOut(meta)) );
+			meta = resolver->KindByStr[prev, PutInBstrAttr(attributes, _T("kind")), OBJTYPE_SET];
 			ASSERT( meta != NULL );
 
 			COMTHROW( prev->CreateRootObject(meta, PutOut(fco)) );
@@ -1633,9 +1629,9 @@ void CMgaParser::StartSet(const attributes_type &attributes)
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
-		COMTHROW( resolver->get_RoleByStr(prev, 
+		role = resolver->RoleByStr[prev, 
 			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_SET,
-			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("role")), _bstr_t()];
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )

@@ -210,7 +210,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 		if (e.Description() != _bstr_t())
 		{
 			errorinfo = (str + static_cast<const TCHAR*>(e.Description())).c_str();
-			throw_com_error(e.Error(), e.Description());
+			throw_com_error(e.Error(), errorinfo);
 		}
 		throw hresult_exception(e.Error());
 	}
