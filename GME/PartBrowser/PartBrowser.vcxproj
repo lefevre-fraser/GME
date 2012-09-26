@@ -122,7 +122,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <RegisterOutput>true</RegisterOutput>
       <BaseAddress>0x60370000</BaseAddress>
     </Link>
     <PostBuildEvent />
@@ -154,7 +153,6 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <RegisterOutput>true</RegisterOutput>
       <BaseAddress>0x60370000</BaseAddress>
     </Link>
     <PostBuildEvent />
@@ -188,7 +186,6 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <RegisterOutput>true</RegisterOutput>
       <BaseAddress>0x60370000</BaseAddress>
     </Link>
     <PostBuildEvent />
@@ -221,7 +218,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <RegisterOutput>true</RegisterOutput>
       <BaseAddress>0x60370000</BaseAddress>
     </Link>
     <PostBuildEvent />

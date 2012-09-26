@@ -89,10 +89,6 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">RegisterOutput</CustomBuildBeforeTargets>
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RegisterOutput</CustomBuildBeforeTargets>
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RegisterOutput</CustomBuildBeforeTargets>
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RegisterOutput</CustomBuildBeforeTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep />
@@ -129,7 +125,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /Y/D/F ..\Lib\xerces-c_3_1.dll "$(OutDir)"</Command>
@@ -171,7 +166,6 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /Y/D/F ..\Lib\$(Platform)\xerces-c_3_1.dll "$(OutDir)"</Command>
@@ -210,7 +204,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>
@@ -248,7 +241,6 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Outputs>$(OutDir)\xerces-c_3_1.dll</Outputs>

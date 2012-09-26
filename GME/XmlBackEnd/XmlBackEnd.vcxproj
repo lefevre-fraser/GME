@@ -88,10 +88,6 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RegisterOutput</CustomBuildBeforeTargets>
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RegisterOutput</CustomBuildBeforeTargets>
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">RegisterOutput</CustomBuildBeforeTargets>
-    <CustomBuildBeforeTargets Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RegisterOutput</CustomBuildBeforeTargets>
     <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <CustomBuildAfterTargets Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
@@ -127,7 +123,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /Y/D/F ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
@@ -168,7 +163,6 @@ xcopy /Y/D/F ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>copy ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
@@ -218,7 +212,6 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /Y/D/F ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
@@ -267,7 +260,6 @@ xcopy /Y/D/F ..\lib\xerces-c_3_1.dll "$(OutDir)"</Command>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <RegisterOutput>true</RegisterOutput>
     </Link>
     <CustomBuildStep>
       <Command>copy ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
