@@ -30,9 +30,9 @@ class CompareCComObj
 
 class ATL_NO_VTABLE CMgaParser : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaParser, &CLSID_MgaParser>,
-	public ISupportErrorInfoImpl3<&IID_IMgaParser, &IID_IMgaParser2, &IID_IMgaParser3>,
-	public IDispatchImpl<IMgaParser3, &IID_IMgaParser3, &LIBID_MGAParserLib, 1, 1>,
+	public CComCoClass<CMgaParser, &__uuidof(MgaParser)>,
+	public ISupportErrorInfoImpl3<&__uuidof(IMgaParser), &__uuidof(IMgaParser2), &__uuidof(IMgaParser3)>,
+	public IDispatchImpl<IMgaParser3, &__uuidof(IMgaParser3), &__uuidof(__MGAParserLib), 1, 1>,
 	public IGMEVersionInfoImpl,
 	public CGenParser
 {
@@ -52,7 +52,7 @@ BEGIN_COM_MAP(CMgaParser)
 	COM_INTERFACE_ENTRY(IMgaParser2)
 	COM_INTERFACE_ENTRY2(IMgaParser3, IMgaParser3)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IGMEVersionInfo), IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

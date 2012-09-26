@@ -30,7 +30,36 @@ extern CComModule _Module;
 
 #define ASSERT ATLASSERT
 
-#include "ParserLib.h"
+// Imports
+#define wireHWND HWND
+
+#import "CoreLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "MetaLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "MgaLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "MgaUtilLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "ParserLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "GMELib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+
+#include "CommonImport.h"
+
+#define cpp_quote(x) 
+#include "Interfaceversion.h"
+#undef cpp_quote
+typedef GMEInterfaceVersion_enum GMEInterfaceVersion;
+
+// Don't load the MIDL-generated headers
+#define __Core_h__
+#define __Meta_h__
+#define __Mga_h__
+#define __MgaUtil_h__
+#define __MgaUtilLib_h__
+#define __Parser_h__
+#define __Gme_h__
+#define __GmeLib_h__
+#define IID_IMgaDataSource __uuidof(IMgaDataSource)
+#define ATTVAL_ENUM _attval_enum
+// End Imports
+
 #include "CommonSmart.h"
 #include "CommonStl.h"
 #define GLOBAL_ID_STR   "guid"

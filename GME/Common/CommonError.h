@@ -134,7 +134,9 @@ inline bool CheckOut_IsBound(const SAFEARRAY *p) { return p != NULL; }
 
 // --------------------------- Common Error Codes
 
-void SetErrorInfo(LPOLESTR desc) NOTHROW;
+
+void throw_com_error(HRESULT hr, LPCOLESTR desc);
+void SetErrorInfo(LPCOLESTR desc) NOTHROW;
 void SetErrorInfo(HRESULT hr, LPOLESTR desc2 = NULL) NOTHROW;
 bool GetErrorInfo(BSTR *p) NOTHROW;
 void GetErrorInfo(HRESULT hr, BSTR *p) NOTHROW;

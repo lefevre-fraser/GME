@@ -166,7 +166,8 @@ public:
 class ATL_NO_VTABLE CMgaResolver : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaResolver, &__uuidof(MgaResolver)>,
-	public IDispatchImpl<IMgaResolver, &__uuidof(IMgaResolver), &__uuidof(__MGAUtilLib)>
+	public IDispatchImpl<IMgaResolver, &__uuidof(IMgaResolver), &__uuidof(__MGAUtilLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaResolver)>
 {
 public:
 	CMgaResolver() : mb_is_interactive(true), mb_use_sticky(false)
@@ -183,6 +184,7 @@ DECLARE_PROTECT_FINAL_CONSTRUCT()
 BEGIN_COM_MAP(CMgaResolver)
 	COM_INTERFACE_ENTRY(IMgaResolver)
 	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 
 public:

@@ -316,6 +316,17 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 
 		return e.hr;
 	}
+	catch(_com_error &e)
+	{
+		CloseAll();
+		clear_GME( m_GME);
+
+		ASSERT( FAILED(e.hr) );
+		if (e.Description() != _bstr_t())
+			SetErrorInfo(e.Description());
+
+		return e.Error();
+	}
 	return S_OK;
 }
 
@@ -1102,9 +1113,9 @@ void CMgaParser::StartModel(const attributes_type &attributes)
 		GetPrevObj(prev);
 
 		CComObjPtr<IMgaMetaRole> role;
-		COMTHROW( resolver->get_RoleByStr(prev, 
+		role = resolver->RoleByStr[prev.p,
 			PutInBstrAttr(attributes, _T("kind")), OBJTYPE_MODEL,
-			PutInBstrAttr(attributes, _T("role")), NULL, PutOut(role)) );
+			PutInBstrAttr(attributes, _T("role")), _bstr_t()];
 		ASSERT( role != NULL );
 
 		if( deriv.from != NULL )

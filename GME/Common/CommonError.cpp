@@ -101,7 +101,7 @@ LPOLESTR parser_descs[] =
 	OLESTR("Invalid long value in XML file")
 };
 
-void SetErrorInfo(LPOLESTR desc)
+void throw_com_error(HRESULT hr, LPCOLESTR desc)
 {
 	ASSERT( desc != NULL );
 
@@ -109,7 +109,30 @@ void SetErrorInfo(LPOLESTR desc)
 	{
 		CComObjPtr<ICreateErrorInfo> errorinfo;
 		COMTHROW( CreateErrorInfo(PutOut(errorinfo)) );
-		COMTHROW( errorinfo->SetDescription(desc) );
+		COMTHROW( errorinfo->SetDescription(const_cast<LPOLESTR>(desc)) );
+		COMTHROW( errorinfo->SetSource(OLESTR("GME")) );
+
+		CComObjPtr<IErrorInfo> errorinfo2;
+		COMTHROW( QueryInterface(errorinfo, errorinfo2) );
+		COMTHROW( SetErrorInfo(0, errorinfo2) );
+
+		throw _com_error(hr, errorinfo2, true);
+	}
+	catch(hresult_exception &)
+	{
+		// do nothing
+	}
+}
+
+void SetErrorInfo(LPCOLESTR desc)
+{
+	ASSERT( desc != NULL );
+
+	try
+	{
+		CComObjPtr<ICreateErrorInfo> errorinfo;
+		COMTHROW( CreateErrorInfo(PutOut(errorinfo)) );
+		COMTHROW( errorinfo->SetDescription(const_cast<LPOLESTR>(desc)) );
 		COMTHROW( errorinfo->SetSource(OLESTR("GME")) );
 
 		CComObjPtr<IErrorInfo> errorinfo2;

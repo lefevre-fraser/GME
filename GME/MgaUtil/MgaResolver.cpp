@@ -5,6 +5,7 @@
 #include "MgaResolver.h"
 #include "DialogList.h"
 #include "AlterNmspDlg.h"
+#include "CommonError.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -260,6 +261,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 				//		since not interactive, exit
 
 				if (! this->mb_is_interactive) {
+					SetErrorInfo(CString(L"Could not resolve folder for kind '") + kind + "'");
 					return RESOLV_ERR_get_FolderByStr;
 				}
 
@@ -283,7 +285,7 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 				MGACOLL_ITERATE_END;
 
 				if ((cdl.DoModal() != IDOK) || (cdl.mn_selection_index == LB_ERR)) {
-//					AfxMessageBox("no items chosen from dialog");
+					SetErrorInfo(L"No item chosen from dialog");
 					return RESOLV_ERR_get_FolderByStr;
 				}
 
@@ -304,34 +306,23 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 		}
 
 //		#pragma bookmark (note: insert helpful message box here get_FolderByStr[] )
-		if (this->mb_is_interactive) {
+		CComBSTR parfolder_name;
+		COMTHROW( parent->get_Name(&parfolder_name) );
 
-			CComBSTR parfolder_name;
-			COMTHROW( parent->get_Name(&parfolder_name) );
+		CComBSTR parmfolder_name;
+		COMTHROW( parent_mfolder->get_Name(&parmfolder_name) );
 
-			CComBSTR parmfolder_name;
-			COMTHROW( parent_mfolder->get_Name(&parmfolder_name) );
+		CString sz_format;
+		sz_format.Format(	_T("Paradigm violation: parent folder %s of type %s\n")
+							_T("cannot contain a child folder\n")
+							_T("of type %s"),
+							(BSTR) parfolder_name, (BSTR) parmfolder_name,
+							kind
+		);
 
-			CString sz_format;
-			sz_format.Format(	_T("Paradigm violation!  Parent folder %s of type %s\n")
-								_T("cannot contain a child folder\n")
-								_T("of type %s"),
-								(BSTR) parfolder_name, (BSTR) parmfolder_name,
-								kind
-			);
-
-			CComPtr<IMgaProject> mgaProject;
-			COMTHROW(parent->get_Project(&mgaProject));
-			CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-			if (pGME) {
-				COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-			}
-			else {
-				AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-			}
-
-		}
-
+		CComPtr<IMgaProject> mgaProject;
+		COMTHROW(parent->get_Project(&mgaProject));
+		SetErrorInfo(sz_format);
 
 		return RESOLV_ERR_get_FolderByStr;
 	
@@ -461,36 +452,23 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 		if (_fs_ct == 0) {
 //			#pragma bookmark (note: insert helpful message box here get_KindByStr[1] )
-			if (this->mb_is_interactive) {
+			CComBSTR parent_name;
+			COMTHROW( parent->get_Name(&parent_name) );
 
-				CComBSTR parent_name;
-				COMTHROW( parent->get_Name(&parent_name) );
+			CComBSTR mparent_name;
+			COMTHROW( parent_mf->get_Name(&mparent_name) );
 
-				CComBSTR mparent_name;
-				COMTHROW( parent_mf->get_Name(&mparent_name) );
+			CString sz_format;
 
-				CString sz_format;
+			sz_format.Format(	_T("%sParent folder %s\n")
+								_T("of type %s\n")
+								_T("cannot have any children."),
+								sentence,
+								(BSTR) parent_name,
+								(BSTR) mparent_name
+			);
+			SetErrorInfo(sz_format);
 
-				sz_format.Format(	_T("%sParent folder %s\n")
-									_T("of type %s\n")
-									_T("cannot have any children."),
-									sentence,
-									(BSTR) parent_name,
-									(BSTR) mparent_name
-				);
-
-				CComPtr<IMgaProject> mgaProject;
-				COMTHROW(parent->get_Project(&mgaProject));
-				CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-				if (pGME) {
-					COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-				}
-				else {
-					AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-				}
-
-
-			}
 			return RESOLV_ERR_get_KindByStr;
 		}
 
@@ -523,46 +501,34 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 		if (valid_obj_map.GetCount() == 0) {
 //			#pragma bookmark (note: insert helpful message box here get_KindByStr[1] )
-			if (this->mb_is_interactive) {
+			CComBSTR parent_name;
+			COMTHROW( parent->get_Name(&parent_name) );
 
-				CComBSTR parent_name;
-				COMTHROW( parent->get_Name(&parent_name) );
+			CComBSTR mparent_name;
+			COMTHROW( parent_mf->get_Name(&mparent_name) );
 
-				CComBSTR mparent_name;
-				COMTHROW( parent_mf->get_Name(&mparent_name) );
+			CString sz_format;
+			CString sz_format_tmp;
 
-				CString sz_format;
-				CString sz_format_tmp;
+			sz_format_tmp.Format(	_T("Paradigm Violation: parent folder %s\n")
+									_T("of type %s\n")
+									_T("cannot have any children\n"),
+									(BSTR) parent_name,
+									(BSTR) mparent_name
+			);
+			sz_format += sz_format_tmp;
 
-				sz_format_tmp.Format(	_T("Paradigm Violation!  Parent folder %s\n")
-										_T("of type %s\n")
-										_T("cannot have any children\n"),
-										(BSTR) parent_name,
-										(BSTR) mparent_name
-				);
+			if (objtype != OBJTYPE_NULL) {
+				sz_format_tmp.Format(	_T("of object type %s\n"),
+										helper_ObjTypeStr(objtype)
+										);
 				sz_format += sz_format_tmp;
-
-				if (objtype != OBJTYPE_NULL) {
-					sz_format_tmp.Format(	_T("of object type %s\n"),
-											helper_ObjTypeStr(objtype)
-											);
-					sz_format += sz_format_tmp;
-				}
-
-				sz_format += sentence;
-
-				CComPtr<IMgaProject> mgaProject;
-				COMTHROW(parent->get_Project(&mgaProject));
-				CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-				if (pGME) {
-					COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-				}
-				else {
-					AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-				}
-
-			
 			}
+
+			sz_format += sentence;
+
+			SetErrorInfo(sz_format);
+
 			return RESOLV_ERR_get_KindByStr;
 		}
 
@@ -593,7 +559,10 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 
 			}
 			if (!this->mb_is_interactive)
+			{
+				SetErrorInfo(CString(L"Could not resolve kind '") + kind + L"'");
 				return RESOLV_ERR_get_KindByStr;
+			}
 			// update mapping
 			this->map_put_KindByStr(parent_mf.p, kind, objtype, *p);
 
@@ -605,12 +574,13 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 		// if not interactive, we have to quit-- no more choices!
 
 		if (!this->mb_is_interactive) {
+			SetErrorInfo(CString(L"Could not resolve kind '") + kind + L"'");
 			return RESOLV_ERR_get_KindByStr;
 		}
 
 		if ((cdl.DoModal() != IDOK) || (cdl.mn_selection_index == LB_ERR)) {
 //			#pragma bookmark (note: insert helpful message box here get_KindByStr[1] )
-//			AfxMessageBox(_T("no items chosen from dialog"));
+			SetErrorInfo(_T("No item chosen from dialog"));
 			return RESOLV_ERR_get_KindByStr;
 		}
 
@@ -899,6 +869,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 						return S_OK;
 					}
 					if (!this->mb_is_interactive) {
+						SetErrorInfo(CString(L"Could not resolve kind '") + kind + L"'");
 						return RESOLV_ERR_get_RoleByStr;
 					}
 
@@ -1025,12 +996,14 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 				// we have a fork in the road-- if no user input, we can't resolve
 
 				if (!this->mb_is_interactive) {
+					SetErrorInfo(CString(L"Could not resolve kind '") + kind + L"'");
 					return RESOLV_ERR_get_RoleByStr;
 				}
 
+				INT_PTR dlgResult;
 				if ((cdl.m_sz_prelist.GetCount() != 0) 
 					&& 
-					(cdl.DoModal() == IDOK) 
+					((dlgResult = cdl.DoModal()) == IDOK) 
 					&& 
 					(cdl.mn_selection_index != LB_ERR)) {
 
@@ -1056,6 +1029,11 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 					return S_OK;
 										
 				}
+				if (dlgResult == IDCANCEL)
+				{
+					SetErrorInfo(CString(L"Parsing cancelled"));
+					return RESOLV_ERR_get_RoleByStr;
+				}
 
 
 			} // if objtype match
@@ -1065,49 +1043,36 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 
 //		#pragma bookmark (note: insert helpful message box here get_AttrByStr[] )
 
-		if (this->mb_is_interactive) {
+		CComBSTR parent_name;
+		COMTHROW( parent->get_Name(&parent_name) );
 
-			CComBSTR parent_name;
-			COMTHROW( parent->get_Name(&parent_name) );
+		CComBSTR mparent_name;
+		COMTHROW( parent_meta_fco->get_Name(&mparent_name) );
 
-			CComBSTR mparent_name;
-			COMTHROW( parent_meta_fco->get_Name(&mparent_name) );
+		CString sz_format;
+		CString sz_format_tmp;
 
-			CString sz_format;
-			CString sz_format_tmp;
+		sz_format_tmp.Format(	_T("Paradigm Violation: cannot create within parent model '%s' ")
+								_T("of type '%s' a child"),
+								(BSTR) parent_name,
+								(BSTR) mparent_name);
+		sz_format+=sz_format_tmp;
 
-			sz_format_tmp.Format(	_T("Paradigm Violation!  Cannot create within parent model '%s' ")
-									_T("of type '%s' a child"),
-									(BSTR) parent_name,
-									(BSTR) mparent_name);
+		if (CString(kind) != _T("")) {
+			sz_format_tmp.Format(_T(" with kind '%s'"), kind);
 			sz_format+=sz_format_tmp;
-
-			if (CString(kind) != _T("")) {
-				sz_format_tmp.Format(_T(" with kind '%s'"), kind);
-				sz_format+=sz_format_tmp;
-			}
-
-			if (objtype != OBJTYPE_NULL) {
-				sz_format_tmp.Format(_T(" of type %s"), helper_ObjTypeStr(objtype));
-				sz_format+=sz_format_tmp;
-			}
-
-			if (CString(aspect) != _T("")) {
-				sz_format_tmp.Format(_T(" in aspect '%s'"), aspect);
-				sz_format+=sz_format_tmp;
-			}
-							
-			CComPtr<IMgaProject> mgaProject;
-			COMTHROW(parent->get_Project(&mgaProject));
-			CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-			if (pGME) {
-				COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-			}
-			else {
-				AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-			}
-
 		}
+
+		if (objtype != OBJTYPE_NULL) {
+			sz_format_tmp.Format(_T(" of type %s"), helper_ObjTypeStr(objtype));
+			sz_format+=sz_format_tmp;
+		}
+
+		if (CString(aspect) != _T("")) {
+			sz_format_tmp.Format(_T(" in aspect '%s'"), aspect);
+			sz_format+=sz_format_tmp;
+		}
+		SetErrorInfo(sz_format);
 		return RESOLV_ERR_get_RoleByStr;
 	
 	}
@@ -1185,6 +1150,7 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 				//		since not interactive, exit
 
 				if (! this->mb_is_interactive) {
+					SetErrorInfo(CString(L"Could not resolve attribute '") + kind + L"'");
 					return RESOLV_ERR_get_AttrByStr;
 				}
 
@@ -1218,6 +1184,7 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
                 }
                 else if( dlgres == IDCANCEL )
                 {
+					SetErrorInfo(CString(L"Could not resolve attribute '") + kind + L"'");
                     return RESOLV_ERR_get_AttrByStr;
                 }				
 
@@ -1240,39 +1207,25 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 		}
 
 //		#pragma bookmark (note: insert helpful message box here get_AttrByStr[] )
-		if (this->mb_is_interactive) {
+		CString sz_format;
+		CComBSTR name;
+		CComBSTR meta_name;
+		objtype_enum objtype;
 
-			CString sz_format;
-			CComBSTR name;
-			CComBSTR meta_name;
-			objtype_enum objtype;
-
-			COMTHROW( parent->get_ObjType(&objtype) );
-			COMTHROW( parent->get_Name(&name) );
-			COMTHROW( parent_metafco->get_Name(&meta_name) );
+		COMTHROW( parent->get_ObjType(&objtype) );
+		COMTHROW( parent->get_Name(&name) );
+		COMTHROW( parent_metafco->get_Name(&meta_name) );
   
 			
-			sz_format.Format(	_T("No such attribute %s\n")
-								_T("can be found in %s %s\n")
-								_T("of kind %s"),
-					kind,
-					helper_ObjTypeStr(objtype),
-					name.m_str,
-					meta_name.m_str
-			);
-
-			CComPtr<IMgaProject> mgaProject;
-			COMTHROW(parent->get_Project(&mgaProject));
-			CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-			if (pGME) {
-				COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-			}
-			else {
-				AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-			}
-		
-		
-		}
+		sz_format.Format(	_T("No such attribute %s\n")
+							_T("can be found in %s %s\n")
+							_T("of kind %s"),
+				kind,
+				helper_ObjTypeStr(objtype),
+				name.m_str,
+				meta_name.m_str
+		);
+		SetErrorInfo(sz_format);
 
 		return RESOLV_ERR_get_AttrByStr;
 
@@ -1324,8 +1277,13 @@ STDMETHODIMP CMgaResolver::get_RoleByMeta(IMgaModel *parent,
 									p
 								);
 
-	return ((hr == RESOLV_ERR_get_RoleByStr) ? RESOLV_ERR_get_RoleByMeta :
-		hr);
+		if (SUCCEEDED(hr)) {
+			return hr;
+		}
+		else {
+			SetErrorInfo(CString(L"Could not resolve role for kind '") + sz_kind + L"'");
+			return ((hr == RESOLV_ERR_get_RoleByStr) ? RESOLV_ERR_get_RoleByMeta : hr);
+		}
 
 	}
 
@@ -1497,12 +1455,14 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 //			if (valid_role_count == 0)
 //				return RESOLV_ERR_get_ConnRoleByMeta;
 
+			SetErrorInfo(CString(L"Could not resolve connection role"));
 			return RESOLV_ERR_get_ConnRoleByMeta;
 		}
 
 		if (valid_role_count > 0) {
 
 			if ((cdl.DoModal() != IDOK) || (cdl.mn_selection_index == LB_ERR)) {
+				SetErrorInfo(CString(L"Cancelled by user"));
 				return E_ABORT;
 
 			} else {
@@ -1600,7 +1560,7 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			CString sz_format_tmp;
 
 			sz_format_tmp.Format(
-				_T("Paradigm violation!  Cannot make connection for \n")
+				_T("Paradigm violation: cannot make connection for \n")
 				_T("source: %s (%s)"),
 				sz_src_name, sz_src_role_name
 			);
@@ -1650,16 +1610,7 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			);
 			sz_format += sz_format_tmp;
 
-			CComPtr<IMgaProject> mgaProject;
-			COMTHROW(parent->get_Project(&mgaProject));
-			CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-			if (pGME) {
-				COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-			}
-			else {
-				AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-			}
-
+			SetErrorInfo(sz_format);
 			return RESOLV_ERR_get_ConnRoleByMeta;
 
 		}
@@ -1790,10 +1741,11 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 
 		if (!this->mb_is_interactive) {
 
-			if (valid_role_count == 0) {
-				return RESOLV_ERR_get_ConnRoleByMeta;
-			}
+			//if (valid_role_count == 0) {
+			//	return RESOLV_ERR_get_ConnRoleByMeta;
+			//}
 
+			SetErrorInfo(CString(L"Could not resolve reference role'"));
 			return RESOLV_ERR_get_ConnRoleByMeta;
 
 		}
@@ -1901,16 +1853,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 			);
 			sz_format += sz_format_tmp;
 
-			CComPtr<IMgaProject> mgaProject;
-			COMTHROW(parent->get_Project(&mgaProject));
-			CComPtr<IGMEOLEApp> pGME = get_GME(mgaProject);
-			COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-			if (pGME) {
-				COMTHROW(pGME->ConsoleMessage(CComBSTR(sz_format), MSG_ERROR));
-			}
-			else {
-				AfxMessageBox(sz_format, MB_ICONSTOP | MB_OK);
-			}
+			SetErrorInfo(sz_format);
 
 			return RESOLV_ERR_get_ConnRoleByMeta;
 

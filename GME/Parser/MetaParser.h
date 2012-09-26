@@ -13,9 +13,9 @@
 
 class ATL_NO_VTABLE CMgaMetaParser : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaParser, &CLSID_MgaMetaParser>,
-	public ISupportErrorInfoImpl<&IID_IMgaMetaParser>,
-	public IDispatchImpl<IMgaMetaParser, &IID_IMgaMetaParser, &LIBID_MGAParserLib, 1, 1>,
+	public CComCoClass<CMgaMetaParser, &__uuidof(MgaMetaParser)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaMetaParser)>,
+	public IDispatchImpl<IMgaMetaParser, &__uuidof(IMgaMetaParser), &__uuidof(__MGAParserLib), 1, 1>,
 	public IGMEVersionInfoImpl,
 	public CGenParser
 {
@@ -34,7 +34,7 @@ BEGIN_COM_MAP(CMgaMetaParser)
 	COM_INTERFACE_ENTRY(IMgaMetaParser)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IGMEVersionInfo), IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

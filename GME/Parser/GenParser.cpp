@@ -178,7 +178,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 	
 	fireStartFunction(namestr, attributes);
 	}
-	catch(hresult_exception &)
+	catch (hresult_exception &)
 	{
 		if( locator != NULL )
 		{
@@ -193,6 +193,26 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 		}
 
 		throw;
+	}
+	catch (_com_error& e)
+	{
+		std::tstring str;
+		if( locator != NULL )
+		{
+			err_line = locator->getLineNumber();
+			err_column = locator->getColumnNumber();
+
+			// we compose and set the error message for exceptions
+			// [which come from the MGA layer because of meta incompatibility]
+			Format(str, _T("In file %s at line %d, char %d: "), xmlfile.c_str(), err_line, err_column);
+			errorinfo = str.c_str();
+		}
+		if (e.Description() != _bstr_t())
+		{
+			errorinfo = (str + static_cast<const TCHAR*>(e.Description())).c_str();
+			throw_com_error(e.Error(), e.Description());
+		}
+		throw hresult_exception(e.Error());
 	}
 }
 
@@ -240,7 +260,25 @@ void CGenParser::endElement(const XMLCh* const name)
 
 		throw;
 	}
+	catch (_com_error& e)
+	{
+		std::tstring str;
+		if( locator != NULL )
+		{
+			err_line = locator->getLineNumber();
+			err_column = locator->getColumnNumber();
 
+			// we compose and set the error message for exceptions
+			// [which come from the MGA layer because of meta incompatibility]
+			Format(str, _T("In file %s at line %d, char %d: "), xmlfile.c_str(), err_line, err_column);
+			errorinfo = str.c_str();
+		}
+		if (e.Description() != _bstr_t())
+		{
+			errorinfo = (str + static_cast<const TCHAR*>(e.Description())).c_str();
+		}
+		throw hresult_exception(e.Error());
+	}
 }
 
 void CGenParser::characters(const XMLCh* const chars, const XMLSize_t length)

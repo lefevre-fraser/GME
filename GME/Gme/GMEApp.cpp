@@ -2250,7 +2250,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Importing ")) + file_name + _T("..."), 1);
 		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
 		if (parser2 && m_pMainWnd)
-			COMTHROW(parser2->ParseProject2(theApp.mgaProject,PutInBstr(fullPath), (ULONGLONG)(m_pMainWnd->GetSafeHwnd())));
+			parser2->__ParseProject2(theApp.mgaProject,_bstr_t(fullPath), (ULONGLONG)(m_pMainWnd->GetSafeHwnd()));
 		else
 			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(fullPath)) );
 		

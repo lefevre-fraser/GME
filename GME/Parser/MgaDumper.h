@@ -35,9 +35,9 @@ class GmeEqual
 
 class ATL_NO_VTABLE CMgaDumper : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaDumper, &CLSID_MgaDumper>,
-	public ISupportErrorInfoImpl2<&IID_IMgaDumper, &IID_IMgaDumper2>,
-	public IDispatchImpl<IMgaDumper2, &IID_IMgaDumper2, &LIBID_MGAParserLib, 1, 1>,
+	public CComCoClass<CMgaDumper, &__uuidof(MgaDumper)>,
+	public ISupportErrorInfoImpl2<&__uuidof(IMgaDumper), &_uuidof(IMgaDumper2)>,
+	public IDispatchImpl<IMgaDumper2, &__uuidof(IMgaDumper2), &__uuidof(__MGAParserLib), 1, 1>,
 	public IGMEVersionInfoImpl
 {
 public:
@@ -56,7 +56,7 @@ BEGIN_COM_MAP(CMgaDumper)
 	COM_INTERFACE_ENTRY2(IDispatch, IMgaDumper2)
 	COM_INTERFACE_ENTRY(IMgaDumper2)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IGMEVersionInfo), IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- Methods

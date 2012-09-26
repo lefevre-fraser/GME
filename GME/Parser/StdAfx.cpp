@@ -7,3 +7,5 @@
 #ifdef _ATL_STATIC_REGISTRY
 #include <statreg.h>
 #endif
+
+#import "MgaUtilLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
