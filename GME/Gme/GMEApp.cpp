@@ -667,7 +667,7 @@ void CGMEApp::Autosave()
 // CGMEApp MGA project management
 
 
-void CGMEApp::CloseProject(bool updateStatusBar)
+void CGMEApp::CloseProject(bool updateStatusBar, bool force_abort)
 {
 
 	CWaitCursor wait;
@@ -706,8 +706,8 @@ void CGMEApp::CloseProject(bool updateStatusBar)
 
 	if( mgaProject != NULL ) {
 		mgaClient = NULL;
-		if(mgaProject->Close(abort_on_close ? VARIANT_TRUE : VARIANT_FALSE) != S_OK) {
-			AfxMessageBox(CString(_T("Error occurred ")) + (abort_on_close ? _T("aborting") : _T("closing")) + _T(" the project"));
+		if(mgaProject->Close((abort_on_close || force_abort) ? VARIANT_TRUE : VARIANT_FALSE) != S_OK) {
+			AfxMessageBox(CString(_T("Error occurred ")) + ((abort_on_close || force_abort) ? _T("aborting") : _T("closing")) + _T(" the project"));
 		}
 		mgaProject.Release();
 	}
@@ -1515,7 +1515,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 		}
 		AfterOpenOrCreateProject(conn);
 	}
-	MSGCATCH(_T("Could not open project"), CloseProject())
+	MSGCATCH(_T("Could not open project"), CloseProject(true, true))
 	
 	UpdateProjectName();
 

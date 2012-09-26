@@ -146,7 +146,7 @@ public:
 	void ImportDroppedFile(const CString& fname);
 	void RegisterDroppedFile( const CString& fname, bool userReg = true);
 	bool SafeCloseProject();
-	void CloseProject(bool updateStatusBar = true);
+	void CloseProject(bool updateStatusBar = true, bool force_abort=false);
 	void OpenProject(const CString &conn);
 	void Importxml(CString fullPath, CString fname, CString ftitle);
 	void SaveProject(const CString &conn);
