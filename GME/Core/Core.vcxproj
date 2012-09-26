@@ -395,6 +395,7 @@
   <ItemGroup>
     <None Include="Core.def" />
     <None Include="CoreBinFile.rgs" />
+    <None Include="CoreCollectionHandler.rgs" />
     <None Include="CoreMetaProject.rgs" />
     <None Include="CoreProject.rgs" />
     <None Include="MetaStaticProject.rgs" />

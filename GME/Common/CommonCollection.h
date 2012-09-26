@@ -148,6 +148,32 @@ template<class ITFTYPE>
 void push_best(std::vector<ITFTYPE*> &into, ITFTYPE *o) { into.push_back(o); }
 
 template<class COLLITF, class COLLTYPE, class ITFTYPE, class OBJTYPE>
+class ATL_NO_VTABLE CCoreCollection;
+
+class __declspec(uuid("9FE3BB80-B596-41BA-910F-0FF9C3B4F38A")) CoreCollectionHandlerCLSID;
+
+template<class COLLITF, class COLLTYPE, class ITFTYPE, class OBJTYPE>
+class CCoreCollectionMarshalTearOff : 
+	public CComTearOffObjectBase<CCoreCollection<COLLITF, COLLTYPE, ITFTYPE, OBJTYPE>>,
+	IStdMarshalInfo
+{
+BEGIN_COM_MAP(CCoreCollectionMarshalTearOff)
+	COM_INTERFACE_ENTRY(IStdMarshalInfo)
+END_COM_MAP()
+
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetClassForHandler( 
+            __in  DWORD dwDestContext,
+            __reserved  void *pvDestContext,
+            __out  CLSID *pClsid)
+	{
+		*pClsid = __uuidof(CoreCollectionHandlerCLSID);
+		return S_OK;
+	}
+};
+
+
+template<class COLLITF, class COLLTYPE, class ITFTYPE, class OBJTYPE>
 class ATL_NO_VTABLE CCoreCollection :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public ICollectionOnSTLImpl<
@@ -161,11 +187,13 @@ public:
 	typedef typename COLLTYPE::iterator ITERTYPE;
 	typedef CopyItfFromObj<ITFTYPE, OBJTYPE> FILL_COPYTYPE;
 	typedef CopyItfFromItf<ITFTYPE> GETALL_COPYTYPE;
+	typedef typename CCoreCollectionMarshalTearOff<COLLITF, COLLTYPE, ITFTYPE, OBJTYPE> ColTearOff;
 
 BEGIN_COM_MAP(CLASS)
 	COM_INTERFACE_ENTRY(COLLITF)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
+	COM_INTERFACE_ENTRY_TEAR_OFF(IID_IStdMarshalInfo, ColTearOff)
 END_COM_MAP()
 
 public:

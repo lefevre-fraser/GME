@@ -16,6 +16,7 @@
     <comClass clsid="{43D12128-12CA-11D3-A6EC-0060082DF884}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" description="CoreMetaAttributes Class" threadingModel="Apartment"/>
     <comClass clsid="{43D12112-22CA-11D3-A6EC-0060082DF884}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" description="CoreObjects Class" threadingModel="Apartment"/>
     <comClass clsid="{43D12128-22CA-11D3-A6EC-0060082DF884}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" description="CoreAttributes Class" threadingModel="Apartment"/>
+    <comClass clsid="{9FE3BB80-B596-41BA-910F-0FF9C3B4F38A}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" description="CoreCollectionHandler Class" threadingModel="Both"/>
     <typelib tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" resourceid="1" version="1.0" helpdir="" flags="HASDISKIMAGE"></typelib>
   </file>
   <comInterfaceExternalProxyStub name="ICoreProject" iid="{AD9DFA4E-2A3B-11D3-B36C-0060082DF884}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" proxyStubClsid32="{00020424-0000-0000-C000-000000000046}"></comInterfaceExternalProxyStub>
@@ -32,4 +33,8 @@
   <comInterfaceExternalProxyStub name="ISupportErrorInfo" iid="{DF0B3D60-548F-101B-8E65-08002B2BD119}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" proxyStubClsid32="{DF0B3D60-548F-101B-8E65-08002B2BD119}"></comInterfaceExternalProxyStub>
   <comInterfaceExternalProxyStub name="IGMEVersionInfo" iid="{9A228010-020B-11D2-BBB3-0040051F7117}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" proxyStubClsid32="{00020424-0000-0000-C000-000000000046}"></comInterfaceExternalProxyStub>
   <comInterfaceExternalProxyStub name="ICoreObjects" iid="{43D12111-22CA-11D3-A6EC-0060082DF884}" tlbid="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" proxyStubClsid32="{00020424-0000-0000-C000-000000000046}"></comInterfaceExternalProxyStub>
+
+  <!-- comInterfaceProxyStub iid="{}" name="I" tlbid="{}" baseInterface="{iid}" proxyStubClsid32="{}"	threadingModel="Both"/ -->
+
+
 </assembly>

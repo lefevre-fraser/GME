@@ -8,6 +8,7 @@
 #define IDR_COREBINFILE                 203
 #define IDR_COREMETAPROJECT             204
 #define IDR_COREXMLFILE                 206
+#define IDR_CORECOLLECTIONHANDLER       103
 
 // Next default values for new objects
 // 

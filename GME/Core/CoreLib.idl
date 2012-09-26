@@ -121,6 +121,15 @@ library MGACoreLib
 		interface ISupportErrorInfo;
 	};
 
+	[
+		uuid(9FE3BB80-B596-41BA-910F-0FF9C3B4F38A)
+	]
+	coclass CoreCollectionHandler
+	{
+		[default] interface IUnknown;
+	};
+
+
 	MGACOLL_COCLASS(43D12112-12CA-11D3-A6EC-0060082DF884, CoreMetaObject)
 	MGACOLL_COCLASS(43D12128-12CA-11D3-A6EC-0060082DF884, CoreMetaAttribute)
 	MGACOLL_COCLASS(43D12112-22CA-11D3-A6EC-0060082DF884, CoreObject)
