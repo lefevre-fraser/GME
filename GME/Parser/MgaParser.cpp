@@ -1016,7 +1016,7 @@ void CMgaParser::StartFolder(const attributes_type &attributes)
 		COMTHROW(resolver->put_IsInteractive(previactmode));
 
 		bool cheat = false;
-		if(hr != S_OK && libn.size()) {
+		if(FAILED(hr) && libn.size()) {
 			CComPtr<IMgaMetaProject> mp;  // it is a library, maybe a rootfolder
 			COMTHROW(project->get_RootMeta(&mp));
 			COMTHROW(mp->get_RootFolder(PutOut(meta)));
@@ -1027,6 +1027,13 @@ void CMgaParser::StartFolder(const attributes_type &attributes)
 			}
 			COMTHROW(project->CheckSupress(VARIANT_TRUE));
 			cheat = true;
+		} else if (FAILED(hr)) {
+			_bstr_t error;
+			if (GetErrorInfo(error.GetAddress()))
+			{
+				throw_com_error(hr, error);
+			}
+			COMTHROW(hr);
 		}
 		ASSERT(meta);
 	
