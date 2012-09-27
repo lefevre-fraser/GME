@@ -33,6 +33,8 @@ public:
 
 // Implementation
 protected:
+	static int CALLBACK SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+	afx_msg void OnParadigmsHeader(NMHDR* pNMHDR, LRESULT* pResult);
 
 	// Generated message map functions
 	//{{AFX_MSG(CMetaPurgeDialog)
@@ -41,6 +43,7 @@ protected:
 	afx_msg void OnPurge();
 	afx_msg void OnSetcurrent();
 	afx_msg void OnClose();
+	afx_msg void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

@@ -1232,7 +1232,7 @@ void CMakeClosure::autoWrap()
 	for( unsigned int l = 1; l < k; ++l)
 	{
 		std::string next_path = path_map[ l];
-		unsigned int minlen = min( next_path.length(), common_path.length());
+		unsigned int minlen = std::min( next_path.length(), common_path.length());
 
 		// the strings may look like
 		// id-0065-001/id-0065-002/id-0065-003/
@@ -1253,7 +1253,7 @@ void CMakeClosure::autoWrap()
 		common_path = common_path.substr( 0, pos_of_last_slash + 1); // tailing '/' needed
 
 		std::string next_name = name_map[ l];
-		minlen = min( next_name.length(), common_name.length());
+		minlen = std::min( next_name.length(), common_name.length());
 
 		pos_of_last_slash = 0;
 		newlen = 0;

@@ -39,12 +39,38 @@ BEGIN_MESSAGE_MAP(CMetaPurgeDialog, CDialog)
 	ON_WM_CANCELMODE()
 	ON_BN_CLICKED(IDC_PURGE2, OnPurge)
 	ON_BN_CLICKED(IDC_SETCURRENT, OnSetcurrent)
-	ON_BN_CLICKED(IDCLOSE, OnClose)
+	ON_BN_CLICKED(IDOK, OnOK)
+	ON_NOTIFY(LVN_COLUMNCLICK, IDC_PURGELIST, OnParadigmsHeader)
+	
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CMetaPurgeDialog message handlers
+
+struct SortParam {
+	CListCtrl& list;
+	int columnIndex;
+};
+
+int CALLBACK CMetaPurgeDialog::SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort) {
+	SortParam& param = *(SortParam*)lParamSort;
+	
+	CString a = param.list.GetItemText(lParam1, param.columnIndex);
+	CString b = param.list.GetItemText(lParam2, param.columnIndex);
+
+	return _tcsicmp(a, b);
+}
+
+
+void CMetaPurgeDialog::OnParadigmsHeader(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NMLISTVIEW *pLV = (NMLISTVIEW *) pNMHDR;
+	SortParam s = { this->m_list, pLV->iSubItem };
+	m_list.SortItemsEx(SortFunc, (DWORD)(void*)&s);
+	
+	*pResult = 0;
+}
 
 
 BOOL CMetaPurgeDialog::OnInitDialog() 
@@ -56,7 +82,6 @@ BOOL CMetaPurgeDialog::OnInitDialog()
     LRESULT dwStyle = listctrl->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE,0,0);
     dwStyle |= LVS_EX_FULLROWSELECT;
     listctrl->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
-
 
 	MSGTRY
 	{
@@ -77,12 +102,18 @@ BOOL CMetaPurgeDialog::OnInitDialog()
 		lvc.cx = 250;
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
-
 		lvc.pszText = _T("Connection String");
-		lvc.cx = 300;
+		lvc.cx = 350;
 		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
 
 		ResetItems();
+
+		listctrl->SetColumnWidth(1,LVSCW_AUTOSIZE);
+		listctrl->SetColumnWidth(2,LVSCW_AUTOSIZE);
+		CRect rect;
+		listctrl->GetClientRect(&rect);
+		int width = std::max(300, rect.Width() - (listctrl->GetColumnWidth(0) + listctrl->GetColumnWidth(1) + listctrl->GetColumnWidth(2)));
+		listctrl->SetColumnWidth(3, width);
 	}
 	MSGCATCH(_T("Error while initializing MetaPurgeDlg"),;)
 		
@@ -93,7 +124,6 @@ BOOL CMetaPurgeDialog::OnInitDialog()
 void CMetaPurgeDialog::OnCancelMode() 
 {
 	CDialog::OnCancelMode();
-	
 }
 
 void CMetaPurgeDialog::ResetItems()
@@ -209,7 +239,19 @@ void CMetaPurgeDialog::OnSetcurrent()
 	MSGCATCH(_T("Error while setting current version"),;)
 }
 
+void CMetaPurgeDialog::OnOK()
+{
+	if (m_list.GetFirstSelectedItemPosition())
+	{
+		if (::MessageBox(GetSafeHwnd(), L"Do you want to purge the selected items?", L"Purge/Select", MB_YESNO) == IDYES)
+		{
+			OnPurge();
+		}
+	}
+	__super::OnOK();
+}
+
 void CMetaPurgeDialog::OnClose() 
 {
-	CDialog::OnOK();
+	CDialog::OnClose();
 }
