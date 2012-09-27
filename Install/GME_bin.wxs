@@ -488,6 +488,7 @@
               </Class>
             </AppId>
             <Interface Id="{11BB02D9-2E2C-11D3-B36D-0060082DF884}" Name="IMgaComponent" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{11BB44D9-2E2C-11D3-B36D-0060082DF884}" Name="IMgaComponentEx" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{270B4F92-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaProject" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{270B4F96-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaFolder" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{270B4F98-B17C-11D3-9AD1-00AA00B6FE26}" Name="IMgaFCO" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />

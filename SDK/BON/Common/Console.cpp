@@ -11,7 +11,7 @@ namespace GMEConsole
 	{
 		CComPtr<IMgaClient> client;	
 		CComQIPtr<IDispatch> pDispatch;
-		HRESULT s1 = project->GetClientByName(L"GME.Application", &client);
+		HRESULT s1 = project->GetClientByName(CComBSTR(L"GME.Application"), &client);
 
 		if ((SUCCEEDED(s1)) && (client != 0))
 		{

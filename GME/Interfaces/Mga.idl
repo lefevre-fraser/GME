@@ -609,6 +609,7 @@ interface IMgaComponent : IUnknown
 [
 	object,
 	uuid(11BB44D9-2E2C-11D3-B36D-0060082DF884),
+	oleautomation,
 	helpstring("IMgaComponentEx Interface"),
 	pointer_default(unique)
 
