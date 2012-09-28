@@ -97,6 +97,11 @@ def update_version_str():
 
 def compile_GME():
     "Compile GME core components"
+    if prefs['arch'] == 'x64':
+        # To use 32bit Python.exe for the tests, 32bit CoreCollectionHandler must be registered
+        sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+        tools.build_VS(sln_file, 'Release', arch='Win32', target='Core')
+        tools.system(['regsvr32', '/s', os.path.join(GME_ROOT, "GME", "Release", "Core.dll")])
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
     tools.build_VS( sln_file, "Release" )
     sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln")
