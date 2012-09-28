@@ -321,7 +321,7 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 		CloseAll();
 		clear_GME( m_GME);
 
-		ASSERT( FAILED(e.hr) );
+		ASSERT( FAILED(e.Error()) );
 		if (e.Description() != _bstr_t())
 			SetErrorInfo(e.Description());
 

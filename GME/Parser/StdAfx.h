@@ -58,6 +58,9 @@ typedef GMEInterfaceVersion_enum GMEInterfaceVersion;
 #define __GmeLib_h__
 #define IID_IMgaDataSource __uuidof(IMgaDataSource)
 #define ATTVAL_ENUM _attval_enum
+
+static const long RELID_BASE_MAX  = 0x7FFFFFF;	//assigned to non-derived ojects
+static const long RELID_VALUE_MAX = 0x7FFFFFFF;   // automatically assigned to deriveds
 // End Imports
 
 #include "CommonSmart.h"
