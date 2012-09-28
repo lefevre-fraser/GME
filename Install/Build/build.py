@@ -101,10 +101,10 @@ def compile_GME():
     tools.build_VS( sln_file, "Release" )
     sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln")
     tools.build_VS( sln_file, "Release" )
-    sln_file = os.path.join(GME_ROOT, "GME", "DotNetPIAs", "DotNetPIAs.vcxproj")
-    tools.build_VS( sln_file, "Release" )
     cmd_dir = os.path.join(GME_ROOT, "GME")
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
+    sln_file = os.path.join(GME_ROOT, "GME", "DotNetPIAs", "DotNetPIAs.vcxproj")
+    tools.build_VS( sln_file, "Release" )
 
 def _Release_PGO_dir():
     if prefs['arch'] == 'x64':
