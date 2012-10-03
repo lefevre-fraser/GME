@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(CDialogList, CDialog)
 	//{{AFX_MSG_MAP(CDialogList)
 	ON_BN_CLICKED(IDC_BUTTON_IGNORE, OnButtonIgnore)
 	ON_LBN_DBLCLK(IDC_LIST, OnDblclkList)
+	ON_LBN_SELCHANGE(IDC_LIST, OnChangeList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -80,7 +81,8 @@ BOOL CDialogList::OnInitDialog()
 
     m_btnIgnore.ShowWindow( m_hasIgnore ? SW_SHOW : SW_HIDE );
 
-
+	CWnd* wndOK = this->GetDlgItem(IDOK);
+	wndOK->EnableWindow(FALSE);
 	
 	return TRUE;
 }
@@ -103,4 +105,10 @@ void CDialogList::OnButtonIgnore()
 void CDialogList::OnDblclkList(void)
 {
 	OnOK();
+}
+
+void CDialogList::OnChangeList(void)
+{
+	CWnd* wndOK = this->GetDlgItem(IDOK);
+	wndOK->EnableWindow(TRUE);
 }

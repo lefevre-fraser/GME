@@ -1752,7 +1752,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 
 		if (valid_role_count > 0) {
 
-			if (cdl.DoModal() != IDOK) {
+			if (cdl.DoModal() != IDOK || (cdl.mn_selection_index == LB_ERR)) {
 				return E_ABORT;
 
 			} else {

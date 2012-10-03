@@ -48,6 +48,7 @@ protected:
 	virtual void OnOK();
 	afx_msg void OnButtonIgnore();
 	afx_msg void OnDblclkList();
+	afx_msg void OnChangeList();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

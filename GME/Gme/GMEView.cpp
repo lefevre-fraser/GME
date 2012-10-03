@@ -3728,6 +3728,7 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 								COMTHROW(doc->resolver->put_IsStickyEnabled(::GetKeyState(VK_SHIFT) < 0 ? VARIANT_FALSE :VARIANT_TRUE));
 								HRESULT hr = doc->resolver->get_RefRoleByMeta(currentModel,aspect,fco,&role);
 								if (hr == E_ABORT) {
+									AbortTransaction(hr);
 									return false;
 								} else {
 									COMTHROW(hr);
