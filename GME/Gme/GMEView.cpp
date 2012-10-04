@@ -4007,9 +4007,9 @@ void CGMEView::FillModelGrid()
 		if(!modelGrid.IsAvailable(obj)) {
 			CRect loc = obj->GetLocation();
 			if(!modelGrid.GetClosestAvailable(obj, loc)) {
-				AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
-				EndWaitCursor();
-				return;
+				//AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
+				//EndWaitCursor();
+				break;
 			}
 			// ASSERT(modelGrid.IsAvailable(loc));
 			if (!executingPendingRequests && !IsInstance()) {
@@ -8994,8 +8994,8 @@ void CGMEView::SyncOnGrid(CGuiObject *obj, int aspectIndexFrom, int aspectIndexT
 
 	if (!modelGrid.IsAvailable(obj, aspectIndexFrom)) {//is enough space to occupy the pos taken from the aspFrom aspect?
 		if (!modelGrid.GetClosestAvailable(obj, loc, aspectIndexTo)) { // if cannot get any position close to the position got above
-			AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
-			throw hresult_exception();
+			//AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
+			//throw hresult_exception();
 		}
 	}
 	obj->SetLocation(loc, aspectIndexTo);

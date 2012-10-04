@@ -1734,8 +1734,8 @@ void CGuiObject::ShiftModels(CGuiObjectList& objList, CPoint& shiftBy)
 		CRect rect = obj->GetLocation();
 		rect.MoveToXY(rect.left + shiftBy.x, rect.top + shiftBy.y);
 		if(!modelGrid.GetClosestAvailable(obj, rect)) {
-			AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
-			return;
+			//AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
+			//return;
 		}
 		obj->SetLocation(rect);
 		modelGrid.Set(obj);
