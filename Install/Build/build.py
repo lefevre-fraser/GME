@@ -95,15 +95,34 @@ def update_version_str():
         with open(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h'), 'w') as header:
             header.write(text)
 
+def _remove_dlldata_from_tlog():
+    ''' Workaround for http://connect.microsoft.com/VisualStudio/feedback/details/763929/incremental-build-of-idl-files-behavior-changes-after-installing-visual-studio-2012
+    Incremental build of IDL files behavior changes after installing Visual Studio 2012
+    MSBuild always rebuilds the project because dlldata.c is included in the file tracker log (midl.read.1.tlog) of the project
+    '''
+    tlog = os.path.join(GME_ROOT, "GME", "Interfaces", "Release", "midl.read.1.tlog")
+    if not os.path.isfile(tlog):
+        return
+    import codecs
+    with codecs.open(tlog, encoding='utf-16-le') as f:
+        lines = f.readlines()
+        lines = [line for line in lines if line.find(u'DLLDATA.C') == -1]
+    with codecs.open(tlog, 'w', encoding='utf-16-le') as f:
+        for line in lines: f.write(line)
+        
 def compile_GME():
     "Compile GME core components"
     if prefs['arch'] == 'x64':
         # To use 32bit Python.exe for the tests, 32bit CoreCollectionHandler must be registered
         sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+        _remove_dlldata_from_tlog()
         tools.build_VS(sln_file, 'Release', arch='Win32', target='Core')
+        _remove_dlldata_from_tlog()
         tools.system(['regsvr32', '/s', os.path.join(GME_ROOT, "GME", "Release", "Core.dll")])
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+    _remove_dlldata_from_tlog()
     tools.build_VS( sln_file, "Release" )
+    _remove_dlldata_from_tlog()
     sln_file = os.path.join(GME_ROOT, "GME", "GMEDecorators.sln")
     tools.build_VS( sln_file, "Release" )
     cmd_dir = os.path.join(GME_ROOT, "GME")
@@ -151,14 +170,18 @@ def compile_GME_PGO_Instrument():
     VC_path = os.path.join(prefs['VS_dir'], r"VC\bin\%s" % (prefs['arch'] == 'x64' and 'amd64\\' or ''))
     copy_if_newer(os.path.join(VC_path, r"pgort%s0.dll" % prefs['toolset']), os.path.join(_Release_PGO_dir(), 'pgort%s0.dll' % prefs['toolset']))
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+    _remove_dlldata_from_tlog()
     tools.build_VS(sln_file, "Release_PGO_Instrument")
+    _remove_dlldata_from_tlog()
     cmd_dir = os.path.join(GME_ROOT, "GME")
     tools.system( ['call', 'regPGO.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
 def compile_GME_PGO_Optimize():
     "Compile GME core components (PGO Optimize)"
     sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
+    _remove_dlldata_from_tlog()
     tools.build_VS( sln_file, "Release_PGO_Optimize" )
+    _remove_dlldata_from_tlog()
 
 def PGO_train():
     "Run tests/Create training data for the PGO binaries"
