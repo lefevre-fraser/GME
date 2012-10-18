@@ -77,8 +77,10 @@ public:
 	typedef CMgaAttribute *hashobp;
 	hashobp *prevptr, next;
 	~CMgaAttribute() {						// remove object from hash
-		if(next) next->prevptr = prevptr;
-		*prevptr = next;
+		if (next)
+			next->prevptr = prevptr;
+		if (prevptr)
+			*prevptr = next;
 	}
 	void Initialize(metaref_type mr, FCO *o, CMgaProject *p);   // Throws!!!
 	metaref_type mref;
@@ -132,7 +134,6 @@ public:
 
 	void clear()
 	{
-		size_t mref = 0;
 		for (size_t mref = 0; mref < sizeof(pool) / sizeof(pool[0]); mref++)
 		{
 			CMgaAttribute::hashobp *kk;

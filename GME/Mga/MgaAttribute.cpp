@@ -983,8 +983,10 @@ STDMETHODIMP CMgaPart::put_RegistryValue( BSTR path,  BSTR newval) {
 
 CMgaPart::CMgaPart()	: prevptr(NULL), next(NULL), load_status(ATTSTATUS_INVALID) {	}
 CMgaPart::~CMgaPart() {						// remove object from hash
-		if(next) next->prevptr = prevptr;
-		*prevptr = next;
+		if (next)
+			next->prevptr = prevptr;
+		if (prevptr)
+			*prevptr = next;
 }
 void CMgaPart::Initialize(metaref_type mr, ::FCO *o, CMgaProject *p) {   // Throws!!!
 		mref = mr;		
