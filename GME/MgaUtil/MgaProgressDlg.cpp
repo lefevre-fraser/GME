@@ -136,7 +136,9 @@ STDMETHODIMP CMgaProgressDlg::StopProgressDialog()
 	if( dlg.m_hWnd == NULL )
 		COMRETURN(E_INVALID_USAGE);
 
-	dlg.GetParent()->EnableWindow(TRUE);
+	HWND hwndParent = ::GetParent(dlg.GetSafeHwnd());
+	if (hwndParent)
+		::EnableWindow(hwndParent, TRUE);
 
 	HWND hwnd = dlg.m_hWnd;
 	dlg.Detach();
