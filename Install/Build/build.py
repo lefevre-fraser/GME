@@ -139,6 +139,9 @@ def copy_if_newer(source, target):
 
 def compile_GME_PGO_Instrument():
     "Compile GME core components (PGO Instrument)"
+    # e.g. Dispatch("MGA.MgaParser") locks Parser.dll. FreeLibary it here
+    import ctypes
+    ctypes.windll.ole32.CoFreeUnusedLibraries()
     import errno
     try:
         os.makedirs(_Release_PGO_dir())
