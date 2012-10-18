@@ -292,8 +292,8 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 			COMTHROW( project->put_Version(projectversion) );
 		}
 
-		COMTHROW( project->CommitTransaction() );
-		COMTHROW( project->Notify(APPEVENT_XML_IMPORT_END));
+		project->__CommitTransaction();
+		project->__Notify(APPEVENT_XML_IMPORT_END);
 		project = NULL;
 
 		CloseAll();
