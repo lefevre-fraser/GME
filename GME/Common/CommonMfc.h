@@ -272,7 +272,8 @@ void DisplayError(const TCHAR *msg, HRESULT hr) NOTHROW;
 	catch(hresult_exception &e) \
 	{ \
 		{ CLEANUP; } \
-		DisplayError(MSG, e.hr); \
+		if (e.hr != E_MGA_CONSTRAINT_VIOLATION) \
+			DisplayError(MSG, e.hr); \
 	} \
 	catch(_com_error &e) { \
 		{ CLEANUP; } \
@@ -281,7 +282,8 @@ void DisplayError(const TCHAR *msg, HRESULT hr) NOTHROW;
 			error = e.Description(); \
 		else \
 			GetErrorInfo(e.Error(), error.GetAddress()); \
-		AfxMessageBox(_bstr_t(MSG) + ": " + error, MB_OK | MB_ICONSTOP); \
+		if (e.Error() != E_MGA_CONSTRAINT_VIOLATION) \
+			AfxMessageBox(_bstr_t(MSG) + ": " + error, MB_OK | MB_ICONSTOP); \
 	}
 
 #endif//MGA_COMMONMFC_H

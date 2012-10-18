@@ -7829,8 +7829,8 @@ void CGMEView::OnConncntxReverse()
 				}
 				connection->RegistryValue[autoroutePrefKey] = autoroutePref;
 			}
-			CommitTransaction();
-		} MSGCATCH(L"Could not delete connection", ;)
+			__CommitTransaction();
+		} MSGCATCH(L"Could not reverse connection direction", --inTransaction; theApp.mgaProject->AbortTransaction();)
 		contextSelection = 0;
 		contextPort = 0;
 	}

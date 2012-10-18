@@ -752,7 +752,11 @@ namespace OclGmeCM
 			m_bViolationDlgExpanded = dlgErrors.IsExpanded();
 			if (punk)
 				dlgErrors.GetGotoPunk(punk);
-			return ( iResult != IDOK ) ? E_MGA_CONSTRAINT_VIOLATION : S_OK;
+			if ( iResult != IDOK ) {
+				SetErrorInfo(L"Constraint violation");
+				return E_MGA_CONSTRAINT_VIOLATION;
+			} else
+				S_OK;
 		}
 		else
 			if ( bShowProgress && closeNotRequested )
