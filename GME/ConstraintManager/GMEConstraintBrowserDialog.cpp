@@ -565,7 +565,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			case Ocl::Constraint::CS_CHECK_FAILED : {
 				iImNumS = CSIMG_SEMANTIC_ERROR;
 				std::string strType = spConstraint->GetFullName();
-				int iPos = strType.rfind( ":" );
+				auto iPos = strType.rfind( ":" );
 				strType = strType.substr( 0, iPos - 1 );
 				try {
 					m_pFacade->GetTreeManager()->GetTypeManager()->GetType( strType, NILNAMESPACE );
@@ -964,7 +964,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			strType = spConstraint->GetContextType();
 		else {
 			strType = spConstraint->GetFullName();
-			int iPos = strType.rfind( ":" );
+			auto iPos = strType.rfind( ":" );
 			strType = strType.substr( 0, iPos - 1 );
 		}
 
