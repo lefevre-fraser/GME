@@ -143,30 +143,6 @@ CComBSTR Now(void) {
 #include "MgaO.h"
 
 
-struct errtab {
-	long code;
-	LPOLESTR descr;
-};
-
-#include "MgaErr.c"
-
-#define MGAERRCODEBASE 0x87650000
-#define MGAERRCODESPAN 0x1000
-
-void MgaSetErrorInfo(HRESULT hr) {
-	if(hr >= MGAERRCODEBASE && hr < MGAERRCODEBASE + MGAERRCODESPAN) {
-		for(struct errtab const *hh = MgaErrTab; hh->code != 0; hh++) { 
-			if(hh->code == hr) {
-				SetErrorInfo(hh->descr);
-				return;
-			}
-		}
-		return;
-	}
-//  Do not set errorinfo if it is returned by other modules, it is their responsibility
-//	SetErrorInfo(hr);
-}
-
 #ifdef DEBUG
 
 HRESULT CheckErrTab(void) {

@@ -3846,6 +3846,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 		}
 		catch (hresult_exception& e) {
 			AbortTransaction(e.hr);
+			if (e.hr == E_MGA_CONSTRAINT_VIOLATION)
+				return false;
 			_bstr_t err;
 			GetErrorInfo(e.hr, err.GetAddress());
 			AfxMessageBox((std::wstring(L"Unable to insert objects: ") + static_cast<const wchar_t*>(err)).c_str(), MB_ICONSTOP | MB_OK); // in most cases there was an error msg already...
@@ -3903,6 +3905,8 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 			_bstr_t err;
 			GetErrorInfo(e.hr, err.GetAddress());
 			AbortTransaction(e.hr);
+			if (e.hr == E_MGA_CONSTRAINT_VIOLATION)
+				return false;
 			AfxMessageBox((std::wstring(L"Unable to insert objects: ") + static_cast<const wchar_t*>(err)).c_str(), MB_ICONSTOP | MB_OK);
 			CGMEEventLogger::LogGMEEvent(_T("    Unable to insert objects.\r\n"));
 			newObjectIDs.RemoveAll();

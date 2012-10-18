@@ -286,7 +286,7 @@ public:
 	if(hr != S_OK) return hr; \
 	try
 
-void MgaSetErrorInfo(HRESULT hr);
+bool MgaSetErrorInfo(HRESULT hr);
 
 #define COMCATCH_IN_TRANSACTION( CLEANUP )  \
 	catch(hresult_exception &e) \

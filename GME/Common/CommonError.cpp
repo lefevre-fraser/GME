@@ -145,6 +145,38 @@ void SetErrorInfo(LPCOLESTR desc)
 	}
 }
 
+
+struct errtab {
+	long code;
+	LPOLESTR descr;
+};
+
+#include "..\Mga\MgaErr.c"
+
+#define MGAERRCODEBASE 0x87650000
+#define MGAERRCODESPAN 0x1000
+
+LPCOLESTR MgaGetErrorInfo(HRESULT hr) {
+	if(hr >= MGAERRCODEBASE && hr < MGAERRCODEBASE + MGAERRCODESPAN) {
+		for(struct errtab const *hh = MgaErrTab; hh->code != 0; hh++) { 
+			if(hh->code == hr) {
+				return hh->descr;
+			}
+		}
+	}
+	return NULL;
+}
+
+bool MgaSetErrorInfo(HRESULT hr) {
+	LPCOLESTR mgaError = MgaGetErrorInfo(hr);
+	if (mgaError)
+	{
+		SetErrorInfo(mgaError);
+		return true;
+	}
+	return false;
+}
+
 void SetErrorInfo(HRESULT hr, LPOLESTR desc2)
 {
 	ASSERT( sizeof(common_descs)/sizeof(LPOLESTR) == (E_COMMON_LAST-E_COMMON_FIRST+1) );
@@ -162,6 +194,10 @@ void SetErrorInfo(HRESULT hr, LPOLESTR desc2)
 	{
 		if( desc != NULL )
 			SetErrorInfo(desc);
+		else if (hr >= MGAERRCODEBASE && hr < MGAERRCODEBASE + MGAERRCODESPAN)
+		{
+			MgaSetErrorInfo(hr);
+		}
 	}
 	else
 	{
@@ -209,6 +245,14 @@ void GetErrorInfo(HRESULT hr, BSTR *p)
 		SysFreeString(*p);
 		*p = SysAllocString(desc);
 	}
+	else if (hr >= MGAERRCODEBASE && hr < MGAERRCODEBASE + MGAERRCODESPAN)
+	{
+		LPCOLESTR mgaError = MgaGetErrorInfo(hr);
+		if (mgaError)
+			*p = SysAllocString(mgaError);
+		else
+			GetErrorInfo(E_FAIL, p);
+	}
 	else
 	{
 		LPWSTR errorText = NULL;
@@ -219,7 +263,10 @@ void GetErrorInfo(HRESULT hr, BSTR *p)
 			*p = SysAllocString(errorText);
 			LocalFree(errorText);
 		} else {
-			GetErrorInfo(p);
+			if (!GetErrorInfo(p))
+			{
+				GetErrorInfo(E_FAIL, p);
+			}
 		}
 	}
 }
