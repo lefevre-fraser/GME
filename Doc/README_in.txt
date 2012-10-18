@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 12.8.14
+                 GME 12.10.18
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -25,6 +25,19 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 12.10.18
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Add "Reverse connection direction" to context menu for connections in the model editor
+  - Fixed model editor Decorator layout bug, which could cause GME to become nonresponsive and run out of memory
+  - Fix out-of-proc marshaling of GetAll for COM collections (e.g. IMgaFCOs). This allows you to run x86 Udm interpreters in 64bit GME (your CLSID will need an AppId)
+  - Added progress bar to xme export
+  - Fix error message if an AddOn fails during CommitTransaction, ModelOpen, or ModelClose
+  - Fix bug where GME crashes with command-line .mga and Tree Browser state (GME-407)
+  - Do not round decorator sizes
+  - Fix some resource leaks that could result in an "Encountered an invalid argument" error
+  - Better error messages when parsing xme fails
 
 Release Notes of Release 12.8.14
 ----------------------------------
