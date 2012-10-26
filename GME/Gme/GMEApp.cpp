@@ -34,6 +34,13 @@
 #pragma comment(lib, "CrashRpt.lib")
 #endif
 
+#import "C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\mscorlib.tlb"
+namespace CSGUI {
+using namespace mscorlib;
+}
+#import "CSGUI.tlb"
+
+#pragma comment(linker, "\"/manifestdependency:type='win32' processorArchitecture='msil' name='CSGUI' version='1.0.0.0' language='*'\"")
 #ifndef _DEBUG
 #pragma comment(linker, "\"/manifestdependency:type='win32' name='Core' version='1.0.0.0' language='*'\"")
 #pragma comment(linker, "\"/manifestdependency:type='win32' name='Meta' version='1.0.0.0' language='*'\"")
@@ -53,6 +60,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 // ATL ///////////////////////////////////////////////////////////////////////////
+#include <atlsafe.h>
 #include "mga_i.c"
 #include "meta_i.c"
 #include "Splash.h"
@@ -294,7 +302,8 @@ BOOL CGMEApp::InitInstance()
 	ParseCommandLine(cmdInfo);
 	
 	if( cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen || cmdInfo.m_nShellCommand == CCommandLineInfo::AppRegister)
-		cmdInfo.m_bShowSplash = false;
+		;
+	cmdInfo.m_bShowSplash = false;
 
 	CSplashWnd::EnableSplashScreen(cmdInfo.m_bShowSplash);
 	// CG: The following block was inserted by 'Status Bar' component.
@@ -521,16 +530,55 @@ BOOL CGMEApp::OpenCommandLineProject()
 		OpenProject(conn);
 
 		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+		return TRUE;
 	}
  	else if(cmdInfo.bOpenLast && !m_RecentProjectList[0].IsEmpty())
 	{
  		OpenProject(m_RecentProjectList[0]);
  		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+		return TRUE;
  	}
 
 	// Dispatch commands specified on the command line
 	//if (!ProcessShellCommand(cmdInfo))
 	//	return FALSE;
+	return FALSE;
+}
+
+BOOL CGMEApp::ShowWelcomeWindow()
+{
+	CSGUI::_WelcomeScreenExpPtr ws;
+	ws.CreateInstance(L"MGA.WelcomeScreen");
+	if (ws)
+	try {
+		ATL::CComSafeArray<BSTR> recents;
+		for (int i = 0; i < m_RecentProjectList.GetSize(); i++)
+		{
+			recents.Add(CComBSTR(m_RecentProjectList[i]));
+		}
+		VARIANT vrecents;
+		vrecents.parray = (SAFEARRAY*)recents;
+		vrecents.vt = VT_ARRAY | VT_BSTR;
+		ws->SetRecentProjects(_variant_t(vrecents));
+		_bstr_t SelectedProject = ws->ShowWelcomeWindow((unsigned long)m_pMainWnd->GetSafeHwnd());
+
+		if (SelectedProject != _bstr_t()) {
+			if (SelectedProject == ws->CREATE_SENTINEL) {
+				OnFileNew();
+			} else {
+				CString conn = static_cast<const wchar_t*>(SelectedProject);
+				if(conn.Find(_T("=")) < 0) {
+					if (conn.Right(4).CompareNoCase(_T(".xme")) == 0)
+						conn.Insert(0, _T("XML="));
+					else
+						conn.Insert(0,_T("MGA="));
+				}
+				OpenProject(conn);
+			}
+		}
+	} catch (_com_error& e) {
+		//AfxMessageBox(e.ErrorMessage());
+	}
 	return TRUE;
 }
 
@@ -578,7 +626,7 @@ int CGMEApp::Run()
 		}
 	}
 
-	OpenCommandLineProject();
+	OpenCommandLineProject() || ShowWelcomeWindow();
 
 	int retVal = 0;
 	if (bNoProtect) {

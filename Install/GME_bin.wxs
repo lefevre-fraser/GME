@@ -264,6 +264,12 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="INSTALLDIR">
+      <Component>
+        <File Source="..\GME\CSGUI\bin\Release\CSGUI.dll" />
+      </Component>
+    </DirectoryRef>
+
     <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="Meta.dll">
         <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Meta.dll">

@@ -57,18 +57,22 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\CrashRpt.props" />
+    <Import Project="..\CSGUI\CSGUI.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\CrashRpt.props" />
+    <Import Project="..\CSGUI\CSGUI.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\CrashRpt.props" />
+    <Import Project="..\CSGUI\CSGUI.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\CrashRpt.props" />
+    <Import Project="..\CSGUI\CSGUI.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -93,7 +97,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
+      <Command>xcopy /Y/D/F ..\CSGUI\bin\Release\CSGUI.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSender.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
 </Command>
@@ -138,7 +143,8 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
+      <Command>xcopy /Y/D/F ..\CSGUI\bin\Release\CSGUI.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSender.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
 </Command>
@@ -182,7 +188,8 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
+      <Command>xcopy /Y/D/F ..\CSGUI\bin\Debug\CSGUI.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
 </Command>
@@ -223,7 +230,8 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
+      <Command>xcopy /Y/D/F ..\CSGUI\bin\Debug\CSGUI.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
 </Command>
@@ -264,6 +272,9 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{bef31e1e-bb02-4687-a543-a6ad5d522869}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\CSGUI\CSGUI.csproj">
+      <Project>{6fc5fb26-36be-4f8b-aee9-8fd9914d666c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.vcxproj">
       <Project>{a9ba4850-c3d5-45dc-98b3-c29ec9fd54eb}</Project>

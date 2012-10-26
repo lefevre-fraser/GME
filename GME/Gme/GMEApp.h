@@ -81,6 +81,7 @@ public:
 	}
 
 	BOOL OpenCommandLineProject();
+	BOOL ShowWelcomeWindow();
 
 private:
 	virtual int Run();
