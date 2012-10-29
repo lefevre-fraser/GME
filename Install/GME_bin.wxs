@@ -264,13 +264,10 @@
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR">
+    <DirectoryRef Id="INSTALLDIR_BIN">
       <Component>
         <File Source="..\GME\CSGUI\bin\Release\CSGUI.dll" />
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR_BIN">
       <Component Id="Meta.dll">
         <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Meta.dll">
           <TypeLib Id="{0ADEEC71-D83A-11D3-B36B-005004D38590}" Description="MGA Meta Type Library" Language="0" MajorVersion="1" MinorVersion="0">
