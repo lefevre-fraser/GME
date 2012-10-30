@@ -62,6 +62,7 @@ BEGIN_DISPATCH_MAP(CConsoleCtrl, COleControl)
     DISP_FUNCTION(CConsoleCtrl, "LoadScript", LoadScript, VT_EMPTY, VTS_BSTR)
 	DISP_FUNCTION(CConsoleCtrl, "RunLoadedScript", RunScript, VT_EMPTY, VTS_NONE)
 	DISP_FUNCTION(CConsoleCtrl, "SetContents", SetContents, VT_EMPTY, VTS_BSTR)
+	DISP_FUNCTION(CConsoleCtrl, "RunCode", RunCode, VT_EMPTY, VTS_BSTR)
 	DISP_PROPERTY_EX_ID(CConsoleCtrl, "GetCWnd", 0x43576E64, GetCWnd, SetCWnd, VT_I8)
 	DISP_FUNCTION_ID(CConsoleCtrl, "AboutBox", DISPID_ABOUTBOX, AboutBox, VT_EMPTY, VTS_NONE)
 	//}}AFX_DISPATCH_MAP

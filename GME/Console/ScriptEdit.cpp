@@ -41,7 +41,7 @@ bool CScriptEdit::Init(CConsoleCtrl *cons)
 		_bstr_t engine(L"JScript");
 //		_bstr_t engine(L"Python.AXScript.2");
 		COMTHROW(m_host->InitEngine(m_console->GetIDispatch(false), engine));
-		this->LimitText( 256);
+		this->LimitText(1024 * 4);
 		this->SetWindowText( defPrompt); // to attract user attention
 	}
 	catch(hresult_exception &e) 

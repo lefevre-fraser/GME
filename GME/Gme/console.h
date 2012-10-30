@@ -53,6 +53,7 @@ public:
 	void SetGMEApp(IDispatch *idp);
 	void SetGMEProj(IDispatch *idp);
 	void NavigateTo(LPCTSTR url);
+	void RunCode(BSTR code);
 };
 
 //{{AFX_INSERT_LOCATION}}

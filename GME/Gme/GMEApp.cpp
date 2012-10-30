@@ -180,12 +180,14 @@ CGMEApp::~CGMEApp()
 class CGMECommandLineInfo : public CCommandLineInfo {
 public:
  	bool bNoProtect, bOpenLast;
+	CString run;
  	CGMECommandLineInfo() : bNoProtect(false), bOpenLast(false) { ; }
 
-	virtual void ParseParam(const char* pszParam, BOOL bFlag, BOOL bLast) {
-		if(bFlag && !strcmp(pszParam, "d")) bNoProtect = true;
- 		else if(bFlag && !strcmp(pszParam, "l")) bOpenLast = true;
-		else if(bFlag && !strcmp(pszParam, "REGSERVER")) {
+	virtual void ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLast) {
+		
+		if(bFlag && !wcsicmp(pszParam, L"d")) bNoProtect = true;
+ 		else if(bFlag && !wcsicmp(pszParam, L"l")) bOpenLast = true;
+		else if(bFlag && !wcsicmp(pszParam, L"REGSERVER")) {
 			TCHAR c[200];
 			GetModuleFileName(NULL, c, sizeof(c)/sizeof(c[0]));
 			CComPtr<ITypeLib> it;
@@ -193,10 +195,14 @@ public:
 			if(hr == S_OK) { AfxMessageBox(_T("Registered")); exit(0); }
 			else { AfxMessageBox(_T("Registration error: ") + hr); exit(-1); }
 		}
-		else if(bFlag && !strcmp(pszParam, "UNREGSERVER")) {
+		else if(bFlag && !wcsicmp(pszParam, L"UNREGSERVER")) {
 			HRESULT hr = UnRegisterTypeLib(__uuidof(__GmeLib), 1, 0, LANG_NEUTRAL, SYS_WIN32);
 			if(hr == S_OK) { AfxMessageBox(_T("Unregistered")); exit(0); }
 			else { AfxMessageBox(_T("Unregistration error: ") + hr); exit(-1); }
+		}
+		else if(bFlag && wcsnicmp(pszParam, L"run:", 4) == 0)
+		{
+			run = pszParam + 4;
 		}
 		else CCommandLineInfo::ParseParam(pszParam, bFlag, bLast);
 	}
@@ -537,11 +543,20 @@ BOOL CGMEApp::OpenCommandLineProject()
  		OpenProject(m_RecentProjectList[0]);
  		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
 		return TRUE;
- 	}
+ 	} else if(cmdInfo.run != "")
+	{
+		if (CMainFrame::theInstance)
+			CMainFrame::theInstance->m_console.m_Console.RunCode(CComBSTR(cmdInfo.run));
+		return TRUE;
+	}
 
 	// Dispatch commands specified on the command line
 	//if (!ProcessShellCommand(cmdInfo))
 	//	return FALSE;
+	if (!(cmdInfo.m_bRunEmbedded || cmdInfo.m_bRunAutomated))
+	{
+		ShowWelcomeWindow();
+	}
 	return FALSE;
 }
 
@@ -626,7 +641,7 @@ int CGMEApp::Run()
 		}
 	}
 
-	OpenCommandLineProject() || ShowWelcomeWindow();
+	OpenCommandLineProject();
 
 	int retVal = 0;
 	if (bNoProtect) {

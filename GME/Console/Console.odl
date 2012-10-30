@@ -48,6 +48,7 @@ library CONSOLELib
 			[id(8)] void LoadScript(BSTR filename);
 			[id(9)] void RunLoadedScript();
 			[id(10)] void SetContents(BSTR Contents);
+			[id(11)] void RunCode(BSTR Code);
 			[id(DISPID_ABOUTBOX)] void AboutBox();
 	};
 

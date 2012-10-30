@@ -30,6 +30,10 @@ public:
 	~CConsoleCtrl();
 	void LoadScript(BSTR fileName);
 	void RunScript();
+	void RunCode(BSTR code)
+	{
+		m_edit.ExecuteScript(CString(code));
+	}
 
 	CHtmlCtrl   m_browser;
 	CScriptEdit	m_edit;

@@ -85,3 +85,9 @@ void CConsole::NavigateTo(LPCTSTR url)
 	InvokeHelper(7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
 		 url);
 }
+
+void CConsole::RunCode(BSTR code)
+{
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(11, DISPATCH_METHOD, VT_EMPTY, NULL, parms, code);
+}
