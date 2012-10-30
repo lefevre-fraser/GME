@@ -187,19 +187,6 @@ public:
 		
 		if(bFlag && !wcsicmp(pszParam, L"d")) bNoProtect = true;
  		else if(bFlag && !wcsicmp(pszParam, L"l")) bOpenLast = true;
-		else if(bFlag && !wcsicmp(pszParam, L"REGSERVER")) {
-			TCHAR c[200];
-			GetModuleFileName(NULL, c, sizeof(c)/sizeof(c[0]));
-			CComPtr<ITypeLib> it;
-			HRESULT hr = LoadTypeLibEx(CComBSTR(c),REGKIND_REGISTER, &it);
-			if(hr == S_OK) { AfxMessageBox(_T("Registered")); exit(0); }
-			else { AfxMessageBox(_T("Registration error: ") + hr); exit(-1); }
-		}
-		else if(bFlag && !wcsicmp(pszParam, L"UNREGSERVER")) {
-			HRESULT hr = UnRegisterTypeLib(__uuidof(__GmeLib), 1, 0, LANG_NEUTRAL, SYS_WIN32);
-			if(hr == S_OK) { AfxMessageBox(_T("Unregistered")); exit(0); }
-			else { AfxMessageBox(_T("Unregistration error: ") + hr); exit(-1); }
-		}
 		else if(bFlag && wcsnicmp(pszParam, L"run:", 4) == 0)
 		{
 			run = pszParam + 4;
