@@ -13,7 +13,7 @@ namespace CSGUI
     }
 
     [Guid("68FDA295-8D49-4445-BE29-1F171B4BE07D"),
-    ProgId("MGA.WelcomeScreen"),
+    ProgId("CSGUI.WelcomeScreenExp"),
     ClassInterface(ClassInterfaceType.AutoDual)]
     [ComVisible(true)]
     public class WelcomeScreenExp
@@ -36,6 +36,11 @@ namespace CSGUI
                 if (!String.IsNullOrEmpty(recent))
                     this.recents.Add(recent);
             }
+        }
+
+        public void SwitchRef()
+        {
+            new ReferenceSwitcher().SwitchReference(null, null);
         }
     }
 

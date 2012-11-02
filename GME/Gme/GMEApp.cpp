@@ -34,13 +34,12 @@
 #pragma comment(lib, "CrashRpt.lib")
 #endif
 
-#import "C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\mscorlib.tlb"
+#import "C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\mscorlib.tlb" no_implementation
 namespace CSGUI {
 using namespace mscorlib;
 }
-#import "CSGUI.tlb"
+#import "CSGUI.tlb" no_implementation
 
-#pragma comment(linker, "\"/manifestdependency:type='win32' processorArchitecture='msil' name='CSGUI' version='1.0.0.0' language='*'\"")
 #ifndef _DEBUG
 #pragma comment(linker, "\"/manifestdependency:type='win32' name='Core' version='1.0.0.0' language='*'\"")
 #pragma comment(linker, "\"/manifestdependency:type='win32' name='Meta' version='1.0.0.0' language='*'\"")
@@ -550,7 +549,7 @@ BOOL CGMEApp::OpenCommandLineProject()
 BOOL CGMEApp::ShowWelcomeWindow()
 {
 	CSGUI::_WelcomeScreenExpPtr ws;
-	ws.CreateInstance(L"MGA.WelcomeScreen");
+	ws.CreateInstance(L"CSGUI.WelcomeScreenExp");
 	if (ws)
 	try {
 		ATL::CComSafeArray<BSTR> recents;

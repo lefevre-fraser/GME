@@ -51,6 +51,9 @@
 CGraphics graphics;
 static CViewList viewsToKill;
 
+// CSGUIInterop.cpp
+void MoveReferenceWithRefportConnectionsAndWriteToConsole(IMgaFCO* target, IMgaReference* ref);
+
 #define MIN_ZOOM_RECT 12 // the minimal size of zoomable rectangle
 /*
 int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
@@ -3685,10 +3688,13 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 							throw hresult_exception(E_FAIL);
 						}
 						CComPtr<IMgaFCO> fco;
-						COMTHROW(fcos->get_Item(1,&fco));// index modified from 0 to 1 [zolmol]
+						COMTHROW(fcos->get_Item(1,&fco));
 						if(!IsEqualObject(fco,mgaRef)) {
 							try {
-								COMTHROW(mgaRef->put_Referred(fco));
+								if (mgaRef->UsedByConns->Count > 0)
+									MoveReferenceWithRefportConnectionsAndWriteToConsole(fco, mgaRef); // only works if fco.ObjType == model
+								else
+									COMTHROW(mgaRef->put_Referred(fco));
 
 								CComBSTR bstr;
 								CString newID;
@@ -3708,6 +3714,20 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 								else
 									if( CGMEConsole::theInstance) AfxMessageBox( t2);
 									else CGMEConsole::theInstance->Message( t2, MSG_ERROR);
+
+								return false;
+							}
+							catch(_com_error &e) {
+								AbortTransaction(e.Error());
+								CString error = _T("Cannot redirect reference to specified object");
+								if (e.Description().length() != 0)
+								{
+									error += _T(": ");
+									error += static_cast<const TCHAR*>(e.Description());
+								}
+								CGMEEventLogger::LogGMEEvent(error + "\r\n");
+								if (CGMEConsole::theInstance)
+									CGMEConsole::theInstance->Message(error, MSG_ERROR);
 
 								return false;
 							}

@@ -6,16 +6,21 @@
              version="1.0.0.0"
              processorArchitecture="msil" />
   <clrClass
-               clsid="{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}"
-               progid="MGA.WelcomeScreen"
+               clsid="{68FDA295-8D49-4445-BE29-1F171B4BE07D}"
+               progid="CSGUI.WelcomeScreenExp"
                threadingModel="Both"
                name="CSGUI.WelcomeScreenExp"
-               runtimeVersion="v4.0.30319">
-  </clrClass>
+               runtimeVersion="v4.0.30319"/>
+  <clrClass
+               clsid="{0ACC000C-29E6-418B-9F8B-968418C533B9}"
+               progid="CSGUI.ReferenceSwitcher"
+               threadingModel="Both"
+               name="CSGUI.ReferenceSwitcher"
+               runtimeVersion="v4.0.30319"/>
   <file name="CSGUI.dll">
   </file>
 
-<!--
+  <!--
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -45,7 +50,7 @@
       
     </application>
   </compatibility>
--->  
+-->
   <!-- Enable themes for Windows common controls and dialogs (Windows XP and later) -->
   <!-- <dependency>
     <dependentAssembly>

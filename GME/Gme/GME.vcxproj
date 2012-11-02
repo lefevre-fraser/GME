@@ -301,6 +301,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <ClCompile Include="ConnityDlg.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="CrashTest.cpp" />
+    <ClCompile Include="CSGUIInterop.cpp" />
     <ClCompile Include="DecoratorEventSink.cpp" />
     <ClCompile Include="DynMenu.cpp" />
     <ClCompile Include="EnumVar.cpp" />
