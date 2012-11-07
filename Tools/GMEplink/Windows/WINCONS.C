@@ -314,11 +314,6 @@ int console_get_userpass_input(prompts_t *p, unsigned char *in, int inlen)
     if (p->n_prompts) {
 	if (console_batch_mode)
 	    return 0;
-	hin = GetStdHandle(STD_INPUT_HANDLE);
-	if (hin == INVALID_HANDLE_VALUE) {
-	    fprintf(stderr, "Cannot get standard input handle\n");
-	    cleanup_exit(1);
-	}
     }
 
 

@@ -732,7 +732,7 @@ int main(int argc, char **argv)
     return 0;			       /* placate compiler warning */
 }
 
-int WinMain(hInstance, hPrevInstance, lpCmdLine, nCmdShow)
+int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	main(__argc,__argv);
 }

@@ -162,6 +162,12 @@
     <ClCompile Include="x11fwd.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Windows\winjump.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\winx11.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="charset\charset.h">
