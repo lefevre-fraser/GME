@@ -4133,13 +4133,12 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 			if (dstPort) CGMEEventLogger::LogGMEEvent(_T("    dstPort=")+dstPort->GetName()+_T(" ")+dstPort->GetID()+_T("\r\n"));
 		}
 		COMTHROW(doc->resolver->put_IsStickyEnabled(nosticky ? VARIANT_FALSE :VARIANT_TRUE));
-		COMTHROW(doc->resolver->get_ConnRoleByMeta(	currentModel,
+		role = doc->resolver->ConnRoleByMeta[currentModel,
 													aspect,
 													src->mgaFco,
 													srcPort ? srcPort->mgaFco : NULL,
 													dst->mgaFco,
-													dstPort ? dstPort->mgaFco : NULL,
-													&role));
+													dstPort ? dstPort->mgaFco : NULL];
 		CComPtr<IMgaFCO> conn;
 		if(role != 0) {
 			CComObjPtr<IMgaFCOs> srcRefs, dstRefs;
@@ -4166,13 +4165,12 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 			}
 // Bakay hack ends
 */
-			COMTHROW(currentModel->CreateSimpleConn(
+			conn = currentModel->__CreateSimpleConn(
 				role,
 				srcPort ? srcPort->mgaFco : src->mgaFco,
 				dstPort ? dstPort->mgaFco : dst->mgaFco,
 				srcRefs,
-				dstRefs,
-				&conn));
+				dstRefs);
 			CComBSTR nm;
 			COMTHROW(role->get_DisplayedName(&nm));
 			COMTHROW(conn->put_Name(nm));
@@ -4226,6 +4224,21 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 		CGMEEventLogger::LogGMEEvent(_T("    Cannot Connect, hresult_exception in CGMEView::Connect\r\n"));
 		AbortTransaction(e.hr);
 //		AfxMessageBox(_T("Unable to connect specified parts!"),MB_ICONSTOP | MB_OK);
+        Reset(true); // BGY: something similar needed, otherwise the created conenction not 
+        // deleted form the gui if the committransaction failed
+		ret = false;
+	}
+	catch(_com_error &e) {
+		AbortTransaction(e.Error());
+		CString error = _T("Cannot create connection");
+		if (e.Description().length() != 0)
+		{
+			error += _T(": ");
+			error += static_cast<const TCHAR*>(e.Description());
+		}
+		CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
+		AfxMessageBox(error,MB_ICONSTOP | MB_OK);
+
         Reset(true); // BGY: something similar needed, otherwise the created conenction not 
         // deleted form the gui if the committransaction failed
 		ret = false;
