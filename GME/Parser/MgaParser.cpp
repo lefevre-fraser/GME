@@ -153,6 +153,17 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 
 		return e.hr;
 	}
+	catch(_com_error &e)
+	{
+		CloseAll();
+		clear_GME( m_GME);
+
+		ASSERT( FAILED(e.hr) );
+		if (e.Description() != _bstr_t())
+			SetErrorInfo(e.Description());
+
+		return e.Error();
+	}
 	return S_OK;
 }
 
