@@ -9075,6 +9075,16 @@ static void do_ssh2_authconn(Ssh ssh, unsigned char *in, int inlen,
 	}
 	break;
     }
+    if (ssh->cfg.ssh_no_shell) {
+		const char msg[] = "[Connected, no shell]\r\n";
+		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (hout != INVALID_HANDLE_VALUE)
+		{
+			DWORD dummy;
+			/* FIXME: control-character filtering */
+			WriteFile(hout, msg, sizeof(msg), &dummy, NULL);
+		}
+	}
 
     ssh->state = SSH_STATE_SESSION;
     if (ssh->size_needed)
