@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CTreeCtrlEx, CTreeCtrl)
 	ON_NOTIFY_REFLECT_EX(NM_KILLFOCUS, OnKillfocus)
 	ON_NOTIFY_REFLECT_EX(TVN_SELCHANGED, OnSelchanged)
 	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_TIMER()
 	ON_WM_NCHITTEST()
@@ -289,6 +290,7 @@ void CTreeCtrlEx::OnMouseMove( UINT nFlags, CPoint point )
 	// down-click point that we should cancel the pending select and initiate
 	// a drag/drop operation instead!
 
+	// FIXME: need to look at NC too, since if the user moves fast enough, we won't get this message
 	if ( m_hClickedItem )
 	{
 		CSize sizeMoved = m_ptClick-point;
@@ -615,10 +617,11 @@ void CTreeCtrlEx::OnRButtonDown( UINT nFlags, CPoint point )
 		{
 			if(!( GetItemState( hClickedItem, TVIS_SELECTED ) & TVIS_SELECTED ))
 			{
-				ClearSelection();
+				ClearSelection(TRUE);
 				SelectItem( hClickedItem );
 			}
 		}
+		m_hClickedItem = hClickedItem;
 	}
 	// Modified: 01/26/2002 Tihamer Levendovszky
 	else
@@ -628,6 +631,12 @@ void CTreeCtrlEx::OnRButtonDown( UINT nFlags, CPoint point )
 
 // Modified: 01/26/2002 Tihamer Levendovszky
 /*	CTreeCtrl::OnRButtonDown( nFlags, point ); */
+}
+
+void CTreeCtrlEx::OnRButtonUp(UINT nFlags, CPoint point)
+{
+	m_hClickedItem = NULL;
+	__super::OnRButtonUp(nFlags, point);
 }
 
 

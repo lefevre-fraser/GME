@@ -99,6 +99,7 @@ protected:
 	afx_msg BOOL OnSetfocus(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg BOOL OnKillfocus(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg BOOL OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
