@@ -116,6 +116,13 @@ LRESULT CInPlaceEdit::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 						GetParent()->SetFocus();
 					}
 				}break;
+			case 'A':
+				{
+					if(::GetKeyState(VK_CONTROL) & 0x8000)
+					{
+						SetSel(0, -1);
+					}
+				}break;
 			default:
 				;
 		}	
