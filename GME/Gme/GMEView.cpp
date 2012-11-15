@@ -6064,6 +6064,8 @@ DROPEFFECT CGMEView::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeyState, 
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDragEnter in ")+path+name+_T("\r\n"));
 	ASSERT(prevDropEffect == DROPEFFECT_NONE);
 
+	m_dropRightClick = GetKeyState(VK_RBUTTON) & 0x8000;
+
 	if(isType && CGMEDataSource::IsGmeNativeDataAvailable(pDataObject,theApp.mgaProject)) {
 //	if(pDataObject->IsDataAvailable(CGMEDataSource::cfGMEDesc)) {
 
@@ -6127,7 +6129,8 @@ void CGMEView::OnDragLeave()
 
 DROPEFFECT CGMEView::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState, CPoint point)
 {
-	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDragOver in ")+path+name+_T("\r\n")); 
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnDragOver in ")+path+name+_T("\r\n"));
+
 	//this event happens too much, logfile size could explode...
 	if(!CGMEDataSource::IsGmeNativeDataAvailable(pDataObject,theApp.mgaProject))
 //	if(!pDataObject->IsDataAvailable(CGMEDataSource::cfGMEDesc))
@@ -6236,6 +6239,44 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 	point.y = (long)(point.y - dragOffset.y);
 
 	OnDragLeave();
+	if (m_dropRightClick)
+	{
+		CMenu menu;
+		if (menu.CreatePopupMenu())
+		{
+			enum actions { MOVE= 1000, COPY, REF, INSTANCE, SUBTYPE };
+			menu.AppendMenu(MF_STRING, MOVE, L"Move");
+			menu.AppendMenu(MF_STRING, COPY, L"Copy");
+			menu.AppendMenu(MF_STRING, REF, L"Create reference");
+			menu.AppendMenu(MF_STRING, SUBTYPE, L"Create subtype");
+			menu.AppendMenu(MF_STRING, INSTANCE, L"Create instance");
+			CPoint screen = point;
+			ClientToScreen(&screen);
+			UINT nItemID = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_NONOTIFY | TPM_RETURNCMD, screen.x, screen.y, this);
+
+			switch (nItemID)
+			{
+			case MOVE:
+				DoPasteItem(pDataObject, true, true, false, false, false, false, false, 0, point);
+				break;
+			case COPY:
+				DoPasteItem(pDataObject, true, false, false, false, false, false, false, 0, point);
+				break;
+			case REF:
+				DoPasteItem(pDataObject, true, false, true, false, false, false, false, 0, point);
+				break;
+			case SUBTYPE:
+				DoPasteItem(pDataObject, true, false, false, true, false, false, false, 0, point);
+				break;
+			case INSTANCE:
+				DoPasteItem(pDataObject, true, false, false, true, true, false, false, 0, point);
+				break;
+			}
+		}
+		return TRUE;
+	}
+
+
 	if(isType) {
 		if ((dropEffect & DROPEFFECT_MOVE) && inDrag)
 		{

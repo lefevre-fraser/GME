@@ -84,15 +84,16 @@ public:
 
 	// === Start of decorator operation specific variables ===
 private:
-	bool					isCursorChangedByDecorator;
 	CRect					originalRect;
+	CGuiObject*				objectInDecoratorOperation;
+	CGuiAnnotator*			annotatorInDecoratorOperation;
+	bool					isCursorChangedByDecorator;
 	bool					inElementDecoratorOperation;
 	bool					inOpenedDecoratorTransaction;
 	bool					isContextInitiatedOperation;
 	bool					shouldCommitOperation;
 	bool					decoratorOrAnnotator;
-	CGuiObject*				objectInDecoratorOperation;
-	CGuiAnnotator*			annotatorInDecoratorOperation;
+	bool m_dropRightClick;
 public:
 	bool m_bEnablePannWindowRefresh;
 	struct ContextClickState {
