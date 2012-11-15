@@ -269,9 +269,9 @@ CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_MULTIPLE_ITEMS MENU
 BEGIN
     POPUP "_POPUP_"
     BEGIN
-        MENUITEM "&Properties",                 ID_POPUP_PROPERTIES
         MENUITEM "&Attributes",                 ID_POPUP_ATTRIBUTES
         MENUITEM "Pr&eferences",                ID_POPUP_PREFERENCES
+        MENUITEM "&Properties",                 ID_POPUP_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "C&opy Closure",               ID_EDIT_COPYCLOSURE
@@ -313,9 +313,9 @@ CG_IDR_POPUP_AGGREGATE_PROPERTY_PAGE_SINGLE_ITEM MENU
 BEGIN
     POPUP "_POPUP_"
     BEGIN
-        MENUITEM "&Properties",                 ID_POPUP_PROPERTIES
         MENUITEM "&Attributes",                 ID_POPUP_ATTRIBUTES
         MENUITEM "Pr&eferences",                ID_POPUP_PREFERENCES
+        MENUITEM "&Properties",                 ID_POPUP_PROPERTIES
         MENUITEM "Registr&y...",                ID_POPUP_REGISTRY
         MENUITEM "&Attach Library...",          ID_POPUP_ATTACH_LIBRARY
         MENUITEM "&Refresh Library...",         ID_POPUP_REFRESH_LIBRARY
