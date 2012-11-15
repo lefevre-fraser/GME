@@ -104,7 +104,7 @@ private:
 	void UpdateItem(const CListItem& srcListItem, CListItem& dstListItem, int nIndex);
 	void SetDefault();
 	void SetHelp(int nIndex);
-	bool SelectNextItem(void);	// JIRA GME-178
+	bool SelectNextItem(BOOL reverse);	// JIRA GME-178
 
 	CInPlaceManager m_InPlaceManager;
 

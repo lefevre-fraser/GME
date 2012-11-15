@@ -884,18 +884,13 @@ void CInspectorList::SetHelp(int nIndex)
 }
 
 
-bool CInspectorList::SelectNextItem(void)
+bool CInspectorList::SelectNextItem(BOOL reverse)
 {
 	int nCount = GetCount();
 	if (nCount > 1) {
 		int nCurSel = GetCurSel();	// In a multiple-selection list box, the index of the item that has the focus.
-		if (nCurSel < nCount - 1) {
-			nCurSel++;
-		} else if (nCurSel == nCount - 1) {
-			nCurSel = 0;
-		} else {
-			return false;
-		}
+		nCurSel = nCurSel + (reverse ? -1 : 1);
+		nCurSel = (nCurSel + nCount) % nCount;
 		// Clear current selections
 		// Get the indexes of all the selected items.
 		int nSelCount = GetSelCount();
@@ -908,6 +903,12 @@ bool CInspectorList::SelectNextItem(void)
 		// Select the next focused
 		SetSel(nCurSel, TRUE);
 		OnSelChange();
+
+		// TODO: pop up comboboxes (tricky because they're not really comboboxes)
+		//CListItem& ListItem=m_ListItemArray.ElementAt(nCurSel);
+		//if (ListItem.Value.dataType == ITEMDATA_BOOLEAN || ListItem.Value.dataType == ITEMDATA_FIXED_LIST) {
+		//	m_InPlaceManager.OnClickArrowButton(false);
+		//}
 		return true;
 	}
 	return false;
@@ -961,7 +962,7 @@ void CInspectorList::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			break;
 		case VK_TAB:	// JIRA GME-178
 			{
-				SelectNextItem();
+				SelectNextItem(::GetKeyState(VK_SHIFT) & 0x8000);
 			}
 			break;
 	}

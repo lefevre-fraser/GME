@@ -100,12 +100,13 @@ LRESULT CInPlaceEdit::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 					GetParent()->SetFocus();	
 					return 0;
 				}break;
-			case VK_TAB:	// for JIRA GME-178
 			case VK_RETURN:
 				{
 					if(!(GetStyle()&ES_MULTILINE))
+			case VK_TAB:	// for JIRA GME-178
 					{
 						GetParent()->SetFocus();
+						GetParent()->SendMessage(WM_KEYDOWN, VK_TAB, lParam);
 					}
 				}break;
 			case'D':
