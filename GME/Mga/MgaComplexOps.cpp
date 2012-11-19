@@ -1648,7 +1648,12 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 							ObjForCore( nmas)->GetGuidDisp( &bstr);
 							if( bstr) ObjForCore( nobj)->put_RegistryValue( CComBSTR( DETACHED_FROM), bstr);
 						}
-						MergeRegs(orig, nobj);
+						CComPtr<ICoreAttribute> regattr;
+						HRESULT hr = orig->get_Attribute(ATTRID_REGNODE, &regattr);
+						if (SUCCEEDED(hr))
+							MergeRegs(orig, nobj);
+						else if (hr != E_INVALIDARG)
+							COMTHROW(hr);
 						nobj[ai] = CComVariant( (IDispatch*) 0);//an empty value;
 						break;
 					}
