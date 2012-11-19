@@ -78,6 +78,7 @@ STDMETHODIMP CCoreMetaObject::get_Attribute(attrid_type attrid, ICoreMetaAttribu
 			return S_OK;
 		}
 	}
+	*p = NULL;
 	return S_OK;
 }
 
