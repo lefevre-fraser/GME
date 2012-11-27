@@ -220,7 +220,7 @@
                 <ProgId Id="Mga.CoreProject" Description="CoreProject Class" />
               </ProgId>
             </Class>
-            <Class Id="{9FE3BB80-B596-41BA-910F-0FF9C3B4F38A}" Context="InprocServer32" Description="CoreCollectionHandler Class" ThreadingModel="both" Programmable="yes" />
+            <Class Id="{9FE3BB80-B596-41BA-910F-0FF9C3B4F38A}" Context="InprocServer32" Description="CoreCollectionHandler Class" ThreadingModel="both" Programmable="yes" Handler="2" />
             <Interface Id="{9A228010-020B-11D2-BBB3-0040051F7117}" Name="IGMEVersionInfo" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
           </TypeLib>
         </File>
