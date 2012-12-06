@@ -1053,8 +1053,18 @@ namespace ISIS.GME.Common
                 try
                 {
                     metaRef = item.MetaBase.MetaRef;
-                    fco = Activator.CreateInstance(dictionary[metaRef]) as ISIS.GME.Common.Interfaces.FCO;
-                    (fco as ISIS.GME.Common.Classes.FCO).Impl = item as IMgaObject;
+                    Type type = null;
+                    if (dictionary.TryGetValue(metaRef, out type))
+                    {
+                        // can be casted to the requested type
+                        fco = Activator.CreateInstance(type) as ISIS.GME.Common.Interfaces.FCO;
+                        (fco as ISIS.GME.Common.Classes.FCO).Impl = item as IMgaObject;
+                    }
+                    else
+                    {
+                        // cannot be casted to DSML types
+                        continue;
+                    }
                 }
                 catch (Exception ex)
                 {

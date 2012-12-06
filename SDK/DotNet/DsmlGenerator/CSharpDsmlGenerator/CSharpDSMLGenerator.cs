@@ -136,6 +136,21 @@ namespace CSharpDSMLGenerator
             List<MgaObject> all = new List<MgaObject>();
             CodeCompileUnit compileunit = new CodeCompileUnit();
 
+            // TODO: add version
+            //var fileVersion = new CodeAttributeDeclaration() {
+            //    Name = "AssemblyFileVersionAttribute",
+            //};
+            
+            //var version = new CodeAttributeDeclaration()
+            //{
+            //    Name = "AssemblyVersion"
+            //};
+            //fileVersion.Arguments.Add(new CodeAttributeArgument("AssemblyFileVersionAttribute", new CodeSnippetExpression("1.0.0.*")));
+            //version.Arguments.Add(new CodeAttributeArgument(new CodeSnippetExpression("1.0.0.*")));
+
+            //compileunit.AssemblyCustomAttributes.Add(fileVersion);
+            //compileunit.AssemblyCustomAttributes.Add(version);
+
             all.AddRange(
                 FlattenMga<IMgaObject>(project.RootFolder, x => x.ChildObjects.Cast<MgaObject>()).
                 Cast<MgaObject>());
@@ -267,8 +282,11 @@ namespace CSharpDSMLGenerator
 					Assembly.GetAssembly(typeof(ISIS.GME.Common.Utils)).Location,
 				};
 
-                CompilerParameters cp = new CompilerParameters(referenceAssemblies,
-                                                                                                             dllFile, false);
+                CompilerParameters cp = new CompilerParameters(
+                    referenceAssemblies,
+                    dllFile,
+                    false);
+
                 // Generate a DLL file.
                 cp.GenerateExecutable = false;
 

@@ -521,7 +521,9 @@ namespace CSharpDSMLGenerator.Generator
 				MgaSimpleConnection simple = cp.Owner as MgaSimpleConnection;
 				if (simple != null)
 				{
-					if (simple.MetaBase.Name == "ConnectorToDestination")
+					if (simple.MetaBase.Name == "ConnectorToDestination" ||
+                        (simple.MetaBase.Name == "SourceToConnector" &&
+                        string.IsNullOrEmpty(simple.StrAttrByName["srcRolename"])))
 					{
 						MgaFCO connector = simple.Src;
 						foreach (MgaConnPoint cpConnector in connector.PartOfConns)
@@ -570,7 +572,9 @@ namespace CSharpDSMLGenerator.Generator
 				MgaSimpleConnection simple = cp.Owner as MgaSimpleConnection;
 				if (simple != null)
 				{
-					if (simple.MetaBase.Name == "SourceToConnector")
+					if (simple.MetaBase.Name == "SourceToConnector" ||
+                        (simple.MetaBase.Name == "ConnectorToDestination" &&
+                        string.IsNullOrEmpty(simple.StrAttrByName["dstRolename"])))
 					{
 						MgaFCO connector = simple.Dst;
 						foreach (MgaConnPoint cpConnector in connector.PartOfConns)
@@ -638,7 +642,7 @@ namespace CSharpDSMLGenerator.Generator
 							MgaSimpleConnection simpleConn = cpConnector.Owner as MgaSimpleConnection;
 							if (simpleConn != null)
 							{
-								if (simpleConn.MetaBase.Name == "SourceToConnector")
+                                if (simpleConn.MetaBase.Name == "SourceToConnector")
 								{
 									if (simpleConn.Src is MgaReference)
 									{
@@ -665,6 +669,34 @@ namespace CSharpDSMLGenerator.Generator
 										}
 									}
 								}
+                                else if (simpleConn.MetaBase.Name == "ConnectorToDestination" &&
+                                         string.IsNullOrEmpty(simpleConn.StrAttrByName["dstRolename"]))
+                                {
+                                    if (simpleConn.Dst is MgaReference)
+                                    {
+                                        yield return (simpleConn.Dst as MgaReference).Referred;
+
+                                        if (includeDerived)
+                                        {
+                                            foreach (MgaFCO derivedClass in GetDerivedClasses((simpleConn.Dst as MgaReference).Referred))
+                                            {
+                                                yield return derivedClass;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        yield return simpleConn.Dst;
+
+                                        if (includeDerived)
+                                        {
+                                            foreach (MgaFCO derivedClass in GetDerivedClasses(simpleConn.Dst))
+                                            {
+                                                yield return derivedClass;
+                                            }
+                                        }
+                                    }
+                                }
 							}
 						}
 					}
@@ -697,7 +729,7 @@ namespace CSharpDSMLGenerator.Generator
 							MgaSimpleConnection simpleConn = cpConnector.Owner as MgaSimpleConnection;
 							if (simpleConn != null)
 							{
-								if (simpleConn.MetaBase.Name == "ConnectorToDestination")
+                                if (simpleConn.MetaBase.Name == "ConnectorToDestination")
 								{
 									if (simpleConn.Dst is MgaReference)
 									{
@@ -724,6 +756,34 @@ namespace CSharpDSMLGenerator.Generator
 										}
 									}
 								}
+                                else if (simpleConn.MetaBase.Name == "SourceToConnector" &&
+                                         string.IsNullOrEmpty(simpleConn.StrAttrByName["srcRolename"]))
+                                {
+                                    if (simpleConn.Src is MgaReference)
+                                    {
+                                        yield return (simpleConn.Src as MgaReference).Referred;
+
+                                        if (includeDerived)
+                                        {
+                                            foreach (MgaFCO derivedClass in GetDerivedClasses((simpleConn.Src as MgaReference).Referred))
+                                            {
+                                                yield return derivedClass;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        yield return simpleConn.Src;
+
+                                        if (includeDerived)
+                                        {
+                                            foreach (MgaFCO derivedClass in GetDerivedClasses(simpleConn.Src))
+                                            {
+                                                yield return derivedClass;
+                                            }
+                                        }
+                                    }
+                                }
 							}
 						}
 					}
