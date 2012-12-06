@@ -312,8 +312,24 @@ namespace CSharpDSMLGenerator
 
                 cr.Errors.Cast<CompilerError>().ToList().
                     ForEach(x => System.Diagnostics.Debug.WriteLine(x.ErrorText));
-                cr.Errors.Cast<CompilerError>().ToList().
-                    ForEach(x => GMEConsole.Error.WriteLine(x.ErrorText));
+                var errors = cr.Errors.Cast<CompilerError>().ToList();
+
+                // errors last on the console
+                errors.Sort((x, y) => y.IsWarning.CompareTo(x.IsWarning));
+
+                errors.
+                    ForEach(x => {
+                        var msg = string.Format("{0} ({1}) {2} ", x.FileName, x.Line, x.ErrorText);
+
+                        if (x.IsWarning)
+                        {
+                            GMEConsole.Warning.WriteLine(msg);
+                        }
+                        else
+                        {
+                            GMEConsole.Error.WriteLine(msg);
+                        }
+                    });
 
                 if (cr.Errors.Count == 0)
                 {

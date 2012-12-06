@@ -53,32 +53,37 @@ namespace CSharpDSMLGenerator.Generator
 
                 if (Configuration.UseOnlyBaseForFunctions)
                 {
-                    srcEnds = GetSrcEnd(Subject as MgaFCO);
-                    dstEnds = GetDstEnd(Subject as MgaFCO);
-                    parents = GetParents(Subject as MgaFCO);
+                    srcEnds = GetSrcEnd(Subject as MgaFCO).Distinct();
+                    dstEnds = GetDstEnd(Subject as MgaFCO).Distinct();
+                    parents = GetParents(Subject as MgaFCO).Distinct();
                 }
                 else
                 {
-                    srcEnds = GetSrcEnd(Subject as MgaFCO, true).
-                        Where(x => x.BoolAttrByName["IsAbstract"] == false);
+                    srcEnds = GetSrcEnd(Subject as MgaFCO, true)
+                        .Distinct()
+                        .Where(x => x.BoolAttrByName["IsAbstract"] == false);
 
-                    dstEnds = GetDstEnd(Subject as MgaFCO, true).
-                        Where(x => x.BoolAttrByName["IsAbstract"] == false);
+                    dstEnds = GetDstEnd(Subject as MgaFCO, true)
+                        .Distinct()
+                        .Where(x => x.BoolAttrByName["IsAbstract"] == false);
 
-                    parents = GetParents(Subject as MgaFCO, true).Distinct().
-                    Where(x => x.BoolAttrByName["IsAbstract"] == false);
+                    parents = GetParents(Subject as MgaFCO, true)
+                        .Distinct()
+                        .Where(x => x.BoolAttrByName["IsAbstract"] == false);
                 }
 
                 List<string> srcEndNames = GetSrcEnd(Subject as MgaFCO, true).
                         Where(x => x.BoolAttrByName["IsAbstract"] == false).
-                        Select(x => x.Name).
+                        Select(x => x.Name)
+                        .Distinct().
                         ToList();
 
                 srcEndNames.Sort();
 
                 List<string> dstEndNames = GetDstEnd(Subject as MgaFCO, true).
                         Where(x => x.BoolAttrByName["IsAbstract"] == false).
-                        Select(x => x.Name).
+                        Select(x => x.Name)
+                        .Distinct().
                         ToList();
 
                 dstEndNames.Sort();

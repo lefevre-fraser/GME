@@ -147,9 +147,10 @@ namespace CSharpDSMLGenerator.Generator
 
 					newAllSrcConnections.GetStatements.Add(
 						new CodeMethodReturnStatement(
-							new CodeSnippetExpression("(new[] { " + sb.ToString() +
-								"}).FirstOrDefault(x => x != null) as " +
-								typeof(ISIS.GME.Common.Classes.FCO).FullName)));
+                            new CodeSnippetExpression("(new " +
+                                typeof(ISIS.GME.Common.Interfaces.FCO).FullName +
+                                "[] { " + sb.ToString() +
+								"}).FirstOrDefault(x => x != null)")));
 				}
 				GeneratedClass.Types[0].Members.Add(newAllSrcConnections);
 
@@ -306,9 +307,10 @@ namespace CSharpDSMLGenerator.Generator
 
 					newAllDstConnections.GetStatements.Add(
 						new CodeMethodReturnStatement(
-							new CodeSnippetExpression("(new[] { " + sb.ToString() +
-								"}).FirstOrDefault(x => x != null) as " +
-								typeof(ISIS.GME.Common.Classes.FCO).FullName)));
+							new CodeSnippetExpression("(new " +
+                                typeof(ISIS.GME.Common.Interfaces.FCO).FullName
+                                + "[] { " + sb.ToString() +
+								"}).FirstOrDefault(x => x != null)")));
 				}
 				GeneratedClass.Types[0].Members.Add(newAllDstConnections);
 
