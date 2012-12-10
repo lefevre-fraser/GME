@@ -9406,7 +9406,7 @@ void CGMEView::OnCntxConnect()
 
 void CGMEView::OnUpdateCntxConnect(CCmdUI* pCmdUI)
 {
-	pCmdUI->Enable(GetDocument()->GetEditMode() == GME_EDIT_MODE);
+	pCmdUI->Enable(GetDocument()->GetEditMode() == GME_EDIT_MODE && isSubType);
 }
 
 void CGMEView::OnResetSticky()
