@@ -758,6 +758,10 @@ void CGMEView::DoPannWinRefresh()
 				CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 				if (!conn)
 					fco->Draw(pannDC, &gdip);
+				// GME-339: Gdiplus::Graphics may modify pDC (e.g. SetViewportOrgEx) when a new-style decorator runs
+				// a modified pDC makes old-style (i.e. no DrawEx) decorators render incorrectly (e.g. when the scrollbar is scrolled)
+				gdip.~Graphics();
+				::new ((void*)&gdip) Gdiplus::Graphics(pannDC);
 			}
 		}
 	}
