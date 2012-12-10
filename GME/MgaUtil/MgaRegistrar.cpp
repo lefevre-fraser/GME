@@ -1816,8 +1816,15 @@ STDMETHODIMP CMgaRegistrar::RegisterComponent(BSTR progid, componenttype_enum ty
 		if(!(type & COMPONENTTYPE_PARADIGM_INDEPENDENT)) {
 			paradigms.Empty();
 			CComPtr<IMgaComponent> comp;
-			CreateMgaComponent(comp, progid);
-			if(!comp) COMTHROW(E_MGA_COMPONENT_ERROR);
+			HRESULT hr = CreateMgaComponent(comp, progid);
+			if(!comp)
+			{
+				_bstr_t error;
+				GetErrorInfo(hr, error.GetAddress());
+				if (!static_cast<LPOLESTR>(error))
+					error = L"Unknown error";
+				throw_com_error(E_MGA_COMPONENT_ERROR, _bstr_t(L"Could not create: ") + progid + L": " + error);
+			}
 			COMTHROW(comp->get_Paradigm(PutOut(paradigms)));
 		}
 		if(mode & RM_USER) {
