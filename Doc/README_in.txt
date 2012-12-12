@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 12.10.18
+                 GME 12.12.11
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -25,6 +25,16 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 12.12.11
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix CoCreateInstance of Mga.MgaFCOs (and other collections)
+  - Fix DetachFromArchetype for models containing connections
+  - Fix crash when copy-and-paste fails
+  - Support redirecting references with refports via drag-n-drop
+  - New welcome screen
+  - CSharpDSMLGenerator: handle src/dst endpoints correctly for the generated API
 
 Release Notes of Release 12.10.18
 ----------------------------------
