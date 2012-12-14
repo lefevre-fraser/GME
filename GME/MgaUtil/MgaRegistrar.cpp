@@ -85,10 +85,16 @@ STDMETHODIMP CMgaRegistrar::get_IconPath(regaccessmode_enum mode, BSTR *path)
 			CRegKey mga;
 			res = mga.Open(HKEY_LOCAL_MACHINE, rootreg, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+			CString str2;
 			if(res == ERROR_SUCCESS) {
-				CString str2 = QueryValue(mga, _T("IconPath"));
-				str2.TrimLeft(_T(" ;,\t"));
-				if(!str.IsEmpty() && !str2.IsEmpty()) str += _T(";");
+				str2 = QueryValue(mga, _T("IconPath"));
+			} else if (res == ERROR_FILE_NOT_FOUND) {
+				str2 = "$PARADIGMDIR\icons;$PROJECTDIR\icons";
+			}
+			str2.TrimLeft(_T(" ;,\t"));
+			if(!str.IsEmpty() && !str2.IsEmpty())
+			{
+				str += _T(";");
 				str	+= str2;
 			}
 		}
