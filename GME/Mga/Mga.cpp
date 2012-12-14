@@ -79,17 +79,10 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 /////////////////////////////////////////////////////////////////////////////
 // DllRegisterServer - Adds entries to the system registry
 
-#ifdef DEBUG
-HRESULT CheckErrTab(void);
-#endif
-
 STDAPI DllRegisterServer(void)
 {
     // registers object, typelib and all interfaces in typelib
     HRESULT res = _Module.RegisterServer(TRUE);
-#ifdef DEBUG
-	if(res == S_OK) res = CheckErrTab();
-#endif
 	return res;
 }
 
@@ -142,15 +135,3 @@ CComBSTR Now(void) {
 #endif
 #include "MgaO.h"
 
-
-#ifdef DEBUG
-
-HRESULT CheckErrTab(void) {
-	for(struct errtab const *hh = MgaErrTab; hh->code != 0; hh++) { 
-		if(!(hh->code >= MGAERRCODEBASE || hh->code < MGAERRCODEBASE + MGAERRCODESPAN)) {
-			return E_MGA_ERRCODE_ERROR;
-		}
-	}
-	return S_OK;
-}
-#endif
