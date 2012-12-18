@@ -283,11 +283,13 @@ namespace ISIS.GME.Common
             Interfaces.Reference dstRef = null,
             Interfaces.Container parent = null,
             string roleStr = null)
-            where T : Interfaces.Connection, new()
+            where T: Classes.Connection, new()
         {
             Contract.Requires(src != null);
             Contract.Requires(dst != null);
 
+            IMgaFCO connection = null;
+            
             T result = new T();
 
             if (parent == null)
@@ -364,7 +366,6 @@ namespace ISIS.GME.Common
             {
                 MgaModel model = parent.Impl as MgaModel;
                 MgaMetaRole role = null;
-                IMgaFCO connection = null;
 
                 try
                 {
@@ -493,7 +494,16 @@ namespace ISIS.GME.Common
                 throw new Exception("Parent could not be a folder.");
             }
 
-            return result;
+            result.Impl = connection;
+
+            if (result.Impl == null)
+            {
+                return null;
+            }
+            else
+            {
+                return result;
+            }
         }
 
 
