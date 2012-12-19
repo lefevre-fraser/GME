@@ -158,7 +158,7 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 		CloseAll();
 		clear_GME( m_GME);
 
-		ASSERT( FAILED(e.hr) );
+		ASSERT( FAILED(e.Error()) );
 		if (e.Description() != _bstr_t())
 			SetErrorInfo(e.Description());
 
