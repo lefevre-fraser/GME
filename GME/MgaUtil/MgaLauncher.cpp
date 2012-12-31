@@ -278,7 +278,8 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 		CComPtr<IMgaFCO> imfco;
 		CString url;
 
-		if (obj != NULL) {
+		if (obj != NULL) 
+		{
 			if (FAILED(obj->QueryInterface(&imf)) &&
 				FAILED(obj->QueryInterface(&imfco)))
 			{
@@ -293,8 +294,10 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 				imfco->get_RegistryValue(bstr,&bstrVal)
 				);
 
+			
 			CopyTo(bstrVal,url);
 
+			// Resolving $PARADIGMDIR
 			CComPtr<IMgaProject> project;
 			if (imf)
 				COMTHROW(imf->get_Project(&project));
@@ -302,14 +305,39 @@ STDMETHODIMP CMgaLauncher::ShowHelp(IMgaObject* obj)
 				COMTHROW(imfco->get_Project(&project));
 			_bstr_t paradigmConnStr;
 			COMTHROW(project->get_ParadigmConnStr(paradigmConnStr.GetAddress()));
-			if (_wcsnicmp(_T("MGA="), paradigmConnStr, 4) == 0) {
+			if (_wcsnicmp(_T("MGA="), paradigmConnStr, 4) == 0) 
+			{
 				CString filename, dirname;
 				GetFullPathName(CString(static_cast<const TCHAR*>(paradigmConnStr) + 4), filename, dirname);
 
 				if (dirname != "")
+				{
 					url.Replace(_T("$PARADIGMDIR"), dirname);
+				}
 			}
 
+
+			// Supporting one environment variable with $VARNAME$ syntax
+			int firstIdx = url.Find(_T('$'));
+			if(firstIdx  != -1 && url.GetLength() > firstIdx+2) // Reference to environment variable with a non-empty name
+			{
+				int nextIdx = url.Find(_T('$'), firstIdx +1); // Finding the closing $
+
+				if(nextIdx != -1 && nextIdx > firstIdx +1)
+				{
+					CString variableName = url.Mid(firstIdx+1, nextIdx - firstIdx -1);
+					TCHAR* value = _tgetenv(variableName);
+
+					if(value != NULL)
+					{
+						CString variableString;
+						variableString.Format(_T("$%s$"), variableName);
+						url.Replace(variableString, value);
+					}
+
+				}
+
+			}
 
 			CString name;
 			COMTHROW(obj->get_Name(PutOut(name)));
