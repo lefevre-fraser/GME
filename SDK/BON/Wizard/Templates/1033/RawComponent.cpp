@@ -105,7 +105,7 @@ STDMETHODIMP RawComponent::GlobalEvent(globalevent_enum event) {
 }
 
 STDMETHODIMP RawComponent::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VARIANT v) {
-	if(eventmask & OBJEVENT_CREATED) {
+	if((eventmask & OBJEVENT_CREATED) && !(eventmask & OBJEVENT_DESTROYED) {
 		AfxMessageBox(_T("Object created: ObjID=") + obj->ID); 
 	}		
 	return S_OK;
