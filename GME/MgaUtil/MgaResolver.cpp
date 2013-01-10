@@ -313,9 +313,10 @@ STDMETHODIMP CMgaResolver::get_FolderByStr(IMgaFolder *parent,
 		COMTHROW( parent_mfolder->get_Name(&parmfolder_name) );
 
 		CString sz_format;
-		sz_format.Format(	_T("Paradigm violation: parent folder %s of type %s\n")
-							_T("cannot contain a child folder\n")
-							_T("of type %s"),
+		sz_format.Format(	_T("Paradigm violation: Cannot create folder.\n")
+							_T("Parent name: %s\n")
+							_T("Parent type: %s\n")
+							_T("Child type: %s"),
 							(BSTR) parfolder_name, (BSTR) parmfolder_name,
 							kind
 		);
@@ -510,16 +511,16 @@ STDMETHODIMP CMgaResolver::get_KindByStr(IMgaFolder *parent, BSTR kind,
 			CString sz_format;
 			CString sz_format_tmp;
 
-			sz_format_tmp.Format(	_T("Paradigm Violation: parent folder %s\n")
-									_T("of type %s\n")
-									_T("cannot have any children\n"),
+			sz_format_tmp.Format(	_T("Paradigm Violation: parent folder %s ")
+									_T("of type %s ")
+									_T("cannot have any children"),
 									(BSTR) parent_name,
 									(BSTR) mparent_name
 			);
 			sz_format += sz_format_tmp;
 
 			if (objtype != OBJTYPE_NULL) {
-				sz_format_tmp.Format(	_T("of object type %s\n"),
+				sz_format_tmp.Format(	_T(" of object type %s\n"),
 										helper_ObjTypeStr(objtype)
 										);
 				sz_format += sz_format_tmp;
@@ -1052,24 +1053,25 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 		CString sz_format;
 		CString sz_format_tmp;
 
-		sz_format_tmp.Format(	_T("Paradigm Violation: cannot create within parent model '%s' ")
-								_T("of type '%s' a child"),
+		sz_format_tmp.Format(	_T("Paradigm Violation: Cannot create child.\n")
+								_T("Parent name: %s\n")
+								_T("Parent type: %s\n"),
 								(BSTR) parent_name,
 								(BSTR) mparent_name);
 		sz_format+=sz_format_tmp;
 
 		if (CString(kind) != _T("")) {
-			sz_format_tmp.Format(_T(" with kind '%s'"), kind);
+			sz_format_tmp.Format(_T("Child kind %s\n"), kind);
 			sz_format+=sz_format_tmp;
 		}
 
 		if (objtype != OBJTYPE_NULL) {
-			sz_format_tmp.Format(_T(" of type %s"), helper_ObjTypeStr(objtype));
+			sz_format_tmp.Format(_T("Child type %s\n"), helper_ObjTypeStr(objtype));
 			sz_format+=sz_format_tmp;
 		}
 
 		if (CString(aspect) != _T("")) {
-			sz_format_tmp.Format(_T(" in aspect '%s'"), aspect);
+			sz_format_tmp.Format(_T("Aspect: %s"), aspect);
 			sz_format+=sz_format_tmp;
 		}
 		SetErrorInfo(sz_format);
@@ -1560,8 +1562,8 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			CString sz_format_tmp;
 
 			sz_format_tmp.Format(
-				_T("Paradigm violation: cannot make connection for \n")
-				_T("source: %s (%s)"),
+				_T("Paradigm violation: cannot make a connection.\n")
+				_T("Source: %s (%s)\n"),
 				sz_src_name, sz_src_role_name
 			);
 
@@ -1571,41 +1573,35 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			if (src_port != NULL) {
 
 				sz_format_tmp.Format(
-					_T(" through port: %s (%s)"),
+					_T("Source port: %s (%s)\n"),
 					sz_src_port, sz_src_port_role				
 				);
 
 				sz_format += sz_format_tmp;
 			}
-			sz_format += CString(_T("\nto\n"));
 				
 			sz_format_tmp.Format(
-				_T("destination: %s (%s)"),
+				_T("Destination: %s (%s)\n"),
 				sz_dst_name, sz_dst_role_name
 			);
 			sz_format += sz_format_tmp;
 
 			if (dst_port != NULL) {
-
 				sz_format_tmp.Format(
-					_T(" through port: %s (%s)"),
+					_T("Destination port: %s (%s)\n"),
 					sz_dst_port, sz_dst_port_role				
 				);
 
 				sz_format += sz_format_tmp;
 			}
 
-			sz_format += CString(_T("\n"));
-
 			if (sz_aspect_name != _T("")) {
-
-				sz_format_tmp.Format(_T("in aspect %s \n"),
+				sz_format_tmp.Format(_T("Aspect: %s\n"),
 					sz_aspect_name);
 				sz_format += sz_format_tmp;
-
 			}
 
-			sz_format_tmp.Format(				_T("within parent: %s (%s)"),
+			sz_format_tmp.Format(_T("Parent: %s (%s)"),
 				sz_parent_name, sz_parent_role
 			);
 			sz_format += sz_format_tmp;
@@ -1830,8 +1826,8 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 			CString sz_format_tmp;
 
 			sz_format_tmp.Format(
-				_T("Cannot insert reference for \n")
-				_T("source: %s (%s) \n"),
+				_T("Cannot insert reference.\n")
+				_T("Source: %s (%s)\n"),
 				sz_src_name, sz_src_role_name
 				);
 			sz_format += sz_format_tmp;
@@ -1839,7 +1835,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 			if (sz_aspect_name != _T("")) {
 
 				sz_format_tmp.Format(
-					_T("in aspect %s \n"),
+					_T("Aspect: %s\n"),
 					sz_aspect_name
 					);
 				sz_format += sz_format_tmp;
@@ -1848,7 +1844,7 @@ STDMETHODIMP CMgaResolver::get_RefRoleByMeta(IMgaModel *parent,
 			}
 
 			sz_format_tmp.Format(
-				_T("within parent: %s (%s)"),
+				_T("Parent: %s (%s)"),
 				sz_parent_name, sz_parent_role
 			);
 			sz_format += sz_format_tmp;
