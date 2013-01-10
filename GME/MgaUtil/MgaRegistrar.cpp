@@ -97,6 +97,8 @@ STDMETHODIMP CMgaRegistrar::get_IconPath(regaccessmode_enum mode, BSTR *path)
 				str += _T(";");
 				str	+= str2;
 			}
+			else
+				str = str2;
 		}
 		CopyTo(str, path);
 	}
