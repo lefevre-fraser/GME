@@ -1296,7 +1296,6 @@ void CMainFrame::OnDropFiles(HDROP p_hDropInfo)
 			}
 			else if( conn.Right(4).CompareNoCase(_T(".xme"))==0)
 			{
-				m_console.Message( _T("Importing ") + conn + _T("."), 1);	
 				theApp.ImportDroppedFile(conn);
 				one_just_opened = true;
 			}
