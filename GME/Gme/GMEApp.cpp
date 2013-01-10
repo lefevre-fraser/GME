@@ -1563,6 +1563,8 @@ void CGMEApp::OpenProject(const CString &conn) {
 			}	
 		}
 		AfterOpenOrCreateProject(conn);
+		hr = mgaProject->Notify(GLOBALEVENT_OPEN_PROJECT_FINISHED);
+		ASSERT(SUCCEEDED(hr));
 	}
 	MSGCATCH(_T("Could not open project"), CloseProject(true, true))
 	
@@ -1614,6 +1616,8 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 	    COMTHROW(hr);
 
 		AfterOpenOrCreateProject(conn);
+		hr = mgaProject->Notify(GLOBALEVENT_OPEN_PROJECT_FINISHED);
+		ASSERT(SUCCEEDED(hr));
 	}
 	MSGCATCH(_T("Could not create project"), CloseProject())
 }
@@ -2310,10 +2314,15 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 			OnFileSave();
 		}
 
-		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( fullPath + _T(" was successfully imported."), 1);
-		else AfxMessageBox(fullPath + _T(" was successfully imported."));
+		if (CMainFrame::theInstance)
+			CMainFrame::theInstance->m_console.Message(fullPath + _T(" was successfully imported."), 1);
+		else
+			AfxMessageBox(fullPath + _T(" was successfully imported."));
 
-	if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
+	if (mgaConstMgr)
+		COMTHROW(mgaConstMgr->Enable(true));
+	HRESULT hr = mgaProject->Notify(GLOBALEVENT_OPEN_PROJECT_FINISHED);
+	ASSERT(SUCCEEDED(hr));
 }
 
 

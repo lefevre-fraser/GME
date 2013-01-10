@@ -87,6 +87,7 @@ typedef enum globalevent_enum  {
     GLOBALEVENT_REDO,
 	GLOBALEVENT_PROJECT_PROPERTIES,							// project properties Name, author, etc changed
 	GLOBALEVENT_NOTIFICATION_READY,
+	GLOBALEVENT_OPEN_PROJECT_FINISHED, // notification is sent after 1. File>New 2. File>Open 3. File>Import XML
 															// application specific (GUI) events
 	APPEVENT_XML_IMPORT_BEGIN = 0xFF,
 	APPEVENT_XML_IMPORT_END,
