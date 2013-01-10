@@ -99,13 +99,13 @@ STDMETHODIMP RawComponent::put_ComponentParameter(BSTR name, VARIANT newVal) {
 // these two functions are the main 
 STDMETHODIMP RawComponent::GlobalEvent(globalevent_enum event) { 
 	if(event == GLOBALEVENT_UNDO) {
-		AfxMessageBox(_T("Undo));
+		AfxMessageBox(_T("Undo"));
 	}
 	return S_OK; 
 }
 
 STDMETHODIMP RawComponent::ObjectEvent(IMgaObject * obj, unsigned long eventmask, VARIANT v) {
-	if((eventmask & OBJEVENT_CREATED) && !(eventmask & OBJEVENT_DESTROYED) {
+	if((eventmask & OBJEVENT_CREATED) && !(eventmask & OBJEVENT_DESTROYED)) {
 		AfxMessageBox(_T("Object created: ObjID=") + obj->ID); 
 	}		
 	return S_OK;
