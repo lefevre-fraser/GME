@@ -263,6 +263,11 @@ CPoint CAutoRouterPort::CreateStartEndPointAt(const CPoint& p, bool isStart) con
 	return point;
 }
 
+static inline LONG RoundToHalfGrid(LONG left, LONG right)
+{
+	return ((right + left) / 2) / GME_GRID_SIZE * GME_GRID_SIZE + (GME_GRID_SIZE / 2);
+}
+
 CPoint CAutoRouterPort::CreateStartEndPointOn(RoutingDirection dir) const
 {
 	ASSERT( !rect.IsRectEmpty() );
@@ -271,16 +276,16 @@ CPoint CAutoRouterPort::CreateStartEndPointOn(RoutingDirection dir) const
 	switch( dir )
 	{
 	case Dir_Top:
-		return CPoint((rect.left + rect.right) / 2, rect.top);
+		return CPoint(RoundToHalfGrid(rect.left, rect.right), rect.top);
 
 	case Dir_Bottom:
-		return CPoint((rect.left + rect.right) / 2, rect.bottom - 1);
+		return CPoint(RoundToHalfGrid(rect.left, rect.right), rect.bottom - 1);
 
 	case Dir_Left:
-		return CPoint(rect.left, (rect.top + rect.bottom) / 2);
+		return CPoint(rect.left, RoundToHalfGrid(rect.top, rect.bottom));
 	}
 
-	return CPoint(rect.right - 1, (rect.top + rect.bottom) / 2);
+	return CPoint(rect.right - 1, RoundToHalfGrid(rect.top, rect.bottom));
 }
 
 CPoint CAutoRouterPort::CreateStartEndPointTo(const CPoint& point, bool isStart) const
