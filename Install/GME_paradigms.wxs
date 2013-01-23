@@ -16,7 +16,9 @@
         <PropertyRef Id="NETFRAMEWORK40FULL"/>
         <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
         <!-- used by PIAs -->
-        <Property Id="NETFRAMEWORK">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Property><!-- FIXME: doesnt work -->
+    <SetProperty Id="NETFRAMEWORK" Value="#1" After="AppSearch">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</SetProperty>
+    <!-- FIXME: doesnt work -->
+    <SetProperty Id="NETFRAMEWORK40" Value="#1" After="AppSearch">NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</SetProperty>
 
     <!-- =========================================================== -->
     <!-- DIRECTORY STRUCTURE -->

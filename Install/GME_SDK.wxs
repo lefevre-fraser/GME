@@ -15,7 +15,8 @@
     <PropertyRef Id="NETFRAMEWORK20"/>
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
     <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
-    <Property Id="NETFRAMEWORK">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Property><!-- FIXME: doesnt work -->
+    <SetProperty Id="NETFRAMEWORK" Value="#1" After="AppSearch">NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</SetProperty>
+    <SetProperty Id="NETFRAMEWORK40" Value="#1" After="AppSearch">NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</SetProperty>
 
     <!-- =========================================================== -->
     <!-- DIRECTORY STRUCTURE -->
@@ -211,7 +212,7 @@
     </Component>
     <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR" Guid="{AEE769E8-E82D-46AF-AF94-F61B2C41DF5A}" Permanent="yes">
       <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\ISIS.GME.Common.dll" KeyPath="yes" Assembly=".net"/>
-      <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
+      <Condition>NETFRAMEWORK40</Condition>
     </Component>
     <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
       <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\MgaMeta.dll" />
