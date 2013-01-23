@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 12.12.11
+                 GME 13
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -25,6 +25,14 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes
+----------------------------------
+  - Fix CSharpDSMLGenerator
+  - Fix IconPath
+  - Fix bug where connections were never straight
+  - Add Add-on event GLOBALEVENT_OPEN_PROJECT_FINISHED, to notify after project open, create or xme import
+  - Fix drag-n-drop not knowing what paradigm a file is, when the xme has a different meta version than the active version
 
 Release Notes of Release 12.12.11
 ----------------------------------
