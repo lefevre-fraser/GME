@@ -107,7 +107,7 @@ const struct errtab MgaErrTab[]= {
 {E_MGA_META_VIOLATION, L"The operation caused meta violation for object %o"},
 {E_MGA_NOT_CHANGEABLE, L"Object cannot be changed"},
 {E_MGA_OP_REFUSED, L"Operation refused due to the state of existing data"},
-{E_MGA_LIBOBJECT, L"Object belongs to a lib image"},
+{E_MGA_LIBOBJECT, L"Objects in libraries may not be modified"},
 {E_META_INVALIDATTR, L"Unknown attribute specified"},
 {E_META_INVALIDASPECT, L"Unknown aspect specified"},
 {E_MGA_ACCESS_TYPE, L"Access method conflicts with attribute type"},
