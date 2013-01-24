@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 13
+                 GME 13.1.24
        Copyright © 2000-2012 Vanderbilt University
 
 
@@ -26,7 +26,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 13.1.24
 ----------------------------------
   - Fix CSharpDSMLGenerator
   - Fix IconPath
