@@ -178,7 +178,7 @@ STDMETHODIMP CExpressionChecker::Initialize( IMgaProject *p )
 	m_spAddOn = NULL;
 	COMTRY {
 		COMTHROW( m_spProject->CreateAddOn( m_spEventSink, &m_spAddOn ) );
-		COMTHROW( m_spAddOn->put_EventMask( ~(OBJEVENT_ATTR | OBJEVENT_CONNECTED) ) );
+		COMTHROW(m_spAddOn->put_EventMask(OBJEVENT_ATTR | OBJEVENT_CONNECTED));
 
 		m_Facade.Initialize( p );
 	} COMCATCH( ASSERT( 0 ); )
