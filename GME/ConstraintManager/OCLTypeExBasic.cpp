@@ -336,6 +336,7 @@ namespace OclBasic
 		if ( ( strName == "trim" && iCount == 0 ) ){
 			vecType.push_back( "ocl::String" );
 			vecFeatures.push_back( new OclMeta::Method( strName, vecParams, vecType, new TString_Trim(), false ) );
+			return;
 		}
 	}
 
@@ -344,6 +345,29 @@ namespace OclBasic
 //	T Y P E   O F   ocl::Enumeration
 //
 //##############################################################################################################################################
+
+	METHOD( TEnumeration_ToString  )
+	{
+		void operator()()
+		{
+			DECL_ENUMERATION( enumThis, GetThis() );
+			SetResult( CREATE_STRING( GetTypeManager(), enumThis ) );
+		}
+	};
+
+	void TEnumeration_MethodFactory::GetFeatures( const OclSignature::Method& signature, OclMeta::MethodVector& vecFeatures )
+	{
+		std::string strName = signature.GetName();
+		int iCount = signature.GetParameterCount();
+		FPV vecParams;
+		TS vecType;
+
+		if ( ( strName == "toString" ) && iCount == 0 ) {
+			vecType.push_back( "ocl::String" );
+			vecFeatures.push_back( new OclMeta::Method( strName, vecParams, vecType, new TEnumeration_ToString(), false ) );
+			return;
+		}
+	}
 
 //##############################################################################################################################################
 //
@@ -3241,7 +3265,7 @@ namespace OclBasic
 		if ( strName == "ocl::Enumeration" || strName == "enum" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Enumeration", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) ));
+			vecTypes.push_back(std::unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Enumeration", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new TEnumeration_MethodFactory(), false ) ));
 			return;
 		}
 

@@ -2263,7 +2263,7 @@ GMEMETHOD( TFCO_AttrByDefault )
 		if ( strName == "ocl::Enumeration" || strName == "enum" ) {
 			StringVector vecSupers;
 			vecSupers.push_back( "ocl::Any" );
-			vecTypes.push_back(unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Enumeration", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclImplementation::MethodFactory(), false ) ));
+			vecTypes.push_back(unique_ptr<OclMeta::Type>( new OclMeta::Type( "ocl::Enumeration", vecSupers, new OclImplementation::AttributeFactory(), new OclImplementation::AssociationFactory(), new OclBasic::TEnumeration_MethodFactory(), false ) ));
 			return;
 		}
 

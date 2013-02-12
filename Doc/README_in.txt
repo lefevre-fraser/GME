@@ -26,6 +26,11 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Fix MetaGME ExpressionChecker
+  - OCL: add toString() method to Enumeration
+
 Release Notes of Release 13.1.24
 ----------------------------------
   - Fix CSharpDSMLGenerator
