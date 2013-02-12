@@ -599,7 +599,6 @@ void CGridDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CGridDlg)
-	DDX_Control(pDX, IDC_BTNIMPORT, m_btnImport);
 	DDX_Control(pDX, IDC_STATIC_FILTERS, m_stcFilters);
 	DDX_Control(pDX, IDC_STATIC_SELECTION, m_stcSelect);
 	DDX_Control(pDX, IDC_CHKALLTYPES, m_btnAllTypes);
@@ -614,7 +613,6 @@ void CGridDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHKCON, m_btnCon);
 	DDX_Control(pDX, IDC_CHKATOM, m_btnAtom);
 	DDX_Control(pDX, IDC_LISTKIND, m_lstKind);
-	DDX_Control(pDX, IDC_BTNEXPORT, m_btnExport);
 	DDX_Control(pDX, IDCANCEL, m_btnCANCEL);
 	DDX_Control(pDX, IDOK, m_btnOK);
 	DDX_Check(pDX, IDC_CHECKALLKINDS, m_chkAllKinds);
@@ -945,8 +943,6 @@ void CGridDlg::OnSize(UINT nType, int cx, int cy)
 
 	MoveWndDown(&m_btnCANCEL, Translate.cy);
 
-	MoveWndDown(&m_btnExport, Translate.cy);
-
 	MoveWndDown(&m_btnDisp, Translate.cy);
 
 	MoveWndDown(&m_btnAllKinds, Translate.cy);
@@ -974,8 +970,6 @@ void CGridDlg::OnSize(UINT nType, int cx, int cy)
 	MoveWndDown(&m_stcSelect, Translate.cy);
 
 	MoveWndDown(&m_stcFilters, Translate.cy);
-
-	MoveWndDown(&m_btnImport, Translate.cy);
 
 	Invalidate();
 

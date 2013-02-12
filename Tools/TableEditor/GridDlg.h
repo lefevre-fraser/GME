@@ -32,7 +32,6 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CGridDlg)
 	enum { IDD = IDD_GRIDDLG };
-	CButton	m_btnImport;
 	CStatic	m_stcFilters;
 	CStatic	m_stcSelect;
 	CButton	m_btnAllTypes;
@@ -47,7 +46,6 @@ public:
 	CButton	m_btnCon;
 	CButton	m_btnAtom;
 	CListBox	m_lstKind;
-	CButton	m_btnExport;
 	CButton	m_btnCANCEL;
 	CButton	m_btnOK;
 	BOOL	m_chkAllKinds;

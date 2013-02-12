@@ -16,13 +16,11 @@
 #define IDC_CHKREF                      217
 #define IDC_CHKSET                      218
 #define IDC_STATICHELP                  219
-#define IDC_BTNEXPORT                   220
 #define IDC_CHKCON                      221
 #define IDC_BTNDISP                     222
 #define IDC_STATIC_TYPE                 223
 #define IDC_STATIC_SELECTION            224
 #define IDC_STATIC_FILTERS              225
-#define IDC_BTNIMPORT                   226
 #define ID_VIEW_RECURSIVELYSHOWITEMS    32771
 
 // Next default values for new objects
