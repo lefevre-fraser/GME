@@ -246,10 +246,13 @@ void CSearchDlg::OnButtonGo()
 	}
     if(CWnd::UpdateData(TRUE))
     {
-        if(m_searchResults)
+        if (m_searchResults)
         {
-            SearchResults();
-            CreateSearchHistory();
+			if (results != nullptr) // TODO: should probably EnableWindow(FALSE) the Search button instead
+			{
+				SearchResults();
+				CreateSearchHistory();
+			}
             return;
         }
 
@@ -930,6 +933,8 @@ void CSearchDlg::ReadHistoryValue(const CString &strCriteriaName,CString &strHis
 
 void CSearchDlg::SearchResults()
 {
+	if (results == nullptr)
+		return;
     CSearchCtrl *TheCtrl = GetCtrl();
     CComPtr<IMgaProject> ccpProject = TheCtrl->GetProject();
     m_pgsSearch.ShowWindow(SW_RESTORE);
