@@ -521,11 +521,18 @@ namespace CSharpDSMLGenerator.Generator
 				MgaSimpleConnection simple = cp.Owner as MgaSimpleConnection;
 				if (simple != null)
 				{
-					if (simple.MetaBase.Name == "ConnectorToDestination" ||
-                        (simple.MetaBase.Name == "SourceToConnector" &&
-                        string.IsNullOrEmpty(simple.StrAttrByName["srcRolename"])))
+                    MgaFCO connector = null;
+                    if (simple.MetaBase.Name == "ConnectorToDestination")
+                    {
+                        connector = simple.Src;
+                    }
+                    if (simple.MetaBase.Name == "SourceToConnector" &&
+                        string.IsNullOrEmpty(simple.StrAttrByName["srcRolename"]))
+                    {
+                        connector = simple.Dst;
+                    }
+                    if (connector != null)
 					{
-						MgaFCO connector = simple.Src;
 						foreach (MgaConnPoint cpConnector in connector.PartOfConns)
 						{
 							MgaSimpleConnection simpleConn = cpConnector.Owner as MgaSimpleConnection;
@@ -572,11 +579,18 @@ namespace CSharpDSMLGenerator.Generator
 				MgaSimpleConnection simple = cp.Owner as MgaSimpleConnection;
 				if (simple != null)
 				{
-					if (simple.MetaBase.Name == "SourceToConnector" ||
-                        (simple.MetaBase.Name == "ConnectorToDestination" &&
-                        string.IsNullOrEmpty(simple.StrAttrByName["dstRolename"])))
+                    MgaFCO connector = null;
+                    if (simple.MetaBase.Name == "SourceToConnector")
+                    {
+                        connector = simple.Dst;
+                    }
+                    if (simple.MetaBase.Name == "ConnectorToDestination" &&
+                        string.IsNullOrEmpty(simple.StrAttrByName["dstRolename"]))
+                    {
+                        connector = simple.Src;
+                    }
+                    if (connector != null)
 					{
-						MgaFCO connector = simple.Dst;
 						foreach (MgaConnPoint cpConnector in connector.PartOfConns)
 						{
 							MgaSimpleConnection simpleConn = cpConnector.Owner as MgaSimpleConnection;
