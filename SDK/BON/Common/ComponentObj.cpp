@@ -351,7 +351,7 @@ END_INTERFACE_MAP()
 // We register the ComponentClass
 // CLSID_MGAComponentClass
 
-IMPLEMENT_OLECREATE(CComponentObj, COCLASS_PROGID, 
+IMPLEMENT_OLECREATE_FLAGS(CComponentObj, COCLASS_PROGID, afxRegApartmentThreading,
 						   COCLASS_UUID_EXPLODED1,
 						   COCLASS_UUID_EXPLODED2,
 						   COCLASS_UUID_EXPLODED3,
