@@ -106,8 +106,8 @@ BOOL CProjectPropertiesDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	CComObjPtr<IMgaTerritory> terry;
-	COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 	try {
+		COMTHROW( theApp.mgaProject->CreateTerritory(NULL, PutOut(terry), NULL) );
 		theApp.mgaProject->BeginTransaction(terry,TRANSACTION_READ_ONLY);
 		{
 			CComBSTR bstr;
