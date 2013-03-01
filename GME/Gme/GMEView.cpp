@@ -6796,7 +6796,8 @@ void CGMEView::OnEditUndo()
 	if (IsInElementDecoratorOperation())
 		return;
 	theApp.mgaProject->Undo();
-	this->SetFocus();
+	// Don't lose TreeBrowser focus
+	//this->SetFocus();
 }
 
 void CGMEView::OnEditRedo() 
@@ -6805,7 +6806,8 @@ void CGMEView::OnEditRedo()
 	if (IsInElementDecoratorOperation())
 		return;
 	theApp.mgaProject->Redo();
-	this->SetFocus();
+	// Don't lose TreeBrowser focus
+	//this->SetFocus();
 }
 
 void CGMEView::OnEditCopy()

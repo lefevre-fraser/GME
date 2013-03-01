@@ -190,6 +190,10 @@ private:
 public:
 	void ShowNavigationAndModeToolbars(bool isVisible);
 
+	void EnableActivateLastActive(BOOL enable)
+	{
+		m_wndClientArea.GetMDITabs().EnableActivateLastActive(enable);
+	}
 };
 
 /////////////////////////////////////////////////////////////////////////////

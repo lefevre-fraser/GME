@@ -144,8 +144,15 @@ void CChildFrame::OnClose()
 	sendEvent = true;
 
 	if(doClose)
+	{
+		// Avoid losing TreeBrowser focus when deleting this (inactive) model from the TreeBrowser
+		CMainFrame::theInstance->EnableActivateLastActive(FALSE);
 		// CFramewWnd::OnClose calls CMDIChildWnd::DestroyWindow
 		CMDIChildWndEx::OnClose();
+		// End avoid (and prevent flicker on opening new ChildFrms)
+		CMainFrame::theInstance->EnableActivateLastActive(TRUE);
+	}
+
 
 	// CMDIChildWndEx::OnClose: when the last ChildWnd is closed
 	// the document is considered closed and the title changes to Paradigm
