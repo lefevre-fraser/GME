@@ -83,7 +83,13 @@ namespace GME.CSharp
             if (gme != null)
                 gme.ConsoleClear();
             else
-                System.Console.Clear();
+                try
+                {
+                    System.Console.Clear();
+                }
+                catch (IOException) // fails if the console is redirected to a file
+                {
+                }
         }
 
 
