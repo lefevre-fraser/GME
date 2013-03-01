@@ -62,7 +62,8 @@
     <Package Id='*' Keywords='GME, MIC, modeling, domain specific languages' Description='Generic Modeling Environment Installer'
         Manufacturer='Vanderbilt University, ISIS'
         InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252'
-        InstallPrivileges='elevated' InstallScope='perMachine'/>
+        InstallPrivileges='elevated' InstallScope='perMachine'
+        Comments='GME $(var.VERSIONSTR) $(sys.BUILDARCH)'/>
 
 
     <Upgrade Id="$(var.UpgradeCode)">
