@@ -119,7 +119,7 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 		{
 			XmlStr desc(e.getMessage());
 
-			ThrowXmlError(desc.c_str());
+			ThrowXmlError(L"%s", desc.c_str());
 		}
 		COMTHROW( project->put_Preferences(project_prefs_orig) );
 
@@ -279,7 +279,7 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 		{
 			XmlStr desc(e.getMessage());
 
-			ThrowXmlError(desc.c_str());
+			ThrowXmlError(L"%s", desc.c_str());
 		}
 
 		COMTHROW( project->put_Preferences(project_prefs_orig) );
@@ -396,7 +396,7 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 			XmlStr msg = e.getMessage();
 			if (msg != magic_exit_str)
 			{
-				ThrowXmlError(msg.c_str());
+				ThrowXmlError(L"%s", msg.c_str());
 			}
 			// else just ignore it, we threw an exception for a good purpose:
 			// to quit the costly parsing operation
@@ -405,7 +405,7 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 		{
 			XmlStr desc(e.getMessage());
 
-			ThrowXmlError(desc.c_str());
+			ThrowXmlError(L"%s", desc.c_str());
 		}
 
 		CloseAll();
@@ -1831,7 +1831,7 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 		{
 			XmlStr desc(e.getMessage());
 
-			ThrowXmlError(desc.c_str());
+			ThrowXmlError(L"%s", desc.c_str());
 		}
 
 		CloseAll();

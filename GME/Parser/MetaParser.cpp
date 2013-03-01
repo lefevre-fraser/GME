@@ -96,7 +96,7 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 		{
 			XmlStr desc(e.getMessage());
 
-			ThrowXmlError(desc.c_str());
+			ThrowXmlError(L"%s", desc.c_str());
 		}
 
 		COMTHROW( metaproject->CommitTransaction() );

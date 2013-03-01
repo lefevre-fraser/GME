@@ -122,7 +122,7 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 		{
 			XmlStr desc(e.getMessage());
 
-			ThrowXmlError(desc.c_str());
+			ThrowXmlError(L"%s", desc.c_str());
 		}
 		COMTHROW( project->put_Preferences(project_prefs_orig) );
 
