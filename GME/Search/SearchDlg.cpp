@@ -287,6 +287,7 @@ void CSearchDlg::OnButtonGo()
             AfxMessageBox(_T("Make sure your input is correct. If you are using")
                 _T(" regular expression elements\n like *, + etc make sure you are")
                 _T(" following proper syntax"));
+            TheCtrl->AbortTransaction();
 
             return;
         }
