@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Reflection;
+using System.Linq;
 
 
 namespace CSharpComponentWizard
@@ -176,7 +177,12 @@ namespace CSharpComponentWizard
             {
                 return false;
             }
-            if (this.txb_SolutionName.Text.Contains(" ") || txb_SolutionName.Text == String.Empty)
+
+            List<char> invalidPathChars = Path.GetInvalidPathChars().ToList();
+            invalidPathChars.Add('\\');
+            invalidPathChars.Add(' ');
+
+            if (this.txb_SolutionName.Text.Any(x => invalidPathChars.Contains(x)) || txb_SolutionName.Text == String.Empty)
             {
                 return false;
             }
@@ -322,6 +328,8 @@ namespace CSharpComponentWizard
             }
             else if (button.Name == "btn_Generate")
             {
+                button.IsEnabled = false;
+                this.btn_Back6.IsEnabled = false;
                 Generate();
             }
         }
@@ -335,6 +343,8 @@ namespace CSharpComponentWizard
         {
             this.lbl_Step.Content = txb_GenerationResultSummary.Text;
             this.tbc_WizardTab.SelectedIndex = 6;
+            this.btn_Generate.IsEnabled = true;
+            this.btn_Back6.IsEnabled = true;
         }
 
         private void btn_Back_Click(object sender, RoutedEventArgs e)
