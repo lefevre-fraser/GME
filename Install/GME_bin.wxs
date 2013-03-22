@@ -59,6 +59,18 @@
             <Class Id='C7DCCC2E-1642-4a40-8060-51A7B9FAE488' Context='LocalServer32' Server='GME.exe' Handler='2'>
               <ProgId Id='GME.Application' />
             </Class>
+            <Interface Id="{81191A44-B898-4143-BF8B-CA7501FEC19A}" Name="IGMEOLEApp" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{9FF8F4E0-E0C9-11d3-B376-005004D38590}" Name="IMgaDataSource" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{F2181278-749F-459d-8700-92F088B80D72}" Name="IGMEOLEIt" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{399A16A0-D209-4d00-9BDF-858D87EC4641}" Name="IGMEOLEModel" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{EDEEB1F8-BC44-40d2-BE91-83E8CCD59845}" Name="IGMEOLEAspect" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{C047FAEB-7AE7-40fb-8C5C-90C73DAD4BC6}" Name="IGMEOLEPanel" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{36C7B797-6BDE-46d0-8870-70189000EDF9}" Name="IGMEOLEColl" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{1E13054E-5AD1-41EB-8FF1-C3901D99FDCC}" Name="IMgaDecorator" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{D25188F5-3ECF-433e-85C5-8B9574CA264C}" Name="IMgaCommonDecoratorEvents" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{91004115-2D1F-44a8-B6A0-09A2750BF278}" Name="IMgaDecoratorCommon" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{1D63D045-28C9-4902-8E5F-46F4AC1F8C5B}" Name="IMgaElementDecoratorEvents" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{2BEAD76C-126E-405D-AAC6-B9CA39067006}" Name="IMgaElementDecorator" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
           </TypeLib>
         </File>
         <RegistryKey Root='HKLM' Key='Software\GME'>
