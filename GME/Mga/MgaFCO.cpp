@@ -582,6 +582,8 @@ HRESULT FCO::get_Part(IMgaMetaAspect * asp, IMgaPart **pVal) {
 			CHECK_INPTRPAR(asp);
 			CHECK_OUTPTRPAR(pVal);
 
+			CComPtr<IMgaPart> ret;
+
 			CComPtr<IMgaMetaRole> metaro;					
 			COMTHROW(get_MetaRole(&metaro));
 			if(!metaro) COMTHROW( E_MGA_ROOTFCO);
@@ -594,9 +596,15 @@ HRESULT FCO::get_Part(IMgaMetaAspect * asp, IMgaPart **pVal) {
 				if(COM_EQUAL(metaa, asp)) {
 					metaref_type r;	            				
 					COMTHROW(MGACOLL_ITER->get_MetaRef(&r));
-					*pVal = ppool.getpoolobj(r, this, mgaproject).Detach();
+					ret = ppool.getpoolobj(r, this, mgaproject);
+					break;
 				}
 			}
+			if (ret == nullptr)
+			{
+				return E_NOTFOUND;
+			}
+			*pVal = ret.Detach();
 
 			MGACOLL_ITERATE_END;
 		} COMCATCH(;);
