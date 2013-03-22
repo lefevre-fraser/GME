@@ -24,7 +24,7 @@ HRESULT VistaBrowseDirectory(CString& directory)
 		return hr;
 	hr = pfd->Show(NULL);
 	if (FAILED(hr))
-		return hr;
+		return hr; // may be HRESULT_FROM_WIN32(ERROR_CANCELLED)
 
 	CComPtr<IShellItem> psiResult;
 	hr = pfd->GetResult(&psiResult);
