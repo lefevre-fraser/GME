@@ -235,7 +235,7 @@ void CAggregateTreeCtrl::MaintainRegistry()
 	TCHAR szName[255];           // subkey name
 	DWORD lName=254;				// size of subkey buffer
 	TCHAR szClass[255];          // class string buffer
-	DWORD lClass;				// size of class string buffer
+	DWORD lClass=254;				// size of class string buffer
 	FILETIME ftLastWriteTime;	// last write time
 	
 	FILETIME ftOldestWriteTime;	// oldest write time
@@ -254,7 +254,7 @@ void CAggregateTreeCtrl::MaintainRegistry()
 	for(dwIndex=0;
 		ERROR_NO_MORE_ITEMS!=
 		RegEnumKeyEx(hKey,dwIndex,szName,&lName,NULL,szClass,&lClass,&ftLastWriteTime);
-		dwIndex++,lName=254
+		dwIndex++,lName=254,lClass=254
 		)
 	{
 			// If the current is earlier
