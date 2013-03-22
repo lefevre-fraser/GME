@@ -236,7 +236,7 @@ namespace CSharpComponentWizard
                 ContentString = ContentString.Replace("MyAddon", SolutionName);
 
                 StreamWriter ComponentConfigWriteStream = new StreamWriter(Path.Combine(outputfolder, "MyAddon.cs"));
-                 ComponentConfigWriteStream.Write(ContentString);
+                ComponentConfigWriteStream.Write(ContentString);
                 ComponentConfigWriteStream.Close();
 
                 File.Move(Path.Combine(outputfolder, "MyAddon.cs"), Path.Combine(outputfolder, SolutionName + ".cs"));
@@ -296,18 +296,24 @@ namespace CSharpComponentWizard
         {
             // Search sn.exe
             string SNLocation;
-            RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.MSSDK_REGISTRY_KEYPATH);
-            if (masterKey == null)
+            using (RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.MSSDK_REGISTRY_KEYPATH))
             {
-                throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
-            }
-            else
-            {
-                SNLocation = masterKey.GetValue(MainWindow.MSSDK_INSTALLFOLDER_REGISTRY_KEYNAME).ToString();
-            }
-            masterKey.Close();
+                if (masterKey == null)
+                {
+                    throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                }
+                string installationFolder = (string)masterKey.GetValue("InstallationFolder", null);
+                if (string.IsNullOrEmpty(installationFolder))
+                {
+                    throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                }
+                SNLocation = Path.Combine(installationFolder, @"bin\sn.exe");
 
-            SNLocation += @"\bin\sn.exe";
+                if (!File.Exists(SNLocation))
+                {
+                    throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                }
+            }
 
             System.Diagnostics.ProcessStartInfo pinfo = new System.Diagnostics.ProcessStartInfo();
             pinfo.Arguments = "-k \"" + outputfolder + "\\AssemblySignature.snk\"";

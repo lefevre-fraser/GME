@@ -19,8 +19,7 @@ namespace CSharpComponentWizard
         public const string VS2010_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
         public const string VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
         public const string VS2010_INSTALLDIR_KEYNAME = "InstallDir";
-        public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows";
-        public const string MSSDK_INSTALLFOLDER_REGISTRY_KEYNAME = "CurrentInstallFolder";
+        public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A";
 
         public const string GUIDREGEXP = @"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$";
 
