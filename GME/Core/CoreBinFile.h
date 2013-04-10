@@ -25,16 +25,16 @@ class membuf
 		if (hFile == INVALID_HANDLE_VALUE) {
 			return 1;
 		}
+		DWORD filesize = GetFileSize(hFile, NULL);
+		if (filesize == INVALID_FILE_SIZE || filesize == 0) {
+			return 1;
+		}
 		hFileMappingObject = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
 		if (hFileMappingObject == INVALID_HANDLE_VALUE) {
 			return 1;
 		}
 		begin = (char*)MapViewOfFile(hFileMappingObject, FILE_MAP_READ, 0, 0, 0);
 		if (begin == NULL) {
-			return 1;
-		}
-		DWORD filesize = GetFileSize(hFile, NULL);
-		if (filesize == INVALID_FILE_SIZE) {
 			return 1;
 		}
 		end = begin + filesize;
