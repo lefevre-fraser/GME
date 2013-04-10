@@ -37,9 +37,9 @@ public:
 public:
 	CCoreMetaObject *object;
 	attrid_type attrid;
+	valtype_type valtype;
 	std::wstring token;
 	std::wstring name;
-	valtype_type valtype;
 
 // ------- Methods
 

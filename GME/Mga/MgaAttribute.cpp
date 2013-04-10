@@ -22,10 +22,6 @@ void CMgaAttribute::Initialize(metaref_type mr, FCO *o, CMgaProject *p) {
 	COMTHROW(meta->get_ValueType(&attrtyp));
 	inputtyp = attrtyp;
 	if(attrtyp == ATTVAL_ENUM) attrtyp = ATTVAL_STRING;
-	regprefix = "AttrRegs/";
-	CComBSTR metaname;
-	COMTHROW(meta->get_Name(&metaname));
-	COMTHROW(regprefix.Append(metaname));
 }
 
 STDMETHODIMP CMgaAttribute::get_Owner( IMgaFCO **pVal) {  
@@ -992,9 +988,4 @@ void CMgaPart::Initialize(metaref_type mr, ::FCO *o, CMgaProject *p) {   // Thro
 		mref = mr;		
 		fco = o;
 		mgaproject = p;
-		CComPtr<IMgaMetaAspect> meta;
-		COMTHROW(get_MetaAspect(&meta));
-		COMTHROW(meta->get_Name(&aspname));
-		regprefix = "PartRegs/";
-		COMTHROW(regprefix.Append(aspname));
 }

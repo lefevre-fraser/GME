@@ -91,7 +91,16 @@ public:
 	FCOPtr fco;
 	attval_enum attrtyp, inputtyp;
 	CMgaProject *mgaproject;
-	CComBSTR(regprefix);
+	CComBSTR getregprefix()
+	{
+		CComQIPtr<IMgaMetaAttribute> meta = mgaproject->FindMetaRef(mref);
+		CComBSTR _regprefix = L"AttrRegs/";
+		CComBSTR metaname;
+		COMTHROW(meta->get_Name(&metaname));
+		COMTHROW(_regprefix.Append(metaname));
+		return _regprefix;
+	}
+	__declspec(property(get=getregprefix)) CComBSTR regprefix;
 };
 
 
@@ -289,8 +298,17 @@ public:
 	long load_status;
 	FCOPtr fco;
 	CMgaProject *mgaproject;  // Holds no reference
-	CComBSTR(regprefix);
-	CComBSTR(aspname);
+	CComBSTR getregprefix()
+	{
+		CComPtr<IMgaMetaAspect> meta;
+		COMTHROW(get_MetaAspect(&meta));
+		CComBSTR aspname;
+		COMTHROW(meta->get_Name(&aspname));
+		CComBSTR _regprefix = L"PartRegs/";
+		COMTHROW(_regprefix.Append(aspname));
+		return _regprefix;
+	}
+	__declspec(property(get=getregprefix)) CComBSTR regprefix;
 };
 
 

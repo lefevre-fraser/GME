@@ -35,7 +35,7 @@ public:
 // call CCoreProject::RegisterFinalTrItem to register, call it only once
 // CoreObjects register to group database access of their CoreAttributes
 
-class ATL_NO_VTABLE CCoreFinalTrItem
+class ATL_NO_VTABLE CCoreFinalTrItem : public ISupportErrorInfo // all subclasses will inherit ISupportErrorInfoImpl, so inherit here to save a vtable entry
 {
 public:
 	// called for final abort, clear dirty
@@ -46,6 +46,18 @@ public:
 
 	// clean up, clear dirty
 	virtual void CommitFinalTransactionFinish(bool undo) NOTHROW = 0;
+};
+
+template<const IID* piid>
+class ATL_NO_VTABLE CCoreFinalTrItemImpl : public CCoreFinalTrItem // all subclasses will inherit ISupportErrorInfoImpl, so inherit here to save a vtable entry
+{
+	// ISupportErrorInfoImpl
+public:
+	STDMETHOD(InterfaceSupportsErrorInfo)(_In_ REFIID riid)
+	{
+		return (InlineIsEqualGUID(riid,*piid)) ? S_OK : S_FALSE;
+	}
+
 };
 
 // --------------------------- CCoreUndoItem

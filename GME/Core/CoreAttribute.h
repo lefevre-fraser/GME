@@ -29,6 +29,8 @@ END_COM_MAP()
 };
 
 // --------------------------- CCoreAttribute
+#pragma pack(push)
+#pragma pack(1)
 
 class ATL_NO_VTABLE CCoreAttribute : 
 	public CComObjectRootEx<CComSingleThreadModel>,
@@ -141,6 +143,8 @@ public:
 #endif
 };
 
+#pragma pack(pop)
+
 // --------------------------- CCoreLockAttribute
 
 class ATL_NO_VTABLE CCoreLockAttribute :
@@ -154,11 +158,11 @@ public:
 
 protected:
 	typedef unsigned short lock_count_type;
+	locking_type original_locking;	// local locking when enterging dirty state
 
 	lock_count_type read_count;
 	lock_count_type write_count;
 
-	locking_type original_locking;	// local locking when enterging dirty state
 	lockval_type others_lockval;	// original lockval minus local locking
 
 public:
@@ -305,9 +309,9 @@ public:
 	typedef objects_type::iterator objects_iterator;
 
 protected:
+	bool isEmpty;
 	values_type values;
 	objects_iterator backref;
-	bool isEmpty;
 
 // ------- CopyTo
 
