@@ -111,6 +111,7 @@ void CDlgRegisterJavaComp::OnOK()
             AfxMessageBox( "Error! Could not register java component. JavaCompRunner.dll is not registered properly." );
             return;
         }
+        dllPath[len] = '\0';
       
         // register under CLSID
         sprintf(buf, "CLSID\\%s\\InprocServer32", m_strGuid);

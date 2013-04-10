@@ -89,6 +89,7 @@ BOOL CComponentApp::InitInstance()
 		if (RegQueryValueEx(hKey, _T("AfxSetAmbientActCtxMod"), NULL, &dwKeyDataType,
 							(LPBYTE) &szData, &dwDataBufSize) == ERROR_SUCCESS)
 		{
+			szData[dwDataBufSize] = '\0';
 			uAfxSetAmbientActCtxMod = _tcstoul(szData, NULL, 10);
 		}
 

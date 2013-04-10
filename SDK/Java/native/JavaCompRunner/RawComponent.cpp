@@ -47,6 +47,7 @@ void RawComponent::loadJavaVM()
 		//throw hresult_exception(E_FAIL);
 		throw regkey;
 	}
+	classPath[bufSize] = '\0';
 
     RegCloseKey(regkey);
 
@@ -55,14 +56,16 @@ void RawComponent::loadJavaVM()
     RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\GME", 0, KEY_EXECUTE, &regkey);
     type = REG_SZ;
     bufSize = sizeof(memory) / sizeof(memory[0]);
-    RegQueryValueEx(regkey, "JavaMemory", NULL, &type, (LPBYTE)memory, &bufSize );
+	if (RegQueryValueEx(regkey, "JavaMemory", NULL, &type, (LPBYTE)memory, &bufSize) == ERROR_SUCCESS)
+		memory[bufSize] = '\0';
     RegCloseKey(regkey);
 
     // query jvm.dll path from registry
     RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\JavaSoft\\Java Runtime Environment", 0, KEY_EXECUTE, &regkey);
     type = REG_SZ;        
 	bufSize = 2000;
-    RegQueryValueEx(regkey, "CurrentVersion", NULL, &type, (LPBYTE)buf, &bufSize );
+	if (RegQueryValueEx(regkey, "CurrentVersion", NULL, &type, (LPBYTE)buf, &bufSize) == ERROR_SUCCESS)
+		buf[bufSize] = '\0';
     RegCloseKey(regkey);
     char javaVersionPath[2000];
     sprintf( javaVersionPath, "SOFTWARE\\JavaSoft\\Java Runtime Environment\\%s", buf );
@@ -70,7 +73,8 @@ void RawComponent::loadJavaVM()
     bufSize = 2000;
     type    = REG_SZ;
     buf[0] = 0;
-    RegQueryValueEx(regkey, "RuntimeLib", NULL, &type, (LPBYTE)buf, &bufSize );
+	if (RegQueryValueEx(regkey, "RuntimeLib", NULL, &type, (LPBYTE)buf, &bufSize) == ERROR_SUCCESS)
+		buf[bufSize] = '\0';
     RegCloseKey(regkey);
     if( strlen(buf)==0 )
     {        

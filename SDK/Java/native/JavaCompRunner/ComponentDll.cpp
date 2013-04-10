@@ -123,7 +123,8 @@ void CComponentApp::addComponents( HKEY root )
         sprintf( buf, "SOFTWARE\\GME\\Components\\%s", componentName );
         VERIFYTHROW(RegOpenKeyEx(root, buf, 0, KEY_READ, &component )==ERROR_SUCCESS);
         if(RegQueryValueEx(component, "JavaClassPath", NULL, NULL, (unsigned char*)classPath, &len ) == ERROR_SUCCESS)
-        {                   
+        {
+            classPath[len] = '\0';
             // Java component!
 
             // query clsid
@@ -133,13 +134,15 @@ void CComponentApp::addComponents( HKEY root )
             sprintf( buf, "%s\\CLSID", componentName );
             VERIFYTHROW(RegOpenKeyEx(HKEY_CLASSES_ROOT, buf, 0, KEY_READ, &clsidkey)==ERROR_SUCCESS);
             VERIFYTHROW(RegQueryValueEx(clsidkey, "", NULL, NULL, (unsigned char*)buf2, &len) == ERROR_SUCCESS);
+            buf2[len] = '\0';
             CComBSTR clsidBstr( buf2 );             
             COMTHROW(CLSIDFromString(clsidBstr,&clsid));
 
             // query class
             len = 2000;
             jclass[0] = 0;
-            RegQueryValueEx(component, "JavaClass", NULL, NULL, (unsigned char*)jclass, &len );
+            if (RegQueryValueEx(component, "JavaClass", NULL, NULL, (unsigned char*)jclass, &len ) == ERROR_SUCCESS)
+                jclass[len] = '\0';
 
             // create factory
             CJavaCompFactory * fac = new CJavaCompFactory(clsid, RUNTIME_CLASS(CComponentObj), FALSE, componentName);
