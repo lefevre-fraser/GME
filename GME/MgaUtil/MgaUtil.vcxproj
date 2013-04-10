@@ -127,6 +127,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)"</Command>

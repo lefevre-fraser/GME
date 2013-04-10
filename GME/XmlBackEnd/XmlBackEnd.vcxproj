@@ -212,6 +212,7 @@ copy ..\lib\xerces-c_3_*D.dll "$(OutDir)"</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <CustomBuildStep>
       <Command>xcopy /Y/D/F ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
