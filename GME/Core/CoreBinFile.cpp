@@ -1271,7 +1271,11 @@ STDMETHODIMP CCoreBinFile::CloseProject( VARIANT_BOOL abort) {
 	COMTRY
 	{
 		if( abort == VARIANT_FALSE && modified && !(filename == ".")) 
-			SaveProject(NULL);
+		{
+			HRESULT hr = SaveProject(NULL);
+			if (FAILED(hr))
+				HR_THROW(hr);
+		}
 
 		ASSERT( IsOpened() );
 
