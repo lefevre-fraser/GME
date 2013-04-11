@@ -52,7 +52,7 @@ CGridDlg::CGridDlg(CWnd* pParent /*=NULL*/)
 }
 
 CGridDlg::CGridDlg(IMgaFCOs* selectedObjs, CWnd* pParent /*=NULL*/)
-	: CDialog(CGridDlg::IDD, pParent)
+	: CDialog(CGridDlg::IDD, pParent), m_bInited(false)
 {
 	//{{AFX_DATA_INIT(CGridDlg)
 	m_chkAllKinds = TRUE;
@@ -128,6 +128,8 @@ BOOL CGridDlg::OnInitDialog()
 	else
 		OnButtonDisplay();
 
+	m_bInited = true;
+
 	return val;
 
 }
@@ -140,6 +142,8 @@ void CGridDlg::InitGrid() //really long function to init the grid, in the future
 	CRect rect;
 	GetClientRect(rect);
 	m_OldSize = CSize(rect.Width(), rect.Height());
+
+
 
 	//m_Grid.AutoSize();
 
@@ -912,6 +916,11 @@ void CGridDlg::BuildExtendedName(IMgaFolder *named, CString &extName)
 
 void CGridDlg::OnSize(UINT nType, int cx, int cy) 
 {
+	if(!m_bInited)
+	{
+		return;
+	}
+
 	if(!(::IsWindow(m_hWnd)))
 		return;
 	CDialog::OnSize(nType, cx, cy);

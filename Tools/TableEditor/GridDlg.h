@@ -55,6 +55,7 @@ public:
 	BOOL	m_chkModel;
 	BOOL	m_chkRef;
 	BOOL	m_chkSet;
+	bool	m_bInited;
 	//}}AFX_DATA
 
 
