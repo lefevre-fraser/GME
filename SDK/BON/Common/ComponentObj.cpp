@@ -646,6 +646,7 @@ STDMETHODIMP COMCLASS::get_ComponentParameter(BSTR name, VARIANT *pVal) {
 		vv = CComBSTR(bb);
 		vv.Detach(pVal);
 	}
+    // FIXME: pVal needs to be set in all cases
 	return S_OK;
 }
 STDMETHODIMP COMCLASS::put_ComponentParameter(BSTR name, VARIANT newVal) {

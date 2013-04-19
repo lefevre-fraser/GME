@@ -1650,6 +1650,7 @@ void CGMEApp::CreateProject(const CString &metaname, const CString &conn)
 	    COMTHROW(hr);
 
 		AfterOpenOrCreateProject(conn);
+		// TODO: set RootFolder name to filename?
 		hr = mgaProject->Notify(GLOBALEVENT_OPEN_PROJECT_FINISHED);
 		ASSERT(SUCCEEDED(hr));
 	}
