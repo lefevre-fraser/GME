@@ -273,7 +273,7 @@ class TestCase6( unittest.TestCase ):
         except:
             pass                            # it is OK to fail, since a Read-only file cannot not be saved modified
 
-        project1.Close(0)
+        project1.Close(True)
         
         mg2name = _adjacent_file("_tc6_C_libuser_sf.mga")
 
