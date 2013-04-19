@@ -540,7 +540,7 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								if (simpleConn.MetaBase.Name == "AssociationClass")
 								{
-                                    MgaFCO target = simpleConn.Src;
+                                    MgaFCO target = simpleConn.Src == connector ? simpleConn.Dst : simpleConn.Src;
                                     if (target is MgaReference)
                                     {
                                         target = (target as MgaReference).Referred;
@@ -589,7 +589,7 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								if (simpleConn.MetaBase.Name == "AssociationClass")
 								{
-                                    MgaFCO target = simpleConn.Src;
+                                    MgaFCO target = simpleConn.Src == connector ? simpleConn.Dst : simpleConn.Src;
 									if (target is MgaReference)
 									{
                                         target = (target as MgaReference).Referred;

@@ -56,9 +56,9 @@ namespace CSharpDSMLGenerator.Generator
 
 				newSrcConn.Members.Add(ctor);
 
-				foreach (IGrouping<MgaFCO, string> tuple in connections.GroupBy(x => x.Item1, x => x.Item2))
+				foreach (IGrouping<MgaFCO, string> group in connections.GroupBy(x => x.Item1, x => x.Item2))
 				{
-                    MgaFCO item = tuple.Key;
+                    MgaFCO item = group.Key;
                     if (!(item is MgaAtom))
                     {
                         continue;
@@ -74,11 +74,11 @@ namespace CSharpDSMLGenerator.Generator
 					newConnections.Comments.Add(
 						new CodeCommentStatement(Configuration.Comments.SrcConnections, true));
 
-                    if (tuple.Count() == 1)
+                    if (group.Count() == 1)
                     {
 					    newConnections.GetStatements.Add(
 						    new CodeMethodReturnStatement(
-							    new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".Cast" + tuple.First() + "Connections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")")));
+							    new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".CastSrcConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")")));
                     }
                     else
                     {
@@ -203,9 +203,9 @@ namespace CSharpDSMLGenerator.Generator
 
 				newDstConn.Members.Add(ctor);
 
-				foreach (IGrouping<MgaFCO, string> tuple in connections.GroupBy(x => x.Item1, x => x.Item2))
+				foreach (IGrouping<MgaFCO, string> group in connections.GroupBy(x => x.Item1, x => x.Item2))
 				{
-                    MgaFCO item = tuple.Key;
+                    MgaFCO item = group.Key;
                     if (!(item is MgaAtom))
                     {
                         continue;
@@ -221,7 +221,7 @@ namespace CSharpDSMLGenerator.Generator
 					newConnections.Comments.Add(
 						new CodeCommentStatement(Configuration.Comments.DstConnections, true));
 
-                    if (tuple.Count() == 1)
+                    if (group.Count() == 1)
                     {
                         newConnections.GetStatements.Add(
                             new CodeMethodReturnStatement(
@@ -262,7 +262,8 @@ namespace CSharpDSMLGenerator.Generator
 				}
 				else
 				{
-                    var allConnectionClasses = connections.Select(x => x.Item1).Distinct();					newAllDstConnections.GetStatements.Add(
+                    var allConnectionClasses = connections.Select(x => x.Item1).Distinct();
+					newAllDstConnections.GetStatements.Add(
 							new CodeSnippetExpression(
 								"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
 								Configuration.GetInterfaceName(Subject) +

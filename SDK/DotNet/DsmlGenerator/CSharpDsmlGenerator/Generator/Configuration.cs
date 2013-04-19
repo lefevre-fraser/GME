@@ -167,13 +167,13 @@ namespace CSharpDSMLGenerator.Generator
 
 			public const string SrcConnections =
 @"<summary>
-<para>Retrives all connections, which have this object as a DESTINATION.</para>
+<para>Retrieves all connections, which have this object as a DESTINATION.</para>
 <para></para>
 </summary>";
 
 			public const string DstConnections =
 @"<summary>
-<para>Retrives all connections, which have this object as a SOURCE.</para>
+<para>Retrieves all connections, which have this object as a SOURCE.</para>
 <para></para>
 </summary>";
 
