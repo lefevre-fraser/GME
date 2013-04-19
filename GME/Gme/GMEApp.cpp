@@ -1456,19 +1456,53 @@ void CGMEApp::OpenProject(const CString &conn) {
 					} else if (parg.vt == (VT_UI1 | VT_ARRAY)) {
 						msg += CString(" with GUID ") + StringFromGUID2(parg);
 					}
-					if (CString(parn) == _T("MetaGME2000"))
-						msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
-					msg += _T("\nDo you want to import with an other registered paradigm ?");
-					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
-					
-						CComObjPtr<IMgaLauncher> launcher;
-						COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
-						if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
+					IMgaRegistrarPtr registrar;
+					COMTHROW(registrar.CreateInstance(L"Mga.MgaRegistrar"));
+					_variant_t current_guid;
+					_bstr_t current_version;
+					registrar->QueryParadigm(static_cast<BSTR>(parn), _bstr_t().GetAddress(), current_guid.GetAddress(), REGACCESS_BOTH);
+					registrar->VersionFromGUID(static_cast<BSTR>(parn), current_guid, current_version.GetAddress(), REGACCESS_BOTH);
+					if (current_guid.vt != VT_EMPTY || current_version.length())
+					{
+						CString msg_current = msg;
+						msg_current += L"\nDo you want to open with the current version (";
+						if (current_version.length())
+						{
+							msg_current += static_cast<const wchar_t*>(current_version);
+						}
+						else if (current_guid.vt == (VT_UI1 | VT_ARRAY))
+						{
+							msg_current += StringFromGUID2(current_guid);
+						}
+						msg_current += L")?";
+						int mbRes = AfxMessageBox(msg_current, MB_YESNOCANCEL);
+						if (mbRes == IDCANCEL)
+						{
+							break;
+						}
+						if (mbRes == IDYES)
+						{
 							guidpar = true;
 							tryit = true;
-							newparname.Empty();
-							COMTHROW( launcher->get_ParadigmName(PutOut(newparname)) );
-							tryit = !newparname.IsEmpty(); // zolmol
+							newparname = parn;
+						}
+					}
+
+					if (!tryit)
+					{
+						if (CString(parn) == _T("MetaGME2000"))
+							msg += _T("\n (In GME3 the MetaGME2000 paradigm was renamed to MetaGME)");
+						msg += _T("\nDo you want to import with another registered paradigm ?");
+						if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
+					
+							CComObjPtr<IMgaLauncher> launcher;
+							COMTHROW( launcher.CoCreateInstance(CComBSTR(L"Mga.MgaLauncher")) );
+							if (SUCCEEDED(launcher->MetaDlg(METADLG_NONE))) {
+								guidpar = true;
+								newparname.Empty();
+								COMTHROW( launcher->get_ParadigmName(PutOut(newparname)) );
+								tryit = !newparname.IsEmpty();
+							}
 						}
 					}
 				}
