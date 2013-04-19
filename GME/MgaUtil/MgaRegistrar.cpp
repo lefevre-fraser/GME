@@ -1607,7 +1607,11 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 				}
 			}
 		}
-		if(!found) return(E_NOTFOUND);
+		if (!found)
+		{
+			SetErrorInfo(E_NOTFOUND);
+			return(E_NOTFOUND);
+		}
 	}
 	COMCATCH(;)
 }
