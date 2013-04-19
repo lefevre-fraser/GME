@@ -18,7 +18,7 @@ namespace CSharpDSMLGenerator.Generator
 			{
 				// find the connection objects
 
-				List<MgaFCO> connections = new List<MgaFCO>();
+                List<Tuple<MgaFCO, string>> connections = new List<Tuple<MgaFCO, string>>();
 
 				List<MgaFCO> _listWProxies = new List<MgaFCO>();
 
@@ -56,8 +56,13 @@ namespace CSharpDSMLGenerator.Generator
 
 				newSrcConn.Members.Add(ctor);
 
-				foreach (MgaFCO item in connections.OfType<MgaAtom>().Distinct())
+				foreach (IGrouping<MgaFCO, string> tuple in connections.GroupBy(x => x.Item1, x => x.Item2))
 				{
+                    MgaFCO item = tuple.Key;
+                    if (!(item is MgaAtom))
+                    {
+                        continue;
+                    }
 					CodeMemberProperty newConnections = new CodeMemberProperty()
 					{
 						Attributes = MemberAttributes.Public,
@@ -69,9 +74,25 @@ namespace CSharpDSMLGenerator.Generator
 					newConnections.Comments.Add(
 						new CodeCommentStatement(Configuration.Comments.SrcConnections, true));
 
-					newConnections.GetStatements.Add(
-						new CodeMethodReturnStatement(
-							new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".CastSrcConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")")));
+                    if (tuple.Count() == 1)
+                    {
+					    newConnections.GetStatements.Add(
+						    new CodeMethodReturnStatement(
+							    new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".Cast" + tuple.First() + "Connections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")")));
+                    }
+                    else
+                    {
+					    newConnections.GetStatements.Add(
+						    new CodeMethodReturnStatement(
+							    new CodeSnippetExpression(
+                                    
+                                    
+                                    typeof(ISIS.GME.Common.Utils).FullName + ".CastSrcConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")"
+                                    + ".Concat(" +
+                                    typeof(ISIS.GME.Common.Utils).FullName + ".CastDstConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")"
+                                    + ")"
+                                    )));
+                    }
 
 					newSrcConn.Members.Add(newConnections);
 				}
@@ -96,14 +117,15 @@ namespace CSharpDSMLGenerator.Generator
 				}
 				else
 				{
+                    var allConnectionClasses = connections.Select(x => x.Item1).Distinct();
 					newAllSrcConnections.GetStatements.Add(
 							new CodeSnippetExpression(
 								"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
 								Configuration.GetInterfaceName(Subject) +
-								")(this)).SrcConnections." + connections.FirstOrDefault().Name + "Collection.Cast<" +
+                                ")(this)).SrcConnections." + allConnectionClasses.FirstOrDefault().Name + "Collection.Cast<" +
 								typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">()"));
 
-					foreach (var childFco in connections.Skip(1))
+                    foreach (var childFco in allConnectionClasses.Skip(1))
 					{
 						newAllSrcConnections.GetStatements.Add(
 							new CodeSnippetExpression(
@@ -143,7 +165,7 @@ namespace CSharpDSMLGenerator.Generator
 			{
 				// find the connection objects
 
-				List<MgaFCO> connections = new List<MgaFCO>();
+				List<Tuple<MgaFCO, string>> connections = new List<Tuple<MgaFCO, string>>();
 
 				List<MgaFCO> _listWProxies = new List<MgaFCO>();
 
@@ -181,8 +203,13 @@ namespace CSharpDSMLGenerator.Generator
 
 				newDstConn.Members.Add(ctor);
 
-				foreach (MgaFCO item in connections.OfType<MgaAtom>().Distinct())
+				foreach (IGrouping<MgaFCO, string> tuple in connections.GroupBy(x => x.Item1, x => x.Item2))
 				{
+                    MgaFCO item = tuple.Key;
+                    if (!(item is MgaAtom))
+                    {
+                        continue;
+                    }
 					CodeMemberProperty newConnections = new CodeMemberProperty()
 					{
 						Attributes = MemberAttributes.Public,
@@ -194,9 +221,23 @@ namespace CSharpDSMLGenerator.Generator
 					newConnections.Comments.Add(
 						new CodeCommentStatement(Configuration.Comments.DstConnections, true));
 
-					newConnections.GetStatements.Add(
-						new CodeMethodReturnStatement(
-							new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".CastDstConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")")));
+                    if (tuple.Count() == 1)
+                    {
+                        newConnections.GetStatements.Add(
+                            new CodeMethodReturnStatement(
+                                new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".CastDstConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")")));
+                    }
+                    else
+                    {
+                        newConnections.GetStatements.Add(
+                            new CodeMethodReturnStatement(
+                                new CodeSnippetExpression(
+                                    typeof(ISIS.GME.Common.Utils).FullName + ".CastSrcConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")"
+                                    + ".Concat(" +
+                                    typeof(ISIS.GME.Common.Utils).FullName + ".CastDstConnections<" + Configuration.GetClassName(item as MgaObject) + ", global::" + typeof(MgaFCO).FullName + ">(Impl as global::" + typeof(MgaFCO).FullName + ", \"" + Configuration.GetKindName(item as MgaObject) + "\")"
+                                    + ")"
+                                    )));
+                    }
 
 					newDstConn.Members.Add(newConnections);
 				}
@@ -221,14 +262,14 @@ namespace CSharpDSMLGenerator.Generator
 				}
 				else
 				{
-					newAllDstConnections.GetStatements.Add(
+                    var allConnectionClasses = connections.Select(x => x.Item1).Distinct();					newAllDstConnections.GetStatements.Add(
 							new CodeSnippetExpression(
 								"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
 								Configuration.GetInterfaceName(Subject) +
-								")(this)).DstConnections." + connections.FirstOrDefault().Name + "Collection.Cast<" +
+                                ")(this)).DstConnections." + allConnectionClasses.FirstOrDefault().Name + "Collection.Cast<" +
 								typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">()"));
 
-					foreach (var childFco in connections.Skip(1))
+                    foreach (var childFco in allConnectionClasses.Skip(1))
 					{
 						newAllDstConnections.GetStatements.Add(
 							new CodeSnippetExpression(

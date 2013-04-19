@@ -512,7 +512,7 @@ namespace CSharpDSMLGenerator.Generator
 		}
 
 
-		public static IEnumerable<MgaFCO> GetSrcConnections(MgaFCO mgaFCO)
+		public static IEnumerable<Tuple<MgaFCO, string>> GetSrcConnections(MgaFCO mgaFCO)
 		{
 			//Contract.Requires<ArgumentNullException>(mgaFCO != null);
 
@@ -527,7 +527,7 @@ namespace CSharpDSMLGenerator.Generator
                         connector = simple.Src;
                     }
                     if (simple.MetaBase.Name == "SourceToConnector" &&
-                        string.IsNullOrEmpty(simple.StrAttrByName["srcRolename"]))
+                        string.IsNullOrEmpty(simple.StrAttrByName["srcRolename"])) // bidirectional connection
                     {
                         connector = simple.Dst;
                     }
@@ -540,28 +540,19 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								if (simpleConn.MetaBase.Name == "AssociationClass")
 								{
-									if (simpleConn.Src == connector)
+                                    MgaFCO target = simpleConn.Src;
+                                    if (target is MgaReference)
+                                    {
+                                        target = (target as MgaReference).Referred;
+                                    }
+                                    if (simple.Src == connector)
 									{
-										if (simpleConn.Dst is MgaReference)
-										{
-											yield return (simpleConn.Dst as MgaReference).Referred;
-										}
-										else
-										{
-											yield return simpleConn.Dst;
-										}
+                                        yield return new Tuple<MgaFCO, string>(target, "Src");
 									}
-									else
+									else // bidirectional connection
 									{
-										if (simpleConn.Src is MgaReference)
-										{
-											yield return (simpleConn.Src as MgaReference).Referred;
-										}
-										else
-										{
-											yield return simpleConn.Src;
-										}
-									}
+                                        yield return new Tuple<MgaFCO, string>(target, "Dst");
+                                    }
 								}
 							}
 						}
@@ -570,7 +561,7 @@ namespace CSharpDSMLGenerator.Generator
 			}
 		}
 
-		public static IEnumerable<MgaFCO> GetDstConnections(MgaFCO mgaFCO)
+		public static IEnumerable<Tuple<MgaFCO, string>> GetDstConnections(MgaFCO mgaFCO)
 		{
 			//Contract.Requires<ArgumentNullException>(mgaFCO != null);
 
@@ -585,7 +576,7 @@ namespace CSharpDSMLGenerator.Generator
                         connector = simple.Dst;
                     }
                     if (simple.MetaBase.Name == "ConnectorToDestination" &&
-                        string.IsNullOrEmpty(simple.StrAttrByName["dstRolename"]))
+                        string.IsNullOrEmpty(simple.StrAttrByName["dstRolename"])) // bidirectional connection
                     {
                         connector = simple.Src;
                     }
@@ -598,28 +589,19 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								if (simpleConn.MetaBase.Name == "AssociationClass")
 								{
-									if (simpleConn.Src == connector)
+                                    MgaFCO target = simpleConn.Src;
+									if (target is MgaReference)
 									{
-										if (simpleConn.Dst is MgaReference)
-										{
-											yield return (simpleConn.Dst as MgaReference).Referred;
-										}
-										else
-										{
-											yield return simpleConn.Dst;
-										}
+                                        target = (target as MgaReference).Referred;
+                                    }
+                                    if (simple.Dst == connector)
+                                    {
+                                        yield return new Tuple<MgaFCO, string>(target, "Dst");
 									}
-									else
+									else // bidirectional connection
 									{
-										if (simpleConn.Src is MgaReference)
-										{
-											yield return (simpleConn.Src as MgaReference).Referred;
-										}
-										else
-										{
-											yield return simpleConn.Src;
-										}
-									}
+                                        yield return new Tuple<MgaFCO, string>(target, "Src");
+                                    }
 								}
 							}
 						}

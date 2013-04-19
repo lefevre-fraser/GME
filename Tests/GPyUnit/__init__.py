@@ -34,6 +34,7 @@ def _test_names():
  'test_MetaInterpreter',
  'Regr.Mga.tc1',
  'test_decorators',
+ 'test_DsmlGenerator',
 ]
     if platform.system() != 'Java':
         _test_names += [
