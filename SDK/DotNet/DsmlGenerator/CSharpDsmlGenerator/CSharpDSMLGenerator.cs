@@ -128,13 +128,42 @@ namespace CSharpDSMLGenerator
                 metaInterpreter.InvokeEx(project, null, null, (int)ComponentStartMode.GME_SILENT_MODE);
                 MgaGateway.BeginTransaction();
             }
+
+            string outputDir = ".";
+            if (project.ProjectConnStr.StartsWith("MGA="))
+            {
+                outputDir = Path.GetDirectoryName(project.ProjectConnStr.Substring(4));
+            }
+            GeneratorMode mode;
+            if (startMode != ComponentStartMode.GME_SILENT_MODE)
+            {
+                ApiGenerator apiForm = new ApiGenerator();
+                apiForm.txtOutputDir.Text =
+                    Path.GetDirectoryName(project.ProjectConnStr.Substring("MGA=".Length));
+
+                DialogResult dr = apiForm.ShowDialog();
+                if (dr != DialogResult.OK)
+                {
+                    return;
+                }
+
+                mode = ((ApiGenerator.ModeItem)apiForm.cbMode.SelectedItem).Mode;
+            }
+            else
+            {
+                mode = GeneratorMode.Namespaces;
+            }
+            GenerateDotNetCode(project, paradigmXmpFile, outputDir, mode);
+        }
+
+        public bool GenerateDotNetCode(MgaProject project, string paradigmXmpFile, string outputDir, GeneratorMode mode)
+        {
             //paradigm = MgaMeta.DsmlModel.GetParadigm(paradigmXmpFile);
             Generator.Configuration.DsmlModel = new MgaMeta.DsmlModel(paradigmXmpFile);
             // Important step
             //Generator.Configuration.LocalFactory.Clear();
             Generator.Configuration.DsmlName = project.RootFolder.Name;
             List<MgaObject> all = new List<MgaObject>();
-            CodeCompileUnit compileunit = new CodeCompileUnit();
 
             // TODO: add version
             //var fileVersion = new CodeAttributeDeclaration() {
@@ -180,6 +209,7 @@ namespace CSharpDSMLGenerator
 
             GMEConsole.Info.WriteLine("Processing graph...");
 
+            CodeCompileUnit compileunit = new CodeCompileUnit();
             foreach (var obj in all.Where(condition))
             {
                 if (obj.MetaBase.Name == "RootFolder" &&
@@ -227,41 +257,9 @@ namespace CSharpDSMLGenerator
                 }
             }
 
-            GeneratorMode mode;
-            if (startMode != ComponentStartMode.GME_SILENT_MODE)
-            {
-                ApiGenerator apiForm = new ApiGenerator();
-                apiForm.txtOutputDir.Text =
-                    Path.GetDirectoryName(project.ProjectConnStr.Substring("MGA=".Length));
-
-                DialogResult dr = apiForm.ShowDialog();
-                if (dr != DialogResult.OK)
-                {
-                    return;
-                }
-
-                mode = ((ApiGenerator.ModeItem)apiForm.cbMode.SelectedItem).Mode;
-            }
-            else
-            {
-                mode = GeneratorMode.Namespaces;
-            }
             {
                 // TODO: a lot of parameters must be set based on the user's choice.
-
-                string language = "";
-                language = "c#";
-                // TBD: do not use these options!
-                //language = "c++";
-                //language = "vb";
-                //language = "javascript";
-                //language = "vj#";
-
-                string outputDir = ".";
-                if (project.ProjectConnStr.StartsWith("MGA="))
-                {
-                    outputDir = Path.GetDirectoryName(project.ProjectConnStr.Substring(4));
-                }
+                string language = "c#";
                 List<string> sourceFile = CodeDomGenerateCode(
                     CodeDomProvider.CreateProvider(language),
                     compileunit,
@@ -318,7 +316,8 @@ namespace CSharpDSMLGenerator
                 errors.Sort((x, y) => y.IsWarning.CompareTo(x.IsWarning));
 
                 errors.
-                    ForEach(x => {
+                    ForEach(x =>
+                    {
                         var msg = string.Format("{0} ({1}) {2} ", x.FileName, x.Line, x.ErrorText);
 
                         if (x.IsWarning)
@@ -336,7 +335,9 @@ namespace CSharpDSMLGenerator
                     GMEConsole.Info.WriteLine(
                         "{0} was generated and is ready to use.",
                         Path.GetFullPath(cr.PathToAssembly));
+                    return true;
                 }
+                return false;
             }
         }
 
@@ -611,8 +612,8 @@ namespace CSharpDSMLGenerator
 
         #region IMgaComponentEx Members
 
-        MgaGateway MgaGateway { get; set; }
-        GMEConsole GMEConsole { get; set; }
+        internal MgaGateway MgaGateway { get; set; }
+        internal GMEConsole GMEConsole { get; set; }
 
         public void InvokeEx(MgaProject project, MgaFCO currentobj, MgaFCOs selectedobjs, int param)
         {
