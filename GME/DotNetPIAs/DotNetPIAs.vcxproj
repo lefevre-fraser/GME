@@ -116,7 +116,7 @@
     <Exec Command="&quot;$(SDK35ToolsPath)\tlbimp&quot; /nologo /primary /keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk /asmversion:$(PIAVersion) /out:$(OutName).dll $(InFile) " />
   </Target>
   <Target Name="RegisterPIA">
-    <Exec Command="&quot;$(MSBuildBinPath)\regasm&quot; /nologo $(OutName).dll" />
+    <Exec Command="&quot;$(windir)\Microsoft.NET\Framework\v2.0.50727\regasm&quot; /nologo $(OutName).dll" />
     <Exec Command="&quot;$(SDK35ToolsPath)\gacutil&quot; /nologo /i $(OutName).dll" />
     <!-- nb must execute 32bit -->
     <Exec Command="reg add HKLM\SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\$([System.IO.Path]::GetFileName($(OutName))) /ve /d c:\WINDOWS\assembly\GAC_MSIL\$([System.IO.Path]::GetFileName($(OutName)))\$(PIAVersion)__f240a760fe751c2e /f" />
