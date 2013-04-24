@@ -153,10 +153,11 @@ namespace CSharpDSMLGenerator
             {
                 mode = GeneratorMode.Namespaces;
             }
-            GenerateDotNetCode(project, paradigmXmpFile, outputDir, mode);
+            var compileUnit = GenerateDotNetCode(project, paradigmXmpFile, outputDir, mode);
+            CompileDll(outputDir, compileUnit);
         }
 
-        public bool GenerateDotNetCode(MgaProject project, string paradigmXmpFile, string outputDir, GeneratorMode mode)
+        public CodeCompileUnit GenerateDotNetCode(MgaProject project, string paradigmXmpFile, string outputDir, GeneratorMode mode)
         {
             //paradigm = MgaMeta.DsmlModel.GetParadigm(paradigmXmpFile);
             Generator.Configuration.DsmlModel = new MgaMeta.DsmlModel(paradigmXmpFile);
@@ -169,7 +170,7 @@ namespace CSharpDSMLGenerator
             //var fileVersion = new CodeAttributeDeclaration() {
             //    Name = "AssemblyFileVersionAttribute",
             //};
-            
+
             //var version = new CodeAttributeDeclaration()
             //{
             //    Name = "AssemblyVersion"
@@ -257,22 +258,28 @@ namespace CSharpDSMLGenerator
                 }
             }
 
-            {
-                // TODO: a lot of parameters must be set based on the user's choice.
-                string language = "c#";
-                List<string> sourceFile = CodeDomGenerateCode(
-                    CodeDomProvider.CreateProvider(language),
-                    compileunit,
-                    Path.Combine(outputDir, project.Name),
-                    mode);
 
-                GMEConsole.Info.WriteLine("API has been generated.");
+            // TODO: a lot of parameters must be set based on the user's choice.
+            CodeDomGenerateCode(
+                CodeDomProvider.CreateProvider(language),
+                compileunit,
+                Path.Combine(outputDir, project.Name),
+                mode);
 
-                string dllFile = Path.Combine(outputDir, Generator.Configuration.ProjectNamespace + ".dll");
+            GMEConsole.Info.WriteLine("API has been generated.");
+            return compileunit;
+        }
 
-                // Configure a CompilerParameters that links System.dll
-                // and produces the specified dll file.
-                string[] referenceAssemblies =
+        private string language = "c#";
+
+        public bool CompileDll(string outputDir, CodeCompileUnit compileunit)
+        {
+
+            string dllFile = Path.Combine(outputDir, Generator.Configuration.ProjectNamespace + ".dll");
+
+            // Configure a CompilerParameters that links System.dll
+            // and produces the specified dll file.
+            string[] referenceAssemblies =
 				{ "System.dll",
 					"System.Core.dll",
 					Assembly.GetAssembly(typeof(GME.MGA.Meta.MgaMetaBase)).Location,
@@ -280,65 +287,65 @@ namespace CSharpDSMLGenerator
 					Assembly.GetAssembly(typeof(ISIS.GME.Common.Utils)).Location,
 				};
 
-                CompilerParameters cp = new CompilerParameters(
-                    referenceAssemblies,
-                    dllFile,
-                    false);
+            CompilerParameters cp = new CompilerParameters(
+                referenceAssemblies,
+                dllFile,
+                false);
 
-                // Generate a DLL file.
-                cp.GenerateExecutable = false;
+            // Generate a DLL file.
+            cp.GenerateExecutable = false;
 
-                using (FileStream fs = File.Create(Path.Combine(outputDir, "AssemblySignature.snk")))
-                {
-                    fs.Write(
-                        CSharpDSMLGenerator.Properties.Resources.AssemblySignature,
-                        0,
-                        CSharpDSMLGenerator.Properties.Resources.AssemblySignature.Length);
-                }
-
-                cp.CompilerOptions += " /debug /pdb:\"" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + "\"";
-                cp.CompilerOptions += " /doc:\"" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + ".xml\"";
-                cp.CompilerOptions += " /keyfile:\"" + Path.Combine(outputDir, "AssemblySignature.snk") + "\"";
-                //cp.CompilerOptions += " /optimize";
-
-                // Invoke compilation.
-                //CompilerResults cr = CodeDomProvider.CreateProvider(language).
-                //CompileAssemblyFromFile(cp, sourceFile.ToArray());
-                CompilerResults cr = CodeDomProvider.CreateProvider(language).CompileAssemblyFromDom(cp, compileunit);
-
-                GMEConsole.Info.WriteLine("Compiling source code.");
-
-                cr.Errors.Cast<CompilerError>().ToList().
-                    ForEach(x => System.Diagnostics.Debug.WriteLine(x.ErrorText));
-                var errors = cr.Errors.Cast<CompilerError>().ToList();
-
-                // errors last on the console
-                errors.Sort((x, y) => y.IsWarning.CompareTo(x.IsWarning));
-
-                errors.
-                    ForEach(x =>
-                    {
-                        var msg = string.Format("{0} ({1}) {2} ", x.FileName, x.Line, x.ErrorText);
-
-                        if (x.IsWarning)
-                        {
-                            GMEConsole.Warning.WriteLine(msg);
-                        }
-                        else
-                        {
-                            GMEConsole.Error.WriteLine(msg);
-                        }
-                    });
-
-                if (cr.Errors.Count == 0)
-                {
-                    GMEConsole.Info.WriteLine(
-                        "{0} was generated and is ready to use.",
-                        Path.GetFullPath(cr.PathToAssembly));
-                    return true;
-                }
-                return false;
+            using (FileStream fs = File.Create(Path.Combine(outputDir, "AssemblySignature.snk")))
+            {
+                fs.Write(
+                    CSharpDSMLGenerator.Properties.Resources.AssemblySignature,
+                    0,
+                    CSharpDSMLGenerator.Properties.Resources.AssemblySignature.Length);
             }
+
+            cp.CompilerOptions += " /debug /pdb:\"" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + "\"";
+            cp.CompilerOptions += " /doc:\"" + Path.Combine(outputDir, Generator.Configuration.ProjectNamespace) + ".xml\"";
+            cp.CompilerOptions += " /keyfile:\"" + Path.Combine(outputDir, "AssemblySignature.snk") + "\"";
+            //cp.CompilerOptions += " /optimize";
+
+            // Invoke compilation.
+            //CompilerResults cr = CodeDomProvider.CreateProvider(language).
+            //CompileAssemblyFromFile(cp, sourceFile.ToArray());
+            CompilerResults cr = CodeDomProvider.CreateProvider(language).CompileAssemblyFromDom(cp, compileunit);
+
+            GMEConsole.Info.WriteLine("Compiling source code.");
+
+            cr.Errors.Cast<CompilerError>().ToList().
+                ForEach(x => System.Diagnostics.Debug.WriteLine(x.ErrorText));
+            var errors = cr.Errors.Cast<CompilerError>().ToList();
+
+            // errors last on the console
+            errors.Sort((x, y) => y.IsWarning.CompareTo(x.IsWarning));
+
+            errors.
+                ForEach(x =>
+                {
+                    var msg = string.Format("{0} ({1}) {2} ", x.FileName, x.Line, x.ErrorText);
+
+                    if (x.IsWarning)
+                    {
+                        GMEConsole.Warning.WriteLine(msg);
+                    }
+                    else
+                    {
+                        GMEConsole.Error.WriteLine(msg);
+                    }
+                });
+
+            if (cr.Errors.Count == 0)
+            {
+                GMEConsole.Info.WriteLine(
+                    "{0} was generated and is ready to use.",
+                    Path.GetFullPath(cr.PathToAssembly));
+                return true;
+            }
+            return false;
+
         }
 
 
