@@ -10251,7 +10251,7 @@ public:
 
           <para>If the there were a lot of constraints and the model was too
           large, the <guilabel moreinfo="none">Check All</guilabel> command
-          would take too mush time. In this case the user can shorten the
+          would take too much time. In this case the user can shorten the
           evaluation to concentrate on the first violations.</para>
         </section>
 
