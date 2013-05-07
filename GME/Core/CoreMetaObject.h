@@ -11,8 +11,8 @@ class CCoreMetaAttribute;
 
 class ATL_NO_VTABLE CCoreMetaObject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreMetaObject, &IID_ICoreMetaObject, &LIBID_MGACoreLib>,
-	public ISupportErrorInfoImpl<&IID_ICoreMetaObject>
+	public IDispatchImpl<ICoreMetaObject, &__uuidof(ICoreMetaObject), &__uuidof(__MGACoreLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(ICoreMetaObject)>
 {
 public:
 	CCoreMetaObject();
@@ -48,7 +48,7 @@ public:
 
 	CCoreMetaProject *project;
 	attributes_type attributes;
-	std::vector<GUID> classids;
+	std::vector<::GUID> classids;
 
 	metaid_type metaid;
 	std::string token;
@@ -58,7 +58,7 @@ public:
 
 public:
 	const attributes_type &GetAttributes() const { return attributes; }
-	const std::vector<GUID> &GetClassIDs() const { return classids; }
+	const std::vector<::GUID> &GetClassIDs() const { return classids; }
 	metaid_type GetMetaID() const { return metaid; }
 
 };

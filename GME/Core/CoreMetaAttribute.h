@@ -8,8 +8,8 @@ class CCoreMetaObject;
 
 class ATL_NO_VTABLE CCoreMetaAttribute : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreMetaAttribute, &IID_ICoreMetaAttribute, &LIBID_MGACoreLib>,
-	public ISupportErrorInfoImpl<&IID_ICoreMetaAttribute>
+	public IDispatchImpl<ICoreMetaAttribute, &__uuidof(ICoreMetaAttribute), &__uuidof(__MGACoreLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(ICoreMetaAttribute)>
 {
 public:
 	CCoreMetaAttribute();

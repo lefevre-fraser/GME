@@ -183,9 +183,9 @@ typedef objects_type::iterator objects_iterator;
 
 class ATL_NO_VTABLE CCoreBinFile : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreStorage, &IID_ICoreStorage, &LIBID_MGACoreLib>,
-	public ISupportErrorInfoImpl<&IID_ICoreStorage>,
-	public CComCoClass<CCoreBinFile, &CLSID_CoreBinFile>
+	public IDispatchImpl<ICoreStorage, &__uuidof(ICoreStorage), &__uuidof(__MGACoreLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(ICoreStorage)>,
+	public CComCoClass<CCoreBinFile, &__uuidof(CoreBinFile)>
 {
 public:
 	CCoreBinFile();

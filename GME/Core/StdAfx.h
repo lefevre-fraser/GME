@@ -65,7 +65,11 @@ extern CComModule _Module;
 #define ASSERT ATLASSERT
 
 #include "resource.h"
-#include "CoreLib.h"
+#import "CoreLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#include "CommonImport.h"
+#define IID_ICoreDictionaryAttributeValue __uuidof(ICoreDictionaryAttributeValue)
+#define LIBID_MGACoreLib __uuidof(__MGACoreLib)
+
 #include "CommonSmart.h"
 #include "CommonStl.h"
 #include "CoreUtilities.h"

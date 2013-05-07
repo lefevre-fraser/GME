@@ -80,4 +80,21 @@ const unsigned long	F_ANIMATION = 1<<5;
 const unsigned long	F_IMGPATH = 1<<6;
 const unsigned long	F_RESIZEAFTERMOD = 1<<7;
 
+const metaid_type METAID_NONE = 0;
+const metaid_type METAID_ROOT = 1;
+
+const attrid_type ATTRID_NONE = 0;
+const attrid_type ATTRID_LOCK = 1;
+const attrid_type ATTRID_NAME = 2;
+const attrid_type ATTRID_FATHER = 3;
+const attrid_type ATTRID_COLLECTION = 10000;
+
+const objid_type OBJID_NONE = 0;
+const objid_type OBJID_ROOT = 1;
+const long RELID_BASE_MAX  = 0x7FFFFFF;	//assigned to non-derived ojects
+const long RELID_VALUE_MAX = 0x7FFFFFFF;   // automatically assigned to deriveds
+
+typedef GMEInterfaceVersion_enum GMEInterfaceVersion;
+typedef long metaref_type;
+#define ATTVAL_ENUM _attval_enum
 

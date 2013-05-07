@@ -1249,7 +1249,9 @@ STDMETHODIMP CCoreBinFile::SaveProject(BSTR connection, VARIANT_BOOL keepoldname
 		if( !fn.empty() ) 
 		{
 			if( !(std::string(fn, 0, 4) == "MGA=") )
-				HR_THROW(E_INVALID_USAGE);
+			{
+				throw_com_error(E_INVALID_USAGE, L"Connection string must start with MGA=");
+			}
 
 			fn.erase(0, 4);
 			filename = fn;

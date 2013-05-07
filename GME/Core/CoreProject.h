@@ -58,9 +58,9 @@ typedef core::list<CCoreTerritory*> created_territorys_type;
 
 class ATL_NO_VTABLE CCoreProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CCoreProject, &CLSID_CoreProject>,
-	public IDispatchImpl<ICoreProject, &IID_ICoreProject, &LIBID_MGACoreLib>,
-	public ISupportErrorInfoImpl<&IID_ICoreProject>,
+	public CComCoClass<CCoreProject, &__uuidof(CoreProject)>,
+	public IDispatchImpl<ICoreProject, &__uuidof(ICoreProject), &__uuidof(__MGACoreLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(ICoreProject)>,
 	public IGMEVersionInfoImpl
 {
 public:
@@ -74,7 +74,7 @@ BEGIN_COM_MAP(CCoreProject)
 	COM_INTERFACE_ENTRY(ICoreProject)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
-	COM_INTERFACE_ENTRY_IID(IID_IGMEVersionInfo, IGMEVersionInfoImpl)
+	COM_INTERFACE_ENTRY_IID(__uuidof(IGMEVersionInfo), IGMEVersionInfoImpl)
 END_COM_MAP()
 
 // ------- COM methods

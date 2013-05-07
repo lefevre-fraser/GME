@@ -362,10 +362,10 @@ void CCoreObject::CreateAggregates()
 	COMTHROW( metaobject->get_ClassIDs(PutOut(p)) );
 	ASSERT( p != NULL );
 
-	const std::vector<GUID> &classids = metaobject->GetClassIDs();
+	const std::vector<::GUID> &classids = metaobject->GetClassIDs();
 
-	std::vector<GUID>::const_iterator i = classids.begin();
-	std::vector<GUID>::const_iterator e = classids.end();
+	std::vector<::GUID>::const_iterator i = classids.begin();
+	std::vector<::GUID>::const_iterator e = classids.end();
 	while( i != e )
 	{
 		CComObjPtr<IUnknown> aggregated;

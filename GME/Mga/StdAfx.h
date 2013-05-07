@@ -64,23 +64,6 @@ inline void NOOP_TRACE2(LPCSTR, ...) { }
 #include "Interfaceversion.h"
 #undef cpp_quote
 
-typedef GMEInterfaceVersion_enum GMEInterfaceVersion;
-typedef long metaref_type;
-#define ATTVAL_ENUM _attval_enum
-const attrid_type ATTRID_NONE = 0;
-const attrid_type ATTRID_LOCK = 1;
-const attrid_type ATTRID_NAME = 2;
-const attrid_type ATTRID_FATHER = 3;
-const attrid_type ATTRID_COLLECTION = 10000;
-const metaid_type METAID_NONE = 0;
-const metaid_type METAID_ROOT = 1;
-
-const objid_type OBJID_NONE = 0;
-const objid_type OBJID_ROOT = 1;
-const long RELID_BASE_MAX  = 0x7FFFFFF;	//assigned to non-derived ojects
-const long RELID_VALUE_MAX = 0x7FFFFFFF;   // automatically assigned to deriveds
-
-
 // Don't load the MIDL-generated headers
 #define __Core_h__
 #define __Meta_h__

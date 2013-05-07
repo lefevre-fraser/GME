@@ -20,7 +20,7 @@ class CCoreTerritory;
 class CCoreMetaAttribute;
 
 class CCoreAttributeErrorTearOff : 
-	public ISupportErrorInfoImpl<&IID_ICoreAttribute>,
+	public ISupportErrorInfoImpl<&__uuidof(ICoreAttribute)>,
 	public CComTearOffObjectBase<CCoreAttribute>
 {
 BEGIN_COM_MAP(CCoreAttributeErrorTearOff)
@@ -34,7 +34,7 @@ END_COM_MAP()
 
 class ATL_NO_VTABLE CCoreAttribute : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreAttribute, &IID_ICoreAttribute, &LIBID_MGACoreLib>
+	public IDispatchImpl<ICoreAttribute, &__uuidof(ICoreAttribute), &__uuidof(__MGACoreLib)>
 {
 public:
 	CCoreAttribute();

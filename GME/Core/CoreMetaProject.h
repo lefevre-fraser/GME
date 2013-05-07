@@ -10,9 +10,9 @@ class CCoreMetaObject;
 
 class ATL_NO_VTABLE CCoreMetaProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CCoreMetaProject, &CLSID_CoreMetaProject>,
-	public IDispatchImpl<ICoreMetaProject, &IID_ICoreMetaProject, &LIBID_MGACoreLib>,
-	public ISupportErrorInfoImpl<&IID_ICoreMetaProject>
+	public CComCoClass<CCoreMetaProject, &__uuidof(CoreMetaProject)>,
+	public IDispatchImpl<ICoreMetaProject, &__uuidof(ICoreMetaProject), &__uuidof(__MGACoreLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(ICoreMetaProject)>
 {
 public:
 	CCoreMetaProject();
@@ -55,7 +55,7 @@ public:
 	objects_type objects;
 	std::string name;
 	std::string token;
-	GUID guid;
+	::GUID guid;
 };
 
 inline IUnknown *CastToUnknown(CCoreMetaProject *p) { return (IUnknown*)(ICoreMetaProject*)p; }

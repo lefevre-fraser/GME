@@ -17,8 +17,8 @@ class CCoreMetaObject;
 
 class ATL_NO_VTABLE CCoreObject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<ICoreObject, &IID_ICoreObject, &LIBID_MGACoreLib>,
-	public CCoreFinalTrItemImpl<&IID_ICoreObject>
+	public IDispatchImpl<ICoreObject, &__uuidof(ICoreObject), &__uuidof(__MGACoreLib)>,
+	public CCoreFinalTrItemImpl<&__uuidof(ICoreObject)>
 {
 public:
 	CCoreObject();

@@ -25,16 +25,14 @@
 #include "stdafx.h"
 #include "resource.h"
 
-#include "Core_i.c"
-#include "Gme_i.c"
-#include "CoreLib_i.c"
-
 #include "CommonError.h"
 #include "CommonSmart.h"
 
 #include "CoreProject.h"
 #include "CoreBinFile.h"
 #include "CoreMetaProject.h"
+
+#import "CoreLib.tlb" implementation_only no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
 
 #ifdef _MERGE_PROXYSTUB
 extern "C" HINSTANCE hProxyDll;
@@ -154,7 +152,7 @@ class CCoreCollectionHandlerTearOff : public ICoreMetaObjects
 
 class CCoreCollectionHandler : 
 	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<CCoreCollectionHandler, &CLSID_CoreCollectionHandler>,
+	public CComCoClass<CCoreCollectionHandler, &__uuidof(CoreCollectionHandler)>,
 	public IUnknown
 {
 
@@ -183,7 +181,7 @@ class CCoreCollectionHandler :
 		if (ppv == NULL)
 			return E_POINTER;
 	
-		static const GUID guids[] = {
+		static const ::GUID guids[] = {
 //def lit(id): return "{%s, %s, %s, {%s, %s, %s}}" % ( hex(id.time_low), hex(id.time_mid), hex(id.time_hi_version), hex(id.clock_seq_hi_variant), hex(id.clock_seq_low), ', '.join((hex(ord(b)) for b in id.bytes[10:])))
 //print "\n".join(["%s, // %ss %s" % (lit(l[0]), l[1], l[0]) for l in ids])
 {0xc5aac2f0L, 0xc1fdL, 0x11d3L, {0x9aL, 0xd2L, 0x0, 0xaa, 0x0, 0xb6, 0xfe, 0x26}}, // MgaObjects c5aac2f0-c1fd-11d3-9ad2-00aa00b6fe26		
@@ -258,10 +256,10 @@ HRESULT STDMETHODCALLTYPE CCoreCollectionHandlerTearOff::QueryInterface(REFIID r
 }
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_CoreProject, CCoreProject)
-OBJECT_ENTRY(CLSID_CoreBinFile, CCoreBinFile)
-OBJECT_ENTRY(CLSID_CoreMetaProject, CCoreMetaProject)
-OBJECT_ENTRY(CLSID_CoreCollectionHandler, CCoreCollectionHandler)
+OBJECT_ENTRY(__uuidof(CoreProject), CCoreProject)
+OBJECT_ENTRY(__uuidof(CoreBinFile), CCoreBinFile)
+OBJECT_ENTRY(__uuidof(CoreMetaProject), CCoreMetaProject)
+OBJECT_ENTRY(__uuidof(CoreCollectionHandler), CCoreCollectionHandler)
 END_OBJECT_MAP()
 
 /////////////////////////////////////////////////////////////////////////////

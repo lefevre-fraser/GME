@@ -237,10 +237,9 @@ STDMETHODIMP CCoreProject::SaveProject(BSTR newname, VARIANT_BOOL keepoldname)
 
 	COMTRY
 	{
-		CComObjPtr<ICoreStorage> corestorage;
-		corestorage = storage;
+		ICoreStoragePtr corestorage = storage.p;
 
-		COMTHROW( corestorage->SaveProject(newname, keepoldname) );
+		corestorage->__SaveProject(newname, keepoldname);
 	}
 	COMCATCH(;)
 }

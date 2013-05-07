@@ -530,7 +530,8 @@ STDMETHODIMP CMgaProject::QueryProjectInfo(BSTR projectname, long *mgaversion,
 STDMETHODIMP CMgaProject::Save(BSTR newname, VARIANT_BOOL keepoldname)
 {
 	COMTRY {
-		if(baseterr) COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
+		if(baseterr)
+			COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
 		{
 			CComPtr<IMgaTerritory> t;
 			COMTHROW(CreateTerritory(NULL, &t));
@@ -558,7 +559,9 @@ STDMETHODIMP CMgaProject::Save(BSTR newname, VARIANT_BOOL keepoldname)
 				}
 			}
 		}
-		COMTHROW(dataproject->SaveProject(newname, keepoldname));
+		HRESULT hr = dataproject->SaveProject(newname, keepoldname);
+		if (FAILED(hr))
+			return hr;
 		if(CComBSTR(newname).Length()) {
 			if (!keepoldname) {
 				projconn = newname;
