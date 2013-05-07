@@ -43,6 +43,8 @@ void docheck(CMgaProject *mgaproject) {
 void get_absmetapath(CoreObj &t, CComBSTR &abspath) {
 	metaref_type mr = t[ATTRID_ROLEMETA];
 	CoreObj parent = t[ATTRID_FCOPARENT];
+	if (!parent)
+		COMTHROW(E_MGA_OBJECT_DELETED);
 	if(mr) {
 		get_absmetapath(parent, abspath);
 	}
