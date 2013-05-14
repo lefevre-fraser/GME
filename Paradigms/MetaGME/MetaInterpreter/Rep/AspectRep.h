@@ -48,6 +48,7 @@ public:
 	/*virtual*/ Any::KIND_TYPE getMyKind() const;
 	/*virtual*/ std::string getName() const;
 	/*virtual*/ std::string getDispName() const;
+	/*virtual*/ bool getReadOnly() const;
 
 	/*virtual*/ std::string getMyPrefix() const;
 	/*virtual*/ BON::RegistryNode getMyRegistry() const;

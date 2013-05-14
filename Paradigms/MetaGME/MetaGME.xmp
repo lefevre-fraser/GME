@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{9D3F9884-FE60-409C-8FC1-45789193989B}" cdate="Mon Jun 22 12:03:20 2009" mdate="Mon Jun 22 12:03:20 2009" >
+<paradigm name="MetaGME" guid="{9D710830-A959-4A60-B7AB-BFA3C4BD3FB9}" cdate="Tue May 14 09:46:47 2013" mdate="Tue May 14 09:46:47 2013" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -663,6 +663,10 @@ else (
 		<attrdef name="Prompt" metaref = "1053" valuetype = "string" defvalue = "">
 			<dispname>Prompt:</dispname>
 			<regnode name="help" value = "Displayed name"></regnode>
+		</attrdef>
+		<attrdef name="ReadOnly" metaref = "1569" valuetype = "boolean" defvalue = "false">
+			<dispname>Read only:</dispname>
+			<regnode name="help" value = "For visualization only. Populated by Add-ons"></regnode>
 		</attrdef>
 		<attrdef name="ReferenceEvent" metaref = "1054" valuetype = "boolean" defvalue = "false">
 			<dispname>On refer</dispname>
@@ -1767,7 +1771,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "icon" value ="set.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
-		<set name = "Aspect" metaref = "1102" attributes = "DisplayedName" >
+		<set name = "Aspect" metaref = "1102" attributes = "DisplayedName ReadOnly" >
 				<regnode name = "namePosition" value ="8"></regnode>
 				<regnode name = "sName" value ="srcFCO"></regnode>
 				<regnode name = "mName" value ="members"></regnode>
@@ -2951,6 +2955,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 		</reference>
 		<model name = "ParadigmSheet" metaref = "1155" >
 				<regnode name = "namePosition" value ="0"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
 			<role name = "Aspect" metaref = "1157" kind = "Aspect"></role>
 			<role name = "AspectProxy" metaref = "1158" kind = "AspectProxy"></role>
 			<role name = "AssociationClass" metaref = "1159" kind = "AssociationClass"></role>
@@ -3002,6 +3007,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 			<role name = "SetProxy" metaref = "1205" kind = "SetProxy"></role>
 			<role name = "SourceToConnector" metaref = "1206" kind = "SourceToConnector"></role>
 			<aspect name = "ClassDiagram" metaref = "1207" >
+				<dispname>Class Diagram</dispname>
 				<part metaref = "1208" role = "AssociationClass" primary = "yes" linked = "no"></part>
 				<part metaref = "1209" role = "Atom" primary = "yes" linked = "no"></part>
 				<part metaref = "1210" role = "AtomProxy" primary = "yes" linked = "no"></part>

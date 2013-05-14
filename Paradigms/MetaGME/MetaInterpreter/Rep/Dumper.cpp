@@ -348,6 +348,33 @@ bool Dumper::am()
 		AspectRep * asp_ptr = *it;
 		const std::string asp_name = asp_ptr->getName();
 
+		if(asp_ptr->getReadOnly())   // set all parts in all models to non-primary
+		{
+			ModelRep_Iterator jt( m_modelList.begin());
+			for( ; jt != m_modelList.end(); ++jt)
+			{
+				ModelRep * parent_mod_ptr = *jt;
+				std::string parent_name = parent_mod_ptr->getName();
+
+				// take all parts from the Aspect within the parent Model
+				const AspectRep::PartRepSeries & part_series = asp_ptr->getPartSeries( parent_mod_ptr);
+				AspectRep::PartRepSeries_ConstIterator kt = part_series.begin();
+				for ( ; kt != part_series.end(); ++kt)
+				{
+					PartRep part = *kt;
+					std::string r_name = part.getRoleRepPtr()->getSmartRoleName();
+					std::string primary_reg_path = "/PrimaryAspects/" + parent_name + ":" + r_name + "/" + asp_name;
+					try {
+							part.getFCOPtr()->getMyRegistry()->setValueByPath( primary_reg_path, "no");
+					}
+					catch(...) {
+						global_vars.err << MSG_ERROR << "Internal error: Exception during registry related write operation.\n";
+					}
+				}
+			}
+			continue;  // do not display aspect in dialog; 
+		}
+
 		// for all models
 		ModelRep_Iterator jt( m_modelList.begin());
 		for( ; jt != m_modelList.end(); ++jt)

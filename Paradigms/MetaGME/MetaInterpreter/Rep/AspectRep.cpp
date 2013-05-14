@@ -162,6 +162,18 @@ std::string AspectRep::getDispName() const
 #endif
 }
 
+bool AspectRep::getReadOnly() const
+{
+	if( m_ptr)
+	{
+		bool b =  m_ptr->getAttribute("ReadOnly")->getBooleanValue();
+		return b;
+	}
+	else // dummy aspect
+	{
+		return false;
+	}
+}
 
 std::string AspectRep::getMyPrefix() const
 {
