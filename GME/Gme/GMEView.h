@@ -234,6 +234,7 @@ public:
 	void					RemoveAnnotationFromSelectionHead(void);
 	void					RemoveAnnotationFromSelection(POSITION annPos);
 	void					ClearConnectionSelection(void);
+	void					UpdateConnectionSelection(int aspect);
 	bool					FollowLine(CGuiConnection* guiConn, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiObject* guiObj, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiPort* guiPort, bool reverse, bool tryPort);

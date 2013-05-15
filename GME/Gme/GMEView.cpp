@@ -1815,6 +1815,16 @@ void CGMEView::ClearConnectionSelection(void)
 	}
 }
 
+void CGMEView::UpdateConnectionSelection(int aspect)
+{
+	if (selectedConnection != NULL) {
+		if(!selectedConnection->IsVisible(aspect)) {
+			selectedConnection->SetSelect(false);
+			selectedConnection = NULL;
+		}
+	}
+}
+
 void CGMEView::ResetParent(bool doInvalidate)
 {
 #if !defined (ACTIVEXGMEVIEW)
@@ -4394,9 +4404,19 @@ void CGMEView::ChangeAspect(CString aspName, bool p_eraseStack /*=true*/)
 			FillModelGrid();
 			AutoRoute(); // HACK we may have size change here, reroute the whole thing for now
 			this->SendUnselEvent4List( &selected);
-			selected.RemoveAll();
+
+			// Keep selection active if it is still visible in the new aspect
+			POSITION pos = selected.GetHeadPosition();
+			while( pos != NULL ) {
+				POSITION oldPos = pos;
+				CGuiFco *gfco = selected.GetNext(pos);
+				if(!gfco->IsVisible(currentAspect->index))
+					selected.RemoveAt(oldPos);
+			}
+			UpdateConnectionSelection(currentAspect->index);
+
 			RemoveAllAnnotationFromSelection();
-			ClearConnectionSelection();
+
 			ChangeAttrPrefObjs(selected);
 
 
