@@ -743,25 +743,30 @@ void CGMEView::DoPannWinRefresh()
 
 		// draw the image
 		POSITION pos = annotators.GetHeadPosition();
-			while (pos) {
+		while (pos) {
 			CGuiAnnotator *annotator = annotators.GetNext(pos);
 			if (annotator->IsVisible()) {
 				annotator->Draw(pannDC, &gdip);
 			}
 		}
-
-		pos = children.GetHeadPosition();
-		while(pos) {
+	}
+	{
+		POSITION pos = children.GetHeadPosition();
+		while (pos) {
 			CGuiFco* fco = children.GetNext(pos);
 			ASSERT(fco != NULL);
 			if (fco->IsVisible()) {
 				CGuiConnection* conn = fco->dynamic_cast_CGuiConnection();
 				if (!conn)
+				{
+					// GME-339: Gdiplus::Graphics may modify pDC (e.g. SetViewportOrgEx) when a new-style decorator runs
+					// a modified pDC makes old-style (i.e. no DrawEx) decorators render incorrectly (e.g. when the scrollbar is scrolled)
+					Gdiplus::Graphics gdip(pannDC);
+					gdip.SetPageUnit(Gdiplus::UnitPixel);
+					gdip.SetSmoothingMode(m_eEdgeAntiAlias);
+					gdip.SetTextRenderingHint(m_eFontAntiAlias);
 					fco->Draw(pannDC, &gdip);
-				// GME-339: Gdiplus::Graphics may modify pDC (e.g. SetViewportOrgEx) when a new-style decorator runs
-				// a modified pDC makes old-style (i.e. no DrawEx) decorators render incorrectly (e.g. when the scrollbar is scrolled)
-				gdip.~Graphics();
-				::new ((void*)&gdip) Gdiplus::Graphics(pannDC);
+				}
 			}
 		}
 	}
