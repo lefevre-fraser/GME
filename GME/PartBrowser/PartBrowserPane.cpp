@@ -426,16 +426,16 @@ void CPartBrowserPane::OnPaint()
 	CPaintDC dc(this); // device context for painting
 	dc.SetWindowOrg(0, parent->GetScrollPosition ());
 
-	Gdiplus::Graphics gdipGraphics(dc.m_hDC);
-	gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
-	gdipGraphics.SetSmoothingMode(m_eEdgeAntiAlias);
-	gdipGraphics.SetTextRenderingHint(m_eFontAntiAlias);
-
 	if (pdts.size() > 0 && currentAspectIndex >= 0) {
 		try {
 			const std::vector<PartWithDecorator>& pdtv = pdts[currentAspectIndex];
 			for (std::vector<PartWithDecorator>::const_iterator ii = pdtv.begin(); ii != pdtv.end(); ++ii) {
 				if ((*ii).newDecorator) {
+					// GME-339
+					Gdiplus::Graphics gdipGraphics(dc.m_hDC);
+					gdipGraphics.SetPageUnit(Gdiplus::UnitPixel);
+					gdipGraphics.SetSmoothingMode(m_eEdgeAntiAlias);
+					gdipGraphics.SetTextRenderingHint(m_eFontAntiAlias);
 					COMTHROW((*ii).newDecorator->DrawEx((ULONG)dc.m_hDC, (ULONGLONG)(&gdipGraphics)));
 				} else {
 					COMTHROW((*ii).decorator->Draw((ULONG)dc.m_hDC));
