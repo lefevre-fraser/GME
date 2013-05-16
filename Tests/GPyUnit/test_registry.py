@@ -43,7 +43,7 @@ class TestRegistry(unittest.TestCase):
                     sheet_meta = self.project.RootMeta.RootFolder.DefinedFCOs.Item(i)
             sheet = self.project.RootFolder.CreateRootObject(sheet_meta)
             sheetregs = sheet.GetRegistryDisp(True)
-            self.assertEqual(sheetregs.Item(1).Name, 'namePosition')
+            self.assertEqual(set([reg.Name for reg in sheetregs]), set(['namePosition', 'isTypeInfoShown']))
             
             namePosition = sheet.GetRegistryNodeDisp('namePosition')
             self.assertEqual(namePosition.Name, 'namePosition')
