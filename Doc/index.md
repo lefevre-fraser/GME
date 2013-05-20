@@ -12,7 +12,10 @@ GME is the generic modeling environment.
 
 [GME overview](http://www.isis.vanderbilt.edu/Projects/gme/)
 
-[Download GME](http://repo.isis.vanderbilt.edu/downloads?tool=GME)
+Download GME  
+&nbsp; [GME-13.1.24.msi](http://repo.isis.vanderbilt.edu/GME/13.1.24/GME-13.1.24.msi)  
+&nbsp; [GME_x64-13.1.24.msi](http://repo.isis.vanderbilt.edu/GME/13.1.24/GME_x64-13.1.24.msi)  
+&nbsp; [older releases and source code](http://repo.isis.vanderbilt.edu/GME/old/)  
 
 [GME User's Manual](GME Manual and User Guide/GME Manual and User Guide.pdf)
 
