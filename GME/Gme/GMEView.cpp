@@ -4933,11 +4933,12 @@ void CGMEView::OnLButtonDown(UINT nFlags, CPoint point)
 	if(tmpConnectMode) {
 		if(connTmp && (connSrc != 0)) {
 			Connect(connSrc, connSrcPort, connSrcHotSide, connTmp, connTmpPort, connTmpHotSide, 0 != (nFlags & MK_SHIFT));
-			ClearConnSpecs();
 		}
 		tmpConnectMode = false;
+		ClearConnSpecs();
 		SetCursor(editCursor);
 		ShowCursor(TRUE);
+		Invalidate();
 	}
 	else {
 		CGMEDoc *doc = GetDocument();
@@ -6557,6 +6558,13 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 			::SetCursor(customizeConnectionCursorBackup);
 			isCursorChangedByEdgeCustomize = false;
 		}
+		if (tmpConnectMode) {
+			tmpConnectMode = false;
+			ClearConnSpecs();
+			SetCursor(editCursor);
+			ShowCursor(TRUE);
+			Invalidate();
+		}
 	}
 
 	if(CGuiMetaProject::theInstance->CmdIDInRange(nID))	{
@@ -7314,6 +7322,7 @@ void CGMEView::OnEditCancel()
 		ClearConnSpecs();
 		SetCursor(editCursor);
 		ShowCursor(TRUE);
+		Invalidate();
 	}
 	else {
 	 	CGMEDoc *doc = GetDocument();
@@ -9427,13 +9436,14 @@ void CGMEView::OnCntxConnect()
 				SetCursor(editCursor);
 			}
 			ShowCursor(TRUE);
+			Invalidate();
 		}
 	}
 }
 
 void CGMEView::OnUpdateCntxConnect(CCmdUI* pCmdUI)
 {
-	pCmdUI->Enable(GetDocument()->GetEditMode() == GME_EDIT_MODE && isSubType);
+	pCmdUI->Enable(GetDocument()->GetEditMode() == GME_EDIT_MODE && isType);
 }
 
 void CGMEView::OnResetSticky()
@@ -9452,6 +9462,36 @@ void CGMEView::OnNcMouseMove(UINT nHitTest, CPoint point)
 		CScrollZoomView::OnNcMouseMove(nHitTest, point);
 }
 
+bool CGMEView::IsLegalConnectionEnd(CGuiObject *connEnd, CGuiPort *port)
+{
+	IMgaMetaModelPtr metaModel = guiMeta->mgaMeta.p;
+	IMgaMetaRolePtr srcMeta = connSrc->dynamic_cast_CGuiObject()->metaRole.p;
+	IMgaMetaRolePtr srcPortMeta = connSrcPort ? connSrcPort->metaRole.p : NULL;
+	IMgaMetaRolePtr dstMeta = connEnd->dynamic_cast_CGuiObject()->metaRole.p;
+	IMgaMetaRolePtr dstPortMeta = port ? port->metaRole.p : NULL;
+
+	wchar_t srcPath[100];
+	if (srcPortMeta)
+		swprintf_s(srcPath, L"src %d %d, ", srcMeta->MetaRef, srcPortMeta->MetaRef);
+	else
+		swprintf_s(srcPath, L"src %d, ", srcMeta->MetaRef);
+
+	wchar_t dstPath[100];
+	if (dstPortMeta)
+		swprintf_s(dstPath, L"dst %d %d", dstMeta->MetaRef, dstPortMeta->MetaRef);
+	else
+		swprintf_s(dstPath, L"dst %d", dstMeta->MetaRef);
+
+	_bstr_t path = srcPath;
+	path += dstPath;
+
+	IMgaMetaRolesPtr roles = metaModel->__LegalConnectionRoles(path);
+
+	// TODO: check for primary aspect
+
+	return roles->Count > 0;
+}
+
 void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 {
 	if (!isLeftMouseButtonDown || (GetKeyState(VK_LBUTTON) & 0x8000) == 0) {
@@ -9463,16 +9503,14 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 	CPoint point(screenpoint);
 	CoordinateTransfer(point);
 
-	if( theApp.isMouseOverNotifyEnabled()/* && GetDocument()->GetEditMode() == GME_EDIT_MODE*/) {
-		//static CGuiObject *lastObject = 0;
-		CGuiObject *object = self  ?self->FindObject(point):0;
-		CGuiPort   *port   = object?object->FindPort(point):0;
-		if(object) {
-			if( object != lastObject)
-				this->SendMouseOver4Object( object);
+	{
+		CGuiObject *object = self ? self->FindObject(point) : 0;
+		CGuiPort   *port   = object? object->FindPort(point) : 0;
+		if(object && object != lastObject && theApp.isMouseOverNotifyEnabled()/* && GetDocument()->GetEditMode() == GME_EDIT_MODE*/) {
+			this->SendMouseOver4Object(object);
 		}
 		lastObject = object;
-		lastPort   = port;
+		lastPort = port;
 	}
 
 	if (GetDocument()->GetEditMode() == GME_EDIT_MODE) { // new decorator notification logic
@@ -9577,11 +9615,11 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 			Invalidate();
 		} 
 	}
-	if ((GetDocument()->GetEditMode() == GME_AUTOCONNECT_MODE || GetDocument()->GetEditMode() == GME_SHORTAUTOCONNECT_MODE) || (tmpConnectMode)) {
+	if ((GetDocument()->GetEditMode() == GME_AUTOCONNECT_MODE || GetDocument()->GetEditMode() == GME_SHORTAUTOCONNECT_MODE || (tmpConnectMode))) {
 		CGuiObject *object = self->FindObject(point);
-		if(object) {
+		CGuiPort *port = object ? object->FindPort(point) : NULL;
+		if (object && (connSrc == NULL || IsLegalConnectionEnd(object, port))) {
 			CRect rect = object->GetLocation();
-			CGuiPort *port = object->FindPort(point);
 			int hotSide = GME_CENTER;
 			if(port && port->IsRealPort()) {
 				rect = port->GetLocation() + rect.TopLeft();

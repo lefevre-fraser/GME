@@ -48,6 +48,7 @@ private:
 	void			UpdateNamePositionMenuItem(CCmdUI* pCmdUI, int this_val);
 	bool			AskUserAndDetachIfNeeded(CComPtr<IMgaFCO>& mgafco);
 	CGuiObject*		HelpMeFindNextObject(bool p_secondFind);
+	bool IsLegalConnectionEnd(CGuiObject *connEnd, CGuiPort *port = NULL);
 
 public:
 	bool m_isActive;

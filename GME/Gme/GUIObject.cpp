@@ -170,6 +170,8 @@ CGuiPort::CGuiPort(CGuiAspect* asp, CComPtr<IMgaFCO> fco) : parent(asp), mgaFco(
 
 	COMTHROW(fco->get_Meta(&metaFco));
 
+	COMTHROW(fco->get_MetaRole(&metaRole));
+
 	if (!IsRealPort()) {
 		ReadARPreferences();
 	}

@@ -98,6 +98,7 @@ public:
 	CGuiConnectionList inConns;
 	CGuiConnectionList outConns;
 	CComPtr<IMgaMetaFCO> metaFco;
+	CComPtr<IMgaMetaRole> metaRole;
 
 private:
 	bool autorouterPrefs[GME_AR_NUM];
