@@ -364,7 +364,7 @@ void CViolationDialog::OnKeyDownErrors(NMHDR* pNMHDR, LRESULT* pResult)
 
 BOOL CViolationDialog::PreTranslateMessage( MSG* pMsg )
 {
-	return ( pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE ) ? FALSE : CDialog::PreTranslateMessage( pMsg );
+	return CDialog::PreTranslateMessage( pMsg );
 }
 
 void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
