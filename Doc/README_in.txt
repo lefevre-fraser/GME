@@ -1,6 +1,6 @@
               Generic Modeling Environment
-                 GME 13.1.24
-       Copyright © 2000-2012 Vanderbilt University
+                 GME 13.5.21
+       Copyright © 2000-2013 Vanderbilt University
 
 
 ************************************************
@@ -26,10 +26,17 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 13.5.21
 ----------------------------------
+  - Binary compatibility with 11.12.2
   - Fix MetaGME ExpressionChecker
   - OCL: add toString() method to Enumeration
+  - Fixes for GDI (C#) decorators
+  - Selected objects/connection in model editor remain selected across aspect change if still visible
+  - IMgaProject::Close now fails if the save fails
+  - Fix bidir conns in DsmlGenerator
+  - Fix out-of-proc calls to IMga collections' GetAll
+  - Register C++ interpreters as Apartment threaded (was: main STA). #define GME_COMPONENT_COM_THREAD 0 to get old behavior
 
 Release Notes of Release 13.1.24
 ----------------------------------
@@ -1230,7 +1237,7 @@ because we have used the Java/COM bridge from Microsoft.
 2. System Requirements
 ************************************************
 
-GME has been tested on Windows XP, Windows Vista, and Windows 7.
+GME is supported on Windows XP, Vista, 7, and 8.
 GME does not work on Windows Server Core.
 
 ************************************************
@@ -1259,7 +1266,7 @@ Java interpreter interface.
 ************************************************
 
 Send comments, questions to akos.ledeczi@vanderbilt.edu
-Send bug reports to escher.isis.vanderbilt.edu/JIRA/browse/GME
+Send bug reports to gme-supp@isis.vanderbilt.edu or escher.isis.vanderbilt.edu/JIRA/browse/GME
 
 ************************************************
 6. License
