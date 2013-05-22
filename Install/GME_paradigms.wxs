@@ -44,6 +44,14 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
+      <Component Id="MetaGME_13.1.24.mta" Win64="no">
+        <File Id="MetaGME_13.1.24.mta" Name="MetaGME_13.1.24.mta" Source="..\Paradigms\MetaGME\MetaGME_13.1.24.mta" />
+        <RegistryKey Root='HKLM' Key='Software\GME\Paradigms\MetaGME'>
+          <RegistryKey Key='{9D3F9884-FE60-409C-8FC1-45789193989B}'>
+            <RegistryValue Name='ConnStr' Type='string' Value='MGA=[#MetaGME_13.1.24.mta]'/>
+          </RegistryKey>
+        </RegistryKey>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML_PARADIGM">
