@@ -21,7 +21,6 @@ extern Globals global_vars;
 /*static*/ const std::string FCO::Decorator_str = "Decorator";
 /*static*/ const std::string FCO::IsHotspotEnabled_str = "IsHotspotEnabled";
 /*static*/ const std::string FCO::IsTypeShown_str = "IsTypeShown";
-/*static*/ const std::string FCO::GeneralPreferences_str = "GeneralPreferences";
 /*static*/ const std::string FCO::NamePosition_str = "NamePosition";
 /*static*/ const std::string FCO::SubTypeIcon_str = "SubTypeIcon";
 /*static*/ const std::string FCO::InstanceIcon_str = "InstanceIcon";
@@ -976,12 +975,11 @@ std::string FCO::dumpTypeShown()
 
 
 
-std::string FCO::dumpGeneralPref()
+std::string Any::dumpGeneralPref()
 {
 	std::string mmm;
-	std::vector<FCO*> ancestors;
-	getImpAncestors( ancestors);
-	std::vector<FCO*>::iterator it = ancestors.begin();
+	std::vector<Any*> ancestors = getGeneralPrefAncestors();
+	std::vector<Any*>::iterator it = ancestors.begin();
 	for( ; it != ancestors.end(); ++it)
 	{
 		mmm += (*it)->dumpGeneralPref();

@@ -25,6 +25,7 @@ public: // constant strings
 	static const std::string NamespaceDelimiter_str;//"::"
 	static const std::string InRootFolder_str;//"InRootFolder"
 	static const std::string DisplayedName_str;//"DisplayedName"
+	static const std::string GeneralPreferences_str;//"GeneralPreferences"
 
 	static const std::string NameSelectorNode_str;
 	static const std::string DisplayedNameSelectorNode_str;
@@ -67,7 +68,7 @@ public:
 	virtual ~Any();
 
 public:	
-	virtual void initAttributes();
+	virtual void initAttributes() {}
 	void initNamespace();
 	void resetNamespace();
 	std::string getNamespace() const;
@@ -78,6 +79,8 @@ public:
 	virtual std::string getName() const;
 	virtual std::string getDispName() const;
 	virtual std::string dumpDispName() const;
+	std::string dumpGeneralPref();
+	virtual std::vector<Any*> getGeneralPrefAncestors() { return std::vector<Any*>(); }
 
 	std::string dumpConstraints();
 
@@ -123,6 +126,7 @@ protected:
 	// equivalent peers
 	std::set< BON::FCO > m_equivs;
 	bool	m_isInRootFolder;
+	std::string m_sAttrGenPref;
 
 	// displayed name (if name selection dialog used) 
 	std::string m_userSelectedDisplayName;

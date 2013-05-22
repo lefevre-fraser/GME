@@ -8,6 +8,8 @@
 #include "vector"
 #include "string"
 #include "map"
+#include <algorithm>
+#include <iterator>
 
 class ModelRep;
 class ReferenceRep;
@@ -22,7 +24,6 @@ public: // constant strings
 	static const std::string Decorator_str;//"Decorator"
 	static const std::string IsHotspotEnabled_str;//"IsHotspotEnabled"
 	static const std::string IsTypeShown_str;//"IsTypeShown"
-	static const std::string GeneralPreferences_str;//"GeneralPreferences"
 	static const std::string NamePosition_str;//"NamePosition"
 	static const std::string SubTypeIcon_str;//"SubTypeIcon"
 	static const std::string InstanceIcon_str;//"InstanceIcon"
@@ -131,6 +132,13 @@ public:
 	// the desc's/ancest's who should have the same constraints and attributes (REGULAR and IMPLEMENTATION combined)
 	void getImpDescendants( std::vector<FCO*> & descendants) const;
 	void getImpAncestors( std::vector<FCO*> & ancestors) const;
+	virtual std::vector<Any*> getGeneralPrefAncestors() {
+		std::vector<FCO*> ret;
+		getImpAncestors(ret);
+		std::vector<Any*> retAny;
+		std::copy(ret.begin(), ret.end(), std::back_inserter(retAny));
+		return retAny;
+	}
 
 	// finds out if "this" has "par" as a "type" parent
 	bool hasParent( const FCO * par, INHERITANCE_TYPE type) const;
@@ -150,7 +158,6 @@ public:
 	std::string dumpDecorator();
 	std::string dumpHotspotEnabled();
 	std::string dumpTypeShown();
-	std::string dumpGeneralPref();
 	std::string dumpNamePosition() const;
 	std::string dumpSubTypeIcon() const;
 	std::string dumpInstanceIcon() const;
@@ -190,7 +197,6 @@ protected:
 	int m_iAttrNameWrapNum;
 
 	std::string m_sAttrDispName;
-	std::string m_sAttrGenPref;
 	std::string m_sAttrIcon;
 	std::string m_sAttrPortIcon;
 	std::string m_sAttrSubTypeIcon;

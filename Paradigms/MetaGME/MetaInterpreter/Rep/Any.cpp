@@ -27,6 +27,7 @@ bool AnyLexicographicSort::operator()( Any * op1, Any * op2) const
 /*static*/ const std::string Any::DisplayedName_str = "DisplayedName";
 /*static*/ const std::string Any::NameSelectorNode_str = "myNameIs";
 /*static*/ const std::string Any::DisplayedNameSelectorNode_str = "myDisplayedNameIs";
+/*static*/ const std::string Any::GeneralPreferences_str = "GeneralPreferences";
 
 /*static*/ const std::string Any::KIND_TYPE_STR[] =
 {
@@ -105,8 +106,7 @@ std::string Any::getNamespace() const
 	return m_namespace;
 }
 
-// applicable for folders only
-void Any::initAttributes()
+void FolderRep::initAttributes()
 {
 	// for folders the default value (from the meta) true
 	// for fcos    the default value (from the meta) false
@@ -119,6 +119,11 @@ void Any::initAttributes()
 		if ( *it == m_ptr) continue;
 		if ((*it)->getObjectMeta().name().find("Proxy") != std::string::npos) continue; // folderproxies don't have attributes
 		m_isInRootFolder = m_isInRootFolder || (*it)->getAttribute( InRootFolder_str)->getBooleanValue();
+	}
+	auto attr = m_ptr->getAttribute(GeneralPreferences_str);
+	if (attr) // old MetaGME versions don't GeneralPreferences for Folders
+	{
+		m_sAttrGenPref = attr->getStringValue();
 	}
 }
 

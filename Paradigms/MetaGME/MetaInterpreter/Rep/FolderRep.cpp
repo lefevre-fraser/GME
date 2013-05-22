@@ -200,6 +200,7 @@ std::string FolderRep::doDump()
 	if (!f_disp.empty() && f_disp != getName()) // if not empty and not the same
 		mmm += dumpDispName();
 
+	mmm += dumpGeneralPref();
 	mmm += dumpConstraints();
 	--ind;
 	// footer

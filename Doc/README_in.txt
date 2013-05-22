@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 13.5.21
+                 GME 13.5.22
        Copyright © 2000-2013 Vanderbilt University
 
 
@@ -26,7 +26,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes of Release 13.5.21
+Release Notes of Release 13.5.22
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix MetaGME ExpressionChecker
@@ -37,6 +37,7 @@ Release Notes of Release 13.5.21
   - Fix bidir conns in DsmlGenerator
   - Fix out-of-proc calls to IMga collections' GetAll
   - Register C++ interpreters as Apartment threaded (was: main STA). #define GME_COMPONENT_COM_THREAD 0 to get old behavior
+  - Added General Preferences to MetaGME Folders
 
 Release Notes of Release 13.1.24
 ----------------------------------

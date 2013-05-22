@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{9D710830-A959-4A60-B7AB-BFA3C4BD3FB9}" cdate="Tue May 14 09:46:47 2013" mdate="Tue May 14 09:46:47 2013" >
+<paradigm name="MetaGME" guid="{4F6845B3-EF6E-40FE-98CA-F052AA0AB999}" cdate="Wed May 22 09:59:16 2013" mdate="Wed May 22 09:59:16 2013" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -1326,7 +1326,7 @@ name <> "" implies name.match( "^[_a-zA-Z][_a-zA-Z0-9]*$" )]]>
 				<regnode name = "icon" value ="fieldattribute.bmp"></regnode>
 				<regnode name = "decorator" value ="Mga.Decorator.MetaDecorator"></regnode>
 		</atom>
-		<atom name = "Folder" metaref = "1083"  attributes = "InRootFolder DisplayedName">
+		<atom name = "Folder" metaref = "1083"  attributes = "InRootFolder DisplayedName GeneralPreferences">
 				<regnode name = "namePosition" value ="8"></regnode>
 			<constraint name="HasChild" eventmask = "0x0" depth = "0" priority = "2">
 				<![CDATA[-- self.connectedFCOs( "src", FolderContainment ) -> size > 0

@@ -60,6 +60,7 @@ That is why a folder has to redefine the getName, getDispName operations
 
 	void extendMembership();
 	void createConstraints( Sheet * s);
+	virtual void initAttributes();
 	
 protected:
 	std::vector<FCO *> m_fcoList;
