@@ -36,7 +36,8 @@ Doc/GME Manual and User Guide/GME Manual and User Guide.fo
 Doc/GME Manual and User Guide/htmlhelp.hhp
 Doc/GME Manual and User Guide/toc.hhc
 Doc/GME Manual and User Guide/unused
-GME/Common/Release/
+Doc/GME Manual and User Guide/ap*.html
+Doc/GME Manual and User Guide/ar*.html
 GME/Console/Release/
 GME/ConstraintManager/ConstraintManager.h
 GME/ConstraintManager/OCLLexer.cpp
