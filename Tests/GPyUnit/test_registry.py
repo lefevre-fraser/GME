@@ -166,6 +166,33 @@ class TestRegistry(unittest.TestCase):
             self.project.Save()
             self.project.Close()
 
+    def test_subtree_removal(self):
+        from GPyUnit import util
+        util.register_xmp('MetaGME')
+        with util.disable_early_binding():
+            self.project = DispatchEx("Mga.MgaProject")
+            self.project.Create(self.connstr, "MetaGME")
+            self.project.BeginTransactionInNewTerr()
+            
+            for i in range(1, self.project.RootMeta.RootFolder.DefinedFCOs.Count+1):
+                if self.project.RootMeta.RootFolder.DefinedFCOs.Item(i).Name == 'ParadigmSheet':
+                    sheet_meta = self.project.RootMeta.RootFolder.DefinedFCOs.Item(i)
+            sheet = self.project.RootFolder.CreateRootObject(sheet_meta)
+            #sys.stdin.readline()
+            sheet.SetRegistryValueDisp('test123', 'test')
+            sheet.SetRegistryValueDisp('test123/123', 'test')
+            sheet.SetRegistryValueDisp('test123456', 'test')
+            sheet.SetRegistryValueDisp('test123456/123', 'test')
+            sheet.GetRegistryNodeDisp('test123').RemoveTree()
+            ATTSTATUS_UNDEFINED = -2
+            self.assertEqual(sheet.GetRegistryNodeDisp('test123').Status(), ATTSTATUS_UNDEFINED)
+            self.assertEqual(sheet.GetRegistryNodeDisp('test123/123').Status(), ATTSTATUS_UNDEFINED)
+            self.assertEqual(sheet.GetRegistryValueDisp('test123456'), 'test')
+            self.assertEqual(sheet.GetRegistryValueDisp('test123456/123'), 'test')
+            self.project.CommitTransaction()
+            self.project.Save()
+            self.project.Close()
+
     def xxxtestupgrade(self):
         from GPyUnit import util
         util.register_xmp('MetaGME')
