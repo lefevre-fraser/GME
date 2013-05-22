@@ -189,13 +189,13 @@ BOOL CViolationDialog::OnInitDialog()
 
 		lvItem.mask = LVIF_TEXT;
 		lvItem.iSubItem = 1;
-		CString strText = m_vecRecords[ i ].spConstraint->GetContextType().c_str();// OclCommonEx::Convert( m_vecRecords[ i ].spConstraint->GetContextType() );
+		CString strText = OclCommonEx::Convert( m_vecRecords[ i ].spConstraint->GetContextType() );
 		lvItem.pszText = (TCHAR*)(LPCTSTR)strText; //.GetBuffer( strText.GetLength() );
 		m_lstConstraints.SetItem( &lvItem );
 //		strText.ReleaseBuffer();
 
 		lvItem.iSubItem = 2;
-		strText = m_vecRecords[ i ].spConstraint->GetName().c_str(); // OclCommonEx::Convert( m_vecRecords[ i ].spConstraint->GetName() );
+		strText = OclCommonEx::Convert( m_vecRecords[ i ].spConstraint->GetName() );
 		lvItem.pszText = (TCHAR*)(LPCTSTR)strText; //.GetBuffer( strText.GetLength() );
 		m_lstConstraints.SetItem( &lvItem );
 //		strText.ReleaseBuffer();
@@ -442,16 +442,16 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				COMTHROW(bstr.Append(_T("\">")));
 				COMTHROW(bstr.AppendBSTR( nm));
 				COMTHROW(bstr.Append(_T("</A>: ")));
-				COMTHROW(bstr.Append(item.spConstraint.Ptr()->GetMessage().c_str()));
+				COMTHROW(bstr.Append(OclCommonEx::Convert(item.spConstraint.Ptr()->GetMessage())));
 				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
 			catch(hresult_exception &)// in case the constraint is not attached to any fco in the metamodel
 			{                         // the constraint becomes project scoped, thus QueryInterface fails
 				CComBSTR bstr;
 				bstr.Append(_T("Constraint "));
-				bstr.Append(item.spConstraint.Ptr()->GetFullName().c_str());
+				bstr.Append(OclCommonEx::Convert(item.spConstraint.Ptr()->GetFullName())); // FIXME suspect
 				bstr.Append(_T(" Violated! Description: \""));
-				bstr.Append(item.spConstraint.Ptr()->GetMessage().c_str());
+				bstr.Append(OclCommonEx::Convert(item.spConstraint.Ptr()->GetMessage())); // FIXME suspect
 				bstr.Append(_T("\"."));
 				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
@@ -508,7 +508,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			lvItem.iSubItem = 0;
 			lvItem.iImage = 0;
 			lvItem.lParam = i;
-			CString strTemp = vi.vecVariables[ i ].c_str(); // OclCommonEx::Convert( vi.vecVariables[ i ] );
+			CString strTemp = OclCommonEx::Convert( vi.vecVariables[ i ] );
 			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp;//.GetBuffer( strTemp.GetLength() );
 			m_lstObjects.InsertItem( &lvItem );
 
@@ -519,7 +519,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
-			strTemp = vi.vecObjects[ i ].c_str(); // OclCommonEx::Convert( vi.vecObjects[ i ] );
+			strTemp = OclCommonEx::Convert( vi.vecObjects[ i ] );
 			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; //.GetBuffer( strTemp.GetLength() );
 			m_lstObjects.SetItem( &lvItem );
 
@@ -541,7 +541,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 		{
 			arrText.RemoveAll();
 			int serial = it->second.serial;
-			CString strExpression = it->second.text.c_str(); // OclCommonEx::Convert(it->second.text);
+			CString strExpression = OclCommonEx::Convert(it->second.text);
 			strExpression.Replace( _T("\r"), _T("") );
 			strExpression.Replace( _T("\n"), _T("\r\n") );
 			strExpression.Replace( _T("\t"), _T("    ") );
@@ -600,7 +600,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 		m_lstExpression.DeleteAllItems();
 
 		CStringArray arrText;
-		CString strExpression = m_vecRecords[ m_iSelectedConstraint ].spConstraint->GetText().c_str(); // OclCommonEx::Convert( m_vecRecords[ m_iSelectedConstraint ].spConstraint->GetText() );
+		CString strExpression = OclCommonEx::Convert( m_vecRecords[ m_iSelectedConstraint ].spConstraint->GetText() );
 		strExpression.Replace( _T("\r"), _T("") );
 		strExpression.Replace( _T("\n"), _T("\r\n") );
 		strExpression.Replace( _T("\t"), _T("    ") );
@@ -704,7 +704,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 
 			lvItem.mask = LVIF_TEXT;
 			lvItem.iSubItem = 1;
-			strTemp = vi.strMessage.c_str(); // OclCommonEx::Convert( vi.strMessage );
+			strTemp = OclCommonEx::Convert( vi.strMessage );
 			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
@@ -714,7 +714,7 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			// Add Signature
 
 			lvItem.iSubItem = 2;
-			strTemp = vi.strSignature.c_str(); // OclCommonEx::Convert( vi.strSignature );
+			strTemp = OclCommonEx::Convert( vi.strSignature );
 			lvItem.pszText = (TCHAR*)(LPCTSTR)strTemp; // .GetBuffer( strTemp.GetLength() );
 			m_lstErrors.SetItem( &lvItem );
 
@@ -771,8 +771,8 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 			int iType2 = spConstraint2->GetType();
 			return ( iType1 < iType2 ) ? -1 : ( iType1 > iType2 ) ? 1 : 0;
 		}
-		CString str1 = ( pSortInfo->iColumn == 1 ) ? spConstraint1->GetContextType().c_str() : spConstraint1->GetName().c_str(); // OclCommonEx::Convert( ( pSortInfo->iColumn == 1 ) ? spConstraint1->GetContextType() : spConstraint1->GetName() );
-		CString str2 = ( pSortInfo->iColumn == 1 ) ? spConstraint2->GetContextType().c_str() : spConstraint2->GetName().c_str(); // OclCommonEx::Convert( ( pSortInfo->iColumn == 1 ) ? spConstraint2->GetContextType() : spConstraint2->GetName() );
+		CString str1 = OclCommonEx::Convert( ( pSortInfo->iColumn == 1 ) ? spConstraint1->GetContextType() : spConstraint1->GetName() );
+		CString str2 = OclCommonEx::Convert( ( pSortInfo->iColumn == 1 ) ? spConstraint2->GetContextType() : spConstraint2->GetName() );
 		return _tcscmp( str1, str2 );
 	}
 

@@ -20,15 +20,42 @@ namespace OclCommonEx {
 //
 //##############################################################################################################################################
 
-	std::string Convert( const CString& strIn )
+	std::string Convert(const CStringW& strIn)
 	{
-		std::string strOut( static_cast<const char*>(CStringA(strIn)) );
+		std::string strOut;
+
+		int len = GetCharLength(strIn, strIn.GetLength(), CP_UTF8);
+		if (len == 0)
+			return strOut;
+		char* out;
+		char out_stack[1024];
+		std::unique_ptr<char[]> out_heap;
+		if (len > sizeof(out_stack) / sizeof(out_stack[0]))
+		{
+			out_heap = std::unique_ptr<char[]>(new char[len]);
+			out = out_heap.get();
+		}
+		else
+		{
+			out = out_stack;
+		}
+		len = WideCharToMultiByte(CP_UTF8, 0, strIn, strIn.GetLength(), out, len, NULL, NULL);
+		ASSERT(len);
+		strOut = std::string(out, out + len);
 		return strOut;
 	}
 
-	CString Convert( const std::string& strIn )
+	CStringW Convert(const std::string& strIn)
 	{
-		return CString( strIn.c_str() );
+		int len = MultiByteToWideChar(CP_UTF8, 0, strIn.c_str(), strIn.length(), nullptr, 0);
+
+		if (len == 0)
+			return CString();
+		CString ret;
+		len = MultiByteToWideChar(CP_UTF8, 0, strIn.c_str(), strIn.length(), ret.GetBuffer(len), len);
+		ASSERT(len);
+		ret.ReleaseBuffer(len);
+		return ret;
 	}
 
 	bool ParseCardinality( const CString& strCardinalityIn )

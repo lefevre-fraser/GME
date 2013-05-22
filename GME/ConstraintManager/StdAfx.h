@@ -11,6 +11,8 @@
 #define _SECURE_ATL 1
 #endif
 
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 1
+
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif

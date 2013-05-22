@@ -101,13 +101,13 @@ BOOL CConstraintPropertiesDialog::OnInitDialog()
 			case OclGme::ConstraintBase::CL_PROJECT : {
 				CString strProject;
 				COMTHROW( m_pDialog->m_pFacade->GetProject()->get_Name( PutOut( strProject ) ) );
-				m_pageIdentity.m_edtDefinition.SetWindowText( "Project: " + strProject );
+				m_pageIdentity.m_edtDefinition.SetWindowText( L"Project: " + strProject );
 				break;
 			}
 			case OclGme::ConstraintBase::CL_META : {
 				CString strMProject;
 				COMTHROW( m_pDialog->m_pFacade->GetMetaProject()->get_Name( PutOut( strMProject ) ) );
-				m_pageIdentity.m_edtDefinition.SetWindowText( "Meta: " + strMProject );
+				m_pageIdentity.m_edtDefinition.SetWindowText( L"Meta: " + strMProject );
 				break;
 			}
 			default : {
@@ -118,7 +118,7 @@ BOOL CConstraintPropertiesDialog::OnInitDialog()
 						strPath += "/";
 					strPath += OclCommonEx::Convert( vecLibPath[ i ] );
 				}
-				m_pageIdentity.m_edtDefinition.SetWindowText( "Library: " + strPath );
+				m_pageIdentity.m_edtDefinition.SetWindowText( L"Library: " + strPath );
 				break;
 			}
 		}
@@ -128,7 +128,7 @@ BOOL CConstraintPropertiesDialog::OnInitDialog()
 		m_pageIdentity.m_cmbDepth.SetCurSel( 1 );
 		CString strProject;
 		COMTHROW( m_pDialog->m_pFacade->GetProject()->get_Name( PutOut( strProject ) ) );
-		m_pageIdentity.m_edtDefinition.SetWindowText( "Project: " + strProject );
+		m_pageIdentity.m_edtDefinition.SetWindowText( L"Project: " + strProject );
 	}
 
 	// Fill Expression Page
@@ -149,7 +149,7 @@ BOOL CConstraintPropertiesDialog::OnInitDialog()
 		m_pageExpression.m_cmbContext.EnableWindow( false );
 		int iPos = FindItem( OclCommonEx::Convert( strContext ) );
 		if ( iPos == -1 ) {
-			iPos = InsertItem( OBJTYPE_NULL, "Invalid context: " + OclCommonEx::Convert( strContext ) );
+			iPos = InsertItem( OBJTYPE_NULL, L"Invalid context: " + OclCommonEx::Convert( strContext ) );
 			m_btnOK.EnableWindow( m_spConstraintIn->GetLocation() == OclGme::ConstraintBase::CL_PROJECT );
 		}
 		m_pageExpression.m_cmbContext.SetCurSel( iPos );
@@ -211,7 +211,7 @@ void CConstraintPropertiesDialog::FillContextCombo( objtype_enum eType )
 	std::sort( vecKinds.begin(), vecKinds.end() );
 
 	for ( unsigned int i = 0 ; i < vecKinds.size() ; i++ )
-		InsertItem( eType, "meta::" + OclCommonEx::Convert( vecKinds[ i ] ) );
+		InsertItem( eType, L"meta::" + OclCommonEx::Convert( vecKinds[ i ] ) );
 }
 
 int CConstraintPropertiesDialog::InsertItem( objtype_enum eType, CString& strItem )

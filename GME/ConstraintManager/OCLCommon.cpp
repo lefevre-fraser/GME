@@ -9,14 +9,14 @@
 
 	std::string& TrimLeft( std::string& strIn )
 	{
-		while ( ! strIn.empty() && ( strIn[ 0 ] < 20 || strIn[ 0 ] == ' ' || strIn[ 0 ] == '\t' ) )
+		while ( ! strIn.empty() && ((strIn[0] < 20 && strIn[0] >= 0) || strIn[ 0 ] == ' ' || strIn[ 0 ] == '\t' ) )
 			strIn.erase( 0, 1 );
 		return strIn;
 	}
 
 	std::string& TrimRight( std::string& strIn )
 	{
-		while ( ! strIn.empty() && ( strIn[ strIn.length() - 1 ] < 20 || strIn[ strIn.length() - 1 ] == ' ' || strIn[ strIn.length() - 1 ] == '\t' ) )
+		while ( ! strIn.empty() && ((strIn[strIn.length() - 1] < 20 && strIn[strIn.length() - 1] >= 0)|| strIn[ strIn.length() - 1 ] == ' ' || strIn[ strIn.length() - 1 ] == '\t' ) )
 			strIn.erase( strIn.length() - 1, 1 );
 		return strIn;
 	}

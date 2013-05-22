@@ -101,11 +101,11 @@ namespace OclGmeCM
 		{
 			DECL_STRING( strThis, GetThis() );
 			DECL_STRING( strRegExp, GetArgument( 0 ) );
-			CStringA strRegExp2 = OclCommonEx::Convert( strRegExp );
+			CString strRegExp2 = OclCommonEx::Convert( strRegExp );
 			try {
-				std::regex tester( strRegExp2 );
+				std::wregex tester( strRegExp2 );
 
-				SetResult( CREATE_BOOLEAN( GetTypeManager(), std::regex_search(strThis, tester) ) );
+				SetResult( CREATE_BOOLEAN( GetTypeManager(), std::regex_search(static_cast<const TCHAR*>(OclCommonEx::Convert(strThis)), tester) ) );
 			} catch (std::regex_error&) {
 				ThrowException( "Regular Expression is not valid!" );
 			}

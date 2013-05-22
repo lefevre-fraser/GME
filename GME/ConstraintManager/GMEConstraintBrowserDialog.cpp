@@ -825,10 +825,10 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			CComQIPtr<IMgaRegNode> spRegNode;
 			CComQIPtr<IMgaFCO> spFCO = spObject;
 			if ( spFCO.p )
-				COMTHROW( spFCO->get_RegistryNode( CComBSTR( "ConstraintEnabling/" + strCID ), &spRegNode ) );
+				COMTHROW( spFCO->get_RegistryNode( CComBSTR( L"ConstraintEnabling/" + strCID ), &spRegNode ) );
 			else {
 				CComQIPtr<IMgaFolder> spFolder = spObject;
-				COMTHROW( spFolder->get_RegistryNode( CComBSTR( "ConstraintEnabling/" + strCID ), &spRegNode ) );
+				COMTHROW( spFolder->get_RegistryNode( CComBSTR( L"ConstraintEnabling/" + strCID ), &spRegNode ) );
 			}
 			if ( iRealNewS == NS_CHECKED_INHERITED || iRealNewS == NS_UNCHECKED_INHERITED && iImNumP != 6 )
 				COMTHROW( spRegNode->RemoveTree() );
@@ -935,7 +935,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		CComPtr<IMgaFolder> spRootFolder;
 		COMTHROW( m_pFacade->GetProject()->get_RootFolder( &spRootFolder ) );
 		CComPtr<IMgaRegNode> spRegNode;
-		COMTHROW( spRootFolder->get_RegistryNode( CComBSTR( "ConstraintDefinitions/" + OclCommonEx::Convert( spConstraint->GetFullName() ) ), &spRegNode ) );
+		COMTHROW( spRootFolder->get_RegistryNode( CComBSTR( L"ConstraintDefinitions/" + OclCommonEx::Convert( spConstraint->GetFullName() ) ), &spRegNode ) );
 		spConstraint->Write( spRegNode );
 
 		// Remove the kind from Object Tree, and refresh it
@@ -983,7 +983,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		CComPtr<IMgaFolder> spRootFolder;
 		COMTHROW( m_pFacade->GetProject()->get_RootFolder( &spRootFolder ) );
 		CComPtr<IMgaRegNode> spRegNode;
-		COMTHROW( spRootFolder->get_RegistryNode( CComBSTR( "ConstraintDefinitions/" + OclCommonEx::Convert( spConstraint->GetFullName() ) ), &spRegNode ) );
+		COMTHROW( spRootFolder->get_RegistryNode( CComBSTR( L"ConstraintDefinitions/" + OclCommonEx::Convert( spConstraint->GetFullName() ) ), &spRegNode ) );
 		COMTHROW( spRegNode->RemoveTree() );
 
 		// Remove Enabling flags from objects' registry
