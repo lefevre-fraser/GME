@@ -1,4 +1,4 @@
-// MgaAttribute.cpp : Implementation of CMgaAttribute
+(// MgaAttribute.cpp : Implementation of CMgaAttribute
 #include "stdafx.h"
 #include "MgaAttribute.h"
 #include "MgaFCO.h"
@@ -834,11 +834,16 @@ STDMETHODIMP CMgaRegNode::RemoveTree() {
 
 		for (auto it = map->begin(); it != map->end();)
 		{
-			if (wcsncmp(it->first ? it->first : L"", mypath, mypath.Length()) == 0)
+			std::wstring path = it->first ? it->first : L"";
+			if (wcsncmp(path.c_str(), mypath, mypath.Length()) == 0)
 			{
-				map->erase(it++);
-			} else
-				it++;
+				// PV: Remove only true subtree nodes (not just prefix testing)
+				if (path.length() > mypath.Length() && (mypath.Length() == 0 || path[mypath.Length()] == L'/')) {
+					map->erase(it++);
+					continue;	// modify collection while iterating
+				}
+			}
+			it++;
 		}
 		// TODO
 		markchg();
