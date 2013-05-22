@@ -166,8 +166,12 @@ bool AspectRep::getReadOnly() const
 {
 	if( m_ptr)
 	{
-		bool b =  m_ptr->getAttribute("ReadOnly")->getBooleanValue();
-		return b;
+		BON::Attribute readOnlyAttribute = m_ptr->getAttribute("ReadOnly");
+		if (readOnlyAttribute) // old MetaGME doesn't have this attribute
+		{
+			return m_ptr->getAttribute("ReadOnly")->getBooleanValue();
+		}
+		return false;
 	}
 	else // dummy aspect
 	{
