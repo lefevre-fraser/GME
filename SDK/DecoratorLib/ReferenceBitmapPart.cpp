@@ -70,6 +70,8 @@ feature_code ReferenceBitmapPart::GetFeatures(void) const
 
 void ReferenceBitmapPart::SetParam(const CString& strName, VARIANT vValue)
 {
+	if (m_referencedPart != NULL)
+		m_referencedPart->SetParam(strName, vValue);
 	TypeableBitmapPart::SetParam(strName, vValue);
 }
 

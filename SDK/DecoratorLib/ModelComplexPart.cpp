@@ -15,6 +15,24 @@ namespace DecoratorSDK {
 
 //################################################################################################
 //
+// CLASS : PortPartData
+//
+//################################################################################################
+class PortPartData {
+public:
+	PortPartData(PortPart* pD, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO):
+		portPart(pD), spPart(pPart), spFCO(pFCO) {};
+	~PortPartData() { if(portPart) delete portPart; };
+
+	void Destroy() { if(portPart) portPart->Destroy(); }
+
+	PortPart*				portPart;
+	CComPtr<IMgaMetaPart>	spPart;
+	CComPtr<IMgaFCO>		spFCO;
+};
+
+//################################################################################################
+//
 // CLASS : ModelComplexPart
 //
 //################################################################################################
@@ -31,39 +49,31 @@ ModelComplexPart::ModelComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorE
 
 ModelComplexPart::~ModelComplexPart()
 {
-	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		if ((*ii) != NULL) {
-			delete (*ii);
-		}
-	}
 	m_LeftPorts.clear();
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		if ((*ii) != NULL) {
-			delete (*ii);
-		}
-	}
 	m_RightPorts.clear();
+	for (std::vector<PortPartData*>::iterator ii = m_AllPorts.begin(); ii != m_AllPorts.end(); ++ii)
+		delete (*ii);
+	m_AllPorts.clear();
 }
 
 void ModelComplexPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
+	// Akos: when this gets called, the left and right ports list should not exist
+	/*
 	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 		(*ii)->Initialize(pProject, pPart, pFCO);
 	}
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->Initialize(pProject, pPart, pFCO);
 	}
+	*/
 	TypeableBitmapPart::Initialize(pProject, pPart, pFCO);
 }
 
 void ModelComplexPart::Destroy()
 {
-	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
+	for (std::vector<PortPartData*>::iterator ii = m_AllPorts.begin(); ii != m_AllPorts.end(); ++ii)
 		(*ii)->Destroy();
-	}
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		(*ii)->Destroy();
-	}
 	TypeableBitmapPart::Destroy();
 }
 
@@ -93,13 +103,19 @@ feature_code ModelComplexPart::GetFeatures(void) const
 
 void ModelComplexPart::SetParam(const CString& strName, VARIANT vValue)
 {
-	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
-		(*ii)->SetParam(strName, vValue);
+	CString pName(DEC_CONNECTED_PORTS_ONLY_PARAM);
+	if(pName == strName && vValue.boolVal == VARIANT_TRUE) 
+		ReOrderConnectedOnlyPorts();
+	else
+	{
+		for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
+			(*ii)->SetParam(strName, vValue);
+		}
+		for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
+			(*ii)->SetParam(strName, vValue);
+		}
+		TypeableBitmapPart::SetParam(strName, vValue);
 	}
-	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
-		(*ii)->SetParam(strName, vValue);
-	}
-	TypeableBitmapPart::SetParam(strName, vValue);
 }
 
 bool ModelComplexPart::GetParam(const CString& strName, VARIANT* pvValue)
@@ -1174,19 +1190,20 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 	}
 }
 
-class PortPartData {
-public:
-	PortPartData(PortPart* pD, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO):
-		portPart(pD), spPart(pPart), spFCO(pFCO) {};
-	~PortPartData() {};
-
-	PortPart*				portPart;
-	CComPtr<IMgaMetaPart>	spPart;
-	CComPtr<IMgaFCO>		spFCO;
-};
 
 void ModelComplexPart::LoadPorts(void)
 {
+	CComBSTR regName("showPorts");
+	CComBSTR dispPortTxt;
+	CComPtr<IMgaFCO> obj = m_parentPart->GetFCO();
+	obj->get_RegistryValue(regName, &dispPortTxt);
+	if(dispPortTxt.Length())
+	{
+		if(dispPortTxt == "false")
+			return;						// do not need ports for this reference: see Meta paradigm ReferTo connection showPorts attribute 
+	}
+
+
 	CComPtr<IMgaMetaAspect>	spParentAspect;
 	COMTHROW(m_spPart->get_ParentAspect(&spParentAspect));
 
@@ -1223,8 +1240,7 @@ void ModelComplexPart::LoadPorts(void)
 	}
 
 	if (spAspect) {
-		std::vector<PortPartData*>	vecPorts;
-
+		
 		CComPtr<IMgaFCOs> spFCOs;
 		COMTHROW(spModel->get_ChildFCOs(&spFCOs));
 		MGACOLL_ITERATE(IMgaFCO, spFCOs) {
@@ -1244,7 +1260,7 @@ void ModelComplexPart::LoadPorts(void)
 							ASSERT(0);
 						PortPart* portPart = new PortPart(static_cast<TypeableBitmapPart*> (this), m_eventSink, CPoint(lX, lY));
 						PortPartData* partData = new PortPartData(portPart, spMetaPart, MGACOLL_ITER);
-						vecPorts.push_back(partData);
+						m_AllPorts.push_back(partData);
 					} else {
 						COMTHROW(MGACOLL_ITER->Close());
 					}
@@ -1254,11 +1270,8 @@ void ModelComplexPart::LoadPorts(void)
 			}
 		} MGACOLL_ITERATE_END;
 
-		OrderPorts(vecPorts);
+		OrderPorts();
 
-		for (std::vector<PortPartData*>::iterator ii = vecPorts.begin(); ii != vecPorts.end(); ++ii)
-			delete (*ii);
-		vecPorts.clear();
 	}
 }
 
@@ -1270,17 +1283,17 @@ struct PortLess
 	}
 };
 
-void ModelComplexPart::OrderPorts(std::vector<PortPartData*>& vecPorts)
+void ModelComplexPart::OrderPorts()
 {
 	long lMin = 100000000;
 	long lMax = 0;
 
-	for (std::vector<PortPartData*>::iterator ii = vecPorts.begin(); ii != vecPorts.end(); ++ii) {
+	for (std::vector<PortPartData*>::iterator ii = m_AllPorts.begin(); ii != m_AllPorts.end(); ++ii) {
 		lMin = min(lMin, (*ii)->portPart->GetInnerPosition().x);
 		lMax = max(lMax, (*ii)->portPart->GetInnerPosition().x);
 	}
 
-	for (std::vector<PortPartData*>::iterator ii = vecPorts.begin(); ii != vecPorts.end(); ++ii) {
+	for (std::vector<PortPartData*>::iterator ii = m_AllPorts.begin(); ii != m_AllPorts.end(); ++ii) {
 		PreferenceMap mapPrefs;
 		mapPrefs[PREF_LABELCOLOR]		= PreferenceVariant(m_crPortText);
 		mapPrefs[PREF_LABELLENGTH]		= PreferenceVariant((long) m_iMaxPortTextLength);
@@ -1300,6 +1313,104 @@ void ModelComplexPart::OrderPorts(std::vector<PortPartData*>& vecPorts)
 		long k = (*ii)->portPart->GetLongest();
 		if (m_iLongestPortTextLength < k)
 			m_iLongestPortTextLength = k;
+	}
+
+	std::sort(m_LeftPorts.begin(), m_LeftPorts.end(), PortLess());
+	std::sort(m_RightPorts.begin(), m_RightPorts.end(), PortLess());
+}
+
+
+void ModelComplexPart::ReOrderConnectedOnlyPorts()
+{
+	long lMin = 100000000;
+	long lMax = 0;
+
+	m_LeftPorts.clear();
+	m_RightPorts.clear();
+	m_iLongestPortTextLength = 0;
+
+	for (std::vector<PortPartData*>::iterator ii = m_AllPorts.begin(); ii != m_AllPorts.end(); ++ii) {
+		lMin = min(lMin, (*ii)->portPart->GetInnerPosition().x);
+		lMax = max(lMax, (*ii)->portPart->GetInnerPosition().x);
+	}
+
+	for (std::vector<PortPartData*>::iterator ii = m_AllPorts.begin(); ii != m_AllPorts.end(); ++ii) {
+		PreferenceMap mapPrefs;
+		mapPrefs[PREF_LABELCOLOR]		= PreferenceVariant(m_crPortText);
+		mapPrefs[PREF_LABELLENGTH]		= PreferenceVariant((long) m_iMaxPortTextLength);
+		mapPrefs[PREF_PORTLABELINSIDE]	= PreferenceVariant(m_bPortLabelInside);
+
+		bool needThisPort = false;
+		CComPtr<IMgaConnPoints> cps;
+		(*ii)->spFCO->get_PartOfConns(&cps);
+		long num;
+		cps->get_Count(&num);
+		if(num > 0)
+		{
+			MGACOLL_ITERATE( IMgaConnPoint , cps ) {
+				CComPtr<IMgaConnPoint> cp = MGACOLL_ITER;
+				CComPtr<IMgaFCOs> refs;
+				COMTHROW( cp->get_References( &refs));
+				long l;
+				COMTHROW( refs->get_Count( &l));
+
+				CComPtr<IMgaConnection> conn;
+				COMTHROW( cp->get_Owner( &conn));
+				CComPtr<IMgaParts> connParts;
+				COMTHROW(conn->get_Parts(&connParts));
+				CComPtr<IMgaMetaAspect>	spParentAspect;
+				COMTHROW(m_spPart->get_ParentAspect(&spParentAspect));
+				bool aspectMatch = false;
+				MGACOLL_ITERATE( IMgaPart , connParts ) {
+					CComPtr<IMgaPart> connPart = MGACOLL_ITER;
+					CComPtr<IMgaMetaAspect> connAsp;
+					COMTHROW(connPart->get_MetaAspect(&connAsp));
+					if(connAsp == spParentAspect)
+					{
+						aspectMatch = true;
+						break;
+					}
+				} MGACOLL_ITERATE_END;
+				if(aspectMatch)
+				{
+					CComPtr<IMgaModel> container;
+					COMTHROW( conn->get_ParentModel( &container));
+					CComPtr<IMgaFCO> parent = m_parentPart->GetFCO();
+					CComPtr<IMgaModel> grandparent;
+					COMTHROW(parent->get_ParentModel(&grandparent));
+	
+					if(l == 0)
+					{
+						needThisPort = (parent == m_spFCO && container == grandparent);
+					}
+					else
+					{
+						CComPtr<IMgaFCO> ref;
+						COMTHROW( refs->get_Item( 1, &ref));
+						needThisPort = (ref == parent && container == grandparent);
+					}
+					if(needThisPort)
+						break;
+				}
+			} MGACOLL_ITERATE_END;
+		}
+
+		if(needThisPort) 
+		{
+			if ((*ii)->portPart->GetInnerPosition().x <= WIDTH_MODELSIDE ||
+				(*ii)->portPart->GetInnerPosition().x < lMax / 2)
+			{
+				mapPrefs[PREF_LABELLOCATION] = PreferenceVariant(m_bPortLabelInside ? L_EAST : L_WEST);
+				m_LeftPorts.push_back((*ii)->portPart);
+			} else {
+				mapPrefs[PREF_LABELLOCATION] = PreferenceVariant(m_bPortLabelInside? L_WEST: L_EAST);
+				m_RightPorts.push_back((*ii)->portPart);
+			}
+		
+			long k = (*ii)->portPart->GetLongest();
+			if (m_iLongestPortTextLength < k)
+				m_iLongestPortTextLength = k;
+		}
 	}
 
 	std::sort(m_LeftPorts.begin(), m_LeftPorts.end(), PortLess());

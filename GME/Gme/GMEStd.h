@@ -8,6 +8,7 @@
 #define IMgaContainer IMgaObject
 #include "mga.h"
 #include "..\Annotator\AnnotationDefs.h"
+#include "..\..\SDK\Decoratorlib\DecoratorDefs.h"
 #include "CommonSmart.h"
 
 /*

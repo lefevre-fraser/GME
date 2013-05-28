@@ -82,6 +82,7 @@ public:
 	static HCURSOR			editCursor;
 	static bool				derivedDrop;
 	static bool				instanceDrop;
+	static bool				showConnectedPortsOnly;
 
 	// === Start of decorator operation specific variables ===
 private:
@@ -652,6 +653,9 @@ protected:
 	afx_msg void OnUpdateViewMultiUserShowObjectOwner( CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnViewShowconnectedportsonly();
+	afx_msg void OnUpdateViewShowconnectedportsonly(CCmdUI *pCmdUI);
 };
 
 class ATL_NO_VTABLE CViewDriver :

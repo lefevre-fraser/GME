@@ -268,6 +268,7 @@ HCURSOR CGMEView::zoomCursor;
 HCURSOR CGMEView::visualCursor;
 HCURSOR CGMEView::editCursor;
 
+bool						CGMEView::showConnectedPortsOnly = false;
 bool						CGMEView::derivedDrop = false;
 bool						CGMEView::instanceDrop = false;
 bool						CGMEView::m_bUseStretchBlt = false;
@@ -520,7 +521,9 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_MULTIUSER_SHOWOWNER, OnViewMultiUserShowObjectOwner)
 	ON_UPDATE_COMMAND_UI( ID_MULTIUSER_SHOWOWNER, OnUpdateViewMultiUserShowObjectOwner)
 
-END_MESSAGE_MAP()
+	ON_COMMAND(ID_VIEW_SHOWCONNECTEDPORTSONLY, &CGMEView::OnViewShowconnectedportsonly)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWCONNECTEDPORTSONLY, &CGMEView::OnUpdateViewShowconnectedportsonly)
+	END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CGMEView construction/destruction
@@ -10652,4 +10655,16 @@ void CGMEView::OnViewMultiUserShowObjectOwner()
 void CGMEView::OnUpdateViewMultiUserShowObjectOwner( CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable( theApp.isMultiUserProj());
+}
+
+
+void CGMEView::OnViewShowconnectedportsonly()
+{
+	showConnectedPortsOnly = !showConnectedPortsOnly;
+	GetDocument()->ResetAllViews();
+}
+
+void CGMEView::OnUpdateViewShowconnectedportsonly(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(showConnectedPortsOnly);
 }

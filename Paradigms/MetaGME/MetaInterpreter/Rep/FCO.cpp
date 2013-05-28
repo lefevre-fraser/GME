@@ -29,6 +29,7 @@ extern Globals global_vars;
 /*static*/ const std::string FCO::IsResizable_str = "IsResizable";
 /*static*/ const std::string FCO::AutoRouterPref_str = "AutoRouterPref";
 /*static*/ const std::string FCO::HelpURL_str = "HelpURL";
+/*static*/ const std::string FCO::ShowPorts_str = "ShowPorts";
 
 /*static*/ const std::string FCO::IsGradientFillEnabled_str = "IsGradientFillEnabled";
 /*static*/ const std::string FCO::GradientFillColor_str = "GradientFillColor";

@@ -27,6 +27,7 @@ class PortPartData;
 class ModelComplexPart: public TypeableBitmapPart
 {
 protected:
+	std::vector<PortPartData*>	m_AllPorts;
 	std::vector<PortPart*>		m_LeftPorts;
 	std::vector<PortPart*>		m_RightPorts;
 	long						m_iMaxPortTextLength;
@@ -81,7 +82,8 @@ public:
 	virtual void	DrawBackground				(CDC* pDC, Gdiplus::Graphics* gdip);
 
 	virtual void 	LoadPorts					(void);
-	virtual void 	OrderPorts					(std::vector<PortPartData*>& vecPorts);
+	virtual void 	OrderPorts					();
+	virtual void 	ReOrderConnectedOnlyPorts	();
 	virtual void	SetBoxLocation				(const CRect& cRect);
 	virtual void	SetReferenced				(bool referenced);
 	virtual void	SetParentPart				(PartBase* pPart);

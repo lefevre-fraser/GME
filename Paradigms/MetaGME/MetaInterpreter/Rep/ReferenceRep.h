@@ -18,6 +18,7 @@ public:
 	~ReferenceRep(); 
 	
 	/*virtual*/ std::string doDump();
+	std::string dumpShowPorts() const;
 
 	inline Any::KIND_TYPE getMyKind() const { return Any::REF; }
 
@@ -28,6 +29,8 @@ public:
 	void addFinalReferees( FCO * referee);
 	void addFinalReferees( RefereeList & referees);
 	const RefereeList& getFinalReferees() const;
+
+	void setShowPorts(bool set) { m_showPorts = set; }
 
 	bool finalize();
 	void inherit();
@@ -53,6 +56,7 @@ protected:
 	// plays role at connection dump
 	// it should be named m_transitiveReferences
 	RefereeList m_allReferees;
+	bool m_showPorts;
 
 private: // forbiding copy
 	ReferenceRep( const ReferenceRep&);

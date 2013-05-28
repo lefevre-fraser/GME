@@ -212,6 +212,8 @@ namespace DecoratorSDK
 	static const int DECORATOR_MINSENSITIVITYDISTANCE	= 2;
 	static const int DECORATOR_MAXSENSITIVITYDISTANCE	= 6;
 
+	#define DEC_CONNECTED_PORTS_ONLY_PARAM				_T("ConnectedPortsOnly")
+
 	struct GdipFont
 	{
 		Gdiplus::Font*	gdipFont;

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MetaGME" guid="{4F6845B3-EF6E-40FE-98CA-F052AA0AB999}" cdate="Wed May 22 09:59:16 2013" mdate="Wed May 22 09:59:16 2013" >
+<paradigm name="MetaGME" guid="{C84D2738-4519-44F2-B4C1-114F73567576}" cdate="Wed May 22 16:52:24 2013" mdate="Wed May 22 16:52:24 2013" >
 
 	<comment>GME Meta Paradigm</comment>
 
@@ -689,6 +689,10 @@ else (
 		</attrdef>
 		<attrdef name="ShadowThickness" metaref = "1512" valuetype = "string" defvalue = "">
 			<dispname>Displacement/offset of the shadow</dispname>
+		</attrdef>
+		<attrdef name="ShowPorts" metaref = "1570" valuetype = "boolean" defvalue = "true">
+			<dispname>Show ports:</dispname>
+			<regnode name="help" value = "For model references only: show ports of the target?"></regnode>
 		</attrdef>
 		<attrdef name="SrcAttrLabel1" metaref = "1057" valuetype = "string" defvalue = "">
 			<dispname>1st source label:</dispname>
@@ -2273,7 +2277,7 @@ car <> "" implies car.match( "^" + item + "(" + ws + "," + ws + item + ")*$" )]]
 				</pointerspec>
 			</connjoint>
 		</connection>
-		<connection name = "ReferTo" metaref = "1122" >
+		<connection name = "ReferTo" metaref = "1122" attributes = "ShowPorts" >
 				<regnode name = "sName" value ="srcReferTo"></regnode>
 				<regnode name = "dName" value ="dstReferTo"></regnode>
 				<regnode name = "color" value ="0x000000"></regnode>

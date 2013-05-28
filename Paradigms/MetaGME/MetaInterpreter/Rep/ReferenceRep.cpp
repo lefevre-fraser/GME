@@ -287,11 +287,11 @@ std::string ReferenceRep::doDump()
 	mmm += dumpDispName();
 	++ind;
 	mmm += dumpNamePosition();
+	mmm += dumpShowPorts();
 	mmm += dumpGeneralPref();
 	--ind;
 	mmm += dumpConstraints();
 	mmm += dumpAttributes();
-
 
 	mmm += dumpIcon();
 	mmm += dumpPortIcon();
@@ -336,6 +336,14 @@ std::string ReferenceRep::doDump()
 	--ind;
 	mmm += indStr() + "</reference>\n";
 	
+	return mmm;
+}
+
+std::string ReferenceRep::dumpShowPorts() const
+{
+	std::string mmm = "";
+	if(!m_showPorts)
+			mmm += indStr() + "<regnode name = \"showPorts\" value =\"false\"></regnode>\n";
 	return mmm;
 }
 

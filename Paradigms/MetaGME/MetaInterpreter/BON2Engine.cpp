@@ -77,6 +77,7 @@ void Component::entityBuilder( const Model& model, const Folder& parent)
 			* in case of reference:
 			* op1: FCO ( referred )
 			* op2: Reference
+			* op3: connection line
 			* 
 			* in other cases: 
 			* op1: container
@@ -115,7 +116,10 @@ void Component::entityBuilder( const Model& model, const Folder& parent)
 			else if ( conn_kind == Relation::set_membership_str)
 				rela.setOperation( Relation::SET_MEMBER_OP);
 			else if ( conn_kind == Relation::refer_to_str)
+			{
 				rela.setOperation( Relation::REFER_TO_OP);
+				rela.setOp3( *conn_it);
+			}
 			else if ( conn_kind == Relation::has_aspect_str)
 				rela.setOperation( Relation::HAS_ASPECT_OP);
 			else if ( conn_kind == Relation::has_constraint_str)
@@ -1113,6 +1117,7 @@ void Component::refersToManager( Relation & rel_it)
 	{
 		ObjPointer obj1 = rel_it.getOp1();
 		ObjPointer obj2 = rel_it.getOp2();
+		BON::Connection obj3( rel_it.getOp3());
 
 		::FCO* elem = m_sheet->findFCO( rel_it.getOp1());
 		::FCO* ref = m_sheet->findFCO( rel_it.getOp2());
@@ -1123,6 +1128,8 @@ void Component::refersToManager( Relation & rel_it)
 				global_vars.err << MSG_ERROR << "Not reference " << obj1 << " referring\n";
 			else
 				ref_obj->addInitialReferee( elem);
+			bool show_ports = obj3->getAttribute("ShowPorts")->getBooleanValue();
+			ref_obj->setShowPorts(show_ports);
 			elem->addRefersToMe( ref_obj);
 		}
 		else

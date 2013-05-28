@@ -32,6 +32,7 @@ public: // constant strings
 	static const std::string IsResizable_str;//"IsResizable"
 	static const std::string AutoRouterPref_str;//"AutoRouterPref"
 	static const std::string HelpURL_str;//"HelpURL"
+	static const std::string ShowPorts_str;//"ShowPorts"
 
 	static const std::string IsGradientFillEnabled_str;//"IsGradientFillEnabled"
 	static const std::string GradientFillColor_str;//"GradientFillColor"

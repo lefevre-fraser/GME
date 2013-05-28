@@ -1032,6 +1032,7 @@ CGuiConnection* CGuiFco::FindConnection(CComPtr<IMgaFCO>& fco, CGuiConnectionLis
 	return 0;
 }
 
+
 void CGuiFco::GrayOutFcos(CGuiFcoList& list, bool set)
 {
 	POSITION pos = list.GetHeadPosition();
@@ -1266,17 +1267,27 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 			decor = CComQIPtr<IMgaDecorator>(newDecor);
 		}
 
+		// It seems that SetParam fails before InitializeEx, so this was probably never tested...
 		POSITION ppos = params.GetHeadPosition();
 		POSITION vpos = values.GetHeadPosition();
 		while (ppos && vpos) {
 			CComBSTR param(params.GetNext(ppos));
 			CComVariant value(values.GetNext(vpos));
-			COMTHROW(decor->SetParam(param, value));
+			COMTHROW(decor->SetParam(param,value));
 		}
+		// *************************************************************************************
+
 		if (newDecor)
 			COMTHROW(newDecor->InitializeEx(theApp.mgaProject, metaPart, mgaFco, decoratorEventSinkIface, (ULONGLONG)viewWnd->m_hWnd));
 		else
 			COMTHROW(decor->Initialize(theApp.mgaProject, metaPart, mgaFco));
+
+		if (CGMEView::showConnectedPortsOnly )
+		{
+			CComVariant value(VARIANT_TRUE);
+			CComBSTR param(DEC_CONNECTED_PORTS_ONLY_PARAM);
+			COMTHROW(decor->SetParam(param,value));
+		}
 	}
 	catch (hresult_exception&) {
 		CMainFrame::theInstance->m_console.Message(_T("Cannot create ") + progId + _T(" decorator."), 3);
@@ -1896,6 +1907,8 @@ void CGuiObject::GrayOut(bool set)
 		}
 	}
 }
+
+
 
 CGuiMetaAspect *CGuiObject::GetKindAspect(CComPtr<IMgaMetaPart> metaPart)
 {
