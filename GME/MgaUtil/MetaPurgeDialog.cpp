@@ -230,6 +230,8 @@ void CMetaPurgeDialog::OnSetcurrent()
 			CComVariant vv;
 			CopyTo(gg, vv);
 			CString setcstr = m_list.GetItemText(i,3);
+			if (setver == L"N/A")
+				setver = L"";
 			COMTHROW( registrar->RegisterParadigm(CComBSTR(paradigm), CComBSTR(setcstr), CComBSTR(setver), vv, 
 				cur[1] == 's' ? REGACCESS_SYSTEM : REGACCESS_USER) );
 		}
