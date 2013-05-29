@@ -257,9 +257,9 @@ class Transaction {
 	CMgaProject *pr;
 public:
 	HRESULT Begin(CMgaProject *ppr) {
-		if(!ppr) return E_MGA_ZOMBIE_NOPROJECT;
-		if(!ppr->opened) return E_MGA_ZOMBIE_CLOSED_PROJECT;
-		if(!ppr->activeterr) return E_MGA_NOT_IN_TRANSACTION;
+		if(!ppr) { SetStandardOrGMEErrorInfo(E_MGA_ZOMBIE_NOPROJECT); return E_MGA_ZOMBIE_NOPROJECT; }
+		if(!ppr->opened) { SetStandardOrGMEErrorInfo(E_MGA_ZOMBIE_CLOSED_PROJECT); return E_MGA_ZOMBIE_CLOSED_PROJECT; }
+		if(!ppr->activeterr) { SetStandardOrGMEErrorInfo(E_MGA_NOT_IN_TRANSACTION); return E_MGA_NOT_IN_TRANSACTION; }
 		if(ppr->alreadynested()) {
 			pr = NULL;
 			return S_OK;
@@ -283,7 +283,7 @@ public:
 #define COMTRY_IN_TRANSACTION { \
 	Transaction ttt; \
 	HRESULT hr = ttt.Begin(mgaproject); \
-	if(hr != S_OK) return hr; \
+	if(hr != S_OK) { return hr; } \
 	try
 
 bool MgaSetErrorInfo(HRESULT hr);
@@ -327,7 +327,7 @@ bool MgaSetErrorInfo(HRESULT hr);
 Transaction ttt; \
 if (!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX)) { \
   HRESULT hr = ttt.Begin(mgaproject); \
-  if (hr != S_OK) return hr; \
+  if (hr != S_OK) { return hr; } \
 } \
 try
 

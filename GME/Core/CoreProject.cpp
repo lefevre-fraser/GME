@@ -349,9 +349,13 @@ STDMETHODIMP CCoreProject::CreateObject(metaid_type metaid, ICoreObject **p)
 
 STDMETHODIMP CCoreProject::BeginTransaction(transtype_enum transtype)
 {
-	if( storage == NULL || (transtype & TRANSTYPE_ANY) == 0 ||
-		(InTransaction() && (transtype & TRANSTYPE_NESTED) == 0) ||
-		(InReadTransaction() && (transtype & TRANSTYPE_READ) == 0) )
+	if (InReadTransaction() && (transtype & TRANSTYPE_READ) == 0)
+	{
+		SetErrorInfo(L"Project is in read-only transaction and cannot be modified");
+		return E_INVALID_USAGE;
+	}
+	if (storage == NULL || (transtype & TRANSTYPE_ANY) == 0 ||
+		(InTransaction() && (transtype & TRANSTYPE_NESTED) == 0))
 	{
 		COMRETURN(E_INVALID_USAGE);
 	}
