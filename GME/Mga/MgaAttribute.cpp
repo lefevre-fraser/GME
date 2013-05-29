@@ -907,7 +907,9 @@ STDMETHODIMP CMgaPart::GetGmeAttrs(BSTR *icon,long *x,long *y) {
 		COMTRY {
 			fco->CheckRead();
 			CComBSTR vval;
-			if(icon) COMTHROW(get_RegistryValue(CComBSTR(L"Icon"), icon));
+			_bstr_t regValueIcon;
+			if (icon)
+				regValueIcon = RegistryValue[L"Icon"];
 			if(x || y) {
 				CComBSTR bb;
 				COMTHROW(get_RegistryValue(CComBSTR(L"Position"), &bb));
@@ -915,6 +917,8 @@ STDMETHODIMP CMgaPart::GetGmeAttrs(BSTR *icon,long *x,long *y) {
 				if(!bb) { *lx = -1; *ly = -1;  }
 				else if(swscanf(bb,OLESTR("%ld,%ld"), lx, ly) != 2) COMTHROW(E_MGA_BAD_POSITIONVALUE);
 			}
+			if (icon)
+				*icon = regValueIcon.Detach();
 		} COMCATCH(;)
 }
 
