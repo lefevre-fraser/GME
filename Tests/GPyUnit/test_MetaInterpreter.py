@@ -53,6 +53,8 @@ def _muoutdir(self):
     return os.path.abspath(os.getcwd())
 try:
     TestMetaInterpreterMU.outdir = _muoutdir
+    TestMetaInterpreterMUSVN.outdir = _muoutdir
+    TestMetaInterpreterMUSVNHashed.outdir = _muoutdir
 except NameError:
     pass # MU isn't tested under x64
 
