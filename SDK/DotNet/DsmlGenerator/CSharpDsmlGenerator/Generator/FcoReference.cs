@@ -97,7 +97,7 @@ namespace CSharpDSMLGenerator.Generator
 							Configuration.GetInterfaceName(item as MgaObject) + " result = null;"));
 
 					sb.Clear();
-					sb.AppendLine("result = ISIS.GME.Common.Utils.CastReferred(Impl as global::GME.MGA.MgaReference, new Dictionary<int, global::System.Type>() {");
+					sb.AppendLine("result = ISIS.GME.Common.Utils.CastReferred(Impl as global::GME.MGA.MgaReference, new global::System.Collections.Generic.Dictionary<int, global::System.Type>() {");
 
 					List<int> metaRefs = new List<int>();
 
@@ -158,7 +158,7 @@ namespace CSharpDSMLGenerator.Generator
 						typeof(ISIS.GME.Common.Interfaces.FCO).FullName + " result = null;"));
 
 				StringBuilder sb2 = new StringBuilder();
-				sb2.AppendLine("result = ISIS.GME.Common.Utils.CastReferred(Impl as global::GME.MGA.MgaReference, new Dictionary<int, global::System.Type>() {");
+				sb2.AppendLine("result = ISIS.GME.Common.Utils.CastReferred(Impl as global::GME.MGA.MgaReference, new global::System.Collections.Generic.Dictionary<int, global::System.Type>() {");
 
 				List<int> metaRefs2 = new List<int>();
 
@@ -323,7 +323,7 @@ namespace CSharpDSMLGenerator.Generator
 						HasGet = true,
 						Name = item.Name,
 						Type = new CodeTypeReference(
-							"IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
+                            "global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
 					};
 
 					List<MgaFCO> derivedClasses = new List<MgaFCO>();
@@ -356,7 +356,7 @@ namespace CSharpDSMLGenerator.Generator
 					//    Configuration.GetInterfaceName(item as MgaObject) + " result = null;"));
 
 					sb.Clear();
-					sb.AppendLine("ISIS.GME.Common.Utils.CastReferencedBy(Impl as global::GME.MGA.MgaFCO, new Dictionary<int, global::System.Type>() {");
+                    sb.AppendLine("ISIS.GME.Common.Utils.CastReferencedBy(Impl as global::GME.MGA.MgaFCO, new global::System.Collections.Generic.Dictionary<int, global::System.Type>() {");
 
 					List<int> metaRefs = new List<int>();
 
@@ -396,13 +396,13 @@ namespace CSharpDSMLGenerator.Generator
 					Attributes = MemberAttributes.Public,
 					HasGet = true,
 					Name = "AllReferencedBy",
-					Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
+                    Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
 
 				newAllReferred.Comments.Add(new CodeCommentStatement("", true));
 
 				StringBuilder sb2 = new StringBuilder();
-				sb2.AppendLine("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + "> result = ISIS.GME.Common.Utils.CastReferencedBy(Impl as global::GME.MGA.MgaFCO, new Dictionary<int, global::System.Type>() {");
+                sb2.AppendLine("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + "> result = ISIS.GME.Common.Utils.CastReferencedBy(Impl as global::GME.MGA.MgaFCO, new global::System.Collections.Generic.Dictionary<int, global::System.Type>() {");
 
 				List<int> metaRefs2 = new List<int>();
 
@@ -479,7 +479,7 @@ namespace CSharpDSMLGenerator.Generator
 					HasGet = true,
 					Name = "AllReferencedBy",
 					Type = new CodeTypeReference(
-						"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
+                        "global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
 
 				if (baseClasses.Count > 1)

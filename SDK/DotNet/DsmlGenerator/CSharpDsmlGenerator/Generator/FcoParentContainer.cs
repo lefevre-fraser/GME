@@ -27,7 +27,7 @@ namespace CSharpDSMLGenerator.Generator
 
 				libraryName.GetStatements.Add(
 					new CodeMethodReturnStatement(
-						new CodeSnippetExpression("(Impl as MgaFolder).LibraryName")));
+						new CodeSnippetExpression("(Impl as global::GME.MGA.MgaFolder).LibraryName")));
 
 				GeneratedClass.Types[0].Members.Add(libraryName);
 
@@ -36,7 +36,7 @@ namespace CSharpDSMLGenerator.Generator
 					Attributes = MemberAttributes.Public | MemberAttributes.Final,
 					HasGet = true,
 					Name = "LibraryCollection",
-					Type = new CodeTypeReference("IEnumerable<" + Configuration.ProjectIntefaceNamespace +
+                    Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.ProjectIntefaceNamespace +
 						".RootFolder" + ">"),
 				};
 
@@ -66,10 +66,10 @@ namespace CSharpDSMLGenerator.Generator
 
 				newParentContainer.GetStatements.Add(
 					new CodeSnippetStatement(
-						"if ((Impl as MgaFolder).ParentFolder != null) { return "
+						"if ((Impl as global::GME.MGA.MgaFolder).ParentFolder != null) { return "
 						+ typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<" +
 						Configuration.ProjectClassNamespace + ".RootFolder" +
-						">((Impl as MgaFolder).ParentFolder as MgaObject); }"));
+						">((Impl as global::GME.MGA.MgaFolder).ParentFolder as global::GME.MGA.MgaObject); }"));
 
 				newParentContainer.GetStatements.Add(
 					new CodeMethodReturnStatement(
@@ -147,12 +147,12 @@ namespace CSharpDSMLGenerator.Generator
 							new CodeMethodReturnStatement(
 								new CodeSnippetExpression(typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<" +
 									typeof(ISIS.GME.Common.Classes.Folder).FullName +
-									">((this.Impl as MgaFolder).ParentFolder as MgaObject)")));
+                                    ">((this.Impl as global::GME.MGA.MgaFolder).ParentFolder as global::GME.MGA.MgaObject)")));
 				}
 				else
 				{
 					newParentContainer.GetStatements.Add(
-						new CodeSnippetStatement("MgaObject parentFolder = (this.Impl as MgaFCO).ParentFolder as MgaObject;"));
+                        new CodeSnippetStatement("global::GME.MGA.MgaObject parentFolder = (this.Impl as global::GME.MGA.MgaFCO).ParentFolder as global::GME.MGA.MgaObject;"));
 
 					if (inrootfolder)
 					{
@@ -174,7 +174,7 @@ namespace CSharpDSMLGenerator.Generator
 					}
 
 					newParentContainer.GetStatements.Add(
-						new CodeSnippetStatement("MgaObject parentModel = (this.Impl as MgaFCO).ParentModel as MgaObject;"));
+                        new CodeSnippetStatement("global::GME.MGA.MgaObject parentModel = (this.Impl as global::GME.MGA.MgaFCO).ParentModel as global::GME.MGA.MgaObject;"));
 
 					foreach (var parent in modelParents.Distinct())
 					{

@@ -68,7 +68,7 @@ namespace CSharpDSMLGenerator.Generator
 						Attributes = MemberAttributes.Public,
 						HasGet = true,
 						Name = item.Name + "Collection",
-						Type = new CodeTypeReference("IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
+						Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
 					};
 
 					newConnections.Comments.Add(
@@ -104,7 +104,7 @@ namespace CSharpDSMLGenerator.Generator
 					Attributes = MemberAttributes.Public | MemberAttributes.Override,
 					HasGet = true,
 					Name = "AllSrcConnections",
-					Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
+					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
 				};
 
 				newAllSrcConnections.Comments.Add(new CodeCommentStatement("", true));
@@ -120,7 +120,7 @@ namespace CSharpDSMLGenerator.Generator
                     var allConnectionClasses = connections.Select(x => x.Item1).Distinct();
 					newAllSrcConnections.GetStatements.Add(
 							new CodeSnippetExpression(
-								"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
+								"global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
 								Configuration.GetInterfaceName(Subject) +
                                 ")(this)).SrcConnections." + allConnectionClasses.FirstOrDefault().Name + "Collection.Cast<" +
 								typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">()"));
@@ -215,7 +215,7 @@ namespace CSharpDSMLGenerator.Generator
 						Attributes = MemberAttributes.Public,
 						HasGet = true,
 						Name = item.Name + "Collection",
-						Type = new CodeTypeReference("IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
+						Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
 					};
 
 					newConnections.Comments.Add(
@@ -249,7 +249,7 @@ namespace CSharpDSMLGenerator.Generator
 					Attributes = MemberAttributes.Public | MemberAttributes.Override,
 					HasGet = true,
 					Name = "AllDstConnections",
-					Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
+					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
 				};
 
 				newAllDstConnections.Comments.Add(new CodeCommentStatement("", true));
@@ -265,7 +265,7 @@ namespace CSharpDSMLGenerator.Generator
                     var allConnectionClasses = connections.Select(x => x.Item1).Distinct();
 					newAllDstConnections.GetStatements.Add(
 							new CodeSnippetExpression(
-								"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
+								"global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + "> result = ((" +
 								Configuration.GetInterfaceName(Subject) +
                                 ")(this)).DstConnections." + allConnectionClasses.FirstOrDefault().Name + "Collection.Cast<" +
 								typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">()"));
@@ -318,7 +318,7 @@ namespace CSharpDSMLGenerator.Generator
 					Attributes = MemberAttributes.Public | MemberAttributes.Override,
 					HasGet = true,
 					Name = "AllSrcConnections",
-					Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
+					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
 				};
 
 				if (baseClasses.Count > 1)
@@ -363,7 +363,7 @@ namespace CSharpDSMLGenerator.Generator
 					Attributes = MemberAttributes.Public | MemberAttributes.Override,
 					HasGet = true,
 					Name = "AllDstConnections",
-					Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
+					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Connection).FullName + ">"),
 				};
 
 				if (baseClasses.Count > 1)

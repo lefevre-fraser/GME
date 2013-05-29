@@ -257,7 +257,7 @@ namespace CSharpDSMLGenerator.Generator
 							new CodeSnippetExpression(
 								"int number = " + 
 								typeof(Utils).FullName + 
-								".GetEnumItemNumber(Impl as MgaFCO, \"" + 
+								".GetEnumItemNumber(Impl as global::GME.MGA.MgaFCO, \"" + 
 								attribute.Name + "\")"));
 
 						attr.GetStatements.Add(
@@ -266,7 +266,7 @@ namespace CSharpDSMLGenerator.Generator
 
 						// create the set statement
 						attr.SetStatements.Add(
-							new CodeSnippetExpression(typeof(Utils).FullName + ".SetEnumItem(Impl as MgaFCO, \"" + 
+							new CodeSnippetExpression(typeof(Utils).FullName + ".SetEnumItem(Impl as global::GME.MGA.MgaFCO, \"" + 
 								attribute.Name + "\", (int)value);"));
 
 						newAttrClass.Members.Add(attr);

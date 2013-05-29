@@ -38,9 +38,9 @@ namespace CSharpDSMLGenerator.Generator
 
 					newArcheType.GetStatements.Add(
 							new CodeMethodReturnStatement(
-								new CodeSnippetExpression("(Impl as MgaFCO).ArcheType == null ? null : " + typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<" +
+                                new CodeSnippetExpression("(Impl as global::GME.MGA.MgaFCO).ArcheType == null ? null : " + typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<" +
 									Configuration.GetClassName(Subject) +
-									">((Impl as MgaFCO).ArcheType as MgaObject)")));
+									">((Impl as global::GME.MGA.MgaFCO).ArcheType as global::GME.MGA.MgaObject)")));
 
 					GeneratedClass.Types[0].Members.Add(newArcheType);
 				}
@@ -53,7 +53,7 @@ namespace CSharpDSMLGenerator.Generator
 			if (Subject.MetaBase.Name != "RootFolder" &&
 					Subject.MetaBase.Name != "Folder")
 			{
-				//(Impl as MgaFCO).ArcheType
+				//(Impl as global::GME.MGA.MgaFCO).ArcheType
 				CodeMemberProperty newArcheType = new CodeMemberProperty()
 				{
 					Attributes = MemberAttributes.Public,

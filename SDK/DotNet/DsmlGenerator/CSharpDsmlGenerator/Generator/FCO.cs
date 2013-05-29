@@ -117,7 +117,7 @@ namespace CSharpDSMLGenerator.Generator
                     HasGet = true,
                     Name = "LibraryCollection",
                     Type = new CodeTypeReference(
-                        "IEnumerable<" + Configuration.ProjectIntefaceNamespace +
+                        "global::System.Collections.Generic.IEnumerable<" + Configuration.ProjectIntefaceNamespace +
                         ".RootFolder" + ">"),
                 };
 

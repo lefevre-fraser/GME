@@ -31,7 +31,7 @@ namespace CSharpDSMLGenerator.Generator
                 newGetRootFolder.Statements.Add(
                     new CodeMethodReturnStatement(
                         new CodeSnippetExpression(
-                        typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<RootFolder>(project.RootFolder as MgaObject)")));
+                        typeof(ISIS.GME.Common.Utils).FullName + ".CreateObject<RootFolder>(project.RootFolder as global::GME.MGA.MgaObject)")));
 
                 GeneratedClass.Types[0].Members.Add(newGetRootFolder);
             }

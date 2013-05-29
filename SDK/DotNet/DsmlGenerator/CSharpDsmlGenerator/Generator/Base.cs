@@ -60,13 +60,10 @@ namespace CSharpDSMLGenerator.Generator
             GeneratedClass = new CodeNamespace(Configuration.GetClassNamespace(Subject));
             GeneratedInterface = new CodeNamespace(Configuration.GetInterfaceNamespace(Subject));
 
-            GeneratedClass.Imports.Add(new CodeNamespaceImport("global::System.Collections.Generic"));
             GeneratedClass.Imports.Add(new CodeNamespaceImport("global::System.Linq"));
-            GeneratedClass.Imports.Add(new CodeNamespaceImport("global::GME.MGA"));
+            //GeneratedClass.Imports.Add(new CodeNamespaceImport("global::GME.MGA"));
 
-            GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::System.Collections.Generic"));
-            GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::System.Linq"));
-            GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::GME.MGA"));
+            //GeneratedInterface.Imports.Add(new CodeNamespaceImport("global::GME.MGA"));
 
             GenerateClassCode();
             GenerateInterfaceCode();
@@ -151,13 +148,13 @@ namespace CSharpDSMLGenerator.Generator
                     Attributes = MemberAttributes.Public | MemberAttributes.Final,
                     HasGet = true,
                     Name = "ParadigmGuid",
-                    Type = new CodeTypeReference(typeof(Guid).FullName),
+                    Type = new CodeTypeReference("global::" + typeof(Guid).FullName),
                 };
 
                 GuidProperty.GetStatements.Add(
                     new CodeMethodReturnStatement(
                         new CodeObjectCreateExpression(
-                            new CodeTypeReference(typeof(Guid).FullName),
+                            new CodeTypeReference("global::" + typeof(Guid).FullName),
                             new CodeSnippetExpression("\"" + Configuration.DsmlModel.Paradigm.guid + "\""))));
 
                 newInfoClass.Members.Add(GuidProperty);
@@ -233,11 +230,11 @@ namespace CSharpDSMLGenerator.Generator
                         MemberAttributes.Override,
                     HasGet = true,
                     Name = "MetaRefs",
-                    Type = new CodeTypeReference(typeof(Dictionary<int, System.Type>)),
+                    Type = new CodeTypeReference("global::System.Collections.Generic.Dictionary<int, global::System.Type>"),
                 };
 
                 StringBuilder sbMetaRefs = new StringBuilder();
-                sbMetaRefs.AppendLine("new System.Collections.Generic.Dictionary<int, System.Type>()");
+                sbMetaRefs.AppendLine("new global::System.Collections.Generic.Dictionary<int, global::System.Type>()");
                 sbMetaRefs.AppendLine("{");
 
                 foreach (var kvp in metarefs)
@@ -305,7 +302,7 @@ namespace CSharpDSMLGenerator.Generator
             //    Attributes = MemberAttributes.Final,
             //    HasGet = true,
             //    Name = typeof(ISIS.GME.Common.Interfaces.Folder).FullName + ".AllChildren",
-            //    Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
+            //    Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
             //  };
 
             //  newAllChildrenProperty.Comments.Add(new CodeCommentStatement("Contains all type of child objects", true));
@@ -395,7 +392,7 @@ namespace CSharpDSMLGenerator.Generator
                         MemberAttributes.Override,
                     HasGet = true,
                     Name = "MetaRefs",
-                    Type = new CodeTypeReference(typeof(Dictionary<int, System.Type>)),
+                    Type = new CodeTypeReference("global::System.Collections.Generic.Dictionary<int, global::System.Type>"),
                 };
                 newInterface.Members.Add(MetaRefs);
             }

@@ -86,7 +86,7 @@ namespace CSharpDSMLGenerator.Generator
 					{
 						Attributes = MemberAttributes.Public | MemberAttributes.Final,
 						HasGet = true,
-						Type = new CodeTypeReference("IEnumerable<" + Configuration.GetInterfaceName(child as MgaObject) + ">"),
+                        Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(child as MgaObject) + ">"),
 						Name = child.Name + "Collection",
 					};
 
@@ -136,7 +136,7 @@ namespace CSharpDSMLGenerator.Generator
 						Configuration.GetKindName(child as MgaObject)) != 0)
 					{
 						//codeDef = String.Format(
-						//  "IEnumerable<{3}.{0}> result = {2}.CastMgaChildren<{1}.{0}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\" /* {4} */);",
+						//  "global::System.Collections.Generic.IEnumerable<{3}.{0}> result = {2}.CastMgaChildren<{1}.{0}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\" /* {4} */);",
 						//  child.Name,
 						//  Configuration.ProjectClassNamespace,
 						//  typeof(ISIS.GME.Common.Utils).FullName,
@@ -144,7 +144,7 @@ namespace CSharpDSMLGenerator.Generator
 						//  Configuration.LocalFactory[child.Name]);
 
 						codeDef = String.Format(
-							"IEnumerable<{3}> result = {2}.CastMgaChildren<{1}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\" /* {4} */);",
+                            "global::System.Collections.Generic.IEnumerable<{3}> result = {2}.CastMgaChildren<{1}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\" /* {4} */);",
 							Configuration.GetKindName(child as MgaObject),
 							Configuration.GetClassName(child as MgaObject),
 							typeof(ISIS.GME.Common.Utils).FullName,
@@ -156,13 +156,13 @@ namespace CSharpDSMLGenerator.Generator
 						// base classes which are abstract or FCO-s
 						// we need a MetaRef list...
 						//codeDef = String.Format(
-						//  "IEnumerable<{3}.{0}> result = {2}.CastMgaChildren<{1}.{0}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\");",
+						//  "global::System.Collections.Generic.IEnumerable<{3}.{0}> result = {2}.CastMgaChildren<{1}.{0}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\");",
 						//  child.Name,
 						//  Configuration.ProjectClassNamespace,
 						//  typeof(ISIS.GME.Common.Utils).FullName,
 						//  Configuration.ProjectIntefaceNamespace);
 						codeDef = String.Format(
-							"IEnumerable<{3}> result = {2}.CastMgaChildren<{1}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\");",
+                            "global::System.Collections.Generic.IEnumerable<{3}> result = {2}.CastMgaChildren<{1}, global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"{0}\");",
 							Configuration.GetKindName(child as MgaObject),
 							Configuration.GetClassName(child as MgaObject),
 							typeof(ISIS.GME.Common.Utils).FullName,
@@ -263,7 +263,7 @@ namespace CSharpDSMLGenerator.Generator
 						Attributes = MemberAttributes.Public | MemberAttributes.Override,
 						HasGet = true,
 						Name = "AllChildren",
-						Type = new CodeTypeReference("IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
+                        Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
 					};
 
 					newAllChildrenProperty.Comments.Add(
@@ -279,7 +279,7 @@ namespace CSharpDSMLGenerator.Generator
 
 					newAllChildrenProperty.GetStatements.Add(
 							new CodeSnippetExpression(
-								"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + "> result = " +
+                                "global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + "> result = " +
 								typeof(ISIS.GME.Common.Utils).FullName + ".CastMgaChildren<" +
 								Configuration.ProjectClassNamespace + ".RootFolder" +
 								", global::GME.MGA.MgaObjects>(Impl.ChildObjects, \"RootFolder\")"));
@@ -385,7 +385,7 @@ namespace CSharpDSMLGenerator.Generator
 						{
 							//  newAllChildrenProperty.GetStatements.Add(
 							//    new CodeSnippetExpression(
-							//      "IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName +
+							//      "global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName +
 							//      "> result = " +
 							//      typeof(ISIS.GME.Common.Utils).FullName + ".CastMgaChildren<" +
 							//      Configuration.GetClassName(allChildren.FirstOrDefault() as MgaObject) +
@@ -424,7 +424,7 @@ namespace CSharpDSMLGenerator.Generator
 
 							//  }
 							StringBuilder sb = new StringBuilder();
-							sb.AppendLine("IEnumerable<ISIS.GME.Common.Interfaces.Base> result = ISIS.GME.Common.Utils.CastMgaChildren(Impl.ChildObjects, new Dictionary<int, global::System.Type>() { ");
+                            sb.AppendLine("global::System.Collections.Generic.IEnumerable<ISIS.GME.Common.Interfaces.Base> result = ISIS.GME.Common.Utils.CastMgaChildren(Impl.ChildObjects, new global::System.Collections.Generic.Dictionary<int, global::System.Type>() { ");
 							foreach (var item in allChildren)
 							{
 								sb.Append("{ ");
@@ -485,7 +485,7 @@ namespace CSharpDSMLGenerator.Generator
 					HasGet = true,
 					Name = "AllChildren",
 					Type = new CodeTypeReference(
-						"IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
+                        "global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
 				};
 
 				if (baseClasses.Count > 1)

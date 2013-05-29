@@ -3,7 +3,7 @@
   <assemblyIdentity
                type="win32"
                name="CSharpDSMLGenerator"
-               version="1.0.8.0"
+               version="1.0.9.0"
                publicKeyToken="1321e6b92842fe54"
                processorArchitecture="msil" />
   <clrClass
