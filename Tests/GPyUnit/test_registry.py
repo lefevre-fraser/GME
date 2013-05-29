@@ -130,6 +130,7 @@ class TestRegistry(unittest.TestCase):
                 if self.project.RootMeta.RootFolder.DefinedFCOs.Item(i).Name == 'ParadigmSheet':
                     sheet_meta = self.project.RootMeta.RootFolder.DefinedFCOs.Item(i)
             sheet = self.project.RootFolder.CreateRootObject(sheet_meta)
+            sheet.SetRegistryValueDisp('testcreation', 'testcreate')
             sheet2 = self.project.RootFolder.DeriveRootObject(sheet, False)
             sheet3 = self.project.RootFolder.DeriveRootObject(sheet2, False)
             sheet4 = self.project.RootFolder.DeriveRootObject(sheet3, False)
@@ -138,9 +139,10 @@ class TestRegistry(unittest.TestCase):
             self.assertEqual(sheet4.GetRegistryValueDisp('test123'), 'test')
             sheet3.DetachFromArcheType()
             self.assertEqual(sheet4.GetRegistryValueDisp('test123'), 'test')
-            self.assertEqual(sheet.GetRegistryDisp(False).Count, 1)
+            self.assertEqual(sheet.GetRegistryDisp(False).Count, 2)
             self.assertEqual(sheet4.GetRegistryDisp(False).Count, 0)
-            self.assertEqual(sheet3.GetRegistryDisp(False).Count, 2) # detaching adds a regnode
+            self.assertEqual(sheet3.GetRegistryDisp(False).Count, 3) # detaching adds a regnode "_detachedFrom"
+            self.assertEqual(sheet4.GetRegistryDisp(False).Count, 0)
             self.assertEqual(sheet4.GetRegistryDisp(False).Count, 0)
             self.project.CommitTransaction()
             self.project.Save()

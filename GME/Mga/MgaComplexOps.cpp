@@ -458,6 +458,7 @@ void ObjTreeDerive(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &new
 				case ATTRID_LASTRELID: 
 					newobj[ai] = 0L;
 					break;
+				case ATTRID_REGNODE:
 				case ATTRID_GUID1: // don't copy these
 				case ATTRID_GUID2:
 				case ATTRID_GUID3:
