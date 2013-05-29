@@ -1273,7 +1273,7 @@ void CGuiObject::InitAspect(int asp, CComPtr<IMgaMetaPart>& metaPart, CString& d
 		while (ppos && vpos) {
 			CComBSTR param(params.GetNext(ppos));
 			CComVariant value(values.GetNext(vpos));
-			COMTHROW(decor->SetParam(param,value));
+			COMTHROW(decor->SetParam(param, value));
 		}
 		// *************************************************************************************
 
