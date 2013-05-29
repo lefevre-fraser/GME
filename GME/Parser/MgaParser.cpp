@@ -1296,9 +1296,14 @@ void CMgaParser::StartAttribute(const attributes_type &attributes)
 	GetPrevObj(fco);
 
 	CComObjPtr<IMgaMetaAttribute> metaattr;
-	HRESULT hr = resolver->get_AttrByStr(fco, PutInBstrAttr(attributes, _T("kind")), PutOut(metaattr));
+	HRESULT hr;
+	const std::tstring* status = GetByNameX(attributes, _T("status"));
+	if (status && *status == L"meta")
+		;
+	else
+		hr = resolver->get_AttrByStr(fco, PutInBstrAttr(attributes, _T("kind")), PutOut(metaattr));
 
-	if( FAILED(hr) || metaattr == NULL )
+	if (metaattr == NULL || FAILED(hr))
 	{
 		GetCurrent().object = NULL;
 		return;
@@ -1309,7 +1314,7 @@ void CMgaParser::StartAttribute(const attributes_type &attributes)
 	ASSERT( attr != NULL );
 	GetCurrent().object = attr;
 
-	if( GetByNameX(attributes, _T("status")) == NULL )
+	if(status == NULL )
 	{
 		// we set some value, and from the _T("value") element we set the actual value
 
