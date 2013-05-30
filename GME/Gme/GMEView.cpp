@@ -6032,13 +6032,41 @@ BOOL CGMEView::OnMouseWheel(UINT fFlags, short zDelta, CPoint point)
 	if (fFlags & MK_CONTROL) {
 		UINT uWheelScrollLines = GetMouseScrollLines();
 		int nToScroll = ::MulDiv(zDelta, uWheelScrollLines, WHEEL_DELTA);
-		if (nToScroll != 0) {
-			for(int i = 0; i < abs(nToScroll); i++) {
-				if (nToScroll > 0)
-					OnZoomIn();
-				else
-					OnZoomOut();
-			}
+
+		int scale = m_zoomVal;
+		float zoom = pow((float)1 + (float)abs(nToScroll)/8, nToScroll > 0 ? 1 : -1);
+		int newScale = scale * zoom; // + 0.49999997f;
+		newScale = max(ZOOM_MIN, min(ZOOM_MAX, newScale));
+		if (abs((float)newScale - 100) < 8) // TODO: implement fixup for more values?
+		{
+			newScale = 100;
+			zoom = (float) newScale / scale;
+		}
+		if (scale != newScale)
+		{
+			// goal: zoom in and move scrollbars such that the mouse is over the same spot in the grid (logical coords)
+			//  (sometimes this cannot be acheived due to scrollbar limits, especially at low zooms)
+			this->ScreenToClient(&point);
+			CPoint scp = GetScrollPosition(); // upper corner of scrolling (logical coords)
+
+			CPoint scaledPoint = point;
+			//  scaledPoint /= scale / 100.0f;
+			scaledPoint.x = ::MulDiv(scaledPoint.x, 100, scale);
+			scaledPoint.y = ::MulDiv(scaledPoint.y, 100, scale);
+			// now scp + scaledPoint == mouse coords (logical). Translate using new zoom back to mouse coords
+			//  scaledPoint -= point / (zoom * (scale / 100.0f));
+			scaledPoint.x -= ::MulDiv(point.x, 100, newScale);
+			scaledPoint.y -= ::MulDiv(point.y, 100, newScale);
+
+			SetRedraw(FALSE); // Reduce flicker: OnZoom sets scrollbar position, and Windows redraws it before we can ScrollToPosition
+			OnZoom(0, newScale);
+			ScrollToPosition(scp + scaledPoint);
+
+			frame->propBar.SetZoomVal(m_zoomVal);
+			CMainFrame::theInstance->WriteStatusZoom(m_zoomVal);
+
+			SetRedraw(TRUE);
+			Invalidate();
 		}
 		return TRUE;
 	}
