@@ -1270,7 +1270,8 @@ void CMgaParser::StartSCModel(const attributes_type &attributes)
 	GetCurrent().object = model;
 	long crid = toLong(GetByName(attributes,_T("childrelidcntr")));
 	GetCurrent().exnuminfo = crid;
-	COMTHROW(CComQIPtr<IMgaModel>(model)->put_ChildRelIDCounter(crid));
+	// model may not be IMgaModel if "merging" (FIXME: likely a bug elsewhere) (crash e72e1106-8ab3-42af-b0e7-087fbef92b19)
+	COMTHROW(CComQIPtr<IMgaModel>(model) ? CComQIPtr<IMgaModel>(model)->put_ChildRelIDCounter(crid) : S_OK);
 
 	if( skip_inner_elements)
 		GetCurrent().exstrinfo = _T("skip");

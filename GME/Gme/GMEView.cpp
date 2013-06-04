@@ -9615,7 +9615,9 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 						   retVal != E_DECORATOR_NOT_IMPLEMENTED)
 				{
 					CancelDecoratorOperation();
-					COMTHROW(retVal);
+					// FIXME: how to handle this error?
+					// COMTHROW(retVal);
+					return;
 				}
 			}
 		} else {

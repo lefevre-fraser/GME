@@ -199,6 +199,12 @@ bool CGMEDataSource::IsGmeNativeDataAvailable(COleDataObject *pDataObject, IMgaP
 		COMTHROW( source->get_Project(&unknown) );
 		ASSERT( unknown != NULL );
 
+		if (unknown == NULL)
+		{
+			// Likely a race, crashrpt e27fb137-199a-4ff8-842e-301655495738
+			return false;
+		}
+
 		CComPtr<IMgaProject> source_project;
 		// KMS: fixing crashrpt 8895373f-396e-490f-b882-036ba9d42961: this QI may fail
 		HRESULT hr = unknown.QueryInterface(&source_project);
