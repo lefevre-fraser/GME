@@ -1104,6 +1104,7 @@
         <File Id="ConstraintFunctionVectorPart.h" Name="ConstraintFunctionVectorPart.h"  Source="..\SDK\DecoratorLib\ConstraintFunctionVectorPart.h" />
         <File Id="ConstraintVectorPart.cpp" Name="ConstraintVectorPart.cpp"  Source="..\SDK\DecoratorLib\ConstraintVectorPart.cpp" />
         <File Id="ConstraintVectorPart.h" Name="ConstraintVectorPart.h"  Source="..\SDK\DecoratorLib\ConstraintVectorPart.h" />
+        <File Source="..\SDK\DecoratorLib\Decorator.props" />
         <File Id="DecoratorDefs.cpp" Name="DecoratorDefs.cpp"  Source="..\SDK\DecoratorLib\DecoratorDefs.cpp" />
         <File Id="DecoratorDefs.h" Name="DecoratorDefs.h"  Source="..\SDK\DecoratorLib\DecoratorDefs.h" />
         <File Id="DecoratorError.cpp" Name="DecoratorError.cpp"  Source="..\SDK\DecoratorLib\DecoratorError.cpp" />
@@ -1155,6 +1156,7 @@
         <File Id="PartBase.h" Name="PartBase.h"  Source="..\SDK\DecoratorLib\PartBase.h" />
         <File Id="PartInterface.cpp" Name="PartInterface.cpp"  Source="..\SDK\DecoratorLib\PartInterface.cpp" />
         <File Id="PartInterface.h" Name="PartInterface.h"  Source="..\SDK\DecoratorLib\PartInterface.h" />
+        <File Source="..\SDK\DecoratorLib\PathUtil.h" />
         <File Id="PortBitmapPart.cpp" Name="PortBitmapPart.cpp"  Source="..\SDK\DecoratorLib\PortBitmapPart.cpp" />
         <File Id="PortBitmapPart.h" Name="PortBitmapPart.h"  Source="..\SDK\DecoratorLib\PortBitmapPart.h" />
         <File Id="PortLabelPart.cpp" Name="PortLabelPart.cpp"  Source="..\SDK\DecoratorLib\PortLabelPart.cpp" />
