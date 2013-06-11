@@ -155,7 +155,7 @@ BEGIN
     CONTROL         "Sort By Name",IDC_SORT,"Button",BS_AUTORADIOBUTTON | WS_GROUP,71,129,59,10
     CONTROL         "Sort By Type",IDC_SORT_BYTYPE,"Button",BS_AUTORADIOBUTTON,71,141,57,10
     CONTROL         "Sort By Creation",IDC_SORT_BYCREATION,"Button",BS_AUTORADIOBUTTON,71,153,67,10
-    CONTROL         "PreserveTree State in Windows Registry",IDC_STORE_TREE_REGISTRY,
+    CONTROL         "Preserve tree state across GME runs",IDC_STORE_TREE_REGISTRY,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,39,192,141,10
     GROUPBOX        "Other Options",IDC_STATIC,14,178,195,36
 END
