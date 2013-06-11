@@ -723,6 +723,10 @@ STDMETHODIMP CMgaProject::GetObjectByID(BSTR id, IMgaObject **pVal)
 		CHECK_OUTPTRPAR(pVal);
 		metaid_type mm; // short
 		objid_type ss;  // long
+		if (SysStringLen(id) == 0)
+		{
+			COMTHROW(E_MGA_BAD_ID);
+		}
 		if( swscanf(id,OLESTR("id-%04hx-%08lx"), &mm, &ss) != 2 || 
 			mm < DTID_MODEL || mm > DTID_FOLDER) COMTHROW(E_MGA_BAD_ID);
 		CoreObj obj;
