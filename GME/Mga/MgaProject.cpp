@@ -1233,11 +1233,14 @@ void CMgaProject::StartAutoAddOns() {
 				autoaddoncreate_progid = *i;
 				COMTHROW(CreateMgaComponent(addon, *i)); // Was: COMTHROW( addon.CoCreateInstance(*i) );
 				ASSERT( addon != NULL );
-				CComQIPtr<IGMEVersionInfo> vv=addon;
-				GMEInterfaceVersion_enum v = GMEInterfaceVersion_None;
-				if(vv) COMTHROW(vv->get_version(&v));
-				if(v != GMEInterfaceVersion_Current)
-					HR_THROW(E_MGA_COMPONENT_ERROR);
+				CComQIPtr<IGMEVersionInfo> vv = addon;
+				if (vv)
+				{
+					GMEInterfaceVersion_enum v;
+					COMTHROW(vv->get_version(&v));
+					if (v != GMEInterfaceVersion_Current)
+						HR_THROW(E_MGA_COMPONENT_ERROR);
+				}
 
 				COMTHROW( addon->Initialize(this));
 				autocomps.push_front(addon.Detach());

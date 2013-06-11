@@ -534,10 +534,8 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 		}
 		else {
 			IGMEVersionInfoPtr vi = (IMgaComponent*) component;
-			if(!vi) {
-				ThrowCOMError(E_NOINTERFACE, L"This component does not provide interface version information\n");
-			}
-			else {
+			if (vi)
+			{
 				GMEInterfaceVersion vv = vi->version;
 				if(vv != INTERFACE_VERSION) {
 					CString aa;
