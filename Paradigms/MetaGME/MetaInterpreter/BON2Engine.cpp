@@ -1128,7 +1128,12 @@ void Component::refersToManager( Relation & rel_it)
 				global_vars.err << MSG_ERROR << "Not reference " << obj1 << " referring\n";
 			else
 				ref_obj->addInitialReferee( elem);
-			bool show_ports = obj3->getAttribute("ShowPorts")->getBooleanValue();
+			bool show_ports = true;
+			BON::Attribute showPortsAttribute = obj3->getAttribute("ShowPorts");
+			if (showPortsAttribute)
+			{
+				show_ports = showPortsAttribute->getBooleanValue();
+			}
 			ref_obj->setShowPorts(show_ports);
 			elem->addRefersToMe( ref_obj);
 		}
