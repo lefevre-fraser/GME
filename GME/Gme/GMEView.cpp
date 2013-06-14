@@ -289,6 +289,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_WM_LBUTTONUP()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_APPCOMMAND()
@@ -3631,6 +3632,13 @@ bool CGMEView::DoPasteNative(COleDataObject *pDataObject,bool drag,bool move,boo
 						COMTHROW(terry->OpenFCO(MGACOLL_ITER, &fco));
 						CString fcoName;
 						COMTHROW(fco->get_Name(PutOut(fcoName)));
+						// Akos: do not want to derive a connection all by itself. Just skip it. 6/14/2013
+						CComPtr<IMgaConnection> conn;
+						HRESULT hr;
+						if((hr = fco.QueryInterface(&conn)) == S_OK) {
+							continue;
+						}
+						// Akos
 /*
 						CComPtr<IMgaModel> model;
 						HRESULT hr;
@@ -5743,6 +5751,65 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnRButtonDown in ")+path+name+_T("\r\n"));
+
+	CPoint trackPoint = point;
+	CPoint ppoint = point;
+	CoordinateTransfer(point);
+
+	if(!tmpConnectMode) {
+		CGMEDoc *doc = GetDocument();
+		if(doc->GetEditMode() == GME_EDIT_MODE)
+		{
+			CGuiObject* selection = FindObject(point);
+			POSITION alreadySelected = 0;
+			if (selection) {
+				CGMEEventLogger::LogGMEEvent(_T("    RButton over ")+selection->GetName()+_T(" ")+selection->GetID()+_T("\r\n")); 
+				ClearConnectionSelection();
+				RemoveAllAnnotationFromSelection();
+				alreadySelected = selected.Find(selection);
+				if(!alreadySelected)
+				{
+					if(!(nFlags & MK_CONTROL)) {
+						this->SendUnselEvent4List( &selected);
+						selected.RemoveAll();
+					}
+					this->SendSelecEvent4Object( selection);
+					selected.AddHead(selection);
+				}
+				inDrag = true;
+				CGuiObject::GetExtent(selected,dragRect);
+				CPoint ptClickOffset(point.x - dragRect.left,
+										point.y - dragRect.top);
+				CRect rectAwake = CRect(trackPoint.x,trackPoint.y,trackPoint.x + 1,trackPoint.y + 1);
+				rectAwake.InflateRect(3,3);
+				ClientToScreen(&dragRect);
+				ClientToScreen(&rectAwake);
+
+				CRectList rects,annRects;
+				CGuiObject::GetRectList(selected,rects);
+				CGuiAnnotator::GetRectList(selectedAnnotations,annRects);
+				CGMEDataDescriptor desc(rects,annRects,point,ptClickOffset);
+				CGMEDataDescriptor::destructList( rects);
+				CGMEDataDescriptor::destructList( annRects);
+
+				dragSource = (selected.GetCount() > 0) ? selected.GetHead() : NULL;
+				validGuiObjects = true;
+				DROPEFFECT dropEffect = CGMEDoc::DoDragDrop(&selected, &selectedAnnotations, &desc,
+													DROPEFFECT_MOVE | DROPEFFECT_COPY | DROPEFFECT_LINK, &rectAwake,this);
+				if (validGuiObjects && dropEffect == DROPEFFECT_NONE) {
+					OnRButtonUp(nFlags,point);
+				}
+				inDrag = false;
+			}
+		}
+	}
+
+	CScrollZoomView::OnRButtonDown(nFlags, ppoint);
+}
+
+void CGMEView::OnRButtonUp(UINT nFlags, CPoint point)
+{
+	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnRButtonUp in ")+path+name+_T("\r\n"));
 	CPoint local = point;
 	CPoint ppoint = point;
 	CoordinateTransfer(local);	// DPtoLP
@@ -6022,7 +6089,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 		}
 		break;
 	}
-	CScrollZoomView::OnRButtonDown(nFlags, ppoint);
+	CScrollZoomView::OnRButtonUp(nFlags, ppoint);
 	this->SendNow();
 }
 
@@ -6294,6 +6361,8 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 	CPoint testPoint = point;
 
 	CoordinateTransfer(point);
+	CPoint screen = point;
+	ClientToScreen(&screen);
 	CoordinateTransfer(testPoint);
 
 	point.x = (long)(point.x - dragOffset.x);
@@ -6305,14 +6374,14 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 		CMenu menu;
 		if (menu.CreatePopupMenu())
 		{
-			enum actions { MOVE= 1000, COPY, REF, INSTANCE, SUBTYPE };
+			enum actions { MOVE= 1000, COPY, REF, INSTANCE, SUBTYPE, CANCEL };
 			menu.AppendMenu(MF_STRING, MOVE, L"Move");
 			menu.AppendMenu(MF_STRING, COPY, L"Copy");
 			menu.AppendMenu(MF_STRING, REF, L"Create reference");
 			menu.AppendMenu(MF_STRING, SUBTYPE, L"Create subtype");
 			menu.AppendMenu(MF_STRING, INSTANCE, L"Create instance");
-			CPoint screen = point;
-			ClientToScreen(&screen);
+			menu.AppendMenu(MF_STRING, CANCEL, L"Cancel");
+
 			UINT nItemID = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_NONOTIFY | TPM_RETURNCMD, screen.x, screen.y, this);
 
 			switch (nItemID)
@@ -6336,7 +6405,6 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 		}
 		return TRUE;
 	}
-
 
 	if(isType) {
 		if ((dropEffect & DROPEFFECT_MOVE) && inDrag)
