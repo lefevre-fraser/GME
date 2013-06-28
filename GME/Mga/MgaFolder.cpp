@@ -505,7 +505,7 @@ HRESULT FCO::get_ChildObjectByRelID(long relid, IMgaObject ** pVal) {
 
 		CoreObjs children = self[ATTRID_FCOPARENT+ATTRID_COLLECTION];
 		ITERATE_THROUGH(children) {
-			if(ITER[ATTRID_RELID] == relid) {
+			if ((ITER[ATTRID_RELID] & RELID_BASE_MAX) == (relid & RELID_BASE_MAX)) {
 		      ObjForCore(ITER)->getinterface(pVal);
 			  break;
 			}
