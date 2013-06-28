@@ -1376,8 +1376,6 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 				if(res != ERROR_SUCCESS && res != ERROR_FILE_NOT_FOUND) WIN32THROW(res);
 			}
 		}
-		
-		Associate(CComBSTR(L"Mga.AddOn.ConstraintManager"), name, mode);     // no error checking
 	}
 	COMCATCH(;)
 }
@@ -2202,7 +2200,7 @@ STDMETHODIMP CMgaRegistrar::Associate(BSTR progid, BSTR paradigm, regaccessmode_
 				if(!res) res = ( comps.Create(mga, _T("Components")) );
 				if(!res) res = ( comp.Create(comps, pname) );
 			}
-			if(!res) res = assocs.Create(comp, _T("Associated"));
+			if(res == ERROR_SUCCESS) res = assocs.Create(comp, _T("Associated"));
 			if(!res) assocs.SetStringValue( PutInCString(paradigm), _T(""));
 			if(!res) somethingdone = true;
 			if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
