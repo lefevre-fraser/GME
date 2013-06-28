@@ -22,7 +22,6 @@ STDMETHODIMP CMgaTerritory::OpenObj(IMgaObject *oldptr, IMgaObject **newptr) {
 		CComPtr<IMgaObject> np;
 		if(!coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
 		ObjFor(oldptr)->getinterface(&np,this);
-		if(*newptr) (*newptr)->Release();
 		*newptr = np.Detach();
 	} COMCATCH(;) 
 }
@@ -34,7 +33,6 @@ STDMETHODIMP CMgaTerritory::OpenFCO(IMgaFCO *oldptr, IMgaFCO **newptr) {
 		CComPtr<IMgaFCO> np;
 		if(!coreterr) COMTHROW(E_MGA_TARGET_DESTROYED);
 		ObjFor(oldptr)->getinterface(&np,this);
-		if(*newptr) (*newptr)->Release();
 		*newptr = np.Detach();
 	} COMCATCH(;) 
 }
@@ -51,7 +49,6 @@ STDMETHODIMP CMgaTerritory::OpenFCOs(IMgaFCOs *oldptr, IMgaFCOs **newptr) {
 			q->Add(bb);
 		}
 		MGACOLL_ITERATE_END;
-		if(*newptr) (*newptr)->Release();
 		*newptr = q.Detach();
 	} COMCATCH(;) 
 }
@@ -122,6 +119,10 @@ STDMETHODIMP CMgaTerritory::GetNamespace( BSTR * pNmsp)
 			CComBSTR res;
 			COMTHROW(res.AppendBSTR( m_bstrCurrNamespace));
 			*pNmsp = res.Detach();
+		}
+		else
+		{
+			*pNmsp = nullptr;
 		}
 	} COMCATCH(;)
 }
