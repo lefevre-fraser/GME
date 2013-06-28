@@ -22,6 +22,19 @@ public:
 	CComObjPtr() { p = NULL; }
 	CComObjPtr(T *q) { if ((p = q) != NULL) q->AddRef(); }
 	CComObjPtr(const CComObjPtr<T> &q) { if((p = q.p) != NULL) p->AddRef(); }
+	CComObjPtr(CComObjPtr<T>&& q)
+	{
+		p = q.p;
+		q.p = NULL;
+	}
+	CComObjPtr& operator=(CComObjPtr<T>&& q)
+	{
+		if (p)
+			p->Release();
+		p = q.p;
+		q.p = NULL;
+		return *this;
+	}
 #ifdef _DEBUG
  	~CComObjPtr() { if(p) p->Release(); p = NULL; }
 #else
@@ -407,7 +420,7 @@ class PutInBstr
 {
 public:
 	template<class T>
-	PutInBstr(T t) { CopyTo(t, b); }
+	PutInBstr(const T t) { CopyTo(t, b); }
 
 	template<> PutInBstr(BSTR a) : b(a) { }
 
