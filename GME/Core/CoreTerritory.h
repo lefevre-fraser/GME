@@ -99,8 +99,19 @@ public:
 	virtual void CommitFinalTransactionFinish(bool undo) NOTHROW;
 };
 
+#ifndef _ATL_DEBUG_INTERFACES
 inline IUnknown *CastToUnknown(CCoreTerritory *p) { return (IUnknown*)(ICoreTerritory*)p; }
 inline CCoreTerritory *CastToTerritory(IUnknown *p) { return (CCoreTerritory*)(ICoreTerritory*)p; }
+#else
+inline IUnknown *CastToUnknown(CCoreTerritory *p) {
+	DebugBreak();
+	return (IUnknown*)(ICoreTerritory*)p;
+}
+inline CCoreTerritory *CastToTerritory(IUnknown *p)
+{
+	return (CCoreTerritory*)(ICoreTerritory*)((ATL::_QIThunk *)(p))->m_pUnk;
+}
+#endif
 
 #endif//MGA_CORETERRITORY_H
 

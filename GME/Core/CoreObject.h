@@ -148,7 +148,29 @@ public:
 	virtual void CommitFinalTransactionFinish(bool undo) NOTHROW;
 };
 
+#ifndef _ATL_DEBUG_INTERFACES
 inline IUnknown *CastToUnknown(CCoreObject *p) { return (IUnknown*)(ICoreObject*)p; }
 inline CCoreObject *CastToObject(IUnknown *p) { return (CCoreObject*)(ICoreObject*)p; }
+#else
+inline IUnknown *CastToUnknown(CCoreObject *p)
+{
+	IUnknown* pUnk;
+	p->QueryInterface(IID_IUnknown, (void**)&pUnk);
+	return pUnk;
+	return (IUnknown*)(ICoreObject*)p;
+}
+
+inline CCoreObject *CastToObject(IUnknown *p) {
+	// Is p a thunk?
+	// dynamic_cast can't work, since ATL::_QIThunk has no superclass (not even IUnknown)
+	//  solution: compare virtual function tables
+	ATL::_QIThunk dummy((IUnknown*)(void*)1, L"dummy", IID_IUnknown, 0, false);
+
+	if (*((int**)(void*)p) == *((int**)(void*)&dummy))
+		return (CCoreObject*)(ICoreObject*)((ATL::_QIThunk *)(p))->m_pUnk;
+	else
+		return (CCoreObject*)(ICoreObject*)p;
+}
+#endif
 
 #endif//MGA_COREOBJECT_H

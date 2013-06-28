@@ -741,8 +741,10 @@ CCoreTerritory *CCoreProject::CastTerritory(ICoreTerritory *territory) const
 	CCoreTerritory *the_territory = CastToTerritory(p);
 	ASSERT( the_territory != NULL );
 
+#ifndef _ATL_DEBUG_INTERFACES
 	if( the_territory->GetProject() != this )
 		HR_THROW(E_SAMEPROJECT);
+#endif
 
 	return the_territory;
 }

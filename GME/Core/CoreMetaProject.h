@@ -58,7 +58,12 @@ public:
 	::GUID guid;
 };
 
+#ifndef _ATL_DEBUG_INTERFACES
 inline IUnknown *CastToUnknown(CCoreMetaProject *p) { return (IUnknown*)(ICoreMetaProject*)p; }
 inline CCoreMetaProject *CastToMetaProject(IUnknown *p) { return (CCoreMetaProject*)(ICoreMetaProject*)p; }
+#else
+inline IUnknown *CastToUnknown(CCoreMetaProject *p) { return (IUnknown*)(ICoreMetaProject*)p; }
+inline CCoreMetaProject *CastToMetaProject(IUnknown *p) { return (CCoreMetaProject*)(ICoreMetaProject*)((ATL::_QIThunk *)(p))->m_pUnk; }
+#endif
 
 #endif//MGA_COREMETAPROJECT_H

@@ -144,7 +144,24 @@ public:
 	STDMETHOD(RegisterClient)(BSTR name, IDispatch *OLEServer, IMgaClient **client);
 	STDMETHOD(GetClientByName)(BSTR name, IMgaClient **client);
 	STDMETHOD(GetTopLibraries)(BSTR name, IMgaFolders **res);
+#ifndef _ATL_DEBUG_INTERFACES
 	ICoreProject* dataproject;
+#else
+	bool dataprojectNull;
+	void put_dataproject(ICoreProject* dataproject)
+	{
+		dataprojectNull = !!dataproject;
+	}
+	ICoreProject* get_dataproject()
+	{
+		if (dataprojectNull)
+			return NULL;
+		ICoreProject* ret;
+		COMTHROW(inner->QueryInterface(__uuidof(ICoreProject), (void**)&ret));
+		return ret;
+	}
+	__declspec(property(get=get_dataproject, put=put_dataproject)) ICoreProject* dataproject;
+#endif
 	void ObjMark(IMgaObject *s, long mask);
 	void FixupGUID(bool write = true);
 	void UpdateMGAVersion(CoreObj& p_dataroot);

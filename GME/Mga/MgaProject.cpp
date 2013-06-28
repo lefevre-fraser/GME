@@ -41,8 +41,12 @@ STDMETHODIMP CMgaProject::FinalConstruct()	{
 		COMTRY {
 //			IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib> *xthis = this;
 			COMTHROW( CoCreateInstance(__uuidof(CoreProject), (IMgaProject *)this, CLSCTX_ALL, IID_IUnknown, (LPVOID *) &inner) );
+#ifndef _ATL_DEBUG_INTERFACES
 			COMTHROW(inner.QueryInterface(&dataproject));
 			dataproject->Release();   // release reference to ourselves
+#else
+			dataprojectNull = false;
+#endif
 		} COMCATCH(;);
 }
 
