@@ -187,6 +187,7 @@ protected:
 	afx_msg void OnButtonGo();
 	afx_msg void OnClickListResults(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDblclkListResults(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnKeyDownListResults(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:

@@ -38,7 +38,7 @@ public:
 public: //there is a "protected:" in the AFX section above..
 	CComPtr<IMgaProject> GetProject() { return m_project; }
 	CComPtr<IMgaObjects> GetScopedL() { return m_MgaObjs; }
-	void BeginTransaction();
+	void BeginTransaction(transactiontype_enum=TRANSACTION_READ_ONLY);
 	void CommitTransaction();
 	void AbortTransaction();
 	CComPtr<IMgaTerritory> Terr();

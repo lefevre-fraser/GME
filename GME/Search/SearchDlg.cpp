@@ -100,6 +100,7 @@ BEGIN_MESSAGE_MAP(CSearchDlg, CDialog)
     ON_NOTIFY(NM_CLICK, IDC_LISTRESULTS, OnClickListResults)
     ON_NOTIFY(LVN_ITEMCHANGED, IDC_LISTRESULTS, OnClickListResults)
     ON_NOTIFY(NM_DBLCLK, IDC_LISTRESULTS, OnDblclkListResults)
+    ON_NOTIFY(LVN_KEYDOWN, IDC_LISTRESULTS, OnKeyDownListResults)
     //}}AFX_MSG_MAP
     ON_WM_SIZE()
     ON_WM_SIZING()
@@ -263,7 +264,6 @@ void CSearchDlg::OnButtonGo()
         m_pgsSearch.ShowWindow(SW_RESTORE);
         RemoveAll();
         //		AfxMessageBox(_T("Searching"));
-        m_lstResults.ShowWindow(SW_HIDE);
 
         TheCtrl->BeginTransaction();
         CComPtr<IMgaObjects> ccpObjectsInTerr = TheCtrl->PutInMyTerritory( TheCtrl->GetScopedL());
@@ -370,7 +370,7 @@ void CSearchDlg::DisplayResults()
 
 
     //Hide the window so it doesn't waste time redrawing each time we add an item
-    m_lstResults.ShowWindow(SW_HIDE);
+    m_lstResults.SetRedraw(FALSE);
     m_lstResults.DeleteAllItems();
 
     MGACOLL_ITERATE(IMgaFCO, results)
@@ -435,8 +435,7 @@ void CSearchDlg::DisplayResults()
     }
 
     //Now that everything is added, allow the display to redraw
-    m_lstResults.ShowWindow(SW_RESTORE);
-
+    m_lstResults.SetRedraw(TRUE);
 }
 
 void CSearchDlg::OnClickListResults(NMHDR* pNMHDR, LRESULT* pResult) 
@@ -448,6 +447,58 @@ void CSearchDlg::OnDblclkListResults(NMHDR* pNMHDR, LRESULT* pResult)
 {
     this->itemDblClicked(); *pResult = 0;
 }
+
+void CSearchDlg::OnKeyDownListResults(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LV_KEYDOWN* pLVKeyDown = (LV_KEYDOWN*)pNMHDR;
+	*pResult = 0;
+
+	long count = 0;
+    if (results)
+		COMTHROW(results->get_Count(&count));
+
+	if (count > 0 && pLVKeyDown->wVKey == VK_DELETE)
+    {
+        CWnd::UpdateData(TRUE);
+
+        CSearchCtrl *TheCtrl = GetCtrl();
+		try 
+		{
+			TheCtrl->BeginTransaction(TRANSACTION_GENERAL);
+		}
+		catch (const hresult_exception&)
+		{
+			return;
+		}
+        try
+        {
+            int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
+            //LVITEM lvItem;
+            long lParam = m_lstResults.GetItemData(selected-1);
+           // m_lstResults.GetItem(&lvItem);
+            CComPtr<IMgaFCO> selectedFCO;
+            // selected might be 0 because GeSelectionMark might have returned -1
+            if( selected >= 1 && selected <= count)
+            {
+                COMTHROW(results->get_Item(lParam+1, &selectedFCO));
+            }
+			VARIANT_BOOL isInstance, isLibObject;
+			COMTHROW(selectedFCO->get_IsInstance(&isInstance));
+			COMTHROW(selectedFCO->get_IsLibObject(&isLibObject));
+            CComQIPtr<IMgaObject> selectedObject(selectedFCO);
+			COMTHROW(selectedObject->DestroyObject());
+            TheCtrl->CommitTransaction();
+			// RemoveZombies
+        }
+        catch(...)
+        {
+            TheCtrl->AbortTransaction();
+        }
+
+    }
+
+}
+
 
 void CSearchDlg::OnSize(UINT nType, int cx, int cy)
 {

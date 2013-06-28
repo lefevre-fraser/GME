@@ -403,7 +403,7 @@ void CSearchCtrl::OnMgaGlobalEvent(globalevent_enum event)
 /////////////////////////////////////////////////////////////////////////////
 // These functions can be used from the dialog
 
-void CSearchCtrl::BeginTransaction()
+void CSearchCtrl::BeginTransaction(transactiontype_enum type)
 {
 	// In the event handlers we are already in transaction
 	if(m_inEventTransactionMode) {
@@ -415,7 +415,7 @@ void CSearchCtrl::BeginTransaction()
 		COMTHROW(
 				m_project->BeginTransaction(
 					m_territory, 	
-					TRANSACTION_READ_ONLY
+					type
 				)
 			);
 	}
