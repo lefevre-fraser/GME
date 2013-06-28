@@ -111,10 +111,12 @@ void CPartBrowserDlg::SetTabs()
 					CComPtr<IMgaMetaAspect>	spAspect;
 					COMTHROW(spAspects->get_Item(ind + 1, &spAspect));
 					tcItem.mask = TCIF_TEXT;
+					CComBSTR displayedNameBstr;
+					COMTHROW(spAspect->get_DisplayedName(&displayedNameBstr));
 					CComBSTR nameBStr;
 					COMTHROW(spAspect->get_Name(&nameBStr));
 					CString name;
-					CopyTo(nameBStr, name);
+					name = displayedNameBstr ? displayedNameBstr : nameBStr;
 					tcItem.pszText = name.GetBuffer();
 					tcItem.cchTextMax = name.GetLength();
 					tab.InsertItem(ind, &tcItem);
