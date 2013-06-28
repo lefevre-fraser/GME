@@ -140,12 +140,19 @@ void CScriptEdit::OnKeyUp( UINT nChar, UINT /*nRepCnt*/, UINT /*nFlags*/ )
 		static const TCHAR *cls_c = _T("!cls");
 		static const TCHAR *run_c = _T("!run");
 		static const TCHAR *lod_c = _T("!load ");
+		static const TCHAR *lor_c = _T("!loadr "); // load & run
 		static const TCHAR *rel_c = _T("!rel"); // reload
 		static const TCHAR *rlr_c = _T("!rlr"); // reload & run
 		bool             handled = false;
 
 		if(      inp == run_c) handled = true, m_console->RunScript();
-		else if( inp == lod_c) handled = true, m_console->LoadScript( _bstr_t(inp.Mid( _tcslen( lod_c))));
+		else if(wcsncmp(inp, lod_c, wcslen(lod_c)) == 0) handled = true, m_console->LoadScript( _bstr_t(inp.Mid( _tcslen( lod_c))));
+		else if(wcsncmp(inp, lor_c, wcslen(lor_c)) == 0)
+		{
+			handled = true;
+			m_console->LoadScript( _bstr_t(inp.Mid( _tcslen( lor_c))));
+			m_console->RunScript();
+		}
 		else if( inp == rel_c) handled = true, m_console->LoadScript( _bstr_t(m_loadedFileName));
 		else if( inp == rlr_c) handled = true, m_console->LoadScript( _bstr_t(m_loadedFileName)), m_console->RunScript();
 		else if( inp == cls_c) handled = true, m_console->Clear();
