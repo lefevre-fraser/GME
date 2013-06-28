@@ -69,8 +69,6 @@ int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
 
 // #define END_SCROLL_OFFSET 50 // not used - instead EXTENT_ERROR_CORR
 
-#define CONSIDER_ONLY_FIRST_ACTIVATE
-
 /////////////////////////////////////////////////////////////////////////////
 // CViewDriver
 bool CViewDriver::attrNeedsRefresh = false;
@@ -7364,11 +7362,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	//anyways, OnActivateView is called on both views, so you would know if going from
 	//one to another by the ACTIVATE/DEACTIVATE - Brian
 
-	if (bActivate
-#ifdef CONSIDER_ONLY_FIRST_ACTIVATE
-		&& (!initDone || needsReset)
-#endif
-		) {
+	if (bActivate && (!initDone || needsReset)) {
 		if( theApp.isHistoryEnabled())
 		{
 			GetDocument()->tellHistorian( currentModId, currentAspect?currentAspect->name:_T(""));
