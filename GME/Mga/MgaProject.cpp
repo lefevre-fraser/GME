@@ -1516,7 +1516,8 @@ STDMETHODIMP CMgaProject::CommitNotify() {
                 if(!baseterr)
 					COMTHROW(E_MGA_NOT_IN_TRANSACTION);
 
-                if(!changedobjs.empty()) notifyqueueprocessed = true;
+                if(!changedobjs.empty())
+					notifyqueueprocessed = true;
                 while(!changedobjs.empty()) {
                                 FCOPtr f = changedobjs.front();
                                 changedobjs.pop();

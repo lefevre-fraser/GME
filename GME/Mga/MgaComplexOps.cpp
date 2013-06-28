@@ -37,7 +37,8 @@ void FCO::inDeleteObject() {
 			long status;
 			COMTHROW(get_Status(&status));
 			metaid_type typ = GetMetaID(self);
-			if(status == OBJECT_DELETED) return;  // since collections contain objects, it may happen!!!
+			if(status == OBJECT_DELETED)
+				return;  // since collections contain objects, it may happen!!!
 // Step 1: delete structure of this object, but not the object itself
 			if(typ == DTID_CONNECTION) {
 				ITERATE_THROUGH(self[ATTRID_CONNROLE+ATTRID_COLLECTION]) CoreObjMark(ITER[ATTRID_XREF], OBJEVENT_DISCONNECTED);
@@ -123,7 +124,7 @@ void FCO::inDeleteObject() {
 						CoreObjMark(ITER[ATTRID_ATTRPARENT], OBJEVENT_ATTR);
 						break;
 					default:	
-										COMTHROW(E_MGA_META_INCOMPATIBILITY);
+						COMTHROW(E_MGA_META_INCOMPATIBILITY);
 					}
 				}
 				if(typ == DTID_REFERENCE) {

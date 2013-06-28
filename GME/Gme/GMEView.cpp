@@ -7389,17 +7389,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 
 //	CGMEView * gmeviewA = (CGMEView *)pActivateView;
 //	CGMEView * gmeviewI = (CGMEView *)pDeactiveView;
-	if (bActivate)
-		m_isActive = true;
-	else 
-		m_isActive = false;
-	if (bActivate)
-	{
-//		if (gmeviewA  &&  guiMeta)
-            {
-			TRACE(_T("CGMEView::OnActivateView DoPannWinRefresh\n"));
-		}
-	}
+	m_isActive = bActivate;
 	TRACE(_T("CGMEView::OnActivateView final false\n"));
 	if (bActivate)
 		theApp.UpdateMainTitle();
