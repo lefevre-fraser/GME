@@ -55,7 +55,7 @@ bool putreftask::Do(CoreObj self, std::vector<CoreObj> *peers) {
 
 		ITERATE_THROUGH(self[ATTRID_DERIVED + ATTRID_COLLECTION])
 		{
-			if (!ITER[ATTRID_MASTEROBJ])
+			if (!static_cast<CoreObj>(ITER[ATTRID_MASTEROBJ]))
 			{
 				COMTHROW(ObjForCore(ITER)->Check());
 			}
