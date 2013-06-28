@@ -617,7 +617,7 @@ public:
 	void getinterface(Q **p, CMgaTerritory *terr = NULL) {
 		CComPtr<IMgaObject> zz;
 		getinterface(&zz, terr);
-#ifdef DEBUG
+#if defined(DEBUG) || defined(_ATL_DEBUG_INTERFACES)
 		CComQIPtr<Q> pp = zz;
 		*p = pp.Detach();
 #else

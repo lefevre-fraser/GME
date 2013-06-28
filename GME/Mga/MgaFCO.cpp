@@ -32,10 +32,10 @@ STDMETHODIMP FCO::FinalConstruct() {
 			COMTHROW(self->get_Project(&cp));
 #ifdef _ATL_DEBUG_INTERFACES
 			CComPtr<IMgaProject> proj;
-			COMTHROW(cp->QueryInterface(IID_IMgaProject,(void **)&proj));
+			COMTHROW(cp->QueryInterface(__uuidof(IMgaProject),(void **)&proj));
 			IUnknown* pUnk = ((ATL::_QIThunk *)(proj.p))->m_pUnk;
 			pUnk->AddRef();
-			mgaproject.Attach((CMgaProject*)(IDispatchImpl<IMgaProject, &IID_IMgaProject, &LIBID_MGALib>*)(pUnk));
+			mgaproject.Attach((CMgaProject*)(IDispatchImpl<IMgaProject, &__uuidof(IMgaProject), &__uuidof(__MGALib)>*)(pUnk));
 #else
 			COMTHROW(cp->QueryInterface(__uuidof(IMgaProject),(void **)&mgaproject));
 #endif
