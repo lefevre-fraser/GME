@@ -288,6 +288,8 @@ void ObjTreeCopy(CMgaProject *mgaproject, CoreObj self, CoreObj &nobj, coreobjpa
 			CComPtr<ICoreMetaAttribute> mattr;
 			COMTHROW(MGACOLL_ITER->get_MetaAttribute(&mattr));
 			COMTHROW(mattr->get_AttrID(&ai));
+			if (ai == ATTRID_LOCK)
+				continue;
 			if(ai < ATTRID_COLLECTION) {
 				// remove library flags from a copy
 				// FIXME this looks wrong
@@ -332,6 +334,8 @@ void ObjTreeCopyFoldersToo(CMgaProject *mgaproject, CoreObj self, CoreObj &nobj,
 			COMTHROW(MGACOLL_ITER->get_MetaAttribute(&mattr));
 			COMTHROW(mattr->get_AttrID(&ai));
 			if(ai < ATTRID_COLLECTION) {
+				if (ai == ATTRID_LOCK)
+					continue;
 				// remove library flags from a copy
 				// FIXME this looks wrong
 				if(ai == ATTRID_PERMISSIONS) nobj[ai] = self[ai] & INSTANCE_FLAG;
@@ -463,7 +467,8 @@ void ObjTreeDerive(CMgaProject *mgaproject, const CoreObj &origobj, CoreObj &new
 				case ATTRID_GUID1: // don't copy these
 				case ATTRID_GUID2:
 				case ATTRID_GUID3:
-				case ATTRID_GUID4: break;
+				case ATTRID_GUID4:
+				case ATTRID_LOCK: break;
 				default:
 					newobj[ai] = static_cast<CComVariant>(origobj[ai]);
 				}

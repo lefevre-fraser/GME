@@ -193,12 +193,6 @@ public:
 		ASSERT(k.pdispVal);
 		return CoreObjs(k.pdispVal);
 	}; 
-
-	inline CoreObj Search(attrid_type  attr, VARIANT sval) {
-		CoreObj o;
-		COMTHROW(p->SearchCollection(i, attr, sval, &o.ComPtr()));
-		return o;
-	}
 };
 
 inline CoreAttr CoreObj::operator[](int  id) const {

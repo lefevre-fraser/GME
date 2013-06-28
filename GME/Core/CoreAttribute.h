@@ -462,7 +462,6 @@ public:
 public:
 	void CopyCollectionFromMemory(VARIANT &v);
 	void CopyCollectionFromStorage(VARIANT &v);
-	CComObjPtr<CCoreObject> SearchCollection(attrid_type attrid, const VARIANT &value);
 	bool IsEmptyFromStorage();
 
 	inline void NotUpToDate() NOTHROW { ResetStatusFlag(COREATTRIBUTE_COLL_UPTODATE); }

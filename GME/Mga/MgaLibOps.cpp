@@ -321,6 +321,8 @@ void LibImgHelper::DoExtTreeCopy::operator ()( const CoreObj& orig, CoreObj& nob
 			COMTHROW(MGACOLL_ITER->get_MetaAttribute(&mattr));
 			COMTHROW(mattr->get_AttrID(&ai));
 			if(ai < ATTRID_COLLECTION) {
+				if (ai == ATTRID_LOCK)
+					continue;
 				valtype_type mvt;
 				COMTHROW(mattr->get_ValueType(&mvt));
 				if(mvt != VALTYPE_POINTER) {

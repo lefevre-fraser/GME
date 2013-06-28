@@ -247,24 +247,7 @@ STDMETHODIMP CCoreObject::get_PeerLockValue(attrid_type attrid, locking_type *p)
 STDMETHODIMP CCoreObject::SearchCollection(attrid_type coll_attrid, attrid_type search_attrid,
 	VARIANT search_value, ICoreObject **p)
 {
-	CHECK_OUT(p);
-
-	if( IsZombie() )
-		COMRETURN(E_ZOMBIE);
-
-	CCoreAttribute *attribute = FindAttribute(coll_attrid);
-	if( attribute == NULL || attribute->GetValType() != VALTYPE_COLLECTION )
-		return E_INVALIDARG;
-
-	COMTRY
-	{
-		CCoreCollectionAttribute *collection = 
-			static_cast<CCoreCollectionAttribute*>(attribute);
-		
-		CComObjPtr<CCoreObject> ret = collection->SearchCollection(search_attrid, search_value);
-		MoveTo(ret, p);
-	}
-	COMCATCH(;)
+	return E_NOTIMPL;
 }
 
 STDMETHODIMP CCoreObject::get_IsDeleted(VARIANT_BOOL *p)

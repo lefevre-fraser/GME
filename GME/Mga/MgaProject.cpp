@@ -550,11 +550,6 @@ STDMETHODIMP CMgaProject::Save(BSTR newname, VARIANT_BOOL keepoldname)
 					COMTHROW(dataproject->get_RootObject(&self.ComPtr()));
 					UpdateMGAVersion( self);
 					FixupGUID();
-					locking_type ppp;
-					COMTHROW(self->get_PeerLockValue(ATTRID_LOCK, &ppp));
-					//if(!(ppp & LOCKING_READ)) self[ATTRID_MDATE] = Now();
-                    // BGY: this modifies the root every save time, which is bad for the
-                    // xmlbackend (it always tries to check out the root)
 					GlobalNotify(GLOBALEVENT_SAVE_PROJECT);
 					COMTHROW(CommitTransaction());
 				} catch(hresult_exception &) {
@@ -600,11 +595,6 @@ STDMETHODIMP CMgaProject::Close(VARIANT_BOOL abort)
 					CoreObj self;
 					COMTHROW(dataproject->get_RootObject(&self.ComPtr()));
 					FixupGUID();
-					locking_type ppp;
-					COMTHROW(self->get_PeerLockValue(ATTRID_LOCK, &ppp));
-					//if(!(ppp & LOCKING_READ)) self[ATTRID_MDATE] = Now();
-                    // BGY: this modifies the root every closing time, which is bad for the
-                    // xmlbackend (it always tries to check out the root)
 				}
 				GlobalNotify(GLOBALEVENT_CLOSE_PROJECT);
 				COMTHROW(CommitTransaction());

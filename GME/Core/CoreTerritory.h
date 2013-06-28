@@ -10,17 +10,6 @@
 class CCoreProject;
 class CCoreLockAttribute;
 
-// --------------------------- typedefs
-
-typedef core::hash_map< CComObjPtr<CCoreLockAttribute>
-                        , locking_type
-                        , ptr_compare<CCoreLockAttribute> 
-                        > lockmap_type;
-typedef lockmap_type::iterator lockmap_iterator;
-
-typedef core::list<lockmap_type> lockmaps_type;
-typedef lockmaps_type::iterator lockmaps_iterator;
-
 // --------------------------- CCoreTerritory
 
 class ATL_NO_VTABLE CCoreTerritory : 
@@ -45,7 +34,6 @@ END_COM_MAP()
 
 protected:
 	CComObjPtr<CCoreProject> project;
-	lockmaps_type lockmaps;
 
 	typedef unsigned char status_type;
 	status_type status;
@@ -62,24 +50,18 @@ public:
 public:
 	CCoreProject *GetProject() const { return project; }
 
-	locking_type GetLocking(CCoreLockAttribute *attribute) const NOTHROW;
-	void SetLockingCore(CCoreLockAttribute *attribute, locking_type old_locking, locking_type locking);
-	void SetLocking(CCoreLockAttribute *attribute, locking_type locking);
-	void RaiseLocking(CCoreLockAttribute *attribute, locking_type locking);
-
 // ------- Status
 
 #define CORETERRITORY_DIRTY				0x0001
 #define CORETERRITORY_FINAL				0x0002
 
-public:
+private:
 	void SetStatusFlag(status_type flags) { status |= flags; }
 	void ResetStatusFlag(status_type flags) { status &= ~flags; }
 
 	void ChangeStatusFlag(status_type flag, bool set) { if(set) status |= flag; else status &= ~flag; }
 	bool GetStatusFlag(status_type flag) const { return (status & flag) != 0; }
 
-public:
 	bool InTransaction() const;
 
 // ------- NestedTrItem
@@ -88,15 +70,15 @@ public:
 	virtual bool IsDirty() const NOTHROW { return GetStatusFlag(CORETERRITORY_DIRTY); }
 	virtual void ChangeDirty(bool dirty) NOTHROW { ChangeStatusFlag(CORETERRITORY_DIRTY, dirty); }
 
-	virtual void AbortNestedTransaction() NOTHROW;
-	virtual void DiscardPreviousValue() NOTHROW;
+	virtual void AbortNestedTransaction() NOTHROW { ResetStatusFlag(CORETERRITORY_DIRTY); }
+	virtual void DiscardPreviousValue() NOTHROW { }
 
 // ------- FinalTrItem
 
 public:
-	virtual void AbortFinalTransaction() NOTHROW;
-	virtual void CommitFinalTransaction();
-	virtual void CommitFinalTransactionFinish(bool undo) NOTHROW;
+	virtual void AbortFinalTransaction() NOTHROW { ResetStatusFlag(CORETERRITORY_DIRTY); }
+	virtual void CommitFinalTransaction() {}
+	virtual void CommitFinalTransactionFinish(bool undo) NOTHROW { ResetStatusFlag(CORETERRITORY_DIRTY); }
 };
 
 #ifndef _ATL_DEBUG_INTERFACES

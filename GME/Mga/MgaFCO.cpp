@@ -125,9 +125,7 @@ HRESULT FCO::get_Status(long *p) {
 HRESULT FCO::get_IsWritable(VARIANT_BOOL *p) {
 	COMTRY {
 		CHECK_OUTPAR(p);
-		locking_type ppp;
-		COMTHROW(self->get_PeerLockValue(ATTRID_LOCK, &ppp));
-		*p =  (ppp & LOCKING_READ) ? VARIANT_FALSE : VARIANT_TRUE;
+		*p = VARIANT_TRUE;
 	} COMCATCH(;)
 }
 
@@ -264,7 +262,6 @@ HRESULT FCO::GetParent(IMgaContainer **pVal, objtype_enum *l) {
 					COMTHROW(pv->get_ObjType(l));
 				if(pVal != NULL) {
 					*pVal = pv.Detach();
-					COMTHROW((*pVal)->Open(OPEN_READ));
 				}
 			}
 			else {
@@ -1148,33 +1145,12 @@ HRESULT FCO::get_CurrentAssociation(VARIANT *userdata) {
 }
 */
 
-HRESULT FCO::Open( openmode mode)  { 
-	COMTRY {	
-		ASSERT(mode == LOCKING_READ || mode == LOCKING_EXCLUSIVE);
-
-		CComVariant lock = self[ATTRID_LOCK];
-		ASSERT (lock.vt == VT_UI1);
-		int  m = lock.bVal;
-
-		switch(m) {
-		case LOCKING_READ:
-				if(mode == LOCKING_READ) break;
-		case LOCKING_WRITE:
-				mode = static_cast<openmode>(LOCKING_EXCLUSIVE);
-		case LOCKING_NONE:
-				self[ATTRID_LOCK] = mode;
-		case LOCKING_EXCLUSIVE:
-				break;
-		default: 
-				ASSERT(("Invalid locking value detected",false));
-		}
-	} COMCATCH(;);
+HRESULT FCO::Open(openmode mode)  { 
+	return S_OK;
 };
 
-HRESULT FCO::Close () {
-	COMTRY {
-		self[ATTRID_LOCK] = LOCKING_NONE;
-	} COMCATCH(;) 
+HRESULT FCO::Close() {
+	return S_OK;
 }
 
 FCOPtr::FCOPtr(FCOPtr const &o) {

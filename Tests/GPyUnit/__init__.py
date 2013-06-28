@@ -35,6 +35,7 @@ def _test_names():
  'Regr.Mga.tc1',
  'test_decorators',
  'test_DsmlGenerator',
+ 'test_coreTransaction',
 ]
     if platform.system() != 'Java':
         _test_names += [

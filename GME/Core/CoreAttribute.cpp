@@ -290,10 +290,8 @@ STDMETHODIMP CCoreLockAttribute::get_Value(VARIANT *p)
 
 	COMTRY
 	{
-		locking_type locking = GetTerritory()->GetLocking(this);
-		ASSERT( LOCKING_NONE <= locking && locking <= LOCKING_EXCLUSIVE );
-
-		CopyTo(locking, p);
+		// this may not be right, but it shouldn't matter
+		CopyTo(original_locking, p);
 	}
 	COMCATCH(;)
 }
@@ -313,8 +311,8 @@ STDMETHODIMP CCoreLockAttribute::put_Value(VARIANT p)
 		if( !(LOCKING_NONE <= locking && locking <= LOCKING_EXCLUSIVE) )
 			HR_THROW(E_INVALIDARG);
 
-		// territory calls RegisterLock
-		GetTerritory()->SetLocking(this, locking);
+		// FIXME: 0 is not right, does it matter?
+		RegisterLockTry(0, locking );
 	}
 	COMCATCH(;)
 }
@@ -1471,9 +1469,6 @@ STDMETHODIMP CCoreDataAttribute<BASE, VALTYPE>::get_Value(VARIANT *p)
 	{
 		if( InTransaction() )
 		{
-			if( LOCKING_GETVALUE > LOCKING_NONE )
-				GetTerritory()->RaiseLocking(GetLockAttr(), LOCKING_GETVALUE);
-
 			if( !IsLoaded() )
 				GetLockAttr()->Load();
 
@@ -1519,9 +1514,6 @@ STDMETHODIMP CCoreDataAttribute<BASE, VALTYPE>::put_Value(VARIANT p)
 
 	COMTRY
 	{
-		if( LOCKING_PUTVALUE > LOCKING_NONE )
-			GetTerritory()->RaiseLocking(GetLockAttr(), LOCKING_PUTVALUE);
-
 		if( !IsLoaded() )
 			GetLockAttr()->Load();
 
@@ -1567,7 +1559,7 @@ STDMETHODIMP CCoreDataAttribute<BASE, VALTYPE>::get_PreviousValue(VARIANT *p)
 
 	COMTRY
 	{
-		if( GetTerritory()->GetLocking(GetLockAttr()) == LOCKING_NONE )
+		if (GetLockAttr()->IsLoaded() == false)
 			HR_THROW(E_NOTLOCKED);
 
 		if( IsDirty() )
@@ -1801,15 +1793,15 @@ STDMETHODIMP CCoreCollectionAttribute::get_Value(VARIANT *p)
 	{
 		if( InTransaction() )
 		{
-			if( (GetTerritory()->GetLocking(GetLockAttr()) & LOCKING_READ) &&
+			if (GetLockAttr()->IsLoaded() &&
 				GetStatusFlag(COREATTRIBUTE_COLL_UPTODATE) )
 			{
 				CopyCollectionFromMemory(*p);
 			}
 			else
 			{
-				if( LOCKING_GETCOLLECTION > LOCKING_NONE )
-					GetTerritory()->RaiseLocking(GetLockAttr(), LOCKING_GETCOLLECTION);
+				if (GetLockAttr()->IsLoaded() == false)
+					GetLockAttr()->Load();
 
 				CopyCollectionFromStorage(*p);
 			}
@@ -1919,78 +1911,6 @@ void CCoreCollectionAttribute::CopyCollectionFromStorage(VARIANT &v)
 
 	v.pdispVal = p.Detach();
 	v.vt = VT_DISPATCH;
-}
-
-CComObjPtr<CCoreObject> CCoreCollectionAttribute::SearchCollection(attrid_type attrid, 
-	const VARIANT &value)
-{
-	// TODO: Try to cast Visual Basic BSTRs: they are passed as VT_DISPATCH
-
-	bool in_transaction = InTransaction();
-
-	// first check the loaded (in memory) part of the collection
-	// the objects are loaded, the pointers point here, the attribute might not be loaded
-
-	objects_type::const_iterator i = collection.begin();
-	objects_type::const_iterator e = collection.end();
-	while( i != e )
-	{
-		CCoreAttribute *attribute = (*i)->FindAttribute(attrid);
-
-		if( attribute != NULL && attribute->DoesMatch(in_transaction, value) )
-			return *i;
-
-		++i;
-	}
-
-	if( in_transaction && !GetStatusFlag(COREATTRIBUTE_COLL_UPTODATE) )
-	{
-		// not found among the loaded objects
-		// try the unloaded objects (from the storage)
-
-		// lock the collection, unloaded objects must then point here
-		if( LOCKING_GETCOLLECTION > LOCKING_NONE )
-			GetTerritory()->RaiseLocking(GetLockAttr(), LOCKING_GETCOLLECTION);
-
-		ICoreStorage *storage = SetStorageThisAttribute();
-		ASSERT( storage != NULL );
-
-		CComVariant a;
-		COMTHROW( storage->get_AttributeValue(PutOut(a)) );
-
-		CCoreProject *project = GetProject();
-		ASSERT( project != NULL );
-
-		attrid_type pointer_attrid = GetAttrID() - ATTRID_COLLECTION;
-		ASSERT( pointer_attrid != ATTRID_NONE && pointer_attrid != - ATTRID_COLLECTION );
-
-		metaobjidpair_type *i;
-		metaobjidpair_type *e;
-		GetArrayBounds(a, i, e);
-
-		while( i != e )
-		{
-#pragma warning( disable: 4244) // conversion from 'long' to 'short', possible loss of data
-			CComObjPtr<CCoreObject> object = project->FindObject((*i).metaid, (*i).objid);
-#pragma warning( default: 4244) // conversion from 'long' to 'short', possible loss of data
-			if( object == NULL )
-			{
-#pragma warning( disable: 4244) // conversion from 'long' to 'short', possible loss of data
-				object = project->CreateObject((*i).metaid, (*i).objid);
-#pragma warning( default: 4244) // conversion from 'long' to 'short', possible loss of data
-				ASSERT( object != NULL );
-
-				CCoreAttribute *attribute = object->FindAttribute(attrid);
-
-				if( attribute != NULL && attribute->DoesMatch(true, value) )
-					return object;
-			}
-
-			++i;
-		}
-	}
-
-	return NULL;
 }
 
 bool CCoreCollectionAttribute::IsEmptyFromStorage()
