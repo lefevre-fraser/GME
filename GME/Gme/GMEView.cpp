@@ -4058,6 +4058,10 @@ void CGMEView::FillModelGrid()
 			continue;
 		if(!modelGrid.IsAvailable(obj)) {
 			CRect loc = obj->GetLocation();
+			if (theApp.labelAvoidance) {
+				CRect name = obj->GetNameLocation();
+				loc.UnionRect(loc, name);
+			}
 			if(!modelGrid.GetClosestAvailable(obj, loc)) {
 				//AfxMessageBox(_T("Too Many Models! Internal Program Error!"),MB_OK | MB_ICONSTOP);
 				//EndWaitCursor();
