@@ -1139,13 +1139,8 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 			if (ma_count > 0) {
 
 				if (ma_count == 1) {
-					COMTHROW( mattrs->get_Item(1,p) );
-
-					//    ' update the mapping: (parent.kind, kindname)->metafolder
-
-					this->map_put_AttrByStr(parent_metafco.p, kind, *p);
-
-					return S_OK;
+					// GME-414: Can't do anything here for xme importing:
+					//  Consider the case where the new meta has 1 attribute, and the xme has 2 (and maybe we've only parsed 1 so far): we may want to ignore
 				}
 
 				// no unique match in mapping and no obvious pick: 
