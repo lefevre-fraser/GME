@@ -112,7 +112,7 @@ int CSplashWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CenterWindow();
 
 	// Set a timer to destroy the splash screen.
-	SetTimer(1, 2000, NULL);
+	m_timerID = SetTimer(1, 2000, NULL);
 
 	return 0;
 }
@@ -134,8 +134,14 @@ void CSplashWnd::OnPaint()
 	dcImage.SelectObject(pOldBitmap);
 }
 
-void CSplashWnd::OnTimer(UINT_PTR /*nIDEvent*/)
+void CSplashWnd::OnTimer(UINT_PTR nIDEvent)
 {
-	// Destroy the splash screen window.
-	HideSplashScreen();
+	if (nIDEvent == 1)
+	{
+		// Destroy the splash screen window.
+		VERIFY(KillTimer(m_timerID));
+		HideSplashScreen();
+		return;
+	}
+	__super::OnTimer(nIDEvent);
 }

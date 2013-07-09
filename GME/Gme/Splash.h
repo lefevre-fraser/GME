@@ -18,6 +18,7 @@ protected:
 // Attributes:
 public:
 	CBitmap m_bitmap;
+	UINT_PTR m_timerID;
 
 // Operations
 public:
