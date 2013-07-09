@@ -3312,9 +3312,16 @@ bool CGMEView::DeleteConnection(CGuiConnection *guiConn,bool checkAspect)
 		CommitTransaction();
 	}
 	catch(hresult_exception &e) {
+		CComBSTR error;
+		CString errorstring = L"Unable to delete connection";
+		if (GetErrorInfo(&error))
+		{
+			errorstring += L": ";
+			errorstring += error;
+		}
+		AfxMessageBox(errorstring, MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(CString(L"    ") + errorstring + L"\r\n");
 		AbortTransaction(e.hr);
-		AfxMessageBox(_T("Unable to delete connection"),MB_ICONSTOP | MB_OK);
-		CGMEEventLogger::LogGMEEvent(_T("    Unable to delete connection.\r\n"));
 	}
 	this->SetFocus();
 	return ok;
@@ -3387,7 +3394,7 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 			if(oStatus == OBJECT_EXISTS) {
 				// throws E_MGA_MUST_ABORT if user selects CANCEL
 				brw_refresh_needed = AskUserAndDetachIfNeeded(obj->mgaFco); // detach the dependents if needed
-				COMTHROW(obj->mgaFco->DestroyObject());
+				COMTHROW(obj->mgaFco->DestroyObject()); // FIXME: read ErrorInfo
 				COMTHROW(obj->mgaFco->Close());
 			}
 		}
@@ -6760,7 +6767,7 @@ void CGMEView::OnEditDelete()
 
 	if (selectedConnection && selected.IsEmpty() && selectedAnnotations.IsEmpty()) {
 		if(!DeleteConnection(selectedConnection))
-			AfxMessageBox(_T("Connection cannot be deleted!"));
+			AfxMessageBox(_T("Unable to delete connection"));
 	} else {
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 		DeleteAnnotations(selectedAnnotations);
