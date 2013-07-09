@@ -1772,6 +1772,11 @@ bool Dumper::build()
 {
 	int res = IDYES;
 
+	if (global_vars.skip_paradigm_register)
+	{
+		res = IDNO;
+	}
+
 	if( global_vars.silent_mode)
  		TO( "Successfully generated " + CString(f_name.c_str()));
 	else

@@ -357,8 +357,9 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	project->beginOnly(TRANSACTION_GENERAL);
 	// ======================
 	// Insert application specific code here
-	global_vars.silent_mode = (lParam == GME_SILENT_MODE);
-	global_vars.silent_mode |= (bool)(GetKeyState(VK_CONTROL) & 0x8000);
+	global_vars.silent_mode = (lParam & GME_SILENT_MODE) != 0;
+	global_vars.silent_mode |= (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+	global_vars.skip_paradigm_register |= (lParam & GME_EMBEDDED_START) != 0;
 	//global_vars.silent_mode = true;
 	initMembers( project);
 
@@ -525,8 +526,17 @@ Util::Variant Component::getParameter( const std::string& strName )
 
 void Component::setParameter( const std::string& strName, const Util::Variant& varValue )
 {
-	// ======================
-	// Insert application specific code here
+	if (strName == "SkipParadigmRegister")
+	{
+		if (varValue.type() == Util::Variant::VT_Boolean)
+		{
+			global_vars.skip_paradigm_register = static_cast<bool>(varValue);
+		}
+		else
+		{
+			global_vars.skip_paradigm_register = true;
+		}
+	}
 }
 
 #ifdef GME_ADDON

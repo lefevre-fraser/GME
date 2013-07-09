@@ -13,6 +13,7 @@ public:
 		, err_file_name("\\Paradigm.xmp.log")
 		, silent_mode  ( false)
 		, genConstr()
+		, skip_paradigm_register(false)
 	{ }
 
 	LogStream     err;
@@ -22,6 +23,7 @@ public:
 	std::string err_file_name;
 
 	bool		silent_mode;
+	bool skip_paradigm_register;
 
 	class GeneratedConstraints
 	{
