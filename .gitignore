@@ -17,6 +17,7 @@ ipch
 *.mta
 *.log
 *-emergency*.mga
+*.nupkg
 Release_PGO
 obj/
 GME/XmlBackEnd/XmlBackEnd.h
@@ -404,3 +405,4 @@ Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.Classes.cs
 Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.Interfaces.cs
 Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.dll
 Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.xml
+ Tests/GPyUnit/DsmlGeneratorTest/DsmlGeneratorTest.sln  

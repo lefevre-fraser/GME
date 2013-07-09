@@ -1,0 +1,31 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)..\lib\net40\CSharpDSMLGenerator.dll" TaskName="CSharpDSMLGenerator.GenerateCSharpDSML" />
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)..\lib\net40\CSharpDSMLGenerator.dll" TaskName="CSharpDSMLGenerator.RunMetaInterpreter" />
+  <PropertyGroup>
+    <BuildDependsOn>CSharpDsml;$(BuildDependsOn)</BuildDependsOn>
+    <RebuildDependsOn>CSharpDsmlRebuild;$(RebuildDependsOn)</RebuildDependsOn>
+  </PropertyGroup>
+  <Target DependsOnTargets="MetaInterpreter"
+    Name="CSharpDsml"
+    Outputs="ISIS.GME.Dsml.$(MSBuildProjectName).Interfaces.cs"
+    Inputs="$(MSBuildProjectName).mga;$(MSBuildThisFileDirectory)\..\lib\net40\CSharpDSMLGenerator.dll">
+    <Message Importance="High" Text="CSharpDsmlGenerator $(MSBuildProjectName)" />
+    <GenerateCSharpDSML InputFile="$(MSBuildProjectName).mga" OutputDir="." CompileDll="false"/>
+  </Target>
+
+  <Target Name="CSharpDsmlRebuild">
+    <Message Importance="High" Text="CSharpDsmlGenerator $(MSBuildProjectName)" />
+    <GenerateCSharpDSML InputFile="$(MSBuildProjectName).mga" OutputDir="." CompileDll="false"/>
+  </Target>
+  
+  <Target Name="MetaInterpreter"
+    Outputs="$(MSBuildProjectName).xmp"
+    Inputs="$(MSBuildProjectName).mga">
+    <RunMetaInterpreter InputFile="$(MSBuildProjectName).mga"/>
+  </Target>
+
+  <ItemGroup>
+    <Compile Include="ISIS.GME.Dsml.$(MSBuildProjectName).Classes.cs" />
+    <Compile Include="ISIS.GME.Dsml.$(MSBuildProjectName).Interfaces.cs" />
+  </ItemGroup>
+</Project>
