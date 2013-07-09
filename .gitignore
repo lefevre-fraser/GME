@@ -393,3 +393,14 @@ Tests/GPyUnit/GME_391/parsertest2.xml
 Tests/GPyUnit/GME_391/testXME.xme
 Tests/GPyUnit/GME_391/udmparsertest.mga
 .idea
+GME/DotNetPIAs_1.0.1.0/policy.1.0.GME.MGA.Core.dll
+GME/DotNetPIAs_1.0.1.0/policy.1.0.GME.MGA.Meta.dll
+GME/DotNetPIAs_1.0.1.0/policy.1.0.GME.MGA.Parser.dll
+GME/DotNetPIAs_1.0.1.0/policy.1.0.GME.MGA.dll
+GME/DotNetPIAs_1.0.1.0/policy.1.0.GME.Util.dll
+GME/DotNetPIAs_1.0.1.0/policy.1.0.GME.dll
+Paradigms/MetaGME/AssemblySignature.snk
+Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.Classes.cs
+Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.Interfaces.cs
+Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.dll
+Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.xml
