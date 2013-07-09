@@ -1037,6 +1037,9 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 
 	ofs.close();
 
+	if( ofs.fail() )
+		HR_THROW(E_FILEOPEN);
+
 	file_buffer.~membuf();
 	new ((void*)&file_buffer) membuf();
 
