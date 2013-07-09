@@ -136,4 +136,83 @@ namespace CSharpDSMLGenerator
             set;
         }
     }
+
+
+    public class RunMetaInterpreter : ITask
+    {
+        public IBuildEngine BuildEngine
+        {
+            get;
+            set;
+        }
+
+        [Required]
+        public string InputFile
+        {
+            get;
+            set;
+        }
+
+        public bool Execute()
+        {
+            Exception excep = null;
+            bool success = false;
+            Thread t = new Thread(() =>
+            {
+                try
+                {
+                    MgaProject project = new MgaProject();
+                    bool ro;
+                    project.Open("MGA=" + InputFile, out ro);
+                    try
+                    {
+                        string rootName;
+                        project.BeginTransactionInNewTerr(transactiontype_enum.TRANSACTION_NON_NESTED);
+                        try
+                        {
+                            rootName = project.RootFolder.Name;
+                        }
+                        finally
+                        {
+                            project.AbortTransaction();
+                        }
+                        if (Path.GetFileNameWithoutExtension(InputFile) != rootName)
+                        {
+                            // TODO: warn
+                        }
+
+                        IMgaComponentEx metaInterpreter = (IMgaComponentEx) Activator.CreateInstance(Type.GetTypeFromProgID("MGA.Interpreter.MetaInterpreter"));
+                        metaInterpreter.InvokeEx(project, null, null, (int)component_startmode_enum.GME_SILENT_MODE);
+                        success = File.ReadAllText(Path.Combine(Path.GetDirectoryName(InputFile), rootName + ".xmp.log")).Contains("Successfully generated");
+                    }
+                    finally
+                    {
+                        project.Close();
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    excep = e;
+                }
+            }
+            );
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+
+            if (excep != null)
+            {
+                throw new Exception("Error running MetaInterpreter", excep);
+            }
+            return success;
+        }
+
+        public ITaskHost HostObject
+        {
+            get;
+            set;
+        }
+    }
+
 }
