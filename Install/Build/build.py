@@ -317,6 +317,26 @@ def generate_sample_files():
     tools.xme2mga(sample_file, "MetaGME")
     tools.xmp2mta(UML_XMP, "UML")
 
+def build_nuget():
+    "Build NuGet packages"
+    dsml_generator = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator")
+    tools.system([tools.MSBUILD, os.path.join(dsml_generator, ".nuget", "NuGet.Targets"), "/t:CheckPrerequisites", "/p:DownloadNuGetExe=True"])
+    nuget = os.path.join(dsml_generator, ".nuget", "NuGet.exe")
+    tools.system([nuget, "pack", os.path.join(dsml_generator, "GME.DSMLGenerator.nuspec"),
+        "-Verbosity", "detailed",
+        "-BasePath", dsml_generator,
+        "-OutputDirectory", os.path.join(GME_ROOT, "Install")])
+        
+    tools.system([nuget, "pack", os.path.join(dsml_generator, "GME.DSMLGenerator.Runtime.nuspec"),
+        "-Verbosity", "detailed",
+        "-BasePath", dsml_generator,
+        "-OutputDirectory", os.path.join(GME_ROOT, "Install")])
+        
+    dotnet_pias = os.path.join(GME_ROOT, "GME", "DotNetPIAs")
+    tools.system([nuget, "pack", os.path.join(dotnet_pias, "GME.PIAs.nuspec"),
+        "-Verbosity", "detailed",
+        "-BasePath", dotnet_pias,
+        "-OutputDirectory", os.path.join(GME_ROOT, "Install")])
 
 def build_msms():
     "Build WiX merge modules (msm files)"
@@ -387,6 +407,7 @@ build_steps = [
     compile_GME_PGO_Instrument,
     PGO_train,
     compile_GME_PGO_Optimize,
+    build_nuget,
     build_msms,
     build_msi,
     zip_pdb,
