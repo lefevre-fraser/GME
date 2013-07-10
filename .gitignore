@@ -406,3 +406,4 @@ Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.Interfaces.cs
 Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.dll
 Paradigms/MetaGME/ISIS.GME.Dsml.MetaGME.xml
  Tests/GPyUnit/DsmlGeneratorTest/DsmlGeneratorTest.sln  
+SDK/DotNet/DsmlGenerator/.nuget/NuGet.exe
