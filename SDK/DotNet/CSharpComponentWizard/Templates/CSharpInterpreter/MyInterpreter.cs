@@ -66,10 +66,17 @@ namespace MyInterpreter
             // TODO: Add your interpreter code
             GMEConsole.Out.WriteLine("Running interpreter...");
 			
-			// TODO: show how to initialize DSML-generated classes
 			// Get RootFolder
 			$GET_ROOTFOLDER_CODE$
-			
+            
+            // To use the domain-specific API:
+            //  Create another project with the same name as the paradigm name
+            //  Copy the paradigm .mga file to the directory containing the new project
+            //  In the new project, install the GME DSMLGenerator NuGet package (search for DSMLGenerator)
+            //  Add a Reference in this project to the other project
+            //  Add "using [ParadigmName] = ISIS.GME.Dsml.[ParadigmName].Classes.Interfaces;" to the top of this file
+            // if (currentobj.Meta.Name == "KindName")
+            // [ParadigmName].[KindName] dsCurrentObj = ISIS.GME.Dsml.[ParadigmName].Classes.[KindName].Cast(currentobj);			
         }
 
         #region IMgaComponentEx Members
