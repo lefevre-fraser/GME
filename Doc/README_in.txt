@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 13.5.22
+                 GME 13.7.10
        Copyright © 2000-2013 Vanderbilt University
 
 
@@ -25,6 +25,23 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Reelase 13.7.10
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Better model editor Ctrl-Mousewheel zoom
+  - Fix instance/subtype FCO positions and annotations (Don't copy the archetype's registry when creating a subtype/instance)
+  - During xme import to a different paradigm, don't assume that attributes must map to the only attribute in the new meta (GME-414)
+  - xme import: Ignore status='meta' attributes (useful for upgrading xme to a paradigm that doesn't have the attribute)
+  - Territories could cause the wrong locking under GC, so never add objects to territories
+  - get_ChildObjectByRelID/get_ObjectByPath: ignore instance high bits
+  - If ConstraintManager is disabled for a paradigm, it now remains disabled when the paradigm is re-registered
+  - Fix refcount bug on IGMEOLEApp::MgaProject
+  - Show aspect Displayed Name in Part Browser (if defined)
+  - Added right-click drag-and-drop with context menu popup from Model Editor to Model Editor
+  - Don't check that a component implements IGMEVersionInfo
+  - Decorator SDK: Add missing PathUtil.h and Decorator.props to installer
+  - Note: Visual Studio 2008 Redistributable package will not be included in the next GME release
 
 Release Notes of Release 13.5.22
 ----------------------------------
