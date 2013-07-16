@@ -26,7 +26,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes of Reelase 13.7.10
+Release Notes of Release 13.7.10
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Better model editor Ctrl-Mousewheel zoom
