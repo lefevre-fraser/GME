@@ -11,13 +11,13 @@ using Microsoft.Win32;
 namespace GME.CSharp
 {
     [ComVisible(false)]
-    public class RegistrationException : ApplicationException
+    internal class RegistrationException : ApplicationException
     {
         public RegistrationException(string message) : base(message) { }
     }
 
     [ComVisible(false)]
-    public static class Registrar
+    internal static class Registrar
     {
         public static void RegisterComponentsInGMERegistry()
         {
