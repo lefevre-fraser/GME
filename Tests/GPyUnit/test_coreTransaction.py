@@ -10,7 +10,7 @@ def _adjacent_file(file):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
 
 class CoreAbortTransaction(unittest.TestCase):
-    def xxtestTerritoryDestroy(self):
+    def testTerritoryDestroy(self):
         project = DispatchEx('Mga.MgaProject')
         project.Create(self.connstr, 'MetaGME')
         paradigmSheet = project.RootMeta.RootFolder.DefinedFCOByName('ParadigmSheet', True)
