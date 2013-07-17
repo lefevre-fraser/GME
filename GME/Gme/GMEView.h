@@ -284,7 +284,7 @@ public:
 	bool					DeleteObjects(CGuiObjectList& objectList);
 	void					DeleteAnnotations(CGuiAnnotatorList& annotatorList);
 	bool					DeleteConnection(CGuiConnection* guiConn,bool checkAspect = true);
-	void					DisconnectAll(CGuiObject* end, CGuiPort* endPort, bool onlyVisible = true);
+	bool					DisconnectAll(CGuiObject* end, CGuiPort* endPort, bool onlyVisible = true);
 	void					FindConnections(CGuiObject* end, CGuiPort* endPort, CGuiConnectionList& guiConn);
 	void					FindConnections(CGuiObject* end1, CGuiPort* end1Port, CGuiObject* end2, CGuiPort* end2Port,
 											CGuiConnectionList& guiConn);

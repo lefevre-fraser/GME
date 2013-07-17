@@ -5,6 +5,7 @@
 #include "GMEApp.h"
 #include <math.h>
 #include <algorithm>
+#include <deque>
 #include <new>
 #include "GMEstd.h"
 
@@ -72,6 +73,46 @@ int setZoomPercents[GME_ZOOM_LEVEL_NUM] = {
 /////////////////////////////////////////////////////////////////////////////
 // CViewDriver
 bool CViewDriver::attrNeedsRefresh = false;
+
+static int CountDeriveds(IMgaFCOPtr archetype)
+{
+	int nDerived = 0;
+	std::deque<IMgaFCOsPtr> derivedQueue;
+	derivedQueue.push_back(archetype->DerivedObjects);
+	while (derivedQueue.size())
+	{
+		IMgaFCOsPtr deriveds = derivedQueue.front();
+		derivedQueue.pop_front();
+		nDerived += deriveds->Count;
+		MGACOLL_ITERATE(IMgaFCO, deriveds)
+		{
+			if (MGACOLL_ITER->Status == OBJECT_EXISTS)
+			{
+				derivedQueue.push_back(MGACOLL_ITER->DerivedObjects);
+			}
+			else
+			{
+				nDerived--;
+			}
+		}
+		MGACOLL_ITERATE_END
+	}
+	return nDerived;
+}
+
+static wchar_t* ObjTypeName[] = {
+	L"Null",
+	L"Model",
+	L"Atom",
+	L"Reference",
+	L"Connection",
+	L"Set",
+	L"Folder",
+	L"Aspect",
+	L"Role",
+	L"Attribute",
+	L"Part",
+};
 
 STDMETHODIMP CViewDriver::GlobalEvent(globalevent_enum event)
 {
@@ -3232,7 +3273,7 @@ bool CGMEView::FindAnnotations(CRect &rect,CGuiAnnotatorList &annotatorList)
 	return ret;
 }
 
-void CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
+bool CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
 {
 	if(endPort)
 		CGMEEventLogger::LogGMEEvent(_T("CGMEView::DisconnectAll(end=")+end->GetName()+_T(" ")+end->GetID()+_T(" endPort=")+endPort->GetName()+_T(" ")+endPort->GetID()+_T(")\r\n"));
@@ -3249,7 +3290,16 @@ void CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
 				long status;
 				COMTHROW(guiConn->mgaFco->get_Status(&status));
 				if(status == OBJECT_EXISTS)
-					DeleteConnection(guiConn,false);
+				{
+					bool ok = DeleteConnection(guiConn,false);
+					if (!ok)
+					{
+						try {
+						AbortTransaction(E_MGA_MUST_ABORT);
+						} catch(hresult_exception e) { }
+						return false;
+					}	
+				}
 				__CommitTransaction();
 			}
 			catch(hresult_exception e) {
@@ -3270,6 +3320,7 @@ void CGMEView::DisconnectAll(CGuiObject *end,CGuiPort *endPort,bool onlyVisible)
 			}
 		}
 	}
+	return true;
 }
 
 void CGMEView::FindConnections(CGuiObject *end,CGuiPort *endPort,CGuiConnectionList &res)
@@ -3298,6 +3349,37 @@ void CGMEView::FindConnections(CGuiObject *end1,CGuiPort *end1Port,CGuiObject *e
 	}
 }
 
+// returns: false if user answers no
+static bool AskDeleteArcheType(IMgaFCOPtr obj)
+{
+	IMgaFCOPtr archetype = obj;
+	do
+	{
+		archetype = archetype->ArcheType;
+	} while (archetype->ArcheType);
+	if (archetype->Status == OBJECT_EXISTS)
+	{
+		int nDerived = CountDeriveds(archetype);
+		_bstr_t message = ObjTypeName[obj->Meta->ObjType];
+		message += L" '" + (obj->Name.length() ? obj->Name : obj->Meta->Name);
+		message += L"' is derived. Children of derived objects cannot be deleted.\n\nDo you want to delete its archetype?";
+		if (nDerived > 1)
+		{
+			wchar_t wDerived[20];
+			_itow(nDerived - 1, wDerived, 10);
+			message += L" Deleting the archetype will also delete " + _bstr_t(wDerived) + L" other instances/subtypes.";
+		}
+		if (AfxMessageBox(message, MB_YESNO) == IDYES)
+		{
+			archetype->__DestroyObject();
+			return true;
+		}
+		else
+			return false;
+	}
+	return true;
+}
+
 bool CGMEView::DeleteConnection(CGuiConnection *guiConn,bool checkAspect)
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::DeleteConnection(")+guiConn->GetName()+_T(" ")+guiConn->GetID()+_T(") in ")+path+name+_T("\r\n"));
@@ -3305,11 +3387,25 @@ bool CGMEView::DeleteConnection(CGuiConnection *guiConn,bool checkAspect)
 	BeginWaitCursor();
 	try {
 		BeginTransaction();
-		if(!checkAspect || guiConn->IsPrimary(guiMeta,currentAspect)) {
-			COMTHROW(guiConn->mgaFco->DestroyObject());
+		if (guiConn->mgaFco->ArcheType && guiConn->mgaFco->IsPrimaryDerived == false)
+		{
+			ok = AskDeleteArcheType(guiConn->mgaFco.p);
+		} else if(!checkAspect || guiConn->IsPrimary(guiMeta,currentAspect)) {
+			guiConn->mgaFco->__DestroyObject();
 			ok = true;
 		}
 		CommitTransaction();
+	}
+	catch(_com_error &e) {
+		CString errorstring = L"Unable to delete connection";
+		if (e.Description().length() != 0)
+		{
+			errorstring += _T(": ");
+			errorstring += static_cast<const TCHAR*>(e.Description());
+		}
+		AfxMessageBox(errorstring, MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(CString(L"    ") + errorstring + L"\r\n");
+		AbortTransaction(e.Error());
 	}
 	catch(hresult_exception &e) {
 		CComBSTR error;
@@ -3381,7 +3477,9 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 			if (obj->IsVisible()) {
 				POSITION pos3 = obj->GetPorts().GetHeadPosition();
 				while(pos3) {
-						DisconnectAll(obj,obj->GetPorts().GetNext(pos3),false);
+						bool ok = DisconnectAll(obj,obj->GetPorts().GetNext(pos3),false);
+						if (!ok)
+							throw hresult_exception(E_MGA_MUST_ABORT);
 				}
 			}
 		}
@@ -3394,11 +3492,34 @@ bool CGMEView::DeleteObjects(CGuiObjectList &objectList)
 			if(oStatus == OBJECT_EXISTS) {
 				// throws E_MGA_MUST_ABORT if user selects CANCEL
 				brw_refresh_needed = AskUserAndDetachIfNeeded(obj->mgaFco); // detach the dependents if needed
-				COMTHROW(obj->mgaFco->DestroyObject()); // FIXME: read ErrorInfo
+				if (obj->mgaFco->ArcheType && obj->mgaFco->IsPrimaryDerived == false)
+				{
+					if (AskDeleteArcheType(obj->mgaFco.p) == false)
+					{
+						throw hresult_exception(E_MGA_MUST_ABORT);
+					}
+				}
+				else
+				{
+					obj->mgaFco->__DestroyObject();
+				}
 				COMTHROW(obj->mgaFco->Close());
 			}
 		}
 		CommitTransaction();
+	}
+	catch(_com_error &e) {
+		AbortTransaction(e.Error());
+		CString error = _T("Unable to delete models");
+		if (e.Description().length() != 0)
+		{
+			error += _T(": ");
+			error += static_cast<const TCHAR*>(e.Description());
+		}
+		AfxMessageBox(error,MB_ICONSTOP | MB_OK);
+		CGMEEventLogger::LogGMEEvent(error);
+		EndWaitCursor();
+		return false;
 	}
 	catch(hresult_exception &e) {
 		AbortTransaction(e.hr);
@@ -6766,16 +6887,13 @@ void CGMEView::OnEditDelete()
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditDelete in ")+path+name+_T("\r\n"));
 
 	if (selectedConnection && selected.IsEmpty() && selectedAnnotations.IsEmpty()) {
-		if(!DeleteConnection(selectedConnection))
-			AfxMessageBox(_T("Unable to delete connection"));
+		bool ok = DeleteConnection(selectedConnection);
+		// user already got a MessageBox, no need for another
 	} else {
 		GMEEVENTLOG_GUIANNOTATORS(selectedAnnotations);
 		DeleteAnnotations(selectedAnnotations);
 		RemoveAllAnnotationFromSelection();
 		ClearConnectionSelection();
-
-		if(!isType)
-			return;
 
 		GMEEVENTLOG_GUIOBJS(selected);
 		this->SendUnselEvent4List( &selected);
@@ -6787,9 +6905,9 @@ void CGMEView::OnEditDelete()
 void CGMEView::OnUpdateEditDelete(CCmdUI* pCmdUI)
 {
 	if( !selected.IsEmpty())
-		pCmdUI->Enable( isType);
+		pCmdUI->Enable(true);
 	else
-		pCmdUI->Enable(!selectedAnnotations.IsEmpty() || (selectedConnection && isType));
+		pCmdUI->Enable(!selectedAnnotations.IsEmpty() || selectedConnection);
 }
 
 void CGMEView::OnContextProperties()
