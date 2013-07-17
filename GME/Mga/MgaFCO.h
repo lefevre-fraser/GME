@@ -63,33 +63,6 @@ public:
 	 MGA_TRACE("Destructed: %s - %08X\n", sig, this);
 #endif
 	 MARKSIG('9');
-// TODO: if an object is released outside a transaction, 
-//	 every object to be deleted opens and closes a transaction.
-//   this is very slow. 
-//   In an updated version 
-//	 I recommend opening  a 'implicit transaction' in MgaProject,
-//	 at the first time such an out-of-transaction destruct happens, 
-//   and not closing that transaction until an explicit transaction or a MgaProject::Close()
-//	 is initiated
-
-	 if(territory->coreterr) {
-		 if(!innFCO->mgaproject->activeterr) {
-			 if(S_OK == innFCO->mgaproject->BeginTransaction(territory, TRANSACTION_READ_ONLY)) {
-				innFCO->Close();
-				if(S_OK != innFCO->mgaproject->CommitTransaction()) {
-					innFCO->mgaproject->AbortTransaction();
-				}
-			 }
-		 }
-		 else
-		 {
-#ifdef _DEBUG
-			 innFCO->Close();
-#else
-			 inFCO->Close();
-#endif
-		 }
-	 }
 
 	 FCO::pubfcohash::iterator ii = innFCO->pubfcos.find(territory);
 	 ASSERT(ii != innFCO->pubfcos.end());
