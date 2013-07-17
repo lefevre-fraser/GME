@@ -1425,6 +1425,8 @@ STDMETHODIMP CMgaProject::AbortTransaction() {
 		{
 			CComPtr<IMgaTerritory> t;
 			COMTHROW(CreateTerritory(NULL, &t));
+			// If this fails, Mga likely didn't close a nested tx
+			// ASSERT(dataproject->GetNestedTrCount == 1)
 			COMTHROW(BeginTransaction(t, TRANSACTION_READ_ONLY));
 			GlobalNotify(GLOBALEVENT_ABORT_TRANSACTION);
 			COMTHROW(CommitTransaction());
