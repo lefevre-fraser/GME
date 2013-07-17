@@ -1911,7 +1911,18 @@ BOOL CGMEApp::SaveAllModified()
 		long l;
 		COMTHROW(mgaProject->get_ProjectStatus(&l));
 		if (IsUndoPossible() && (l & PROJECT_STATUS_CHANGED))
-			ret = AfxMessageBox(_T("Save project '") + projectName + _T("'?"),  MB_YESNOCANCEL);
+		{
+			CString filename;
+			CString connstr = static_cast<const wchar_t*>(mgaProject->ProjectConnStr);
+			if (connstr.Mid(0, 4) == "MGA=")
+			{
+				CString dirname;
+				GetFullPathName(connstr.Mid(4), filename, dirname);
+				filename = L" (" + filename + ")";
+			}
+			CString message = _T("Do you want to save changes to '") + projectName + L"'" + filename + _T("?");
+			ret = AfxMessageBox(message,  MB_YESNOCANCEL);
+		}
 		if (ret == IDCANCEL) {
 			return FALSE;
 		} else if (ret == IDNO) {
