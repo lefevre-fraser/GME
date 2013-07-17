@@ -288,6 +288,13 @@ public:
 
 bool MgaSetErrorInfo(HRESULT hr);
 
+#define COMRETURN_IN_TRANSACTION(hr) \
+	if (FAILED(hr)) { \
+		HRESULT hrTx = ttt.Abort(); \
+		if (FAILED(hrTx)) return hrTx; \
+		return hr; \
+	} else { return ttt.Commit(); }
+
 #define COMCATCH_IN_TRANSACTION( CLEANUP )  \
 	catch(hresult_exception &e) \
 	{ \

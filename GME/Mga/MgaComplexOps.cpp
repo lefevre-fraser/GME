@@ -205,15 +205,18 @@ HRESULT FCO::DeleteObject() {
 			CheckWrite();
 
 			if(self[ATTRID_PERMISSIONS] & LIBRARY_FLAG) {
-				SetErrorInfo(L"Delete refused: object is in a library");
-				_com_issue_error(E_MGA_OP_REFUSED);
+				SetErrorInfo(L"Object is in a library. Library objects cannot be deleted.");
+				COMRETURN_IN_TRANSACTION(E_MGA_OP_REFUSED);
 			}
 			if(self[ATTRID_PERMISSIONS] & READONLY_FLAG)
-				COMTHROW(E_MGA_OP_REFUSED);
+			{
+				SetErrorInfo(L"Object is read-only");
+				COMRETURN_IN_TRANSACTION(E_MGA_OP_REFUSED);
+			}
 			// check for non-primary derived
 			if(self[ATTRID_RELID] >= RELIDSPACE) {
-				SetErrorInfo(L"Delete refused: object is derived");
-				_com_issue_error(E_MGA_OP_REFUSED);
+				SetErrorInfo(L"Object is derived.");
+				COMRETURN_IN_TRANSACTION(E_MGA_OP_REFUSED);
 			}
 			// check for rootfolder
 			if(!CoreObj(self[ATTRID_PARENT]).IsContainer()) {  
