@@ -160,9 +160,6 @@ class CCoreCollectionHandler :
 
 	DECLARE_REGISTRY_RESOURCEID(IDR_CORECOLLECTIONHANDLER)
 
-	class __declspec(uuid("c66a6c60-c1fd-11d3-9ad2-00aa00b6fe26"))
-    IMgaMetaFCOs;
-
 	CComPtr<IUnknown> m_pUnknownInner;
 	HRESULT FinalConstruct()
 	{
