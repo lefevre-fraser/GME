@@ -7608,6 +7608,12 @@ void CGMEView::RunComponent(CString compname)
 			}
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
+			// Disable the DCOM wait dialogs: if interpreters want them, they can do it themselves; but if they don't want them, they need to link to GME's mfc1xxu.dll
+			COleMessageFilter* messageFilter = AfxOleGetMessageFilter();
+			messageFilter->EnableBusyDialog(FALSE);
+			messageFilter->EnableNotRespondingDialog(FALSE);
+			std::shared_ptr<COleMessageFilter> busyRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableBusyDialog(TRUE); } );
+			std::shared_ptr<COleMessageFilter> notRespondingRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableNotRespondingDialog(TRUE); } );
 			launcher->__RunComponent(_bstr_t(compname), theApp.mgaProject, focus, selfcos, GME_MAIN_START);
 		}
 	}
@@ -8998,6 +9004,12 @@ void CGMEView::OnCntxInterpret()
 			}
 
 			if(theApp.bNoProtect) COMTHROW( launcher->put_Parameter(CComVariant(true)));
+			// Disable the DCOM wait dialogs: if interpreters want them, they can do it themselves; but if they don't want them, they need to link to GME's mfc1xxu.dll
+			COleMessageFilter* messageFilter = AfxOleGetMessageFilter();
+			messageFilter->EnableBusyDialog(FALSE);
+			messageFilter->EnableNotRespondingDialog(FALSE);
+			std::shared_ptr<COleMessageFilter> busyRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableBusyDialog(TRUE); } );
+			std::shared_ptr<COleMessageFilter> notRespondingRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableNotRespondingDialog(TRUE); } );
 
 			MSGTRY {
 			launcher->__RunComponent(_bstr_t(), theApp.mgaProject, focus, selfcos, contextSelection ? GME_CONTEXT_START :  GME_BGCONTEXT_START);

@@ -451,13 +451,6 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 	if( project == NULL )
 		COMRETURN(E_POINTER);
 
-	// Disable the DCOM wait dialogs: if interpreters want them, they can do it themselves; but if they don't want them, they need to link to GME's mfc1xxu.dll
-	COleMessageFilter* messageFilter = AfxOleGetMessageFilter();
-	messageFilter->EnableBusyDialog(FALSE);
-	messageFilter->EnableNotRespondingDialog(FALSE);
-	std::shared_ptr<COleMessageFilter> busyRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableBusyDialog(TRUE); } );
-	std::shared_ptr<COleMessageFilter> notRespondingRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableNotRespondingDialog(TRUE); } );
-
 	COMTRY
 	{
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());

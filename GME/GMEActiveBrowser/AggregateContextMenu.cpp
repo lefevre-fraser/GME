@@ -462,14 +462,15 @@ void CAggregateContextMenu::OnInterpret()
 	CComObjPtr<IMgaLauncher> ccpMgaLauncher;
 	COMTHROW( ccpMgaLauncher.CoCreateInstance(L"Mga.MgaLauncher") );
 	
-	// Starting transaction
-	// DEPRECATED - pMgaContext->BeginTransaction();
 	// Calling the interpreter via MGA
+	// Disable the DCOM wait dialogs: if interpreters want them, they can do it themselves; but if they don't want them, they need to link to GME's mfc1xxu.dll
+	COleMessageFilter* messageFilter = AfxOleGetMessageFilter();
+	messageFilter->EnableBusyDialog(FALSE);
+	messageFilter->EnableNotRespondingDialog(FALSE);
+	std::shared_ptr<COleMessageFilter> busyRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableBusyDialog(TRUE); } );
+	std::shared_ptr<COleMessageFilter> notRespondingRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableNotRespondingDialog(TRUE); } );
 	COMTHROW( ccpMgaLauncher->RunComponent(NULL,pMgaContext->m_ccpProject, NULL,
 				ccpSelFCOs,GME_BROWSER_START) );
-	// Ending transaction
-	// DEPRECATED - pMgaContext->CommitTransaction();
-
 }
 
 void CAggregateContextMenu::OnSortName()
