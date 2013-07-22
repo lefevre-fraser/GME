@@ -251,7 +251,7 @@
                     </TextBlock>
 
                     <TextBlock Name="txb_GenerationResultDetails" Height="128" HorizontalAlignment="Left" Margin="16,60,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="429" FontFamily="Segoe UI" FontSize="13">
-                        Your Visual Studio 2010 solution has been successfully generated.
+                        Your Visual Studio solution has been successfully generated.
                     </TextBlock>
                     <Button Content="Exit" Height="30" HorizontalAlignment="Right" Margin="0,334,18,0" Name="btn_ExitLastPage" VerticalAlignment="Top" Width="90" FontWeight="Normal" FontSize="13" Click="btn_Exit_Click" IsDefault="True"/>
                     <Button Content="Open your solution" Height="30" HorizontalAlignment="Left" Margin="169,216,0,0" Name="btn_OpenSolution" VerticalAlignment="Top" Width="171" Click="btn_OpenSolution_Click" />

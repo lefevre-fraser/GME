@@ -17,6 +17,7 @@ namespace CSharpComponentWizard
     {
         // DEFINES       
         public const string VS2010_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\10.0";
+        public const string VS2012_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\11.0";
         public const string VS2010_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
         public const string VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
         public const string VS2010_INSTALLDIR_KEYNAME = "InstallDir";
@@ -38,9 +39,14 @@ namespace CSharpComponentWizard
         public MainWindow()
         {
             System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
+            if (type == null)
+            {
+                type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
+            }
+
             if (type == null || Activator.CreateInstance(type, true) == null)
             {
-                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010 Professional or better. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010 Professional or later. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 System.Environment.Exit(11);
             }
 
@@ -162,7 +168,7 @@ namespace CSharpComponentWizard
         public void SetError(string s)
         {
             txb_GenerationResultSummary.Text = "Generation failed";
-            txb_GenerationResultDetails.Text = "Error occured while generating your Visual Studio 2010 solution. " + Environment.NewLine;
+            txb_GenerationResultDetails.Text = "Error occured while generating your Visual Studio solution. " + Environment.NewLine;
             txb_GenerationResultDetails.Text += "We recommend you start the whole process again. " + Environment.NewLine + Environment.NewLine;
             txb_GenerationResultDetails.Text += "The specific error was: " + s;
             btn_OpenSolution.IsEnabled = false;
@@ -712,10 +718,16 @@ namespace CSharpComponentWizard
                 string pathToOpen = "\"" + txb_TargetFolder.Text + @"\" + txb_SolutionName.Text + @"\" + txb_SolutionName.Text + ".sln\"";
 
                 string DevenvLocation = String.Empty;
-                RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+                RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+
                 if (masterKey == null)
                 {
-                    throw new Exception("Cannot locate Visual Studio 2010");
+                    masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+                }
+
+                if (masterKey == null)
+                {
+                    throw new Exception("Cannot locate Visual Studio 2010/2012");
                 }
                 else
                 {

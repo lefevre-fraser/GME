@@ -28,7 +28,8 @@ namespace CSharpComponentWizard
         Dependent,
         Independent
     }
-    
+
+    enum VSVersion { VS_2010, VS_2012 };
     public static class SolutionGenerator
     {
         public const string ENTRYPOINTCODE_REPLACESTRING = "$GET_ROOTFOLDER_CODE$";
@@ -59,6 +60,9 @@ namespace CSharpComponentWizard
             object obj;
             string outputfolder = "";
 
+            VSVersion vsVersion = VSVersion.VS_2010;
+           
+
             try
             {
                 if (SolutionGenerator.SelectedType == CompType.Addon)
@@ -71,6 +75,13 @@ namespace CSharpComponentWizard
                 }
 
                 System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
+
+                if (type == null)
+                {
+                    type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
+                    vsVersion = VSVersion.VS_2012;
+                }
+
                 obj = Activator.CreateInstance(type, true);
                 dte = (DTE2)obj;
                 Solution4 sln = (Solution4)dte.Solution;
@@ -84,10 +95,17 @@ namespace CSharpComponentWizard
                 }
 
                 // Determine the ProjectTemplateFolder of custom templates
-                RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+                RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
                 if (masterKey == null)
                 {
-                    throw new Exception("Cannot locate ProjectTemplate folder. Is Visual Studio 2010 installed?");
+                    masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+                }
+                
+                if (masterKey == null)
+                {
+
+
+                    throw new Exception("Cannot locate ProjectTemplate folder. Is Visual Studio installed?");
                 }
                 else
                 {
@@ -300,7 +318,9 @@ namespace CSharpComponentWizard
             {
                 if (masterKey == null)
                 {
-                    throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                    // FIXME: later for newer SDKs
+                    return;
+                    // throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
                 }
                 string installationFolder = (string)masterKey.GetValue("InstallationFolder", null);
                 if (string.IsNullOrEmpty(installationFolder))
@@ -311,7 +331,8 @@ namespace CSharpComponentWizard
 
                 if (!File.Exists(SNLocation))
                 {
-                    throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                    return; // Assembly won't be signed
+                    // throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
                 }
             }
 
