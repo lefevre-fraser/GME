@@ -95,23 +95,29 @@ namespace CSharpComponentWizard
                 }
 
                 // Determine the ProjectTemplateFolder of custom templates
-                RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
-                if (masterKey == null)
-                {
-                    masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
-                }
-                
-                if (masterKey == null)
+
+                using (RegistryKey currentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64))
                 {
 
 
-                    throw new Exception("Cannot locate ProjectTemplate folder. Is Visual Studio installed?");
+                    RegistryKey masterKey = currentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+                    if (masterKey == null)
+                    {
+                        masterKey = currentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+                    }
+
+                    if (masterKey == null)
+                    {
+
+
+                        throw new Exception("Cannot locate ProjectTemplate folder. Is Visual Studio installed?");
+                    }
+                    else
+                    {
+                        SolutionGenerator.ProjectTemplateLocation = masterKey.GetValue(MainWindow.VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME).ToString();
+                    }
+                    masterKey.Close();
                 }
-                else
-                {
-                    SolutionGenerator.ProjectTemplateLocation = masterKey.GetValue(MainWindow.VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME).ToString();
-                }
-                masterKey.Close();
 
 
                 // Unpack the sufficent template project
@@ -314,25 +320,27 @@ namespace CSharpComponentWizard
         {
             // Search sn.exe
             string SNLocation;
-            using (RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.MSSDK_REGISTRY_KEYPATH))
-            {
-                if (masterKey == null)
-                {
-                    // FIXME: later for newer SDKs
-                    return;
-                    // throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
-                }
-                string installationFolder = (string)masterKey.GetValue("InstallationFolder", null);
-                if (string.IsNullOrEmpty(installationFolder))
-                {
-                    throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
-                }
-                SNLocation = Path.Combine(installationFolder, @"bin\sn.exe");
 
-                if (!File.Exists(SNLocation))
+            using (RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+            {
+                using (RegistryKey masterKey = localMachine.OpenSubKey(MainWindow.MSSDK_REGISTRY_KEYPATH))
                 {
-                    return; // Assembly won't be signed
-                    // throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                    if (masterKey == null)
+                    {
+                        throw new Exception("Cannot locate sn.exe. Is Windows SDK installed?");
+                    }
+                    string installationFolder = (string)masterKey.GetValue("InstallationFolder", null);
+                    if (string.IsNullOrEmpty(installationFolder))
+                    {
+                        throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
+                    }
+                    SNLocation = Path.Combine(installationFolder, @"bin\sn.exe");
+
+                    if (!File.Exists(SNLocation))
+                    {
+                        return; // Assembly won't be signed
+                        throw new Exception("Cannot locate sn.exe. Is Windows SDK installed?");
+                    }
                 }
             }
 
