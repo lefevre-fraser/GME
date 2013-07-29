@@ -827,6 +827,10 @@ void CGMEView::OnDraw(CDC* pDC)
 
 	onScreen = pDC;
 	if(!onScreen->IsPrinting()  &&  !IsPreview()) { 
+		CRect onScreenClipBox;
+		onScreen->GetClipBox(&onScreenClipBox);
+		if (onScreenClipBox.IsRectEmpty()) // empty check is enough: windows may never overlap, since they don't float
+			return;
 		pDC = offScreen;
 		OnPrepareDC(pDC);
 	}
