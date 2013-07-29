@@ -36,6 +36,8 @@ public:
 	void NextZoomVal(int &kk);
 	void PrevZoomVal(int &kk);
 
+	virtual BOOL CanFloat() const { return FALSE; };
+
 private:
 	int m_zoomlist[MAX_ZOOM];
 
