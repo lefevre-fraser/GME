@@ -12,6 +12,9 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "secur32.lib")
 #pragma comment(lib, "crypt32.lib")
+#pragma comment(lib, "version.lib")
+#pragma comment(lib, "psapi.lib")
+
 
 #pragma comment(lib, "libapr-1.lib")
 #pragma comment(lib, "libaprutil-1.lib")
@@ -52,7 +55,7 @@
 
 #if(USESERF)
 	#pragma comment(lib, "libsvn_ra_serf-1.lib")
-	#pragma comment(lib, "serf.lib")
+	#pragma comment(lib, "serf-1.lib")
 #endif
 
 #endif
