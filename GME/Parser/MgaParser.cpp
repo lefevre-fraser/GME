@@ -620,7 +620,10 @@ void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *o
 		if( (*i).first == _T("id") )
 		{
 			RegisterLookup((*i).second, object);
-			//break;
+		}
+		else if( (*i).first == _T("guid") )
+		{
+			RegisterLookup((*i).second, object);
 		}
 		else if( m_maintainGuids && (*i).first == _T("guid"))
 		{
@@ -1084,7 +1087,14 @@ void CMgaParser::ResolveDerivation(const attributes_type &attributes, deriv_type
 
 	LookupByID(*s, deriv.from);
 	if( deriv.from == NULL )
-		throw pass_exception(std::wstring(L"Subtype/instance ") + *GetByNameX(attributes, _T("id")) + L" cannot find archetype " + *s);
+	{
+		const std::tstring* name = GetByNameX(attributes, _T("id"));
+		if (name == NULL)
+		{
+			name = GetByNameX(attributes, _T("guid"));
+		}
+		throw pass_exception(std::wstring(L"Subtype/instance ") + *name + L" cannot find archetype " + *s);
+	}
 
 	s = GetByNameX(attributes, _T("isinstance"));
 	deriv.isinstance = ( s != NULL && *s == _T("yes") ) ? VARIANT_TRUE : VARIANT_FALSE;

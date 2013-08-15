@@ -107,6 +107,7 @@ IDR_MGAPARSER           REGISTRY DISCARDABLE    "MgaParser.rgs"
 
 EDF.DTD                 DTD     DISCARDABLE     "edf.dtd"
 MGA.DTD                 DTD     DISCARDABLE     "mga.dtd"
+MGA2.DTD                 DTD     DISCARDABLE     "mga2.dtd"
 
 /////////////////////////////////////////////////////////////////////////////
 //

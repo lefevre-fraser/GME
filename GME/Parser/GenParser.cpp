@@ -96,13 +96,14 @@ InputSource *CGenParser::resolveEntity(const XMLCh* const publicId, const XMLCh*
 		HRSRC res = FindResource(hm, syssid.c_str(), _T("DTD"));
 		if(res) {
 			XMLByte *bytes = (XMLByte *)LockResource(LoadResource(hm, res));
-			if(!bytes) COMTHROW(E_INVALID_DTD); 
+			if (!bytes)
+				COMTHROW(E_INVALID_DTD);
 			return new MemBufInputSource(bytes, SizeofResource(hm, res), syssid.c_str());
 		}
 
 		
-		TCHAR filename[200];
-		int a = GetModuleFileName(hm, filename, 200);
+		TCHAR filename[MAX_PATH];
+		int a = GetModuleFileName(hm, filename, MAX_PATH);
 		a -= 10;
 		if( a <= 0 )
 			break;
