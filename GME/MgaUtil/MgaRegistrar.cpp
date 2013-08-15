@@ -1473,12 +1473,12 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 			CRegKey par;
 			res = par.Open(HKEY_CURRENT_USER, rootreg + _T("\\Paradigms\\") + pname, KEY_READ);
 			if(res == ERROR_SUCCESS) {
-				// REVOKE_SYS2(mode);						// paradigm found, ignore system settings
 				if(inguidstr == NULL) {
 					guidact = QueryValue(par, _T("CurrentVersion"));
 					if(guidact.IsEmpty()) res = ERROR_FILE_NOT_FOUND;
 				}
-				else	guidact = inguidstr;
+				else
+					guidact = inguidstr;
 			}
 			if(res == ERROR_SUCCESS) res = subk.Open(par, guidact, KEY_READ);
 			if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
@@ -1490,20 +1490,33 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 			res = par.Open(HKEY_LOCAL_MACHINE, rootreg + _T("\\Paradigms\\") + pname, KEY_READ | KEY_WOW64_32KEY);
 			if(res == ERROR_SUCCESS) {
 				CString cur = QueryValue(par, _T("CurrentVersion"));
-				if(cur.IsEmpty()) {
+				if (cur.IsEmpty() && inguidstr == NULL) {
 					guidact = QueryValue(par, _T("GUID"));
-					if(inguidstr != NULL && inguidstr != CComBSTR(guidact)) COMTHROW(E_NOTFOUND);
+					if (inguidstr != NULL && inguidstr != CComBSTR(guidact))
+						COMTHROW(E_NOTFOUND);
 					subk.Attach(par.Detach());
 				}
 				else {
-					if(inguidstr == NULL) guidact = cur;
-					else	guidact = inguidstr;
+					if (inguidstr == NULL)
+						guidact = cur;
+					else
+						guidact = inguidstr;
 					res = subk.Open(par, guidact, KEY_READ);
-					if(res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
+					if (res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND)
+						ERRTHROW(res);
 				}
 			}
 		}
-		if(subk == NULL) return(E_NOTFOUND);  // !!!!!!!
+		if (subk == NULL)
+		{
+			CString error;
+			if (inguidstr)
+				error.Format(L"Paradigm '%s' with GUID '%s' is not registered.", pname, inguidstr);
+			else
+				error.Format(L"Paradigm '%s' is not registered.", pname);
+			SetErrorInfo(error);
+			return E_NOTFOUND;
+		}
 
 
 		CopyTo(QueryValue(subk, _T("ConnStr")), connstr);
@@ -1646,7 +1659,13 @@ STDMETHODIMP CMgaRegistrar::GUIDFromVersion(BSTR name, BSTR ver, VARIANT* guid, 
 		}
 
 		if (gstr.IsEmpty()) {
-			ERRTHROW(E_NOTFOUND);
+			CString error;
+			if (SysStringLen(ver))
+				error.Format(L"Paradigm '%s' with version '%s' is not registered.", name, ver);
+			else
+				error.Format(L"Paradigm '%s' is not registered.", name);
+			SetErrorInfo(error);
+			return E_NOTFOUND;
 		}
 
 		GUID g;

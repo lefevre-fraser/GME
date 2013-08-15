@@ -145,9 +145,17 @@ STDMETHODIMP CMgaProject::OpenParadigm(BSTR s, VARIANT *pGUID) {
 		CComPtr<IMgaRegistrar> mgareg;
 		COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
 		CComBSTR connstr;
-		COMTHROW(EDEF(mgareg->QueryParadigm(s, &connstr, pGUID, REGACCESS_PRIORITY), E_MGA_PARADIGM_NOTREG));
+		{
+			HRESULT hr = mgareg->QueryParadigm(s, &connstr, pGUID, REGACCESS_PRIORITY);
+			if (FAILED(hr))
+			{
+				CComPtr<IErrorInfo> info;
+				GetErrorInfo(0, &info);
+				throw _com_error(E_MGA_PARADIGM_NOTREG, info, true);
+			}
+		}
 		ASSERT(connstr);
-		COMTHROW(metapr.CoCreateInstance(	OLESTR("Mga.MgaMetaProject")));
+		COMTHROW(metapr.CoCreateInstance(OLESTR("Mga.MgaMetaProject")));
 		COMTHROW(EDEF(metapr->Open(connstr), E_MGA_PARADIGM_NOTREG));
 		CComVariant metaGUID;
 		COMTHROW(metapr->get_GUID(&metaGUID));
@@ -163,9 +171,19 @@ STDMETHODIMP CMgaProject::OpenParadigm(BSTR s, BSTR ver) {
 		{
 			CComPtr<IMgaRegistrar> mgareg;
 			COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
-			COMTHROW(EDEF(mgareg->GUIDFromVersion(s, ver, &vguid, REGACCESS_PRIORITY), E_MGA_PARADIGM_NOTREG));
+			{
+				HRESULT hr = mgareg->GUIDFromVersion(s, ver, &vguid, REGACCESS_PRIORITY);
+				if (FAILED(hr))
+				{
+					CComPtr<IErrorInfo> info;
+					GetErrorInfo(0, &info);
+					throw _com_error(E_MGA_PARADIGM_NOTREG, info, true);
+				}
+			}
 		}
-		COMTHROW(OpenParadigm(s,&vguid));
+		HRESULT hr =  OpenParadigm(s,&vguid);
+		if (FAILED(hr))
+			return hr;
 	} COMCATCH(;);
 }
 
@@ -412,12 +430,19 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 		}
 
 		if(s.Length()) {
+			HRESULT hr;
 			if (ver.Length()) {
 				// Version string has precedence
-				COMTHROW(OpenParadigm(s,ver));
+				hr = OpenParadigm(s,ver);
 			}
 			else {
-				COMTHROW(OpenParadigm(s,&pGUID));
+				hr = OpenParadigm(s,&pGUID);
+			}
+			if (FAILED(hr))
+			{
+				CComPtr<IErrorInfo> info;
+				GetErrorInfo(0, &info);
+				throw _com_error(hr, info, true);
 			}
 		}
 		else COMTHROW(E_MGA_MODULE_INCOMPATIBILITY);
