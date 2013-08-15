@@ -131,25 +131,25 @@ void CMetaDlg::ResetItems()
 		CComBstrObj guid2;
 
 		CopyTo(paradigms[i], name);
-		CComVariant v;
+		CComVariant vGuid;
 
 		CString mode = _T("u");
-		if( registrar->QueryParadigm(paradigms[i], PutOut(cstr), PutOut(v), REGACCESS_USER) != S_OK) {
+		if( registrar->QueryParadigm(paradigms[i], PutOut(cstr), PutOut(vGuid), REGACCESS_USER) != S_OK) {
 			mode = _T("s");
-			if( registrar->QueryParadigm(paradigms[i], PutOut(cstr), PutOut(v), REGACCESS_SYSTEM) != S_OK) {
+			if( registrar->QueryParadigm(paradigms[i], PutOut(cstr), PutOut(vGuid), REGACCESS_SYSTEM) != S_OK) {
 				AfxMessageBox(_T("Error reading registry data for paradigm ") + name);
 				mode = _T("?");
 				cstr = _T("????");
 			}
 		}
-		if(v.vt != VT_EMPTY) {
+		if(vGuid.vt != VT_EMPTY) {
 			GUID guid;
-			CopyTo(v, guid);
+			CopyTo(vGuid, guid);
 
 			CopyTo(guid, guid2);
 		}
 		
-		HRESULT hr = registrar->VersionFromGUID(paradigms[i], v, PutOut(version), mode ==  'u' ? REGACCESS_USER : REGACCESS_SYSTEM);
+		HRESULT hr = registrar->VersionFromGUID(paradigms[i], vGuid, PutOut(version), mode ==  'u' ? REGACCESS_USER : REGACCESS_SYSTEM);
 		if (FAILED(hr)) {
 			version = _T("N/A");
 		}
