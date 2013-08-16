@@ -98,8 +98,6 @@ static TCHAR metafilter[] = _T("MGA Meta Files (*.mta)|*.mta|XML Paradigm Files 
 
 CString CMgaOpenDlg::AskMGAConnectionString()
 {
-	CString filters = mgaonlyfilter;
-
 	CString file, dir;
 	if (theApp.isMgaProj() && theApp.mgaProject)
 	{
@@ -108,8 +106,7 @@ CString CMgaOpenDlg::AskMGAConnectionString()
 
 	CString conn;
 	CFileDialog dlg(flag_isopen ? TRUE : FALSE, _T("mga"), (file == _T("")) ? NULL : (LPCTSTR)file, 
-			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | 
-			0, filters);
+			OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, mgaonlyfilter);
 
 	if (dir != _T(""))
 		dlg.GetOFN().lpstrInitialDir = dir;
@@ -130,9 +127,18 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme, bool openFileDialog)
 		{
 			if (openFileDialog || m_radio == 0)
 			{
+				const TCHAR* filter;
+				if (allowXme == false && openFileDialog == false)
+				{
+					filter = mgaonlyfilter;
+				}
+				else
+				{
+					filter = allowXme ? xmemgafilter : mgafilter;
+				}
 				CFileDialog dlg(openFileDialog, NULL, fileNameHint.IsEmpty() ? NULL : (LPCTSTR)fileNameHint,
 					OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
-					(flag_create ? 0 : OFN_FILEMUSTEXIST), allowXme ? xmemgafilter : mgafilter);
+					(flag_create ? 0 : OFN_FILEMUSTEXIST), filter);
 				if (!folderPathHint.IsEmpty())
 					dlg.m_ofn.lpstrInitialDir = folderPathHint.GetBuffer(_MAX_PATH);
 
@@ -141,6 +147,10 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme, bool openFileDialog)
 					CString ext = dlg.GetFileExt();
 					ext.MakeLower();
 
+					if (allowXme == false && openFileDialog == false)
+					{
+						return CString(L"MGA=") + dlg.GetPathName() + L".mga";
+					}
 					if( ext == _T("mga") || ext == _T("mta") )
 						conn = CString(_T("MGA=")) + dlg.GetPathName();
                     else if( ext == _T("mgx") )
