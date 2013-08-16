@@ -571,6 +571,12 @@ BOOL CGMEApp::ShowWelcomeWindow()
 				if(conn.Find(_T("=")) < 0) {
 					if (conn.Right(4).CompareNoCase(_T(".xme")) == 0)
 						conn.Insert(0, _T("XML="));
+					else if (conn.Right(4).CompareNoCase(_T(".mgx")) == 0)
+					{
+						CString filename, dirname;
+						GetFullPathName(conn, filename, dirname);
+						conn = CString(L"MGX=\"") + dirname + L"\"";
+					}
 					else
 						conn.Insert(0,_T("MGA="));
 				}

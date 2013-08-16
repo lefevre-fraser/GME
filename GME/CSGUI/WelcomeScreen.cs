@@ -66,7 +66,7 @@ namespace CSGUI
             {
                 OpenFileDialog openFileDialog1 = new OpenFileDialog();
                 //openFileDialog1.InitialDirectory =
-                openFileDialog1.Filter = "GME project files (*.mga,*.xme)|*.mga; *.xme|MGA files|*.mga|GME XML files|*.xme; *.xml|All files (*.*)|*.*";
+                openFileDialog1.Filter = "GME project files (*.mga,*.xme,*.mgx)|*.mga; *.xme; *.mgx|MGA files|*.mga|GME XML files|*.xme; *.xml|All files (*.*)|*.*";
                 openFileDialog1.RestoreDirectory = true;
                 openFileDialog1.CheckFileExists = true;
 
