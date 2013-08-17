@@ -141,6 +141,8 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme, bool openFileDialog)
 					(flag_create ? 0 : OFN_FILEMUSTEXIST), filter);
 				if (!folderPathHint.IsEmpty())
 					dlg.m_ofn.lpstrInitialDir = folderPathHint.GetBuffer(_MAX_PATH);
+				if (allowXme == false && openFileDialog == false)
+					dlg.m_ofn.lpstrDefExt = L"mga";
 
 				if( dlg.DoModal() == IDOK )
 				{
@@ -149,7 +151,7 @@ CString CMgaOpenDlg::AskConnectionString(bool allowXme, bool openFileDialog)
 
 					if (allowXme == false && openFileDialog == false)
 					{
-						return CString(L"MGA=") + dlg.GetPathName() + L".mga";
+						return CString(L"MGA=") + dlg.GetPathName();
 					}
 					if( ext == _T("mga") || ext == _T("mta") )
 						conn = CString(_T("MGA=")) + dlg.GetPathName();
