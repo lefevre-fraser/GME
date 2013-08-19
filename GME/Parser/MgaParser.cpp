@@ -606,6 +606,11 @@ void CMgaParser::RegisterLookup(const std::tstring &id, IMgaObject *object)
 
 	CComBstrObj &mgaid = id_lookup[id];
 	ASSERT( mgaid.p == NULL );
+	if (mgaid.p != NULL)
+	{
+		std::wstring err = L"Duplicate id '" + id + L"'";
+		throw_com_error(E_MGA_INVALID_ARG, err.c_str());
+	}
 
 	COMTHROW( object->get_ID(PutOut(mgaid)) );
 }
