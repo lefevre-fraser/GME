@@ -629,12 +629,12 @@ void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *o
 		else if( (*i).first == _T("guid") )
 		{
 			RegisterLookup((*i).second, object);
-		}
-		else if( m_maintainGuids && (*i).first == _T("guid"))
-		{
+			if (m_maintainGuids)
+			{
 				// when fco was created already got a fresh GUID, but we need to maintain
 				// the old guid, thus we overwrite the old value with the parsed one
-			COMTHROW(object->PutGuidDisp( CComBSTR( (*i).second.c_str())));
+				COMTHROW(object->PutGuidDisp( CComBSTR( (*i).second.c_str())));
+			}
 		}
 		else if( (*i).first == _T("perm") )
 		{

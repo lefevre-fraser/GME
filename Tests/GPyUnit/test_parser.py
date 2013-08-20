@@ -11,7 +11,15 @@ class TestParser(unittest.TestCase):
     def test_ParseMetaGME(self):
         mga = GPyUnit.util.parse_xme(self.connstr)
         mga.Save()
-        mga.Close()
+        try:
+            mga.BeginTransactionInNewTerr()
+            try:
+                #self.assertEqual('{5297b5a3-1e47-403c-bf85-40d5c5ecce3f}', mga.RootFolder.GetGuidDisp())
+                self.assertEqual('{819c860f-177a-4382-a325-4c73f616734b}', mga.ObjectByPath('/@Aspects').GetGuidDisp())
+            finally:
+                mga.AbortTransaction()
+        finally:
+            mga.Close()
         if type(self) == TestParser:
             self.assertTrue(os.path.isfile(_adjacent_file("parsertest.mga")))
     
