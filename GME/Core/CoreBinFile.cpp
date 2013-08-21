@@ -1179,7 +1179,7 @@ void CCoreBinFile::LoadProject()
 				opened_object->second.CreateGuidAttributes( this);
 
 			std::pair<std::hash_map<GUID, bool>::iterator, bool> guid_insert = guids.emplace(std::make_pair(guid, true));
-			if (guid_insert.second == true)
+			if (guid_insert.second == false)
 			{
 				SetNewGuid(this, opened_object->second);
 			}
