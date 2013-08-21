@@ -85,17 +85,17 @@ public:
 	{
 		const BinGuid &m_guid = *this;
 		p_guid.Data1 = m_guid.v1;
-		p_guid.Data2 = (m_guid.v2 >> 16);
-		p_guid.Data3 = (m_guid.v2 << 16) >> 16;
+		p_guid.Data2 = m_guid.v2 >> 16;
+		p_guid.Data3 = m_guid.v2 & 0xFFFF;
 		p_guid.Data4[0] = (m_guid.v3 >> 24);
-		p_guid.Data4[1] = (m_guid.v3 << 8) >> 24;
-		p_guid.Data4[2] = (m_guid.v3 << 16) >> 24;
-		p_guid.Data4[3] = (m_guid.v3 << 24) >> 24;
+		p_guid.Data4[1] = (m_guid.v3 >> 16) & 0xFF;
+		p_guid.Data4[2] = (m_guid.v3 >> 8) & 0xFF;
+		p_guid.Data4[3] = m_guid.v3 & 0xFF;
 
 		p_guid.Data4[4] = (m_guid.v4 >> 24);
-		p_guid.Data4[5] = (m_guid.v4 << 8) >> 24;
-		p_guid.Data4[6] = (m_guid.v4 << 16) >> 24;
-		p_guid.Data4[7] = (m_guid.v4 << 24) >> 24;
+		p_guid.Data4[5] = (m_guid.v4 >> 16) & 0xFF;
+		p_guid.Data4[6] = (m_guid.v4 >> 8) & 0xFF;
+		p_guid.Data4[7] = m_guid.v4 & 0xFF;
 	}
 };
 

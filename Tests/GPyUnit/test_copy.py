@@ -7,7 +7,7 @@ def _adjacent_file(file):
     import os.path
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
 
-class TestParser(unittest.TestCase):
+class TestCopy(unittest.TestCase):
     def test_CopyFCODupGUID(self):
         mga = GPyUnit.util.parse_xme(self.connstr, _adjacent_file(r'..\..\Paradigms\SF\SFDemo.xme'))
         mga.Save()
@@ -29,7 +29,7 @@ class TestParser(unittest.TestCase):
     def connstr(self):
         return "MGA=" + _adjacent_file("copytest.mga")
 
-GPyUnit.util.MUGenerator(globals(), TestParser)
+GPyUnit.util.MUGenerator(globals(), TestCopy)
 
 if __name__ == "__main__":
         unittest.main()

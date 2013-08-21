@@ -145,7 +145,7 @@ void BinObject::UpgradeRegistryIfNecessary(CCoreBinFile* p_bf)
 	}
 }
 
-bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound, bool* p_oldRegFound)
+void BinObject::HasGuidAndStatAttributes(GUID& t_guid, bool* p_statusFound, bool* p_oldRegFound)
 {
 	int a1( 0), a2( 0), a3( 0), a4( 0);
 
@@ -153,12 +153,30 @@ bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound
 	binattrs_iterator e = binattrs.end();
 	while( i != e)
 	{
-		switch( (i)->attrid)
+		switch ((i)->attrid)
 		{
-			case ATTRID_GUID1: ++a1;break;
-			case ATTRID_GUID2: ++a2;break;
-			case ATTRID_GUID3: ++a3;break;
-			case ATTRID_GUID4: ++a4;break;
+			case ATTRID_GUID1:
+				t_guid.Data1 = reinterpret_cast<BinAttr<VALTYPE_LONG>*>(&(*i))->a;
+				break;
+			case ATTRID_GUID2:
+				t_guid.Data2 = (reinterpret_cast<BinAttr<VALTYPE_LONG>*>(&(*i))->a) >> 16;
+				t_guid.Data3 = (reinterpret_cast<BinAttr<VALTYPE_LONG>*>(&(*i))->a) & 0xFFFF;
+				break;
+
+			case ATTRID_GUID3: {
+				long v3 = reinterpret_cast<BinAttr<VALTYPE_LONG>*>(&(*i))->a;
+				t_guid.Data4[0] = (v3 >> 24);
+				t_guid.Data4[1] = (v3 >> 16) & 0xFF;
+				t_guid.Data4[2] = (v3 >> 8) & 0xFF;
+				t_guid.Data4[3] = v3 & 0xFF;
+				} break;
+			case ATTRID_GUID4: {
+				long v4 = reinterpret_cast<BinAttr<VALTYPE_LONG>*>(&(*i))->a;
+				t_guid.Data4[4] = (v4 >> 24);
+				t_guid.Data4[5] = (v4 >> 16) & 0xFF;
+				t_guid.Data4[6] = (v4 >> 8) & 0xFF;
+				t_guid.Data4[7] = v4 & 0xFF;
+				} break;
 			case ATTRID_FILESTATUS: *p_statusFound = true; break;
 			case ATTRID_REGNOWNER + ATTRID_COLLECTION:
 				*p_oldRegFound = true; break;
@@ -166,12 +184,6 @@ bool BinObject::HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound
 
 		++i;
 	}
-
-	// a1, a2, a3, a4 should be equal & have the 0 or 1 value
-	ASSERT( (a1 == 0 || a1 == 1) && a1 == a2 && a1 == a3 && a1 == a4);
-
-	*p_guidFound = a1 && a2 && a3 && a4;
-	return *p_guidFound;
 }
 
 // this method will create Guid attributes for mga objects
@@ -1059,6 +1071,46 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 	cifs_eof = file_buffer.getEnd();
 }
 
+// KMS: due to a bug in MgaFolder::CopyFCOs (ObjTreeCopyFoldersToo) fixed in r2297, some mga files may have duplicate GUIDs
+static void SetNewGuid(CCoreBinFile* p_bf, BinObject& o)
+{
+	CComVariant l1, l2, l3, l4;
+	l4.vt = l3.vt = l2.vt = l1.vt = VT_I4;
+	getMeAGuid( &l1.lVal, &l2.lVal, &l3.lVal, &l4.lVal);
+
+	binattrs_iterator i = o.binattrs.begin();
+	binattrs_iterator e = o.binattrs.end();
+	while( i != e)
+	{
+		switch (i->attrid)
+		{
+		case ATTRID_GUID1:
+			i->Set(p_bf, l1);
+			break;
+		case ATTRID_GUID2:
+			i->Set(p_bf, l2);
+			break;
+		case ATTRID_GUID3:
+			i->Set(p_bf, l3);
+			break;
+		case ATTRID_GUID4:
+			i->Set(p_bf, l4);
+			break;
+		default:
+			break;
+		}
+		i++;
+	}
+}
+
+struct GUID_hash {
+	size_t operator()(const GUID& guid) const
+	{
+		int* iGuid = (int*)(void*)&guid;
+		return iGuid[0] ^ iGuid[1] ^ iGuid[2] ^ iGuid[3];
+	}
+};
+
 void CCoreBinFile::LoadProject()
 {
 	InitMaxObjIDs();
@@ -1068,6 +1120,8 @@ void CCoreBinFile::LoadProject()
 	}
 	cifs = file_buffer.getBegin();
 	cifs_eof = file_buffer.getEnd();
+
+	std::unordered_map<GUID, bool, GUID_hash> guids;
 
 	bindata guid;
 	read(guid);
@@ -1115,12 +1169,20 @@ void CCoreBinFile::LoadProject()
 		// if the object read is folder or fco and it does NOT have guid attributes (old version mga file)
 		if( metaid >= DTID_MODEL && metaid <= DTID_FOLDER)	// 101 .. 106
 		{
-			bool stat_found( false), guid_found( false);
+			bool stat_found( false);
 
-			opened_object->second.HasGuidAndStatAttributes( &guid_found, &stat_found, &oldReg_found);
+			GUID zero_guid = {0};
+			GUID guid = {0};
+			opened_object->second.HasGuidAndStatAttributes(guid, &stat_found, &oldReg_found);
 
-			if( !guid_found) // we will create guid attributes for it
+			if(guid == zero_guid) // we will create guid attributes for it
 				opened_object->second.CreateGuidAttributes( this);
+
+			std::pair<std::hash_map<GUID, bool>::iterator, bool> guid_insert = guids.emplace(std::make_pair(guid, true));
+			if (guid_insert.second == true)
+			{
+				SetNewGuid(this, opened_object->second);
+			}
 
 			if( !stat_found && ( metaid == DTID_MODEL || metaid == DTID_FOLDER)) // we will create status attribute for M and F
 				opened_object->second.CreateStatusAttribute( this);

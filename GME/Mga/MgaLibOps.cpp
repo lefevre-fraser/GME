@@ -1377,17 +1377,17 @@ void LibImgHelper::GetItsGuid( CoreObj&           p_coreObj
 	
 	GUID t_guid;
 	t_guid.Data1 = v1;
-	t_guid.Data2 = (v2 >> 16);
-	t_guid.Data3 = (v2 << 16) >> 16;
+	t_guid.Data2 = v2 >> 16;
+	t_guid.Data3 = v2 & 0xFFFF;
 	t_guid.Data4[0] = (v3 >> 24);
-	t_guid.Data4[1] = (v3 << 8) >> 24;
-	t_guid.Data4[2] = (v3 << 16) >> 24;
-	t_guid.Data4[3] = (v3 << 24) >> 24;
+	t_guid.Data4[1] = (v3 >> 16) & 0xFF;
+	t_guid.Data4[2] = (v3 >> 8) & 0xFF;
+	t_guid.Data4[3] = v3 & 0xFF;
 
 	t_guid.Data4[4] = (v4 >> 24);
-	t_guid.Data4[5] = (v4 << 8) >> 24;
-	t_guid.Data4[6] = (v4 << 16) >> 24;
-	t_guid.Data4[7] = (v4 << 24) >> 24;
+	t_guid.Data4[5] = (v4 >> 16) & 0xFF;
+	t_guid.Data4[6] = (v4 >> 8) & 0xFF;
+	t_guid.Data4[7] = v4 & 0xFF;
 
 	char buff[39];
 	sprintf( buff, "{%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}",

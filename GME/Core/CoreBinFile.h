@@ -146,7 +146,7 @@ public:
 	binattrs_type binattrs;
 	bool deleted;
 
-	bool HasGuidAndStatAttributes( bool* p_guidFound, bool* p_statusFound, bool* p_oldRegFound);
+	void HasGuidAndStatAttributes(GUID& guid, bool* p_statusFound, bool* p_oldRegFound);
 	void CreateGuidAttributes( CCoreBinFile* p_bf);
 	void CreateStatusAttribute( CCoreBinFile* p_bf);
 	void UpgradeRegistryIfNecessary(CCoreBinFile* binFile);

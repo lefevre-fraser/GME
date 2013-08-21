@@ -26,6 +26,7 @@ def _test_names():
  'test_gmeoleapp',
  'test_parser',
  'test_copy',
+ 'test_mga_open',
  'test_registry',
  'test_instances',
  'GME_297.suite',
