@@ -349,6 +349,10 @@ void ObjTreeCopyFoldersToo(CMgaProject *mgaproject, CoreObj self, CoreObj &nobj,
 				// remove library flags from a copy
 				// FIXME this looks wrong
 				if(ai == ATTRID_PERMISSIONS) nobj[ai] = self[ai] & INSTANCE_FLAG;
+				else if( ai == ATTRID_GUID1 // don't copy these
+					|| ai == ATTRID_GUID2
+					|| ai == ATTRID_GUID3 
+					|| ai == ATTRID_GUID4) {}
 				else nobj[ai] = static_cast<CComVariant>(self[ai]);
 			}
 			else {
