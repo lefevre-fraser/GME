@@ -23,6 +23,23 @@ class TestParser(unittest.TestCase):
         if type(self) == TestParser:
             self.assertTrue(os.path.isfile(_adjacent_file("parsertest.mga")))
     
+    def test_ParseDupGuids(self):
+        mga = GPyUnit.util.parse_xme(self.connstr, _adjacent_file('SFDemo_dup_guids.xme'))
+        mga.Save()
+        try:
+            mga.BeginTransactionInNewTerr()
+            try:
+                self.assertEqual(mga.ObjectByPath('/@Folder1/@System').GetGuidDisp(), '{a57ca6b2-d95e-485c-a768-98c16fd30588}')
+                self.assertEqual(mga.ObjectByPath('/@Folder1/@System/@DBSetup1').GetGuidDisp(), '{009ef956-cfe9-4b2a-9bed-3d486dfc71ce}')
+                self.assertNotEqual(mga.ObjectByPath('/@Folder1/@System').GetGuidDisp(), mga.ObjectByPath('/@Folder2/@System').GetGuidDisp())
+                self.assertNotEqual(mga.ObjectByPath('/@Folder1/@System/@DBSetup1').GetGuidDisp(), mga.ObjectByPath('/@Folder2/@System/@DBSetup1').GetGuidDisp())
+            finally:
+                mga.AbortTransaction()
+        finally:
+            mga.Close()
+        if type(self) == TestParser:
+            self.assertTrue(os.path.isfile(_adjacent_file("parsertest.mga")))
+    
     def test_ParseInTx(self):
         project = GPyUnit.util.DispatchEx("Mga.MgaProject")
         project.Create(self.connstr, "MetaGME")

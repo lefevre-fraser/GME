@@ -9,6 +9,7 @@
 
 #include "../Common/CommonCollection.h"
 #include <list>//slist
+#include <algorithm>
 
 const TCHAR * magic_exit_str = _T("Analysis done.Quit parsing.");
 // --------------------------- CMgaParser
@@ -600,7 +601,7 @@ void CMgaParser::LookupByID(const std::tstring &id, CComObjPtr<IMgaFCO> &ret)
 	}
 }
 
-void CMgaParser::RegisterLookup(const std::tstring &id, IMgaObject *object)
+bool CMgaParser::RegisterLookup(const std::tstring &id, IMgaObject *object)
 {
 	ASSERT( object != NULL );
 
@@ -608,11 +609,11 @@ void CMgaParser::RegisterLookup(const std::tstring &id, IMgaObject *object)
 	ASSERT( mgaid.p == NULL );
 	if (mgaid.p != NULL)
 	{
-		std::wstring err = L"Duplicate id '" + id + L"'";
-		throw_com_error(E_MGA_INVALID_ARG, err.c_str());
+		return false;
 	}
 
 	COMTHROW( object->get_ID(PutOut(mgaid)) );
+	return true;
 }
 
 void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *object)
@@ -624,12 +625,31 @@ void CMgaParser::RegisterLookup(const attributes_type &attributes, IMgaObject *o
 	{
 		if( (*i).first == _T("id") )
 		{
-			RegisterLookup((*i).second, object);
+			if (RegisterLookup((*i).second, object) == false)
+			{
+				std::wstring err = L"Duplicate id '" + (*i).second + L"'";
+				throw_com_error(E_MGA_INVALID_ARG, err.c_str());
+			}
+
 		}
 		else if( (*i).first == _T("guid") )
 		{
-			RegisterLookup((*i).second, object);
-			if (m_maintainGuids)
+			bool dup = !RegisterLookup((*i).second, object);
+			// KMS: due to a bug in MgaFolder::CopyFCOs (ObjTreeCopyFoldersToo), some mga files (and thus xme files) may have duplicate GUIDs
+			// If we have a Mga.dtd-type file, re-assign the dup GUIDs (==don't PutGuidDisp the parsed GUID)
+			// If we have a Mga2.dtd-type file, this is a hard error (consider: what if a connection, reference, or set is connected to a dup GUID?)
+			if (dup)
+			{
+				// "id" not in attributes => Mga2.dtd-type file
+				auto old_id = std::find_if(attributes.begin(), attributes.end(), [](const attributes_type::value_type& val) -> bool { return val.first == L"id"; });
+				if (old_id == attributes.end())
+				{
+					std::wstring err = L"Duplicate id '" + (*i).second + L"'";
+					throw_com_error(E_MGA_INVALID_ARG, err.c_str());
+				}
+			}
+			// n.b. dup == true means (*i).second is not registered in lookup. This is ok, since we have a Mga.dtd-type file
+			if (m_maintainGuids && !dup)
 			{
 				// when fco was created already got a fresh GUID, but we need to maintain
 				// the old guid, thus we overwrite the old value with the parsed one

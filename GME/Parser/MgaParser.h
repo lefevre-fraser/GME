@@ -161,7 +161,8 @@ public:
 public:
 	void LookupByID(const std::tstring &id, CComObjPtr<IMgaObject> &object);
 	void LookupByID(const std::tstring &id, CComObjPtr<IMgaFCO> &fco);
-	void RegisterLookup(const std::tstring &id, IMgaObject *object);
+	// return true if successful
+	bool RegisterLookup(const std::tstring &id, IMgaObject *object);
 	void RegisterLookup(const attributes_type &attributes, IMgaObject *object);
 
 	//void RegisterReadOnlyStatus( const attributes_type &attributes);
