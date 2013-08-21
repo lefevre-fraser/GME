@@ -30,9 +30,10 @@ class TestMgaOpen(unittest.TestCase):
 
             self.project.BeginTransactionInNewTerr(0)
             mga = self.project
-            self.assertEqual(mga.ObjectByPath('/@Folder1').GetGuidDisp(), '{8ce2ca06-2729-4e4c-955f-fc88194782cc}')
-            self.assertEqual(mga.ObjectByPath('/@Folder1/@System').GetGuidDisp(), '{a57ca6b2-d95e-485c-a768-98c16fd30588}')
-            self.assertEqual(mga.ObjectByPath('/@Folder1/@System/@DBSetup1').GetGuidDisp(), '{009ef956-cfe9-4b2a-9bed-3d486dfc71ce}')
+            self.assertTrue(mga.ObjectByPath('/@Folder1').GetGuidDisp() == '{8ce2ca06-2729-4e4c-955f-fc88194782cc}' 
+                or mga.ObjectByPath('/@Folder2').GetGuidDisp() == '{8ce2ca06-2729-4e4c-955f-fc88194782cc}')
+            self.assertTrue(mga.ObjectByPath('/@Folder1/@System').GetGuidDisp() == '{a57ca6b2-d95e-485c-a768-98c16fd30588}' 
+                or mga.ObjectByPath('/@Folder2/@System').GetGuidDisp() == '{a57ca6b2-d95e-485c-a768-98c16fd30588}')
             self.assertNotEqual(mga.ObjectByPath('/@Folder1').GetGuidDisp(), mga.ObjectByPath('/@Folder2').GetGuidDisp())
             self.assertNotEqual(mga.ObjectByPath('/@Folder1/@System').GetGuidDisp(), mga.ObjectByPath('/@Folder2/@System').GetGuidDisp())
             self.assertNotEqual(mga.ObjectByPath('/@Folder1/@System/@DBSetup1').GetGuidDisp(), mga.ObjectByPath('/@Folder2/@System/@DBSetup1').GetGuidDisp())
