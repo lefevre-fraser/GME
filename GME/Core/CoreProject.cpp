@@ -98,6 +98,10 @@ STDMETHODIMP CCoreProject::put_Storage(ICoreStorage *p)
 			object_lookup_iterator e = object_lookup.end();
 			while( i != e )
 			{
+#ifdef _ATL_DEBUG_INTERFACES
+				CComPtr<IUnknown> obj1 = (IDispatchImpl<ICoreObject, &__uuidof(ICoreObject), &__uuidof(__MGACoreLib)>*)i->second;
+				CComPtr<IUnknown> obj2 = (IDispatchImpl<ICoreObject, &__uuidof(ICoreObject), &__uuidof(__MGACoreLib)>*)i->second;
+#endif
 				(*i).second->SetZombie();
 
 				++i;

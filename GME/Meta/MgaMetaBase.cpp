@@ -41,12 +41,24 @@ void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 	COMTHROW( ::QueryInterface(me, ibase) );
 	ASSERT( ibase != NULL );
 
+#ifdef _ATL_DEBUG_INTERFACES
+	IUnknown* pUnk = ((ATL::_QIThunk *)(ibase.p))->m_pUnk;
+	pUnk = ((ATL::_QIThunk *)(pUnk))->m_pUnk; // this is needed if Core has _ATL_DEBUG_INTERFACES
+	CMgaMetaBase *base = (CMgaMetaBase *)(IMgaMetaBase*)(pUnk);
+#else
 	CMgaMetaBase *base = static_cast<CMgaMetaBase*>((IMgaMetaBase*)ibase);
+#endif
 	ASSERT( base != NULL );
 
 	ASSERT( base->metaproject == NULL );
 
+#ifdef _ATL_DEBUG_INTERFACES
+	CComQIPtr<IMgaMetaBase> base2;
+	base->QueryInterface(&base2.p);
+	metaproject->RegisterMetaBase(metaref, base2);
+#else
 	metaproject->RegisterMetaBase(metaref, base);
+#endif
 
 	base->metaprojectref = metaproject;
 	base->metaref = metaref;

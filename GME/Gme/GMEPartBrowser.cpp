@@ -139,7 +139,7 @@ void CGMEPartBrowser::SetProject(CComPtr<IMgaProject>& mgaProject)
 
 void CGMEPartBrowser::SetMetaModel(CGuiMetaModel* meta)
 {
-	LPUNKNOWN pMeta = NULL;
+	CComPtr<IUnknown> pMeta = NULL;
 	guiMetaModel = meta;
 	if (meta != NULL) {
 		CComQIPtr<IMgaMetaModel> iMeta;

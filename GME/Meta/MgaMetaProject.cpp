@@ -171,13 +171,42 @@ STDMETHODIMP CMgaMetaProject::Close()
 	{
 		if( coreproject != NULL )
 		{
-			rootobject = NULL;
-
 			short count = 0;
 			COMTHROW( coreproject->get_NestedTransactionCount(&count) );
 
 			if( count == 1 )
 				COMTHROW( coreproject->AbortTransaction(TRANSTYPE_ANY) );
+
+			short undos;
+			COMTHROW(coreproject->get_UndoQueueSize(&undos));
+			if (undos)
+			{
+				COMTHROW(coreproject->SaveProject(L"", VARIANT_TRUE));
+			}
+			COMTHROW(coreproject->FlushRedoQueue());
+			COMTHROW(coreproject->FlushUndoQueue());
+
+			COMTHROW( coreproject->BeginTransaction(TRANSTYPE_FIRST) );
+			COMTHROW( coreproject->PushTerritory(coreterritory) );
+
+
+			for (auto it = metaobj_lookup.begin(); it != metaobj_lookup.end(); it++)
+			{
+				CCoreObjectPtr self(it->second);
+				COMTHROW(self->put_AttributeValue(ATTRID_LOCK, CComVariant((locking_type)-1)));
+			}
+			for (auto it = core_object_cleanup.begin(); it != core_object_cleanup.end(); it++)
+			{
+				COMTHROW((*it)->put_AttributeValue(ATTRID_LOCK, CComVariant((locking_type)-1)));
+			}
+			core_object_cleanup.clear();
+
+			COMTHROW( coreproject->CommitTransaction(TRANSTYPE_FIRST) );
+
+			metaobj_lookup.clear();
+			max_metaref = 1000;
+
+			rootobject = NULL;
 
 			if( coreterritory != NULL )
 			{
@@ -185,11 +214,8 @@ STDMETHODIMP CMgaMetaProject::Close()
 				coreterritory = NULL;
 			}
 
-			COMTHROW( coreproject->CloseProject() );
+			COMTHROW( coreproject->CloseProject(VARIANT_TRUE) );
 			coreproject = NULL;
-
-			metaobj_lookup.clear();
-			max_metaref = 1000;
 		}
 
 		ASSERT( coreproject == NULL );
@@ -352,7 +378,7 @@ STDMETHODIMP CMgaMetaProject::get_FindObject(metaref_type metaref, IMgaMetaBase 
 	if( i == metaobj_lookup.end() )
 		COMRETURN(E_NOTFOUND);
 
-	CopyTo((*i).second, p);
+	CopyTo((*i).second.p, p);
 	return S_OK;
 }
 

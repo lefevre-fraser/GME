@@ -152,15 +152,15 @@ public:
 	{
 		dataprojectNull = !!dataproject;
 	}
-	ICoreProject* get_dataproject()
+	CComPtr<ICoreProject> get_dataproject()
 	{
 		if (dataprojectNull)
 			return NULL;
-		ICoreProject* ret;
-		COMTHROW(inner->QueryInterface(__uuidof(ICoreProject), (void**)&ret));
+		CComPtr<ICoreProject> ret;
+		COMTHROW(inner->QueryInterface(__uuidof(ICoreProject), (void**)&ret.p));
 		return ret;
 	}
-	__declspec(property(get=get_dataproject, put=put_dataproject)) ICoreProject* dataproject;
+	__declspec(property(get=get_dataproject, put=put_dataproject)) CComPtr<ICoreProject> dataproject;
 #endif
 	void ObjMark(IMgaObject *s, long mask);
 	void FixupGUID(bool write = true);

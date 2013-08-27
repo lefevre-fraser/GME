@@ -69,8 +69,14 @@ CCoreObject::~CCoreObject()
 	aggregates.clear();
 
 	// the attribute will remove itself from the list
+#ifndef _ATL_DEBUG_INTERFACES
 	while( !attributes.empty() )
 		delete attributes.front();
+#else
+	for (auto it = attributes.begin(); it != attributes.end(); it++)
+		delete *it;
+	attributes.clear();
+#endif
 
 	if( project != NULL )
 		project->UnregisterObject(GetMetaID(), objid);
@@ -509,6 +515,20 @@ void CCoreObject::SetZombie()
 	ASSERT( project != NULL );
 
 	// we do not unregister, the object_lookup is cleared
+
+#ifdef _ATL_DEBUG_INTERFACES
+	attributes_type::const_iterator i = attributes.begin();
+	attributes_type::const_iterator e = attributes.end();
+	while( i != e )
+	{
+		if ((*i)->GetAttrID() == ATTRID_LOCK)
+			ASSERT(!((CCoreLockAttribute*)*i)->GetStatusFlag(COREATTRIBUTE_LOCKGROUP_LOADED));
+
+		(*i)->Release();
+		i++;
+	}
+	cleanup.clear();
+#endif
 
 	project = NULL;
 	metaobject = NULL;

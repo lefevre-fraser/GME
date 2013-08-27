@@ -146,18 +146,34 @@ public:
 	virtual void AbortFinalTransaction() NOTHROW;
 	virtual void CommitFinalTransaction();
 	virtual void CommitFinalTransactionFinish(bool undo) NOTHROW;
+#ifdef _ATL_DEBUG_INTERFACES
+	std::vector<CComPtr<IUnknown> > cleanup;
+#endif
 };
 
 #ifndef _ATL_DEBUG_INTERFACES
 inline IUnknown *CastToUnknown(CCoreObject *p) { return (IUnknown*)(ICoreObject*)p; }
 inline CCoreObject *CastToObject(IUnknown *p) { return (CCoreObject*)(ICoreObject*)p; }
+inline IUnknown *CastToUnknown_Object(CCoreObject *p) { return CastToUnknown(p); }
 #else
-inline IUnknown *CastToUnknown(CCoreObject *p)
+inline CComPtr<IUnknown> CastToUnknown(CCoreObject *p)
 {
-	IUnknown* pUnk;
-	p->QueryInterface(IID_IUnknown, (void**)&pUnk);
+	CComPtr<IUnknown> pUnk;
+	p->QueryInterface(IID_IUnknown, (void**)&pUnk.p);
+	p->cleanup.push_back(pUnk);
 	return pUnk;
-	return (IUnknown*)(ICoreObject*)p;
+}
+
+inline CComPtr<IUnknown> CastToUnknown_Object(CCoreObject *p)
+{
+	CComPtr<IUnknown> pUnk;
+	p->QueryInterface(IID_IUnknown, (void**)&pUnk.p);
+	p->cleanup.push_back(pUnk);
+
+	pUnk = 0;
+	p->QueryInterface(__uuidof(ICoreObject), (void**)&pUnk.p);
+	p->cleanup.push_back(pUnk);
+	return pUnk;
 }
 
 inline CCoreObject *CastToObject(IUnknown *p) {

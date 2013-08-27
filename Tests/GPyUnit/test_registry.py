@@ -43,7 +43,7 @@ class TestRegistry(unittest.TestCase):
                     sheet_meta = self.project.RootMeta.RootFolder.DefinedFCOs.Item(i)
             sheet = self.project.RootFolder.CreateRootObject(sheet_meta)
             sheetregs = sheet.GetRegistryDisp(True)
-            self.assertEqual(set([reg.Name for reg in sheetregs]), set(['namePosition', 'isTypeInfoShown']))
+            self.assertEqual(set([reg.Name for reg in sheetregs]), set(['namePosition', 'isTypeInfoShown'])) # this assert will fail with an old MetaGME registered
             
             namePosition = sheet.GetRegistryNodeDisp('namePosition')
             self.assertEqual(namePosition.Name, 'namePosition')

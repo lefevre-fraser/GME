@@ -182,6 +182,8 @@ void TraverseObject(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 			CMgaMetaPointerSpec::Traverse(metaproject, me);
 		else if( SUCCEEDED(QueryInterface(me, regnode)) )
 			CMgaMetaRegNode::Traverse(metaproject, me);
+
+		metaproject->core_object_cleanup.push_back(CComPtr<ICoreObject>(me.p));
 	}
 }
 

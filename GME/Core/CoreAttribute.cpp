@@ -61,7 +61,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCorePointerAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -72,7 +72,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreCollectionAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -83,7 +83,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreLongAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -94,7 +94,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreDictAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -105,7 +105,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreStringAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -116,7 +116,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreBinaryAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -127,7 +127,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreRealAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -138,7 +138,7 @@ void CCoreAttribute::Create(CCoreObject *object, CCoreMetaAttribute *metaattribu
 			typedef CComPartObject< CCoreLockAttribute > COMTYPE;
 
 			COMTYPE *p = NULL;
-			COMTHROW( COMTYPE::CreateInstance(CastToUnknown(object), &p) );
+			COMTHROW( COMTYPE::CreateInstance(CastToUnknown_Object(object), &p) );
 			attribute = p;
 
 			break;
@@ -162,7 +162,9 @@ CCoreAttribute::~CCoreAttribute()
 	ASSERT( metaattribute != NULL );
 	ASSERT( !IsDirty() );
 
+#ifndef _ATL_DEBUG_INTERFACES
 	GetObject()->UnregisterAttribute(this);
+#endif
 }
 
 #ifdef DEBUG
@@ -308,6 +310,16 @@ STDMETHODIMP CCoreLockAttribute::put_Value(VARIANT p)
 		locking_type locking = LOCKING_NONE;
 		CopyTo(p, locking);
 
+		// this kludge value is used by meta to indicate that the project is about to be closed, so just call Release on our object and be done with it
+		if (locking == (unsigned char)-1)
+		{
+			SetStatusFlag(COREATTRIBUTE_LOCK_CLOSED);
+			read_count = write_count = 0;
+			SetDirty();
+			Unload();
+			return S_OK;
+		}
+
 		if( !(LOCKING_NONE <= locking && locking <= LOCKING_EXCLUSIVE) )
 			HR_THROW(E_INVALIDARG);
 
@@ -350,6 +362,8 @@ STDMETHODIMP CCoreLockAttribute::get_PeerLockValue(locking_type *p)
 
 void CCoreLockAttribute::RegisterLockTry(locking_type unreg, locking_type reg)
 {
+	if (GetStatusFlag(COREATTRIBUTE_LOCK_CLOSED))
+		return;
 	ASSERT( InTransaction() );
 
 	locking_type old_locking = CombineLock(read_count, write_count);

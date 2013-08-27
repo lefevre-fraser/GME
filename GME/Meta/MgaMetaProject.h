@@ -68,20 +68,17 @@ public:
 
 // ------- metaobj_lookup
 
-	// Through the metaobj_lookup we do not keep references (AddRef)
-	// to objects, this would result in a dead-lock. So we use our
-	// CoreTerritory to keep these objects alive. They will register
-	// and unregister themselves.
-
 public:
 	typedef stdext::hash_map< metaref_type
-	                        , IMgaMetaBase*
+	                        , CComPtr<IMgaMetaBase>
 	                        , metaid_hashfunc
 	                        > metaobj_lookup_type;
 	typedef metaobj_lookup_type::iterator metaobj_lookup_iterator;
 
 	metaobj_lookup_type metaobj_lookup;
 	metaref_type max_metaref;
+
+	std::vector<CComPtr<ICoreObject> > core_object_cleanup;
 
 public:
 	void RegisterMetaBase(metaref_type metaref, IMgaMetaBase *obj);

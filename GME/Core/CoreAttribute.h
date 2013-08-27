@@ -90,6 +90,14 @@ public:
 	// if type mismatch then returns false
 	virtual bool DoesMatch(bool do_load, const VARIANT &v) { return false; }
 
+#ifdef _ATL_DEBUG_INTERFACES
+	HRESULT FinalConstruct()
+	{
+		m_pOuterUnknown->AddRef();
+		return S_OK;
+	}
+#endif
+
 // ------- Inline
 
 public:
@@ -101,6 +109,7 @@ public:
 #define COREATTRIBUTE_DIRTY				0x0001
 #define COREATTRIBUTE_LOCKGROUP_LOADED	0x0002
 #define COREATTRIBUTE_COLL_UPTODATE		0x0004
+#define COREATTRIBUTE_LOCK_CLOSED		0x0008
 
 public:
 	void SetStatusFlag(status_type flags) NOTHROW { status |= flags; }
