@@ -9,7 +9,7 @@ def _adjacent_file(file):
 
 class TestCopy(unittest.TestCase):
     def test_CopyFCODupGUID(self):
-        mga = GPyUnit.util.parse_xme(self.connstr, _adjacent_file(r'..\..\Paradigms\SF\SFDemo.xme'))
+        mga = GPyUnit.util.parse_xme(self.connstr, _adjacent_file(r'SFDemo.xme'))
         mga.Save()
         try:
             mga.BeginTransactionInNewTerr()
