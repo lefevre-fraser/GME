@@ -28,6 +28,16 @@ namespace CSGUI
                 Close();
                 return true;
             }
+            if (charCode == 'o')
+            {
+                this.btnOpen.PerformClick();
+                return true;
+            }
+            if (charCode == 'n')
+            {
+                this.btnNew.PerformClick();
+                return true;
+            }
             return false;
         }
 
