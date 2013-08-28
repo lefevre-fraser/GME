@@ -26,7 +26,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 13.8.28
 ----------------------------------
   - Binary compatibility with 11.12.2
   - XME Parser: parse XMEs with GUID connection ends, referred, set members. A future GME will write XMEs of this type
@@ -36,6 +36,7 @@ Release Notes
   - Model Editor: don't draw every tab all the time. Fixes bug where the contents of multiple models were visible (META-404)
   - CSharpComponentWizard: support Visual Studio 2012
   - Disable reg-free activation for CCoreCollectionHandler (GME-418)
+  - Fixed a memory leak in opening MgaMetaProjects
   
 Release Notes of Release 13.7.10
 ----------------------------------
