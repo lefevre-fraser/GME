@@ -171,3 +171,20 @@ def MUGenerator(module, test):
 
     for name, opts in (('MUSVN', ''), ('MUSVNHashed', ' hash=\"true\" hval=\"256\"')):
         module[test.__name__ + name] = type(test.__name__ + name, (MUSVNTestMixin, test), {'opts': opts_f(opts)})
+
+
+def get_MetaGME_user_reg_data():
+    registrar = DispatchEx("Mga.MgaRegistrar")
+    try:
+        meta_gme_guid = registrar.ParadigmGUIDString(1, "MetaGME")
+    except:
+        # not registered in user
+        return None
+    else:
+        # get MetaGME ConnStr (can't get it out of registrar with Jython)
+        project = DispatchEx("Mga.MgaProject")
+        project.Create("MGA=" + "get_MetaGME_user_reg_data.mga", "MetaGME")
+        meta_gme_connstr = project.ParadigmConnStr
+        project.Close(True)
+        return ("MetaGME", meta_gme_connstr, None, meta_gme_guid, 1)
+

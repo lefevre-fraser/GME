@@ -31,15 +31,24 @@ class TestMetaInterpreter(unittest.TestCase):
             self.assertEqual(atomattrs, list(atomattributes.split()))
         finally:
             metaproj.Close()
-        
-
-    def tearDown(self):
+    
+    def _rm_old_files(self):
         for file in ("MetaGME.xmp", "MetaGME.mta", "MetaGME.xmp.log"):
             if os.path.isfile(os.path.join(self.outdir(), file)):
                 os.unlink(os.path.join(self.outdir(), file))
+
+    def tearDown(self):
+        self._rm_old_files()
         registrar = DispatchEx("Mga.MgaRegistrar")
-        registrar.RegisterParadigmFromData("XML=" + os.path.abspath(os.path.join(os.environ['GME_ROOT'], "Paradigms\\MetaGME\\MetaGME.xmp")), "MetaGME", 1)
-    setUp = tearDown
+        if self.old_reg_data is None:
+            registrar.UnregisterParadigm("MetaGME", 1)
+        else:
+            registrar.RegisterParadigm(*self.old_reg_data)
+
+
+    def setUp(self):
+        self._rm_old_files()
+        self.old_reg_data = GPyUnit.util.get_MetaGME_user_reg_data()
 
     @property
     def connstr(self):
@@ -73,17 +82,27 @@ class TestCSharpDSMLGenerator(unittest.TestCase):
         self.assertTrue(os.path.isfile(os.path.join(self.outdir(), "ISIS.GME.Dsml.MetaGME.dll")))
 
             
-    def tearDown(self):
-        for file in ("MetaGME.xmp", "MetaGME.mta", "MetaGME.xmp.log"):
-            if os.path.isfile(os.path.join(self.outdir(), file)):
-                os.unlink(os.path.join(self.outdir(), file))
-        registrar = DispatchEx("Mga.MgaRegistrar")
-        registrar.RegisterParadigmFromData("XML=" + os.path.abspath(os.path.join(os.environ['GME_ROOT'], "Paradigms\\MetaGME\\MetaGME.xmp")), "MetaGME", 1)
+    def _rm_old_files(self):
+        for filename in ("MetaGME.xmp", "MetaGME.mta", "MetaGME.xmp.log"):
+            if os.path.isfile(os.path.join(self.outdir(), filename)):
+                os.unlink(os.path.join(self.outdir(), filename))
         for filename in ("AssemblySignature.snk", "ISIS.GME.Dsml.MetaGME.Classes.cs", "ISIS.GME.Dsml.MetaGME.dll", "ISIS.GME.Dsml.MetaGME.Interfaces.cs", "ISIS.GME.Dsml.MetaGME.xml", "ISIS.GME.Dsml.pdb"):
             path = os.path.join(self.outdir(), filename)
             if os.path.isfile(path):
                 os.unlink(path)
-    setUp = tearDown
+
+    def tearDown(self):
+        registrar = DispatchEx("Mga.MgaRegistrar")
+        if self.old_reg_data is None:
+            registrar.UnregisterParadigm("MetaGME", 1)
+        else:
+            registrar.RegisterParadigm(*self.old_reg_data)
+        self._rm_old_files()
+
+
+    def setUp(self):
+        self.old_reg_data = GPyUnit.util.get_MetaGME_user_reg_data()
+        self._rm_old_files()
 
     @property
     def connstr(self):
