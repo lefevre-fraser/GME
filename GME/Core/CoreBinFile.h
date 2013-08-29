@@ -19,9 +19,9 @@ class membuf
 		begin(0), end(0), hFile(INVALID_HANDLE_VALUE), hFileMappingObject(INVALID_HANDLE_VALUE)
 		{ }
 	
-	int open(const char* filename) {
+	int open(const wchar_t* filename) {
 		ASSERT(hFile == INVALID_HANDLE_VALUE);
-		hFile = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+		hFile = CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 		if (hFile == INVALID_HANDLE_VALUE) {
 			return 1;
 		}
@@ -322,7 +322,7 @@ public:
 // ------- Project
 
 public:
-	std::string filename;
+	std::wstring filename;
 	bool read_only;
 	bool intrans;
 	bool modified;
@@ -332,7 +332,7 @@ public:
 	bool InTransaction() const { return intrans; }
 
 	void CancelProject() NOTHROW;
-	void SaveProject(const std::string& origfname, bool keepoldname);
+	void SaveProject(const std::wstring& origfname, bool keepoldname);
 	void LoadProject();
 
 public:

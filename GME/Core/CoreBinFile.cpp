@@ -989,22 +989,22 @@ LARGE_INTEGER StreamBytesTransferred, DWORD dwStreamNumber, DWORD dwCallbackReas
 }
 
 
-void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
+void CCoreBinFile::SaveProject(const std::wstring& origfname, bool keepoldname)
 {
 	ASSERT( !ofs.is_open() );
 	ASSERT( metaprojectid.size() == 16 );
 
 
-	std::string filenameout = filename;
+	std::wstring filenameout = filename;
 	// origfname == filename => file_buffer has filename locked FILE_SHARE_READ
 	// CopyFile because:
 	// SetEndOfFileInformationFile
 	// Preserves extended attributes, NTFS alternate streams, file attributes (and newer Windows: security attributes)
-	if (origfname == filename && GetFileAttributesA(origfname.c_str()) != INVALID_FILE_ATTRIBUTES)
+	if (origfname == filename && GetFileAttributesW(origfname.c_str()) != INVALID_FILE_ATTRIBUTES)
 	{
-		filenameout += "tmp";
+		filenameout += L"tmp";
 		BOOL cancel = FALSE;
-		BOOL succ = CopyFileExA(origfname.c_str(), filenameout.c_str(), &prog, NULL, &cancel, 0);
+		BOOL succ = CopyFileExW(origfname.c_str(), filenameout.c_str(), &prog, NULL, &cancel, 0);
 		if (!succ && GetLastError() != ERROR_REQUEST_ABORTED)
 		{
 			HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
@@ -1064,7 +1064,7 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 
 	if (origfname == filename)
 	{
-		BOOL succ = MoveFileExA(filenameout.c_str(), filename.c_str(), MOVEFILE_REPLACE_EXISTING);
+		BOOL succ = MoveFileExW(filenameout.c_str(), filename.c_str(), MOVEFILE_REPLACE_EXISTING);
 		if (!succ)
 		{
 			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
@@ -1250,9 +1250,10 @@ STDMETHODIMP CCoreBinFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode) {
 
 	COMTRY
 	{
-		CopyTo(connection, filename);
-		if( !(std::string(filename, 0, 4) == "MGA=") )
-			HR_THROW(E_INVALID_USAGE);
+		if (SysStringLen(connection))
+			filename = connection;
+		if (!(std::wstring(filename, 0, 4) == L"MGA="))
+			throw_com_error(E_INVALID_USAGE, L"Connection string must start with MGA=");
 
 		filename.erase(0, 4);
 
@@ -1274,9 +1275,11 @@ STDMETHODIMP CCoreBinFile::CreateProject(BSTR connection)
 
 	COMTRY
 	{
-		CopyTo(connection, filename);
-		if( !(std::string(filename, 0, 4) == "MGA=") )
-			HR_THROW(E_INVALID_USAGE);
+		if (SysStringLen(connection))
+			filename = connection;
+		if( !(std::wstring(filename, 0, 4) == L"MGA=") )
+			throw_com_error(E_INVALID_USAGE, L"Connection string must start with MGA=");
+
 
 		filename.erase(0, 4);
 
@@ -1301,7 +1304,7 @@ STDMETHODIMP CCoreBinFile::CreateProject(BSTR connection)
 		t.first->second.CreateAttributes(mo);
 
 		if (filename.empty())
-			filename = ".";
+			filename = L".";
 
 		modified = false;
 
@@ -1312,24 +1315,26 @@ STDMETHODIMP CCoreBinFile::CreateProject(BSTR connection)
 
 STDMETHODIMP CCoreBinFile::SaveProject(BSTR connection, VARIANT_BOOL keepoldname = VARIANT_TRUE) 
 {
-	std::string origfname = filename;
+	std::wstring origfname = filename;
 	COMTRY
 	{
-		std::string fn;
-		CopyTo(connection, fn);
+		std::wstring fn;
+		if (SysStringLen(connection))
+			fn = connection;
 
 		if( !fn.empty() ) 
 		{
-			if( !(std::string(fn, 0, 4) == "MGA=") )
+			if( !(std::wstring(fn, 0, 4) == L"MGA=") )
 			{
 				throw_com_error(E_INVALID_USAGE, L"Connection string must start with MGA=");
 			}
 
 			fn.erase(0, 4);
 			filename = fn;
-			if(filename.empty()) filename = ".";
+			if(filename.empty())
+				filename = L".";
 		}
-		if (filename == ".")
+		if (filename == L".")
 			COMTHROW(E_NAMEMISSING);
 		SaveProject(origfname, keepoldname != VARIANT_FALSE);
 		if (keepoldname != VARIANT_FALSE)
@@ -1344,7 +1349,7 @@ STDMETHODIMP CCoreBinFile::CloseProject( VARIANT_BOOL abort) {
 
 	COMTRY
 	{
-		if( abort == VARIANT_FALSE && modified && !(filename == ".")) 
+		if( abort == VARIANT_FALSE && modified && !(filename == L".")) 
 		{
 			HRESULT hr = SaveProject(NULL);
 			if (FAILED(hr))
