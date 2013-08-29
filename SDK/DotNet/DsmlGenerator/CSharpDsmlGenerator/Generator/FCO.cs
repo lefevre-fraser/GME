@@ -74,8 +74,16 @@ namespace CSharpDSMLGenerator.Generator
                     ReturnType = new CodeTypeReference(
                         Configuration.GetInterfaceName(Subject as MgaObject)),
                 };
+
+                newCast.Comments.Add(
+                    new CodeCommentStatement(@"<summary>", true));
+
                 newCast.Comments.Add(
                     new CodeCommentStatement("Gets a domain specific object from a COM object.", true));
+
+                newCast.Comments.Add(
+                    new CodeCommentStatement(@"</summary>", true));
+
 
                 newCast.Parameters.Add(
                     new CodeParameterDeclarationExpression("global::" + typeof(IMgaObject).FullName, "subject"));

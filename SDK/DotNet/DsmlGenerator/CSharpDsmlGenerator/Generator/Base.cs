@@ -143,6 +143,9 @@ namespace CSharpDSMLGenerator.Generator
                     Name = "InfoClass",
                 };
 
+                newInfoClass.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
                 CodeMemberProperty GuidProperty = new CodeMemberProperty()
                 {
                     Attributes = MemberAttributes.Public | MemberAttributes.Final,
@@ -150,6 +153,9 @@ namespace CSharpDSMLGenerator.Generator
                     Name = "ParadigmGuid",
                     Type = new CodeTypeReference("global::" + typeof(Guid).FullName),
                 };
+
+                GuidProperty.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
                 GuidProperty.GetStatements.Add(
                     new CodeMethodReturnStatement(
@@ -167,6 +173,9 @@ namespace CSharpDSMLGenerator.Generator
                     Type = new CodeTypeReference(typeof(string).FullName),
                 };
 
+                ParadigmNameProperty.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
                 ParadigmNameProperty.GetStatements.Add(
                     new CodeMethodReturnStatement(
                         new CodeSnippetExpression("\"" + Configuration.DsmlModel.Paradigm.name + "\"")));
@@ -182,6 +191,9 @@ namespace CSharpDSMLGenerator.Generator
                     Name = "ParadigmVersion",
                     Type = new CodeTypeReference(typeof(string).FullName),
                 };
+
+                Version.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
                 Version.GetStatements.Add(
                     new CodeMethodReturnStatement(
@@ -233,6 +245,9 @@ namespace CSharpDSMLGenerator.Generator
                     Type = new CodeTypeReference("global::System.Collections.Generic.Dictionary<int, global::System.Type>"),
                 };
 
+                MetaRefs.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
                 StringBuilder sbMetaRefs = new StringBuilder();
                 sbMetaRefs.AppendLine("new global::System.Collections.Generic.Dictionary<int, global::System.Type>()");
                 sbMetaRefs.AppendLine("{");
@@ -268,6 +283,9 @@ namespace CSharpDSMLGenerator.Generator
                     Type = new CodeTypeReference(Configuration.ProjectClassNamespace + ".RootFolder.InfoClass"),
                 };
 
+                Info.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
                 Info.GetStatements.Add(
                     new CodeMethodReturnStatement(
                         new CodeObjectCreateExpression(
@@ -276,7 +294,15 @@ namespace CSharpDSMLGenerator.Generator
                 newClass.Members.Add(Info);
             }
 
-            newClass.Comments.Add(new CodeCommentStatement("Class comments", true));
+            newClass.Comments.Add(
+                new CodeCommentStatement(@"<summary>", true));
+
+            //newClass.Comments.Add(new CodeCommentStatement("Class comments", true));
+
+            newClass.Comments.Add(
+                new CodeCommentStatement(@"</summary>", true));
+
+
             // only one class inheritance
             Type t = GetBaseType(Subject, false);
             newClass.BaseTypes.Add(new CodeTypeReference(t));
@@ -382,6 +408,9 @@ namespace CSharpDSMLGenerator.Generator
                     Type = new CodeTypeReference(Configuration.ProjectClassNamespace + ".RootFolder.InfoClass"),
                 };
 
+                Info.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
                 newInterface.Members.Add(Info);
 
                 CodeMemberProperty MetaRefs = new CodeMemberProperty()
@@ -394,6 +423,10 @@ namespace CSharpDSMLGenerator.Generator
                     Name = "MetaRefs",
                     Type = new CodeTypeReference("global::System.Collections.Generic.Dictionary<int, global::System.Type>"),
                 };
+
+                MetaRefs.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
                 newInterface.Members.Add(MetaRefs);
             }
 

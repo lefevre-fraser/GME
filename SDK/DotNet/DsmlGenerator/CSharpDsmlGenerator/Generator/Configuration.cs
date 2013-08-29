@@ -69,6 +69,12 @@ namespace CSharpDSMLGenerator.Generator
 		/// </summary>
 		public struct Comments
 		{
+            public const string Empty =
+@"<summary>
+<para></para>
+<para></para>
+</summary>";
+
 			public const string ArcheType =
 @"<summary>
 <para>the object that is at the farthest position within the chain of base objects (i.e. the one which is not derived from anything).</para>
@@ -89,13 +95,13 @@ namespace CSharpDSMLGenerator.Generator
 
 			public const string AllDstConnections =
 @"<summary>
-<para></para>
+<para>Contains the domain specific destination end point of this connection.</para>
 <para></para>
 </summary>";
 
 			public const string AllSrcConnections =
 @"<summary>
-<para></para>
+<para>Contains the domain specific source end point of this connection.</para>
 <para></para>
 </summary>";
 

@@ -40,12 +40,18 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
+                newSrcConn.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
 				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newSrcConn.Members.Add(impl);
 
 				CodeConstructor ctor = new CodeConstructor();
 				ctor.Attributes = MemberAttributes.Public;
 				ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+
+                ctor.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				CodeFieldReferenceExpression implReference =
 					new CodeFieldReferenceExpression(
@@ -187,12 +193,18 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
+                newDstConn.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
 				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newDstConn.Members.Add(impl);
 
 				CodeConstructor ctor = new CodeConstructor();
 				ctor.Attributes = MemberAttributes.Public;
 				ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+
+                ctor.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				CodeFieldReferenceExpression implReference =
 					new CodeFieldReferenceExpression(

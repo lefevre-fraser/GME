@@ -39,12 +39,18 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
+                newRefClass.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
 				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newRefClass.Members.Add(impl);
 
 				CodeConstructor ctor = new CodeConstructor();
 				ctor.Attributes = MemberAttributes.Public;
 				ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+
+                ctor.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				CodeFieldReferenceExpression implReference =
 					new CodeFieldReferenceExpression(
@@ -284,12 +290,18 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
+                newRefClass.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
 				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newRefClass.Members.Add(impl);
 
 				CodeConstructor ctor = new CodeConstructor();
 				ctor.Attributes = MemberAttributes.Public;
-				ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+                ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+
+                ctor.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				CodeFieldReferenceExpression implReference =
 					new CodeFieldReferenceExpression(
@@ -472,8 +484,8 @@ namespace CSharpDSMLGenerator.Generator
 					newAllReferencedBy.Attributes = newAllReferencedBy.Attributes | MemberAttributes.New;
 				}
 
-				newAllReferencedBy.Comments.Add(
-					new CodeCommentStatement("Contains the domain specific ....", true));
+                newAllReferencedBy.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				GeneratedInterface.Types[0].Members.Add(newAllReferencedBy);
 
@@ -485,6 +497,9 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference(
 						Configuration.GetClassName(Subject) + ".MembersOfSetClass"),
 				};
+
+                newReferencedBy.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				if (baseClassesWoObject.Count > 0)
 				{

@@ -36,6 +36,7 @@ namespace CSharpDSMLGenerator
         /// <summary>
         /// Contains information about the GUI event that initiated the invocation.
         /// </summary>
+        [ComVisible(false)]
         public enum ComponentStartMode
         {
             GME_MAIN_START = 0, 		// Not used by GME
@@ -81,6 +82,7 @@ namespace CSharpDSMLGenerator
         /// </param>
         /// <param name="startMode">Contains information about the GUI event 
         /// that initiated the invocation.</param>
+        [ComVisible(false)]
         public void Main(
             MgaProject project,
             MgaFCO currentobj,
@@ -157,6 +159,7 @@ namespace CSharpDSMLGenerator
             CompileDll(outputDir, compileUnit);
         }
 
+        [ComVisible(false)]
         public CodeCompileUnit GenerateDotNetCode(MgaProject project, string paradigmXmpFile, string outputDir, GeneratorMode mode)
         {
             //paradigm = MgaMeta.DsmlModel.GetParadigm(paradigmXmpFile);
@@ -272,6 +275,7 @@ namespace CSharpDSMLGenerator
 
         private string language = "c#";
 
+        [ComVisible(false)]
         public bool CompileDll(string outputDir, CodeCompileUnit compileunit)
         {
 
@@ -348,7 +352,7 @@ namespace CSharpDSMLGenerator
 
         }
 
-
+        [ComVisible(false)]
         public static IEnumerable<T> FlattenMga<T>(T item, Func<T, IEnumerable<T>> next)
             where T : IMgaObject
         {
@@ -366,6 +370,7 @@ namespace CSharpDSMLGenerator
             }
         }
 
+        [ComVisible(false)]
         public enum GeneratorMode
         {
             /// <summary>
@@ -389,6 +394,7 @@ namespace CSharpDSMLGenerator
             Many,
         }
 
+        [ComVisible(false)]
         public List<string> CodeDomGenerateCode(
             CodeDomProvider provider,
             CodeCompileUnit compileunit,

@@ -40,12 +40,18 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
+                newSrcConn.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
 				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newSrcConn.Members.Add(impl);
 
 				CodeConstructor ctor = new CodeConstructor();
 				ctor.Attributes = MemberAttributes.Public;
 				ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+
+                ctor.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				CodeFieldReferenceExpression implReference =
 					new CodeFieldReferenceExpression(
@@ -200,12 +206,18 @@ namespace CSharpDSMLGenerator.Generator
 					TypeAttributes = System.Reflection.TypeAttributes.NestedPublic,
 				};
 
+                newDstConn.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
+
 				CodeMemberField impl = new CodeMemberField("global::GME.MGA.IMgaObject", "Impl");
 				newDstConn.Members.Add(impl);
 
 				CodeConstructor ctor = new CodeConstructor();
 				ctor.Attributes = MemberAttributes.Public;
 				ctor.Parameters.Add(new CodeParameterDeclarationExpression("global::GME.MGA.IMgaObject", "impl"));
+
+                ctor.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.Empty, true));
 
 				CodeFieldReferenceExpression implReference =
 					new CodeFieldReferenceExpression(
@@ -355,8 +367,8 @@ namespace CSharpDSMLGenerator.Generator
 					newAllSrcConnections.Attributes = newAllSrcConnections.Attributes | MemberAttributes.New;
 				}
 
-				newAllSrcConnections.Comments.Add(
-					new CodeCommentStatement("Contains the domain specific source end point of this connection.", true));
+                newAllSrcConnections.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.AllSrcConnections, true));
 
 				GeneratedInterface.Types[0].Members.Add(newAllSrcConnections);
 
@@ -368,6 +380,10 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference(
 						Configuration.GetClassName(Subject) + ".SrcEndsClass"),
 				};
+
+                newSrcConnections.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.SrcConnections, true));
+
 
 				if (baseClassesWoObject.Count > 0)
 				{
@@ -393,8 +409,8 @@ namespace CSharpDSMLGenerator.Generator
 					newAllDstConnections.Attributes = newAllDstConnections.Attributes | MemberAttributes.New;
 				}
 
-				newAllDstConnections.Comments.Add(
-					new CodeCommentStatement("Contains the domain specific destination end point of this connection.", true));
+                newAllDstConnections.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.AllDstConnections, true));
 
 				GeneratedInterface.Types[0].Members.Add(newAllDstConnections);
 
@@ -406,6 +422,9 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference(
 						Configuration.GetClassName(Subject) + ".DstEndsClass"),
 				};
+
+                newDstConnections.Comments.Add(
+                    new CodeCommentStatement(Configuration.Comments.DstConnections, true));
 
 				if (baseClassesWoObject.Count > 0)
 				{
