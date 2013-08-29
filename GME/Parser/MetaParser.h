@@ -42,7 +42,7 @@ END_COM_MAP()
 public:
 	STDMETHOD(Parse)(BSTR filename, BSTR connection);
 	
-	void CloseAll();
+	HRESULT CloseAll();
 
 // ------- Attributes
 

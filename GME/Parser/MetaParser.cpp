@@ -101,7 +101,9 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 
 		COMTHROW( metaproject->CommitTransaction() );
 
-		CloseAll();
+		HRESULT hr = CloseAll();
+		if (FAILED(hr))
+			return hr; // IErrorInfo already set by metaproject->Close()
 	}
 	catch(hresult_exception &e)
 	{
@@ -121,14 +123,19 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 	return S_OK;
 }
 
-void CMgaMetaParser::CloseAll()
+HRESULT CMgaMetaParser::CloseAll()
 {
+	HRESULT hr;
+
 	elements.clear();
 
-	if( metaproject != NULL )
-		metaproject->Close();
+	if (metaproject != NULL)
+		hr = metaproject->Close();
+	else
+		hr = S_OK;
 
 	metaproject = NULL;
+	return hr;
 };
 
 // ------- Attributes
