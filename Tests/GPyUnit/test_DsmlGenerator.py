@@ -35,7 +35,7 @@ class TestCSharpDSMLGenerator(unittest.TestCase):
             mga.Close()
         
         import subprocess
-        subprocess.check_call([r"c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe", _adjacent_file(r"DsmlGeneratorTest\DsmlGeneratorTest.csproj")])
+        subprocess.check_call([r"c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe", _adjacent_file(r"DsmlGeneratorTest\DsmlGeneratorTest.sln")])
         subprocess.check_call([_adjacent_file(r"DsmlGeneratorTest\bin\Debug\DsmlGeneratorTest.exe"), self.connstr])
 
             
