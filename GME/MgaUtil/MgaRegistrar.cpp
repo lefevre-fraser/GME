@@ -1537,7 +1537,9 @@ STDMETHODIMP CMgaRegistrar::get_ParadigmGUIDString(regaccessmode_enum mode, BSTR
 	{
 		CComBSTR connstr;
 		CComVariant guid;
-		COMTHROW(QueryParadigm(parname, &connstr, &guid, mode));
+		HRESULT hr = QueryParadigm(parname, &connstr, &guid, mode);
+		if (FAILED(hr))
+			return hr;
 		GUID g;
 		CopyTo(guid, g);
 		CopyTo(g, guidstr);

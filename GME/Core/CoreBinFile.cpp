@@ -1006,8 +1006,12 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 		BOOL cancel = FALSE;
 		BOOL succ = CopyFileExA(origfname.c_str(), filenameout.c_str(), &prog, NULL, &cancel, 0);
 		if (!succ && GetLastError() != ERROR_REQUEST_ABORTED)
-			HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
-
+		{
+			HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
+			_bstr_t err;
+			GetErrorInfo(hr, err.GetAddress());
+			throw_com_error(hr, _bstr_t(L"Error saving '") + filenameout.c_str() + L"': " + err);
+		}
 	}
 	// TODO:
 	// GetNamedSecurityInfo(source, GROUP_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION)
@@ -1016,9 +1020,12 @@ void CCoreBinFile::SaveProject(const std::string& origfname, bool keepoldname)
 	ofs.clear();
 	ofs.open(filenameout.c_str(), std::ios::out | std::ios::binary);
 	if( ofs.fail() || !ofs.is_open() ) {
+		HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
 		ofs.close();
 		ofs.clear();
-		HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+		_bstr_t err;
+		GetErrorInfo(hr, err.GetAddress());
+		throw_com_error(hr, _bstr_t(L"Error saving '") + filenameout.c_str() + L"': " + err);
 	}
 
 	write(metaprojectid);

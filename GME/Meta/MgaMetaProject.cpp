@@ -181,7 +181,9 @@ STDMETHODIMP CMgaMetaProject::Close()
 			COMTHROW(coreproject->get_UndoQueueSize(&undos));
 			if (undos)
 			{
-				COMTHROW(coreproject->SaveProject(L"", VARIANT_TRUE));
+				HRESULT hr = coreproject->SaveProject(L"", VARIANT_TRUE);
+				if (FAILED(hr))
+					return hr;
 			}
 			COMTHROW(coreproject->FlushRedoQueue());
 			COMTHROW(coreproject->FlushUndoQueue());
