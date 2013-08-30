@@ -204,7 +204,7 @@ namespace CSharpDSMLGenerator.Generator
 			{
 				CodeMemberProperty newParentContainer = new CodeMemberProperty()
 				{
-					Attributes = MemberAttributes.Public | MemberAttributes.Override,
+					Attributes = MemberAttributes.Public | MemberAttributes.New,
 					HasGet = true,
 					Name = "ParentContainer",
 					Type = new CodeTypeReference(typeof(ISIS.GME.Common.Interfaces.Container).FullName),
@@ -231,7 +231,7 @@ namespace CSharpDSMLGenerator.Generator
 
 				CodeMemberProperty newParentContainer = new CodeMemberProperty()
 				{
-					Attributes = MemberAttributes.Public | MemberAttributes.Override,
+					Attributes = MemberAttributes.Public | MemberAttributes.New,
 					HasGet = true,
 					Name = "ParentContainer",
 					Type = new CodeTypeReference(typeof(ISIS.GME.Common.Interfaces.Container).FullName),

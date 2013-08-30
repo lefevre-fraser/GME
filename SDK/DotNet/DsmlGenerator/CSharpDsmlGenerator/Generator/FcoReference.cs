@@ -242,7 +242,7 @@ namespace CSharpDSMLGenerator.Generator
                 if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
                 {
 					newAllReferred.Attributes =
-						newAllReferred.Attributes | MemberAttributes.Override;
+						newAllReferred.Attributes | MemberAttributes.New;
 				}
 
 				newAllReferred.Comments.Add(
@@ -494,10 +494,10 @@ namespace CSharpDSMLGenerator.Generator
                         "global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
 
-                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                if (baseClassesWoObject.Count > 0)
 				{
 					newAllReferencedBy.Attributes =
-						newAllReferencedBy.Attributes | MemberAttributes.Override;
+						newAllReferencedBy.Attributes | MemberAttributes.New;
 				}
 
 				newAllReferencedBy.Comments.Add(
@@ -514,7 +514,7 @@ namespace CSharpDSMLGenerator.Generator
 						Configuration.GetClassName(Subject) + ".ReferencedByClass"),
 				};
 
-                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+				if (baseClassesWoObject.Count > 0)
 				{
 					newReferencedBy.Attributes =
 						newReferencedBy.Attributes | MemberAttributes.New;

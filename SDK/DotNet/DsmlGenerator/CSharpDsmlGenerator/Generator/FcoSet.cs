@@ -142,17 +142,11 @@ namespace CSharpDSMLGenerator.Generator
 
 				CodeMemberProperty newAllReferred = new CodeMemberProperty()
 				{
-					Attributes = MemberAttributes.Public,
+					Attributes = MemberAttributes.Public | MemberAttributes.New,
 					HasGet = true,
 					Name = "AllSetMembers",
 					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable <" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
-
-                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
-                {
-                    newAllReferred.Attributes =
-                        newAllReferred.Attributes | MemberAttributes.Override;
-                }
 
 				newAllReferred.Comments.Add(new CodeCommentStatement("", true));
 
@@ -227,7 +221,7 @@ namespace CSharpDSMLGenerator.Generator
 		{
 			if (Subject.MetaBase.Name == "Set")
 			{
-				CodeMemberProperty newAllSetMembers = new CodeMemberProperty()
+				CodeMemberProperty newAllReferred = new CodeMemberProperty()
 				{
 					Attributes = MemberAttributes.Public,
 					HasGet = true,
@@ -235,16 +229,15 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable <" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
 
-                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
-                {
-                    newAllSetMembers.Attributes =
-                        newAllSetMembers.Attributes | MemberAttributes.Override;
-                }
+				if (baseClassesWoObject.Count > 0)
+				{
+					newAllReferred.Attributes = newAllReferred.Attributes | MemberAttributes.New;
+				}
 
-                newAllSetMembers.Comments.Add(
+				newAllReferred.Comments.Add(
 					new CodeCommentStatement("Contains the domain specific ....", true));
 
-				GeneratedInterface.Types[0].Members.Add(newAllSetMembers);
+				GeneratedInterface.Types[0].Members.Add(newAllReferred);
 
 				CodeMemberProperty newReferred = new CodeMemberProperty()
 				{

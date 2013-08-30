@@ -496,7 +496,7 @@ namespace CSharpDSMLGenerator.Generator
 
 				CodeMemberProperty newAllChildrenProperty = new CodeMemberProperty()
 				{
-                    Attributes = MemberAttributes.Public | MemberAttributes.Override,
+                    Attributes = MemberAttributes.Public | MemberAttributes.New,
 					HasGet = true,
 					Name = "AllChildren",
 					Type = new CodeTypeReference(

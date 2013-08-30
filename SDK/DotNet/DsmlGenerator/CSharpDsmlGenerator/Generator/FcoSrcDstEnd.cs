@@ -364,7 +364,7 @@ namespace CSharpDSMLGenerator.Generator
 
                 if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
                 {
-					newAllSrcConnections.Attributes = newAllSrcConnections.Attributes | MemberAttributes.Override;
+					newAllSrcConnections.Attributes = newAllSrcConnections.Attributes | MemberAttributes.New;
 				}
 
                 newAllSrcConnections.Comments.Add(
@@ -406,7 +406,7 @@ namespace CSharpDSMLGenerator.Generator
 
                 if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
                 {
-					newAllDstConnections.Attributes = newAllDstConnections.Attributes | MemberAttributes.Override;
+					newAllDstConnections.Attributes = newAllDstConnections.Attributes | MemberAttributes.New;
 				}
 
                 newAllDstConnections.Comments.Add(
