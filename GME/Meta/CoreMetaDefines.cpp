@@ -10,7 +10,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	COMTHROW( project->put_Token(PutInBstr("MgaMetaProject")) );
 	COMTHROW( project->put_Name(PutInBstr("MgaMetaProject")) );
 
-	GUID guid = {0x028F7AA4,0x2E51,0x11D3,{0xB3,0x17,0x00,0x62,0x08,0x2D,0xF8,0x85}};
+	::GUID guid = {0x028F7AA4,0x2E51,0x11D3,{0xB3,0x17,0x00,0x62,0x08,0x2D,0xF8,0x85}};
 	COMTHROW( project->put_GUID(PutInVariant(guid)) );
 
 // ------- Macros

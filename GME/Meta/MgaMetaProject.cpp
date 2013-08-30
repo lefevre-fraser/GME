@@ -240,10 +240,10 @@ STDMETHODIMP CMgaMetaProject::get_GUID(VARIANT *p)
 		CCoreObjectPtr me(rootobject);
 		me.GetVariantValue(ATTRID_GUID, p);
 
-		if( p->vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(*p) != sizeof(GUID) )
+		if( p->vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(*p) != sizeof(::GUID) )
 		{
 			::GUID guid;
-			memset(&guid, 0, sizeof(GUID));
+			memset(&guid, 0, sizeof(::GUID));
 
 			CopyTo(guid, p);
 		}
@@ -256,7 +256,7 @@ STDMETHODIMP CMgaMetaProject::put_GUID(VARIANT p)
 	if( rootobject == NULL )
 		COMRETURN(E_META_NOTOPEN);
 
-	if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(GUID) )
+	if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(::GUID) )
 		COMRETURN(E_INVALIDARG);
 
 	return ComPutAttrValue(rootobject, ATTRID_GUID, p);
