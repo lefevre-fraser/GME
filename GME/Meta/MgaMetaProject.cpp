@@ -62,7 +62,7 @@ STDMETHODIMP CMgaMetaProject::Open(BSTR connection)
 		COMTHROW( coreproject.CoCreateInstance(OLESTR("MGA.CoreProject")) );
 		ASSERT( coreproject != NULL );
 
-		COMTHROW( coreproject->OpenProject(connection, coremetaproject, NULL) );
+		coreproject->__OpenProject(connection, coremetaproject, NULL);
 
 		COMTHROW( coreproject->CreateTerritory(PutOut(coreterritory)) );
 		ASSERT( coreterritory != NULL );
@@ -97,7 +97,7 @@ STDMETHODIMP CMgaMetaProject::Create(BSTR connection)
 		COMTHROW( coreproject.CoCreateInstance(OLESTR("MGA.CoreProject")) );
 		ASSERT( coreproject != NULL );
 
-		COMTHROW( coreproject->CreateProject(connection, coremetaproject) );
+		coreproject->__CreateProject(connection, coremetaproject);
 
 		COMTHROW( coreproject->CreateTerritory(PutOut(coreterritory)) );
 		ASSERT( coreterritory != NULL );
