@@ -426,7 +426,7 @@ namespace CSharpDSMLGenerator.Generator
                 newDstConnections.Comments.Add(
                     new CodeCommentStatement(Configuration.Comments.DstConnections, true));
 
-                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef)
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
                 {
 					newDstConnections.Attributes = newDstConnections.Attributes | MemberAttributes.New;
 				}
