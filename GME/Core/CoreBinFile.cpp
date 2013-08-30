@@ -1123,7 +1123,10 @@ void CCoreBinFile::LoadProject()
 	InitMaxObjIDs();
 
 	if (file_buffer.open(filename.c_str()) != 0) {
-		HR_THROW(HRESULT_FROM_WIN32(GetLastError()));
+		HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
+		_bstr_t err;
+		GetErrorInfo(hr, err.GetAddress());
+		throw_com_error(hr, _bstr_t(L"Error opening '") + filename.c_str() + L"': " + err);
 	}
 	cifs = file_buffer.getBegin();
 	cifs_eof = file_buffer.getEnd();

@@ -209,7 +209,7 @@ STDMETHODIMP CCoreProject::OpenProject(BSTR connection, ICoreMetaProject *p, VAR
 		ASSERT( corestorage != NULL );
 
 		COMTHROW( corestorage->put_MetaProject(p) );
-		COMTHROW( corestorage->OpenProject(connection, ro_mode) );
+		corestorage->__OpenProject(connection, ro_mode);
 
 		COMTHROW( put_Storage(corestorage) );
 	}
