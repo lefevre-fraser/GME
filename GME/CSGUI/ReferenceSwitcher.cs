@@ -213,7 +213,12 @@ namespace CSGUI
         {
             Queue<IMgaReference> references = new Queue<IMgaReference>();
             references.Enqueue(origref);
-            MgaFCOs fco2ChildFCOs = (fco2 as IMgaModel).ChildFCOs;
+            IMgaFCO targetModel = fco2;
+            while (targetModel is IMgaReference)
+            {
+                targetModel = ((IMgaReference)targetModel).Referred;
+            }
+            MgaFCOs fco2ChildFCOs = ((IMgaModel)targetModel).ChildFCOs;
             Dictionary<string, IMgaFCO> newRefeChildren = GetNameMap(fco2ChildFCOs,
                 x => { });
             // TODO: warn, but only for refport-connected children
