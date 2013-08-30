@@ -486,22 +486,22 @@ namespace CSharpDSMLGenerator.Generator
 				newChildrenProperty.Comments.Add(
 					new CodeCommentStatement(Configuration.Comments.Children, true));
 
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                {
+                    newChildrenProperty.Attributes =
+                        newChildrenProperty.Attributes | MemberAttributes.New;
+                }
+
 				GeneratedInterface.Types[0].Members.Add(newChildrenProperty);
 
 				CodeMemberProperty newAllChildrenProperty = new CodeMemberProperty()
 				{
-					Attributes = MemberAttributes.Public,
+                    Attributes = MemberAttributes.Public | MemberAttributes.Override,
 					HasGet = true,
 					Name = "AllChildren",
 					Type = new CodeTypeReference(
                         "global::System.Collections.Generic.IEnumerable<" + typeof(ISIS.GME.Common.Interfaces.Base).FullName + ">"),
 				};
-
-				if (baseClasses.Count > 1)
-				{
-					newAllChildrenProperty.Attributes =
-						newAllChildrenProperty.Attributes | MemberAttributes.New;
-				}
 
 				newAllChildrenProperty.Comments.Add(
 					new CodeCommentStatement(Configuration.Comments.AllChildren, true));

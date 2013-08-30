@@ -27,7 +27,7 @@ namespace CSharpDSMLGenerator.Generator
 				{
 					CodeMemberProperty newArcheType = new CodeMemberProperty()
 					{
-						Attributes = MemberAttributes.Final,
+						Attributes = MemberAttributes.Override,
 						HasGet = true,
 						Name = Configuration.GetInterfaceName(child as MgaObject) + ".ArcheType",
 						Type = new CodeTypeReference(Configuration.GetInterfaceName(child as MgaObject)),
@@ -56,18 +56,12 @@ namespace CSharpDSMLGenerator.Generator
 				//(Impl as global::GME.MGA.MgaFCO).ArcheType
 				CodeMemberProperty newArcheType = new CodeMemberProperty()
 				{
-					Attributes = MemberAttributes.Public,
+					Attributes = MemberAttributes.Public | MemberAttributes.Override,
 					HasGet = true,
 					Name = "ArcheType",
 					Type = new CodeTypeReference(
 						Configuration.GetInterfaceName(Subject)),
 				};
-
-				if (baseClasses.Count > 1)
-				{
-					newArcheType.Attributes =
-						newArcheType.Attributes | MemberAttributes.New;
-				}
 
 				newArcheType.Comments.Add(
 					new CodeCommentStatement(Configuration.Comments.ArcheType, true));

@@ -362,9 +362,9 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference(typeof(ISIS.GME.Common.Interfaces.FCO).FullName),
 				};
 
-				if (baseClassesWoObject.Count > 0)
-				{
-					newAllSrcConnections.Attributes = newAllSrcConnections.Attributes | MemberAttributes.New;
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                {
+					newAllSrcConnections.Attributes = newAllSrcConnections.Attributes | MemberAttributes.Override;
 				}
 
                 newAllSrcConnections.Comments.Add(
@@ -385,8 +385,8 @@ namespace CSharpDSMLGenerator.Generator
                     new CodeCommentStatement(Configuration.Comments.SrcConnections, true));
 
 
-				if (baseClassesWoObject.Count > 0)
-				{
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                {
 					newSrcConnections.Attributes = newSrcConnections.Attributes | MemberAttributes.New;
 				}
 
@@ -404,9 +404,9 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference(typeof(ISIS.GME.Common.Interfaces.FCO).FullName),
 				};
 
-				if (baseClassesWoObject.Count > 0)
-				{
-					newAllDstConnections.Attributes = newAllDstConnections.Attributes | MemberAttributes.New;
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                {
+					newAllDstConnections.Attributes = newAllDstConnections.Attributes | MemberAttributes.Override;
 				}
 
                 newAllDstConnections.Comments.Add(
@@ -426,8 +426,8 @@ namespace CSharpDSMLGenerator.Generator
                 newDstConnections.Comments.Add(
                     new CodeCommentStatement(Configuration.Comments.DstConnections, true));
 
-				if (baseClassesWoObject.Count > 0)
-				{
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef)
+                {
 					newDstConnections.Attributes = newDstConnections.Attributes | MemberAttributes.New;
 				}
 

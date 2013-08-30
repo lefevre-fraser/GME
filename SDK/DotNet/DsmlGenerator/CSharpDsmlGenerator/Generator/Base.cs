@@ -238,7 +238,6 @@ namespace CSharpDSMLGenerator.Generator
                 {
                     Attributes =
                         MemberAttributes.Public |
-                        MemberAttributes.Final |
                         MemberAttributes.Override,
                     HasGet = true,
                     Name = "MetaRefs",
@@ -417,8 +416,7 @@ namespace CSharpDSMLGenerator.Generator
                 {
                     Attributes =
                         MemberAttributes.Public |
-                        MemberAttributes.Final |
-                        MemberAttributes.Override,
+                        MemberAttributes.New,
                     HasGet = true,
                     Name = "MetaRefs",
                     Type = new CodeTypeReference("global::System.Collections.Generic.Dictionary<int, global::System.Type>"),

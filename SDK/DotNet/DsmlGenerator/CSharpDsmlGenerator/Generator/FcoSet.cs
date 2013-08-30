@@ -148,6 +148,12 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable <" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
 
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                {
+                    newAllReferred.Attributes =
+                        newAllReferred.Attributes | MemberAttributes.Override;
+                }
+
 				newAllReferred.Comments.Add(new CodeCommentStatement("", true));
 
 				newAllReferred.GetStatements.Add(
@@ -221,7 +227,7 @@ namespace CSharpDSMLGenerator.Generator
 		{
 			if (Subject.MetaBase.Name == "Set")
 			{
-				CodeMemberProperty newAllReferred = new CodeMemberProperty()
+				CodeMemberProperty newAllSetMembers = new CodeMemberProperty()
 				{
 					Attributes = MemberAttributes.Public,
 					HasGet = true,
@@ -229,15 +235,16 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable <" + typeof(ISIS.GME.Common.Interfaces.FCO).FullName + ">"),
 				};
 
-				if (baseClassesWoObject.Count > 0)
-				{
-					newAllReferred.Attributes = newAllReferred.Attributes | MemberAttributes.New;
-				}
+                if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
+                {
+                    newAllSetMembers.Attributes =
+                        newAllSetMembers.Attributes | MemberAttributes.Override;
+                }
 
-				newAllReferred.Comments.Add(
+                newAllSetMembers.Comments.Add(
 					new CodeCommentStatement("Contains the domain specific ....", true));
 
-				GeneratedInterface.Types[0].Members.Add(newAllReferred);
+				GeneratedInterface.Types[0].Members.Add(newAllSetMembers);
 
 				CodeMemberProperty newReferred = new CodeMemberProperty()
 				{

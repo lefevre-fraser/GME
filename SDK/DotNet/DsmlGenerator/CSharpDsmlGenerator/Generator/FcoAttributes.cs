@@ -180,7 +180,7 @@ namespace CSharpDSMLGenerator.Generator
 							};
 
 							codeProperty.Comments.Add(new CodeCommentStatement(@"<summary>", true));
-							codeProperty.Comments.Add(new CodeCommentStatement(key, true));
+                            codeProperty.Comments.Add(new CodeCommentStatement(new System.Xml.Linq.XText(key).ToString(), true));
 							codeProperty.Comments.Add(new CodeCommentStatement(@"</summary>", true));
 
 							if (enumAttr.Members.Cast<CodeMemberField>().Any(x => x.Name == codeProperty.Name))
@@ -534,8 +534,8 @@ namespace CSharpDSMLGenerator.Generator
 					Type = new CodeTypeReference(Configuration.GetClassName(Subject) + ".AttributesClass"),
 				};
 
-				if (baseClasses.Count > 1)
-				{
+                if (baseClassesWoObject.Count > 0)
+                {
 					newAttrProperty.Attributes =
 						newAttrProperty.Attributes | MemberAttributes.New;
 				}
