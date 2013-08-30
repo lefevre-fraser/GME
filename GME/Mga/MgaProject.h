@@ -49,7 +49,7 @@ public:
 	STDMETHOD(get_MetaObj)(/**/ long id, /**/ IMgaMetaBase * *pVal);
 	STDMETHOD(GetMetaObjDisp)(/**/ long id, /**/ IMgaMetaBase * *pVal) { return get_MetaObj( id, pVal); }
 
-	STDMETHOD(OpenParadigm)(BSTR s, VARIANT *pGUID);
+	void OpenParadigm(BSTR s, VARIANT *pGUID);
 	STDMETHOD(OpenParadigm)(BSTR s, BSTR ver);
 	STDMETHOD(Create)(BSTR projectname, BSTR paradigmname) { return CreateEx(projectname, paradigmname, NULLVARIANT); }
 	STDMETHOD(CreateEx)(BSTR projectname, BSTR paradigmname, VARIANT parguid);

@@ -140,28 +140,26 @@ inline HRESULT EMAP(HRESULT hr, HRESULT from, HRESULT to) { HRESULT h = hr; if(h
 inline HRESULT EDEF(HRESULT hr, HRESULT to) { HRESULT h = hr; if(h != S_OK) h = to; return h; }
 
 
-STDMETHODIMP CMgaProject::OpenParadigm(BSTR s, VARIANT *pGUID) {
-	COMTRY {
-		CComPtr<IMgaRegistrar> mgareg;
-		COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
-		CComBSTR connstr;
+void CMgaProject::OpenParadigm(BSTR s, VARIANT *pGUID) {
+	CComPtr<IMgaRegistrar> mgareg;
+	COMTHROW(mgareg.CoCreateInstance(OLESTR("Mga.MgaRegistrar")));
+	_bstr_t connstr;
+	{
+		HRESULT hr = mgareg->QueryParadigm(s, connstr.GetAddress(), pGUID, REGACCESS_PRIORITY);
+		if (FAILED(hr))
 		{
-			HRESULT hr = mgareg->QueryParadigm(s, &connstr, pGUID, REGACCESS_PRIORITY);
-			if (FAILED(hr))
-			{
-				CComPtr<IErrorInfo> info;
-				GetErrorInfo(0, &info);
-				throw _com_error(E_MGA_PARADIGM_NOTREG, info, true);
-			}
+			CComPtr<IErrorInfo> info;
+			GetErrorInfo(0, &info);
+			throw _com_error(E_MGA_PARADIGM_NOTREG, info, true);
 		}
-		ASSERT(connstr);
-		COMTHROW(metapr.CoCreateInstance(OLESTR("Mga.MgaMetaProject")));
-		COMTHROW(EDEF(metapr->Open(connstr), E_MGA_PARADIGM_NOTREG));
-		CComVariant metaGUID;
-		COMTHROW(metapr->get_GUID(&metaGUID));
-		if(guidcmp(metaGUID, *pGUID)) COMTHROW(E_MGA_PARADIGM_INVALID);
-		parconn = connstr;
-	} COMCATCH(;);
+	}
+	ASSERT(connstr);
+	COMTHROW(metapr.CoCreateInstance(OLESTR("Mga.MgaMetaProject")));
+	metapr->__Open(connstr);
+	CComVariant metaGUID;
+	COMTHROW(metapr->get_GUID(&metaGUID));
+	if(guidcmp(metaGUID, *pGUID)) COMTHROW(E_MGA_PARADIGM_INVALID);
+	parconn = connstr.GetBSTR();
 }
 
 
@@ -181,9 +179,7 @@ STDMETHODIMP CMgaProject::OpenParadigm(BSTR s, BSTR ver) {
 				}
 			}
 		}
-		HRESULT hr =  OpenParadigm(s,&vguid);
-		if (FAILED(hr))
-			return hr;
+		OpenParadigm(s,&vguid);
 	} COMCATCH(;);
 }
 
@@ -198,7 +194,7 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 
 		CComVariant connGUID;
 		if(paradigmGUID.vt != VT_EMPTY) connGUID = paradigmGUID;
-		COMTHROW(OpenParadigm(paradigmname, &connGUID));
+		OpenParadigm(paradigmname, &connGUID);
 	
 		int undosize = getMaxUndoSize();
 		COMTHROW(dataproject->CreateProject2(projectname, undosize, genericproject));
@@ -325,7 +321,7 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 				COMTHROW(metapr->get_GUID(&pGUID));
 			}
 			else {
-				COMTHROW(OpenParadigm(s,&pGUID));
+				OpenParadigm(s, &pGUID);
 				ver.Empty();
 				COMTHROW(metapr->get_Version(&ver));
 			}
@@ -436,7 +432,7 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 				hr = OpenParadigm(s,ver);
 			}
 			else {
-				hr = OpenParadigm(s,&pGUID);
+				OpenParadigm(s, &pGUID);
 			}
 			if (FAILED(hr))
 			{
