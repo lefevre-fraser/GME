@@ -1310,14 +1310,20 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 {
 	CString cver(version); 
 
-	if( guid.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(guid) != sizeof(GUID) )
-	COMRETURN(E_INVALIDARG);
-
 	COMTRY
 	{
-		
 		GUID guid2;
-		CopyTo(guid, guid2);
+		if (guid.vt == (VT_UI1 | VT_ARRAY) && GetArrayLength(guid) == sizeof(GUID))
+		{
+			CopyTo(guid, guid2);
+		}
+		else if (guid.vt == VT_BSTR)
+		{
+			CopyTo(guid.bstrVal, guid2);
+		}
+		else
+			COMTHROW(E_INVALIDARG);
+
 		CComBstrObj guid3;
 		CopyTo(guid2, guid3);
 	
