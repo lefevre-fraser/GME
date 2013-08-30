@@ -6,8 +6,8 @@
 
 class ATL_NO_VTABLE CMgaMetaConstraint : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaConstraint, &CLSID_MgaMetaConstraint>,
-	public IDispatchImpl<IMgaMetaConstraint, &IID_IMgaConstraint, &LIBID_MGAMetaLib>
+	public CComCoClass<CMgaMetaConstraint, &__uuidof(MgaMetaConstraint)>,
+	public IDispatchImpl<IMgaMetaConstraint, &__uuidof(IMgaConstraint), &__uuidof(__MGAMetaLib)>
 {
 public:
 	IUnknown *GetUnknown() const { return (IMgaMetaConstraint*)this; }

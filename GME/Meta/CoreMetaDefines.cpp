@@ -66,7 +66,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 
 	CREATE_OBJECT(METAID_METAFOLDER, "MetaFolder", "Meta Folder");
 	DECLARE_FOLDER();
-	CLSID_PUSH(CLSID_MgaMetaFolder);
+	CLSID_PUSH(__uuidof(MgaMetaFolder));
 
 	CREATE_OBJECT(METAID_METAFOLDERLINK, "MetaFolderLink", "Meta Folder Link");
 	DECLARE_COMMON();
@@ -90,7 +90,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_ATTRIBUTE(ATTRID_COMMENT, "Comment", "Comment", VALTYPE_STRING);
 	CREATE_ATTRIBUTE(ATTRID_CDATE, "CDate", "Create Date", VALTYPE_DATE);
 	CREATE_ATTRIBUTE(ATTRID_MDATE, "MDate", "Modification Date", VALTYPE_DATE);
-	CLSID_PUSH(CLSID_MgaMetaFolder);
+	CLSID_PUSH(__uuidof(MgaMetaFolder));
 
 // ------- FCO
 
@@ -110,7 +110,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_COLLECTION(ATTRID_DEFFCO_PTR, "DefinedFCOs", "Defined FCOs");
 	CREATE_COLLECTION(ATTRID_ROLES_COLL, "Roles", "Roles");
 	CREATE_COLLECTION(ATTRID_ASPECTS_COLL, "Aspects", "Aspects");
-	CLSID_PUSH(CLSID_MgaMetaModel);
+	CLSID_PUSH(__uuidof(MgaMetaModel));
 
 // ------- Aspect
 
@@ -119,7 +119,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_POINTER(ATTRID_ASPECTS_COLL, "Model", "Model");
 	CREATE_COLLECTION(ATTRID_PARTASPECT_PTR, "AspectParts", "Parts");
 	CREATE_COLLECTION(ATTRID_ATTRLINK_USEDIN_PTR, "Attributes", "Attributes");
-	CLSID_PUSH(CLSID_MgaMetaAspect);
+	CLSID_PUSH(__uuidof(MgaMetaAspect));
 
 // ------- Role
 
@@ -128,7 +128,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_POINTER(ATTRID_ROLES_COLL, "ParentModel", "Parent Model");
 	CREATE_COLLECTION(ATTRID_PARTROLE_PTR, "RoleParts", "Parts");
 	CREATE_POINTER(ATTRID_KIND_PTR, "Kind", "Kind");
-	CLSID_PUSH(CLSID_MgaMetaRole);
+	CLSID_PUSH(__uuidof(MgaMetaRole));
 
 // ------- Part
 
@@ -138,13 +138,13 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_POINTER(ATTRID_PARTASPECT_PTR, "Aspect", "Aspect");
 	CREATE_ATTRIBUTE(ATTRID_PARTDATA, "Data", "Part Data", VALTYPE_LONG);
 	CREATE_ATTRIBUTE(ATTRID_KINDASPECT, "KindAspect", "Kind Aspect", VALTYPE_STRING);
-	CLSID_PUSH(CLSID_MgaMetaPart);
+	CLSID_PUSH(__uuidof(MgaMetaPart));
 
 // ------- Atom
 
 	CREATE_OBJECT(METAID_METAATOM, "MetaAtom", "Meta Atom");
 	DECLARE_FCO();
-	CLSID_PUSH(CLSID_MgaMetaAtom);
+	CLSID_PUSH(__uuidof(MgaMetaAtom));
 
 // ------- Attribute
 
@@ -156,7 +156,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_ATTRIBUTE(ATTRID_ATTVALTYPE, "ValType", "Value Type", VALTYPE_LONG);
 	CREATE_ATTRIBUTE(ATTRID_VIEWABLE, "Viewable", "Viewable", VALTYPE_LONG);
 	CREATE_COLLECTION(ATTRID_ENUMITEMS_COLL, "EnumItems", "Enum Items");
-	CLSID_PUSH(CLSID_MgaMetaAttribute);
+	CLSID_PUSH(__uuidof(MgaMetaAttribute));
 
 	CREATE_OBJECT(METAID_METAATTRLINK, "MetaAttrLink", "Meta Attribute Link");
 	DECLARE_COMMON();
@@ -173,7 +173,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	DECLARE_COMMON();
 	DECLARE_POINTERSPEC();
 	CREATE_POINTER(ATTRID_PTRSPECS_COLL, "SpecParent", "Parent");
-	CLSID_PUSH(CLSID_MgaMetaPointerSpec);
+	CLSID_PUSH(__uuidof(MgaMetaPointerSpec));
 
 // ------- PointerItem
 
@@ -181,30 +181,30 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	DECLARE_COMMON();
 	CREATE_POINTER(ATTRID_PTRITEMS_COLL, "ItemParent", "Parent");
 	CREATE_ATTRIBUTE(ATTRID_PTRITEMDESC, "Desc", "Description", VALTYPE_STRING);
-	CLSID_PUSH(CLSID_MgaMetaPointerItem);
+	CLSID_PUSH(__uuidof(MgaMetaPointerItem));
 
 // ------- Reference
 
 	CREATE_OBJECT(METAID_METAREFERENCE, "MetaReference", "Meta Reference");
 	DECLARE_FCO();
 	DECLARE_POINTERSPEC();
-	CLSID_PUSH(CLSID_MgaMetaReference);
-	CLSID_PUSH(CLSID_MgaMetaPointerSpec);
+	CLSID_PUSH(__uuidof(MgaMetaReference));
+	CLSID_PUSH(__uuidof(MgaMetaPointerSpec));
 
 // ------- Set
 
 	CREATE_OBJECT(METAID_METASET, "MetaSet", "Meta Set");
 	DECLARE_FCO();
 	DECLARE_POINTERSPEC();
-	CLSID_PUSH(CLSID_MgaMetaSet);
-	CLSID_PUSH(CLSID_MgaMetaPointerSpec);
+	CLSID_PUSH(__uuidof(MgaMetaSet));
+	CLSID_PUSH(__uuidof(MgaMetaPointerSpec));
 
 // ------- Connection
 
 	CREATE_OBJECT(METAID_METACONNECTION, "MetaConnection", "Meta Connection");
 	DECLARE_FCO();
 	CREATE_COLLECTION(ATTRID_CONNJOINTS_COLL, "Joints", "Connection Joints");
-	CLSID_PUSH(CLSID_MgaMetaConnection);
+	CLSID_PUSH(__uuidof(MgaMetaConnection));
 
 // ------- ConnJoint
 
@@ -212,7 +212,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	DECLARE_COMMON();
 	CREATE_POINTER(ATTRID_CONNJOINTS_COLL, "JointParent", "Parent");
 	CREATE_COLLECTION(ATTRID_PTRSPECS_COLL, "Specs", "Pointer Specifications");
-	CLSID_PUSH(CLSID_MgaMetaConnJoint);
+	CLSID_PUSH(__uuidof(MgaMetaConnJoint));
 
 // ------- RegNode
 
@@ -222,7 +222,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_ATTRIBUTE(ATTRID_VALUE, "Value", "Value", VALTYPE_STRING);
 	CREATE_POINTER(ATTRID_REGNODES_COLL, "RegNodeParent", "Parent");
 	CREATE_COLLECTION(ATTRID_REGNODES_COLL, "RegNodes", "Registry Nodes");
-	CLSID_PUSH(CLSID_MgaMetaRegNode);
+	CLSID_PUSH(__uuidof(MgaMetaRegNode));
 
 // ------- EnumItem
 
@@ -231,7 +231,7 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_ATTRIBUTE(ATTRID_NAME, "Name", "Displayed Name", VALTYPE_STRING);
 	CREATE_ATTRIBUTE(ATTRID_VALUE, "Value", "Value", VALTYPE_STRING);
 	CREATE_POINTER(ATTRID_ENUMITEMS_COLL, "EnumItemParent", "Parent");
-	CLSID_PUSH(CLSID_MgaMetaEnumItem);
+	CLSID_PUSH(__uuidof(MgaMetaEnumItem));
 
 // ------- Constraint
 
@@ -246,6 +246,6 @@ void CreateCoreMetaProject(CComPtr<ICoreMetaProject> &project)
 	CREATE_ATTRIBUTE(ATTRID_CONSPRIORITY, "Priority", "Constraint Priority", VALTYPE_LONG);
 	CREATE_ATTRIBUTE(ATTRID_CONSTYPE, "Type", "Constraint Type", VALTYPE_LONG);
 	CREATE_ATTRIBUTE(ATTRID_CONSNAMESPC, "DesiredNamespace", "DesiredNamespace", VALTYPE_STRING);
-	CLSID_PUSH(CLSID_MgaMetaConstraint);
+	CLSID_PUSH(__uuidof(MgaMetaConstraint));
 
 }

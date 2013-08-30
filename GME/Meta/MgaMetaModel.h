@@ -9,9 +9,9 @@
 // --------------------------- CMgaMetaModel
 
 class ATL_NO_VTABLE CMgaMetaModel : 
-	public CComCoClass<CMgaMetaModel, &CLSID_MgaMetaModel>,
+	public CComCoClass<CMgaMetaModel, &__uuidof(MgaMetaModel)>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaMetaModel, &IID_IMgaMetaModel, &LIBID_MGAMetaLib>,
+	public IDispatchImpl<IMgaMetaModel, &__uuidof(IMgaMetaModel), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaFCO
 {
 public:

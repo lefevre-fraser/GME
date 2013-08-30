@@ -10,8 +10,8 @@
 
 class ATL_NO_VTABLE CMgaMetaAspect : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaAspect, &CLSID_MgaMetaAspect>,
-	public IDispatchImpl<IMgaMetaAspect, &IID_IMgaMetaAspect, &LIBID_MGAMetaLib>,
+	public CComCoClass<CMgaMetaAspect, &__uuidof(MgaMetaAspect)>,
+	public IDispatchImpl<IMgaMetaAspect, &__uuidof(IMgaMetaAspect), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaBase
 {
 public:

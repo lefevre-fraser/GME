@@ -9,9 +9,9 @@
 // --------------------------- CMgaMetaConnection
 
 class ATL_NO_VTABLE CMgaMetaConnection : 
-	public CComCoClass<CMgaMetaConnection, &CLSID_MgaMetaConnection>,
+	public CComCoClass<CMgaMetaConnection, &__uuidof(MgaMetaConnection)>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaMetaConnection, &IID_IMgaMetaConnection, &LIBID_MGAMetaLib>,
+	public IDispatchImpl<IMgaMetaConnection, &__uuidof(IMgaMetaConnection), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaFCO
 {
 public:

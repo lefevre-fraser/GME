@@ -62,7 +62,7 @@ STDMETHODIMP CMgaMetaProject::Open(BSTR connection)
 		COMTHROW( coreproject.CoCreateInstance(OLESTR("MGA.CoreProject")) );
 		ASSERT( coreproject != NULL );
 
-		COMTHROW( coreproject->OpenProject(connection, coremetaproject) );
+		COMTHROW( coreproject->OpenProject(connection, coremetaproject, NULL) );
 
 		COMTHROW( coreproject->CreateTerritory(PutOut(coreterritory)) );
 		ASSERT( coreterritory != NULL );
@@ -242,7 +242,7 @@ STDMETHODIMP CMgaMetaProject::get_GUID(VARIANT *p)
 
 		if( p->vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(*p) != sizeof(GUID) )
 		{
-			GUID guid;
+			::GUID guid;
 			memset(&guid, 0, sizeof(GUID));
 
 			CopyTo(guid, p);

@@ -8,7 +8,7 @@
 // --------------------------- CMgaMetaBase
 
 class ATL_NO_VTABLE CMgaMetaBase :
-	public IDispatchImpl<IMgaMetaBase, &IID_IMgaMetaBase, &LIBID_MGAMetaLib>,
+	public IDispatchImpl<IMgaMetaBase, &__uuidof(IMgaMetaBase), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaRegNodes
 {
 public:
@@ -16,7 +16,7 @@ public:
 	~CMgaMetaBase();
 
 public:
-	HRESULT PutMetaRef(metaref_type p);
+	HRESULT PutMetaRef_(metaref_type p);
 
 	static void Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me);
 
@@ -42,7 +42,7 @@ public: \
 		return S_OK; \
 	} \
 	STDMETHOD(put_MetaRef)(metaref_type p) \
-	{ HRESULT hr = PutMetaRef(p); \
+	{ HRESULT hr = PutMetaRef_(p); \
 		if(hr == S_OK) hr = ComPutAttrValue(GetUnknown(), ATTRID_METAREF, p); \
 		return hr; \
 	} \

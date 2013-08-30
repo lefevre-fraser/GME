@@ -38,26 +38,26 @@
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_MgaMetaProject, CMgaMetaProject)
-OBJECT_ENTRY(CLSID_MgaMetaFolder, CMgaMetaFolder)
-OBJECT_ENTRY(CLSID_MgaMetaModel, CMgaMetaModel)
-OBJECT_ENTRY(CLSID_MgaMetaAspect, CMgaMetaAspect)
-OBJECT_ENTRY(CLSID_MgaMetaRole, CMgaMetaRole)
-OBJECT_ENTRY(CLSID_MgaMetaAtom, CMgaMetaAtom)
-OBJECT_ENTRY(CLSID_MgaMetaReference, CMgaMetaReference)
-OBJECT_ENTRY(CLSID_MgaMetaSet, CMgaMetaSet)
-OBJECT_ENTRY(CLSID_MgaMetaConnection, CMgaMetaConnection)
-OBJECT_ENTRY(CLSID_MgaMetaConnJoint, CMgaMetaConnJoint)
-OBJECT_ENTRY(CLSID_MgaMetaAttribute, CMgaMetaAttribute)
-OBJECT_ENTRY(CLSID_MgaMetaPointerSpec, CMgaMetaPointerSpec)
-OBJECT_ENTRY(CLSID_MgaMetaPointerItem, CMgaMetaPointerItem)
-OBJECT_ENTRY(CLSID_MgaMetaPart, CMgaMetaPart)
-OBJECT_ENTRY(CLSID_MgaMetaRegNode, CMgaMetaRegNode)
-OBJECT_ENTRY(CLSID_MgaMetaEnumItem, CMgaMetaEnumItem)
-OBJECT_ENTRY(CLSID_MgaMetaConstraint, CMgaMetaConstraint)
+OBJECT_ENTRY(__uuidof(MgaMetaProject), CMgaMetaProject)
+OBJECT_ENTRY(__uuidof(MgaMetaFolder), CMgaMetaFolder)
+OBJECT_ENTRY(__uuidof(MgaMetaModel), CMgaMetaModel)
+OBJECT_ENTRY(__uuidof(MgaMetaAspect), CMgaMetaAspect)
+OBJECT_ENTRY(__uuidof(MgaMetaRole), CMgaMetaRole)
+OBJECT_ENTRY(__uuidof(MgaMetaAtom), CMgaMetaAtom)
+OBJECT_ENTRY(__uuidof(MgaMetaReference), CMgaMetaReference)
+OBJECT_ENTRY(__uuidof(MgaMetaSet), CMgaMetaSet)
+OBJECT_ENTRY(__uuidof(MgaMetaConnection), CMgaMetaConnection)
+OBJECT_ENTRY(__uuidof(MgaMetaConnJoint), CMgaMetaConnJoint)
+OBJECT_ENTRY(__uuidof(MgaMetaAttribute), CMgaMetaAttribute)
+OBJECT_ENTRY(__uuidof(MgaMetaPointerSpec), CMgaMetaPointerSpec)
+OBJECT_ENTRY(__uuidof(MgaMetaPointerItem), CMgaMetaPointerItem)
+OBJECT_ENTRY(__uuidof(MgaMetaPart), CMgaMetaPart)
+OBJECT_ENTRY(__uuidof(MgaMetaRegNode), CMgaMetaRegNode)
+OBJECT_ENTRY(__uuidof(MgaMetaEnumItem), CMgaMetaEnumItem)
+OBJECT_ENTRY(__uuidof(MgaMetaConstraint), CMgaMetaConstraint)
 
-OBJECT_ENTRY(CLSID_MgaMetaFCOs, FCOsExCOMType)
-OBJECT_ENTRY(CLSID_MgaMetaRoles, RolesExCOMType)
+OBJECT_ENTRY(__uuidof(MgaMetaFCOs), FCOsExCOMType)
+OBJECT_ENTRY(__uuidof(MgaMetaRoles), RolesExCOMType)
 END_OBJECT_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-        _Module.Init(ObjectMap, hInstance, &LIBID_MGAMetaLib);
+        _Module.Init(ObjectMap, hInstance, &__uuidof(__MGAMetaLib));
         DisableThreadLibraryCalls(hInstance);
     }
     else if (dwReason == DLL_PROCESS_DETACH)

@@ -10,8 +10,8 @@
 
 class ATL_NO_VTABLE CMgaMetaFolder : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaFolder, &CLSID_MgaMetaFolder>,
-	public IDispatchImpl<IMgaMetaFolder, &IID_IMgaMetaFolder, &LIBID_MGAMetaLib>,
+	public CComCoClass<CMgaMetaFolder, &__uuidof(MgaMetaFolder)>,
+	public IDispatchImpl<IMgaMetaFolder, &__uuidof(IMgaMetaFolder), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaBase
 {
 public:

@@ -466,6 +466,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\CommonImport.h" />
     <ClInclude Include="CoreMetaDefines.h" />
     <ClInclude Include="MetaUtilities.h" />
     <ClInclude Include="MgaMetaAspect.h" />

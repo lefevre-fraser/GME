@@ -6,8 +6,8 @@
 
 class ATL_NO_VTABLE CMgaMetaPointerSpec : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaPointerSpec, &CLSID_MgaMetaPointerSpec>,
-	public IDispatchImpl<IMgaMetaPointerSpec, &IID_IMgaMetaPointerSpec, &LIBID_MGAMetaLib>
+	public CComCoClass<CMgaMetaPointerSpec, &__uuidof(MgaMetaPointerSpec)>,
+	public IDispatchImpl<IMgaMetaPointerSpec, &__uuidof(IMgaMetaPointerSpec), &__uuidof(__MGAMetaLib)>
 {
 public:
 	IUnknown *GetUnknown() const { return (IMgaMetaPointerSpec*)this; }

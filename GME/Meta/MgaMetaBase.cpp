@@ -16,7 +16,7 @@ CMgaMetaBase::~CMgaMetaBase()
 #endif
 }
 
-HRESULT CMgaMetaBase::PutMetaRef(metaref_type p)
+HRESULT CMgaMetaBase::PutMetaRef_(metaref_type p)
 {
 	ASSERT( metaprojectref != NULL );
 

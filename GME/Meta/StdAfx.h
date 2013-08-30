@@ -31,10 +31,14 @@ extern CComModule _Module;
 
 #define ASSERT ATLASSERT
 
+#import "CoreLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#import "MetaLib.tlb" no_implementation no_namespace raw_method_prefix("") high_method_prefix("__") no_registry
+#include "CommonImport.h"
+
 #include "resource.h"
-#include "Core.h"
-#include "Gme.h"
-#include "MetaLib.h"
+//#include "Core.h"
+//#include "Gme.h"
+//#include "MetaLib.h"
 #include "CommonSmart.h"
 #include "CommonStl.h"
 #include "MetaUtilities.h"
@@ -44,9 +48,9 @@ typedef IMgaConstraint IMgaMetaConstraint;
 typedef IMgaConstraints IMgaMetaConstraints;
 
 typedef CCoreCollectionEx<IMgaMetaRoles, std::vector<IMgaMetaRole*>,
-			IMgaMetaRole, IMgaMetaRole, &CLSID_MgaMetaRoles, IDR_MGAMETAROLES> RolesExCOMType;
+			IMgaMetaRole, IMgaMetaRole, &__uuidof(MgaMetaRoles), IDR_MGAMETAROLES> RolesExCOMType;
 typedef CCoreCollectionEx<IMgaMetaFCOs, std::vector<IMgaMetaFCO*>,
-			IMgaMetaFCO, IMgaMetaFCO, &CLSID_MgaMetaFCOs, IDR_MGAMETAFCOS> FCOsExCOMType;
+			IMgaMetaFCO, IMgaMetaFCO, &__uuidof(MgaMetaFCOs), IDR_MGAMETAFCOS> FCOsExCOMType;
 
 extern HRESULT check_location_compatibility(IMgaMetaBase *newobj, IMgaMetaBase *oldobj);
 

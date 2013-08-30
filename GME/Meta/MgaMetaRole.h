@@ -10,8 +10,8 @@
 
 class ATL_NO_VTABLE CMgaMetaRole : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaRole, &CLSID_MgaMetaRole>,
-	public IDispatchImpl<IMgaMetaRole, &IID_IMgaMetaRole, &LIBID_MGAMetaLib>,
+	public CComCoClass<CMgaMetaRole, &__uuidof(MgaMetaRole)>,
+	public IDispatchImpl<IMgaMetaRole, &__uuidof(IMgaMetaRole), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaBase
 {
 public:

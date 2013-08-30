@@ -40,9 +40,9 @@ public: \
 // --------------------------- CMgaMetaRegNode
 
 class ATL_NO_VTABLE CMgaMetaRegNode : 
-	public CComCoClass<CMgaMetaRegNode, &CLSID_MgaMetaRegNode>,
+	public CComCoClass<CMgaMetaRegNode, &__uuidof(MgaMetaRegNode)>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaMetaRegNode, &IID_IMgaMetaRegNode, &LIBID_MGAMetaLib>,
+	public IDispatchImpl<IMgaMetaRegNode, &__uuidof(IMgaMetaRegNode), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaRegNodes
 {
 public:

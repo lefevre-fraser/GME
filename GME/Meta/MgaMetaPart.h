@@ -10,8 +10,8 @@
 
 class ATL_NO_VTABLE CMgaMetaPart : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CMgaMetaPart, &CLSID_MgaMetaPart>,
-	public IDispatchImpl<IMgaMetaPart, &IID_IMgaMetaPart, &LIBID_MGAMetaLib>,
+	public CComCoClass<CMgaMetaPart, &__uuidof(MgaMetaPart)>,
+	public IDispatchImpl<IMgaMetaPart, &__uuidof(IMgaMetaPart), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaBase
 {
 public:
@@ -51,7 +51,7 @@ public:
 		return S_OK;
 	}
 	STDMETHOD(put_MetaRef)(metaref_type p) 
-	{ HRESULT hr = PutMetaRef(p); 
+	{ HRESULT hr = PutMetaRef_(p); 
 		if(hr == S_OK) hr = ComPutAttrValue(GetUnknown(), ATTRID_METAREF, p); 
 		return hr; 
 	} 

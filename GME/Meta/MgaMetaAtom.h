@@ -9,9 +9,9 @@
 // --------------------------- CMgaMetaAtom
 
 class ATL_NO_VTABLE CMgaMetaAtom : 
-	public CComCoClass<CMgaMetaAtom, &CLSID_MgaMetaAtom>,
+	public CComCoClass<CMgaMetaAtom, &__uuidof(MgaMetaAtom)>,
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IMgaMetaAtom, &IID_IMgaMetaAtom, &LIBID_MGAMetaLib>,
+	public IDispatchImpl<IMgaMetaAtom, &__uuidof(IMgaMetaAtom), &__uuidof(__MGAMetaLib)>,
 	public CMgaMetaFCO
 {
 public:
