@@ -242,7 +242,7 @@ CSVNFile* CSVNClient::embraceFile(const CString & filePath)
 {
 	ASSERT(isInitialized);
 
-	CSVNFile* svnFile = new CSVNFile(filePath);
+	CSVNFile* svnFile = new CSVNFile(this, filePath);
 	if (svnFile) {
 		svnFiles.AddTail(svnFile);
 	}
@@ -352,7 +352,8 @@ svn_error_t* CSVNClient::cbAuthSSLClientCertPrompt(svn_auth_cred_ssl_client_cert
 }
 
 
-CSVNFile::CSVNFile(const CString & filePath)
+CSVNFile::CSVNFile(CSVNClient* client, const CString & filePath) 
+	: client(client), filePath(filePath)
 {
 }
 
@@ -363,6 +364,9 @@ CSVNFile::~CSVNFile()
 bool CSVNFile::isTracked()
 {
 	//TODO: implement this
+
+	SVNTHROW(svn_client_status5(NULL, client->ctx, filePath, NULL, svn_depth_empty, FALSE, FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, client->pool));
+
 	return false;
 }
 

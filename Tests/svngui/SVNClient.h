@@ -28,7 +28,10 @@ class CSVNFile
 	friend class CSVNClient;
 
 private:
-	CSVNFile(const CString & filePath);
+	CSVNFile(CSVNClient* client, const CString & filePath);
+
+	// Callbacks
+	static svn_error_t* cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool);
 
 public:
 	virtual ~CSVNFile();
@@ -39,6 +42,10 @@ public:
 
 	void takeOwnership();
 	void commit();
+
+private:
+	CSVNClient *client;
+	CString	filePath;
 };
 
 
