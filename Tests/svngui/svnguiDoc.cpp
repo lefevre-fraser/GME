@@ -152,3 +152,40 @@ void CsvnguiDoc::Dump(CDumpContext& dc) const
 
 
 // CsvnguiDoc commands
+
+
+BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;
+
+	svnFile = theApp.svn.embraceFile(lpszPathName);
+
+	return TRUE;
+}
+
+
+void CsvnguiDoc::OnCloseDocument()
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	CDocument::OnCloseDocument();
+
+	theApp.svn.forgetFile(svnFile);
+}
+
+
+BOOL CsvnguiDoc::OnSaveDocument(LPCTSTR lpszPathName)
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	return CDocument::OnSaveDocument(lpszPathName);
+}
+
+
+BOOL CsvnguiDoc::SaveModified()
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	return CDocument::SaveModified();
+}

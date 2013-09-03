@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\include\apr;$(SolutionDir)\include\apr-util;$(SolutionDir)\include\apr-iconv;$(SolutionDir)\include\subversion;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\lib;$(SolutionDir)\lib\subv_$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\..\GME\include\apr;$(SolutionDir)\..\..\GME\include\apr-util;$(SolutionDir)\..\..\GME\include\apr-iconv;$(SolutionDir)\..\..\GME\include\subversion;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\..\GME\lib;$(SolutionDir)\..\..\GME\lib\subv_$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\include\apr;$(SolutionDir)\include\apr-util;$(SolutionDir)\include\apr-iconv;$(SolutionDir)\include\subversion;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\lib;$(SolutionDir)\lib\subv_$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\..\GME\include\apr;$(SolutionDir)\..\..\GME\include\apr-util;$(SolutionDir)\..\..\GME\include\apr-iconv;$(SolutionDir)\..\..\GME\include\subversion;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\..\GME\lib;$(SolutionDir)\..\..\GME\lib\subv_$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -71,11 +71,11 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <CustomBuildStep>
-      <Command>xcopy /Y/D/F ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\ssleay32.dll  "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp;&amp; ^
+      <Command>xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\ssleay32.dll  "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
 </Command>
     </CustomBuildStep>
     <CustomBuildStep>
@@ -111,11 +111,11 @@ xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <CustomBuildStep>
-      <Command>xcopy /Y/D/F ..\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\ssleay32.dll  "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp;&amp; ^
+      <Command>xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\libeay32.dll  "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\ssleay32.dll  "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapr-1.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libaprutil-1.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)"
 </Command>
     </CustomBuildStep>
     <CustomBuildStep>
@@ -166,4 +166,9 @@ xcopy /Y/D/F ..\lib\subv_$(ConfigurationName)\libapriconv-1.dll "$(OutDir)" &amp
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="svngui.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

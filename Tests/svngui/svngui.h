@@ -32,7 +32,7 @@ public:
 
 // Implementation
 	BOOL  m_bHiColorIcons;
-	CSVNClient *svn;
+	CSVNClient svn;
 
 	virtual void PreLoadState();
 	virtual void LoadCustomState();

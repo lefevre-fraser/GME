@@ -143,10 +143,10 @@ BOOL CsvnguiApp::InitInstance()
 	m_pMainWnd->DragAcceptFiles();
 
 	try {
-		svn = new CSVNClient();
+		svn.initialize();
 	} 
 	catch (const CSVNError& svnError) {
-		//Log(svnError->msg());
+		Log(svnError.msg());
 	}
 
 	return TRUE;
@@ -156,9 +156,6 @@ int CsvnguiApp::ExitInstance()
 {
 	//TODO: handle additional resources you may have added
 	AfxOleTerm(FALSE);
-
-	delete svn;
-	apr_terminate();
 	return CWinAppEx::ExitInstance();
 }
 

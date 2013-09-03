@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "SVNClient.h"
+
 
 class CsvnguiDoc : public CDocument
 {
@@ -51,4 +53,12 @@ private:
 	CString m_strSearchContent;
 	CString m_strThumbnailContent;
 #endif // SHARED_HANDLERS
+public:
+	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+	virtual void OnCloseDocument();
+	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
+	virtual BOOL SaveModified();
+
+private:
+	CSVNFile *svnFile;
 };

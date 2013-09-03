@@ -3,7 +3,6 @@
 #include "svngui.h"
 
 #include "SVNClient.h"
-#include "svn_client.h"
 #include "svn_pools.h"
 #include "svn_dso.h"
 #include "svn_utf.h"
@@ -72,7 +71,7 @@ CSVNError::~CSVNError()
 	svn_error_clear(svnError);
 }
 
-CString CSVNError::msg()
+CString CSVNError::msg() const
 {
 	char buf[SVN_ERROR_MSG_MAX];
 
@@ -80,7 +79,7 @@ CString CSVNError::msg()
 	return CString(buf);
 }
 
-CSVNClient::CSVNClient() : isInitialized(false)
+CSVNClient::CSVNClient() : isInitialized(false), ctx(NULL), pool(NULL)
 {
 }
 
@@ -98,9 +97,6 @@ CSVNClient::~CSVNClient(void)
 void CSVNClient::initialize(void)
 {
 	apr_status_t status;
-	apr_pool_t *pool;
-	svn_error_t *err;
-	svn_client_ctx_t *ctx;
 
 	// TODO: subversion/libsvn_subr/cmdline.c contains a lot of esoteric stuff
 	// such as "setvbuf", input/output encodings, exception handlers, locale settings, etc.
@@ -135,7 +131,7 @@ void CSVNClient::initialize(void)
 	SVNTHROW(svn_ra_initialize(pool));
 
 	/* Make sure the ~/.subversion run-time config files exist */
-	SVNTHROW(svn_config_ensure (NULL, pool));
+	SVNTHROW(svn_config_ensure(NULL, pool));
 
 
 	/* All clients need to fill out a client_ctx object. */
@@ -156,29 +152,27 @@ void CSVNClient::initialize(void)
 			SVNTHROW(svn_wc_set_adm_dir ("_svn", pool));
 		}
 
-		/* Depending on what your client does, you'll want to read about
-		(and implement) the various callback function types below.  */
+		/* Callbacks */
 
-		/* A func (& context) which receives event signals during
-		checkouts, updates, commits, etc.  */
-		/* ctx->notify_func2 = my_notification_func;
-		ctx->notify_baton2 = NULL; */
+		/* A func (& context) which receives event signals during checkouts, updates, commits, etc.  */
+		ctx->notify_func2 = cbNotify;
+		ctx->notify_baton2 = this;
 
 		/* A func (& context) which can receive log messages */
-		/* ctx->log_msg_func3 = my_log_msg_receiver_func;
-		ctx->log_msg_baton3 = NULL; */
+		ctx->log_msg_func3 = cbLog;
+		ctx->log_msg_baton3 = this;
 
 		/* A func (& context) which checks whether the user cancelled */
-		/* ctx->cancel_func = my_cancel_checking_func;
-		ctx->cancel_baton = NULL; */
+		ctx->cancel_func = cbCancel;
+		ctx->cancel_baton = this;
 
 		/* A func (& context) for network progress */
-		/* ctx->progress_func = my_progress_func;
-		ctx->progress_baton = NULL; */
+		ctx->progress_func = cbProgress;
+		ctx->progress_baton = this;
 		
 		/* A func (& context) for conflict resolution */
-		/* ctx->conflict_func2 = my_conflict_func;
-		ctx->conflict_baton2 = NULL; */
+		ctx->conflict_func2 = cbConflict;
+		ctx->conflict_baton2 = this;
 
 		/* Make the client_ctx capable of authenticating users */
 		{
@@ -189,7 +183,7 @@ void CSVNClient::initialize(void)
 			SVNTHROW(svn_auth_get_platform_specific_client_providers(&providers, cfg_config, pool));
 
 			/* For caching unencrypted username/password (also from config file) - prompting only to confirm storing creds in cleartext */
-			svn_auth_get_simple_provider2(&provider,svn_cmdline_auth_plaintext_prompt, NULL /* prompt baton */, pool);
+			svn_auth_get_simple_provider2(&provider, cbAuthPlaintextPrompt, this, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
 			/* For guessing and optionally saving username - no prompting */
@@ -208,19 +202,19 @@ void CSVNClient::initialize(void)
 			svn_auth_get_ssl_client_cert_file_provider(&provider, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
-			svn_auth_get_ssl_client_cert_pw_file_provider2(&provider, svn_cmdline_auth_plaintext_passphrase_prompt, NULL /* prompt baton */, pool);
+			svn_auth_get_ssl_client_cert_pw_file_provider2(&provider, cbAuthPlaintextPassphrasePrompt, this, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
-			svn_auth_get_simple_prompt_provider(&provider, svn_cmdline_auth_simple_prompt, NULL /* prompt baton */, 2 /* retry limit */, pool);
+			svn_auth_get_simple_prompt_provider(&provider, cbAuthSimplePrompt, this, 2 /* retry limit */, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
-			svn_auth_get_username_prompt_provider(&provider, svn_cmdline_auth_username_prompt, NULL /* prompt baton */, 2 /* retry limit */, pool);
+			svn_auth_get_username_prompt_provider(&provider, cbAuthUsernamePrompt, this, 2 /* retry limit */, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
-			svn_auth_get_ssl_server_trust_prompt_provider(&provider, svn_cmdline_auth_ssl_server_trust_prompt, NULL /* prompt baton */, pool);
+			svn_auth_get_ssl_server_trust_prompt_provider(&provider, cbAuthSSLServerTrustPrompt, this, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
-			svn_auth_get_ssl_client_cert_pw_prompt_provider(&provider, svn_cmdline_auth_ssl_client_cert_pw_prompt, NULL /* prompt baton */, 2 /* retry limit */, pool);
+			svn_auth_get_ssl_client_cert_pw_prompt_provider(&provider, cbAuthSSLClientCertPWPrompt, this, 2 /* retry limit */, pool);
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
 			/* If configuration allows, add a provider for client-cert path
@@ -232,7 +226,7 @@ void CSVNClient::initialize(void)
 										FALSE));
 			if (ssl_client_cert_file_prompt)
 			{
-				svn_auth_get_ssl_client_cert_prompt_provider(&provider, svn_cmdline_auth_ssl_client_cert_prompt, NULL /* prompt baton */, 2 /* retry limit */, pool);
+				svn_auth_get_ssl_client_cert_prompt_provider(&provider, cbAuthSSLClientCertPrompt, this, 2 /* retry limit */, pool);
 				APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 			}
 
@@ -266,6 +260,97 @@ void CSVNClient::forgetFile(CSVNFile* svnFile)
 		p = svnFiles.Find(svnFile);
 	}
 }
+
+// Context Callbacks
+void CSVNClient::cbNotify(void *baton, const svn_wc_notify_t *notify, apr_pool_t *pool)
+{
+	//TODO: implement this
+}
+
+svn_error_t* CSVNClient::cbLog(const char **log_msg, const char **tmp_file, const apr_array_header_t *commit_items, void *baton, apr_pool_t *pool)
+{
+	//TODO: implement this
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbCancel(void *cancel_baton)
+{
+	//TODO: implement this
+	return SVN_NO_ERROR;
+}
+
+void CSVNClient::cbProgress(apr_off_t progress, apr_off_t total, void *baton, apr_pool_t *pool)
+{
+	//TODO: implement this
+}
+
+svn_error_t* CSVNClient::cbConflict(svn_wc_conflict_result_t **result, const svn_wc_conflict_description2_t *description, void *baton, apr_pool_t *result_pool, apr_pool_t *scratch_pool)
+{
+	//TODO: implement this
+	return SVN_NO_ERROR;
+}
+
+// Auth Callbacks
+svn_error_t* CSVNClient::cbAuthPlaintextPrompt(svn_boolean_t *may_save_plaintext, const char *realmstring, void *baton, apr_pool_t *pool)
+{
+	//TODO: implement this
+	may_save_plaintext = FALSE;
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbAuthPlaintextPassphrasePrompt(svn_boolean_t *may_save_plaintext, const char *realmstring, void *baton, apr_pool_t *pool)
+{
+	//TODO: implement this
+	may_save_plaintext = FALSE;
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbAuthSimplePrompt(svn_auth_cred_simple_t **cred, void *baton, const char *realm, const char *username, svn_boolean_t may_save, apr_pool_t *pool)
+{
+	//TODO: implement this
+	svn_auth_cred_simple_t *ret = (svn_auth_cred_simple_t *)apr_pcalloc(pool, sizeof(*ret));
+	ret->username = NULL;
+	ret->password = NULL;
+	ret->may_save = may_save;
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbAuthUsernamePrompt(svn_auth_cred_username_t **cred, void *baton, const char *realm, svn_boolean_t may_save, apr_pool_t *pool)
+{
+	//TODO: implement this
+	svn_auth_cred_username_t *ret = (svn_auth_cred_username_t *)apr_pcalloc(pool, sizeof(*ret));
+	ret->username = NULL;
+	ret->may_save = may_save;
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbAuthSSLServerTrustPrompt(svn_auth_cred_ssl_server_trust_t **cred, void *baton, const char *realm, apr_uint32_t failures, const svn_auth_ssl_server_cert_info_t *cert_info, svn_boolean_t may_save, apr_pool_t *pool)
+{
+	//TODO: implement this
+	svn_auth_cred_ssl_server_trust_t *ret = (svn_auth_cred_ssl_server_trust_t *)apr_pcalloc(pool, sizeof(*ret));
+	ret->accepted_failures = failures; 
+	ret->may_save = may_save;
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbAuthSSLClientCertPWPrompt(svn_auth_cred_ssl_client_cert_pw_t **cred, void *baton, const char *realm, svn_boolean_t may_save, apr_pool_t *pool)
+{
+	//TODO: implement this
+	svn_auth_cred_ssl_client_cert_pw_t *ret = (svn_auth_cred_ssl_client_cert_pw_t *)apr_pcalloc(pool, sizeof(*ret));
+	ret->password = NULL;
+	ret->may_save = may_save;
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNClient::cbAuthSSLClientCertPrompt(svn_auth_cred_ssl_client_cert_t **cred, void *baton, const char *realm, svn_boolean_t may_save, apr_pool_t *pool)
+{
+	//TODO: implement this
+	svn_auth_cred_ssl_client_cert_t *ret = (svn_auth_cred_ssl_client_cert_t *)apr_pcalloc(pool, sizeof(*ret));
+	ret->cert_file = NULL;
+	ret->may_save = may_save;
+	return SVN_NO_ERROR;
+}
+
 
 CSVNFile::CSVNFile(const CString & filePath)
 {
