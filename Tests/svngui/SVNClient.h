@@ -31,13 +31,15 @@ class CSVNFile
 private:
 	CSVNFile(CSVNClient* client, const CString & filePath);
 
+	void updateStatus(bool checkServer = false);
+
 	// Callbacks
 	static svn_error_t* cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool);
-	static svn_error_t* cbInfo(void *baton, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t *scratch_pool);
 
 public:
 	virtual ~CSVNFile();
 
+	bool isVersioned();
 	bool isTracked();
 	bool isOwned();
 	bool isLatest();
@@ -48,6 +50,10 @@ public:
 private:
 	CSVNClient *client;
 	CString	filePath;
+	bool	versioned;
+	bool	tracked;
+	bool	owned;
+	bool	latest;
 };
 
 

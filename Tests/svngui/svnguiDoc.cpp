@@ -161,7 +161,10 @@ BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	try {
 		svnFile = theApp.svn.embraceFile(lpszPathName);
-		svnFile->isTracked();
+		CString logLine;
+		logLine.Format(_T("File: %s, Tracked %s"), lpszPathName, svnFile->isTracked() ? _T("yes") : _T("no"));
+		theApp.Log(logLine);
+		
 	}
 	catch (CSVNError e) {
 		theApp.Log(e.msg());

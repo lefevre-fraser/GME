@@ -9,6 +9,7 @@
 #include "svn_nls.h"
 #include "svn_fs.h"
 #include "svn_hash.h"
+#include "svn_props.h"
 
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "shfolder.lib")
@@ -62,6 +63,9 @@ do { \
 } while(false)
 
 
+///////////////////////////////////////////////////////////////////////
+// SVN Error
+///////////////////////////////////////////////////////////////////////
 CSVNError::CSVNError(svn_error_t* e) : svnError(e)
 {
 }
@@ -79,6 +83,9 @@ CString CSVNError::msg() const
 	return CString(ret);
 }
 
+///////////////////////////////////////////////////////////////////////
+// SVN Client
+///////////////////////////////////////////////////////////////////////
 CSVNClient::CSVNClient() : isInitialized(false), ctx(NULL), pool(NULL)
 {
 }
@@ -240,8 +247,6 @@ void CSVNClient::initialize(void)
 
 CSVNFile* CSVNClient::embraceFile(const CString & filePath)
 {
-	ASSERT(isInitialized);
-
 	CSVNFile* svnFile = new CSVNFile(this, filePath);
 	if (svnFile) {
 		svnFiles.AddTail(svnFile);
@@ -251,8 +256,6 @@ CSVNFile* CSVNClient::embraceFile(const CString & filePath)
 
 void CSVNClient::forgetFile(CSVNFile* svnFile)
 {
-	ASSERT(isInitialized);
-
 	POSITION p = svnFiles.Find(svnFile);
 	while (p) {
 		delete p;
@@ -261,7 +264,9 @@ void CSVNClient::forgetFile(CSVNFile* svnFile)
 	}
 }
 
-// Context Callbacks
+///////////////////////////////////////////////////////////////////////
+// SVN Client Context Callbacks
+///////////////////////////////////////////////////////////////////////
 void CSVNClient::cbNotify(void *baton, const svn_wc_notify_t *notify, apr_pool_t *pool)
 {
 	//TODO: implement this
@@ -290,7 +295,9 @@ svn_error_t* CSVNClient::cbConflict(svn_wc_conflict_result_t **result, const svn
 	return SVN_NO_ERROR;
 }
 
-// Auth Callbacks
+///////////////////////////////////////////////////////////////////////
+// SVN Client Auth Callbacks
+///////////////////////////////////////////////////////////////////////
 svn_error_t* CSVNClient::cbAuthPlaintextPrompt(svn_boolean_t *may_save_plaintext, const char *realmstring, void *baton, apr_pool_t *pool)
 {
 	//TODO: implement this
@@ -352,8 +359,11 @@ svn_error_t* CSVNClient::cbAuthSSLClientCertPrompt(svn_auth_cred_ssl_client_cert
 }
 
 
+///////////////////////////////////////////////////////////////////////
+// SVN File
+///////////////////////////////////////////////////////////////////////
 CSVNFile::CSVNFile(CSVNClient* client, const CString & filePath) 
-	: client(client), filePath(filePath)
+	: client(client), filePath(filePath), versioned(false), tracked(false), owned(false), latest(false)
 {
 }
 
@@ -361,55 +371,86 @@ CSVNFile::~CSVNFile()
 {
 }
 
+void CSVNFile::updateStatus(bool checkServer)
+{
+	svn_error_t* e;
+
+	if (client->isInitialized) {
+		svn_opt_revision_t revision = {svn_opt_revision_head, {0}};
+
+		e = svn_client_status5(NULL, client->ctx, CStringA(filePath), &revision, svn_depth_immediates, TRUE, 
+								checkServer ? TRUE : FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, client->pool);
+
+		if (e && e->apr_err == SVN_ERR_WC_NOT_WORKING_COPY) {
+			versioned = tracked = owned = latest = false;
+			svn_error_clear(e);
+		}
+		else {
+			SVNTHROW(e);
+		}
+	}
+}
+
+bool CSVNFile::isVersioned()
+{
+	updateStatus();
+	return versioned;
+}
+
 bool CSVNFile::isTracked()
 {
-	//TODO: implement this
-	CStringA filePathA(filePath);
-	const char* fpath = filePathA.GetString();
-	SVNTHROW(svn_client_info3(filePathA, NULL, NULL, svn_depth_empty, FALSE, FALSE, NULL, cbInfo, this, client->ctx, client->pool));
-	SVNTHROW(svn_client_status5(NULL, client->ctx, filePathA, NULL, svn_depth_empty, FALSE, FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, client->pool));
-
-	return false;
+	updateStatus();
+	return tracked;
 }
 
 bool CSVNFile::isOwned()
 {
-	//TODO: implement this
-	return false;
+	updateStatus();
+	return owned;
 }
 
 bool CSVNFile::isLatest()
 {
-	//TODO: implement this
-	return false;
+	updateStatus(true);
+	return latest;
 }
 
 void CSVNFile::takeOwnership()
 {
+	// TODO: Implement this
 } 
 
 void CSVNFile::commit()
 {
+	// TODO: Implement this
 }
 
+///////////////////////////////////////////////////////////////////////
+// Operation Callbacks
+///////////////////////////////////////////////////////////////////////
 svn_error_t* CSVNFile::cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool)
 {
 	CSVNFile* self = (CSVNFile*)baton;
-	CString fpath(path);
+	
+	if (status->versioned) {
+		self->tracked = true;
+		self->latest = (status->ood_changed_rev != SVN_INVALID_REVNUM);
+		self->owned = (status->lock != NULL);
 
-	if (fpath != self->filePath) {
-		return svn_error_create(SVN_ERR_BAD_FILENAME, NULL, "Unexpected file path.");
+		self->tracked = false;
+		apr_hash_t* props;
+		svn_opt_revision_t revision = {svn_opt_revision_base, {0}};
+		SVNTHROW(svn_client_propget(&props, SVN_PROP_NEEDS_LOCK, CStringA(self->filePath), &revision, FALSE, self->client->ctx, scratch_pool));
+		if (apr_hash_count(props)) {
+			void *hval;
+			apr_hash_index_t* hi = apr_hash_first(scratch_pool, props);
+			apr_hash_this(hi, NULL, 0, &hval);
+			if (hval) {
+				self->tracked = true;
+			}
+		}
+
 	}
-	return SVN_NO_ERROR;
-}
 
-svn_error_t* CSVNFile::cbInfo(void *baton, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t *scratch_pool)
-{
-	CSVNFile* self = (CSVNFile*)baton;
-	CString fpath(abspath_or_url);
-
-	if (fpath != self->filePath) {
-		return svn_error_create(SVN_ERR_BAD_FILENAME, NULL, "Unexpected file path.");
-	}
 	return SVN_NO_ERROR;
 }
