@@ -10,6 +10,7 @@ class CSVNClient;
 class CSVNError
 {
 	friend class CSVNClient;
+	friend class CSVNFile;
 
 private:
 	CSVNError(svn_error_t* e);
@@ -32,6 +33,7 @@ private:
 
 	// Callbacks
 	static svn_error_t* cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool);
+	static svn_error_t* cbInfo(void *baton, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t *scratch_pool);
 
 public:
 	virtual ~CSVNFile();

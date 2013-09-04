@@ -159,8 +159,13 @@ BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	if (!CDocument::OnOpenDocument(lpszPathName))
 		return FALSE;
 
-	svnFile = theApp.svn.embraceFile(lpszPathName);
-
+	try {
+		svnFile = theApp.svn.embraceFile(lpszPathName);
+		svnFile->isTracked();
+	}
+	catch (CSVNError e) {
+		theApp.Log(e.msg());
+	}
 	return TRUE;
 }
 

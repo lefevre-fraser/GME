@@ -75,8 +75,8 @@ CString CSVNError::msg() const
 {
 	char buf[SVN_ERROR_MSG_MAX];
 
-	svn_err_best_message(svnError, buf, sizeof(buf));
-	return CString(buf);
+	const char *ret = svn_err_best_message(svnError, buf, sizeof(buf));
+	return CString(ret);
 }
 
 CSVNClient::CSVNClient() : isInitialized(false), ctx(NULL), pool(NULL)
@@ -364,8 +364,10 @@ CSVNFile::~CSVNFile()
 bool CSVNFile::isTracked()
 {
 	//TODO: implement this
-
-	SVNTHROW(svn_client_status5(NULL, client->ctx, filePath, NULL, svn_depth_empty, FALSE, FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, client->pool));
+	CStringA filePathA(filePath);
+	const char* fpath = filePathA.GetString();
+	SVNTHROW(svn_client_info3(filePathA, NULL, NULL, svn_depth_empty, FALSE, FALSE, NULL, cbInfo, this, client->ctx, client->pool));
+	SVNTHROW(svn_client_status5(NULL, client->ctx, filePathA, NULL, svn_depth_empty, FALSE, FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, client->pool));
 
 	return false;
 }
@@ -390,3 +392,24 @@ void CSVNFile::commit()
 {
 }
 
+svn_error_t* CSVNFile::cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool)
+{
+	CSVNFile* self = (CSVNFile*)baton;
+	CString fpath(path);
+
+	if (fpath != self->filePath) {
+		return svn_error_create(SVN_ERR_BAD_FILENAME, NULL, "Unexpected file path.");
+	}
+	return SVN_NO_ERROR;
+}
+
+svn_error_t* CSVNFile::cbInfo(void *baton, const char *abspath_or_url, const svn_client_info2_t *info, apr_pool_t *scratch_pool)
+{
+	CSVNFile* self = (CSVNFile*)baton;
+	CString fpath(abspath_or_url);
+
+	if (fpath != self->filePath) {
+		return svn_error_create(SVN_ERR_BAD_FILENAME, NULL, "Unexpected file path.");
+	}
+	return SVN_NO_ERROR;
+}
