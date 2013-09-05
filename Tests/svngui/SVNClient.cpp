@@ -11,6 +11,8 @@
 #include "svn_hash.h"
 #include "svn_props.h"
 
+#include "SVNDialogCommit.h"
+
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "shfolder.lib")
 #pragma comment(lib, "ws2_32.lib")
@@ -55,12 +57,12 @@
 //#endif
 
 #define SVNTHROW(FUNC) \
-do { \
+	do { \
 	svn_error_t* _err = (FUNC); \
 	if( _err ) { \
-		throw CSVNError(_err); \
+	throw CSVNError(_err); \
 	} \
-} while(false)
+	} while(false)
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -109,10 +111,10 @@ void CSVNClient::initialize(void)
 	// such as "setvbuf", input/output encodings, exception handlers, locale settings, etc.
 
 	/* Initialize the APR subsystem, and register an atexit() function
-       to Uninitialize that subsystem at program exit. */
+	to Uninitialize that subsystem at program exit. */
 	status = apr_initialize();
 	if (status)
-    { 
+	{ 
 		// this is not a real svn error, but coming from apr
 		throw CSVNError(svn_error_create(status, NULL, NULL));
 	}
@@ -123,7 +125,7 @@ void CSVNClient::initialize(void)
 	SVNTHROW(svn_dso_initialize2());
 
 	/* Create a pool for use by the UTF-8 routines.  It will be cleaned
-     up by APR at exit time. */
+	up by APR at exit time. */
 	pool = svn_pool_create(NULL);
 	svn_utf_initialize2(FALSE, pool);
 	SVNTHROW(svn_nls_init());
@@ -176,7 +178,7 @@ void CSVNClient::initialize(void)
 		/* A func (& context) for network progress */
 		ctx->progress_func = cbProgress;
 		ctx->progress_baton = this;
-		
+
 		/* A func (& context) for conflict resolution */
 		ctx->conflict_func2 = cbConflict;
 		ctx->conflict_baton2 = this;
@@ -225,12 +227,12 @@ void CSVNClient::initialize(void)
 			APR_ARRAY_PUSH(providers, svn_auth_provider_object_t *) = provider;
 
 			/* If configuration allows, add a provider for client-cert path
-				prompting, too. */
+			prompting, too. */
 			svn_boolean_t ssl_client_cert_file_prompt;
 			SVNTHROW(svn_config_get_bool(cfg_config, &ssl_client_cert_file_prompt,
-										SVN_CONFIG_SECTION_AUTH,
-										SVN_CONFIG_OPTION_SSL_CLIENT_CERT_FILE_PROMPT,
-										FALSE));
+				SVN_CONFIG_SECTION_AUTH,
+				SVN_CONFIG_OPTION_SSL_CLIENT_CERT_FILE_PROMPT,
+				FALSE));
 			if (ssl_client_cert_file_prompt)
 			{
 				svn_auth_get_ssl_client_cert_prompt_provider(&provider, cbAuthSSLClientCertPrompt, this, 2 /* retry limit */, pool);
@@ -258,7 +260,7 @@ void CSVNClient::forgetFile(CSVNFile* svnFile)
 {
 	POSITION p = svnFiles.Find(svnFile);
 	while (p) {
-		delete p;
+		delete svnFiles.GetAt(p);
 		svnFiles.RemoveAt(p);
 		p = svnFiles.Find(svnFile);
 	}
@@ -274,7 +276,22 @@ void CSVNClient::cbNotify(void *baton, const svn_wc_notify_t *notify, apr_pool_t
 
 svn_error_t* CSVNClient::cbLog(const char **log_msg, const char **tmp_file, const apr_array_header_t *commit_items, void *baton, apr_pool_t *pool)
 {
-	//TODO: implement this
+	CSVNDialogCommit dlg;
+	*log_msg = NULL;
+
+	if (apr_is_empty_array(commit_items)) {
+		return SVN_NO_ERROR;
+	}
+	
+	svn_client_commit_item3_t* item = APR_ARRAY_IDX(commit_items, 0, svn_client_commit_item3_t*);
+	dlg.filename = item->path;
+	dlg.repository = item->url;
+	dlg.revision = item->revision;
+	if (dlg.DoModal() == IDOK) {
+		svn_string_t* logMsg = svn_string_create(CStringA(dlg.logMessage), pool);
+		*log_msg = logMsg->data;
+	}
+	
 	return SVN_NO_ERROR;
 }
 
@@ -378,8 +395,12 @@ void CSVNFile::updateStatus(bool checkServer)
 	if (client->isInitialized) {
 		svn_opt_revision_t revision = {svn_opt_revision_head, {0}};
 
+		apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+
 		e = svn_client_status5(NULL, client->ctx, CStringA(filePath), &revision, svn_depth_immediates, TRUE, 
-								checkServer ? TRUE : FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, client->pool);
+			checkServer ? TRUE : FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, scratch_pool);
+
+		svn_pool_clear(scratch_pool);
 
 		if (e && e->apr_err == SVN_ERR_WC_NOT_WORKING_COPY) {
 			versioned = tracked = owned = latest = false;
@@ -415,14 +436,31 @@ bool CSVNFile::isLatest()
 	return latest;
 }
 
-void CSVNFile::takeOwnership()
+void CSVNFile::update()
 {
 	// TODO: Implement this
+}
+
+void CSVNFile::takeOwnership()
+{
+	CStringA filePathA(filePath);
+	const char* target = filePathA;
+	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+	apr_array_header_t* targets = apr_array_make(client->pool, 1, sizeof(target));
+	APR_ARRAY_PUSH(targets, const char*) = target;
+	SVNTHROW(svn_client_lock(targets, "GME auto-locking", FALSE, client->ctx, scratch_pool));
+	svn_pool_clear(scratch_pool);
 } 
 
 void CSVNFile::commit()
 {
-	// TODO: Implement this
+	CStringA filePathA(filePath);
+	const char* target = filePathA;
+	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+	apr_array_header_t* targets = apr_array_make(client->pool, 1, sizeof(target));
+	APR_ARRAY_PUSH(targets, const char*) = target;
+	SVNTHROW(svn_client_commit6(targets, svn_depth_immediates, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, NULL, NULL, NULL, client->ctx, scratch_pool));
+	svn_pool_clear(scratch_pool);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -431,10 +469,10 @@ void CSVNFile::commit()
 svn_error_t* CSVNFile::cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool)
 {
 	CSVNFile* self = (CSVNFile*)baton;
-	
+
 	if (status->versioned) {
-		self->tracked = true;
-		self->latest = (status->ood_changed_rev != SVN_INVALID_REVNUM);
+		self->versioned = true;
+		self->latest = (status->ood_changed_rev == SVN_INVALID_REVNUM);
 		self->owned = (status->lock != NULL);
 
 		self->tracked = false;
@@ -442,10 +480,10 @@ svn_error_t* CSVNFile::cbStatus(void *baton, const char *path, const svn_client_
 		svn_opt_revision_t revision = {svn_opt_revision_base, {0}};
 		SVNTHROW(svn_client_propget(&props, SVN_PROP_NEEDS_LOCK, CStringA(self->filePath), &revision, FALSE, self->client->ctx, scratch_pool));
 		if (apr_hash_count(props)) {
-			void *hval;
+			svn_string_t *hval;
 			apr_hash_index_t* hi = apr_hash_first(scratch_pool, props);
-			apr_hash_this(hi, NULL, 0, &hval);
-			if (hval) {
+			apr_hash_this(hi, NULL, 0, (void**)&hval);
+			if (hval && !svn_string_isempty(hval)) {
 				self->tracked = true;
 			}
 		}

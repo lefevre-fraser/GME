@@ -44,6 +44,7 @@ public:
 	bool isOwned();
 	bool isLatest();
 
+	void update();
 	void takeOwnership();
 	void commit();
 

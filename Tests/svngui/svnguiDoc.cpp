@@ -27,7 +27,7 @@ END_MESSAGE_MAP()
 
 // CsvnguiDoc construction/destruction
 
-CsvnguiDoc::CsvnguiDoc()
+CsvnguiDoc::CsvnguiDoc() : svnFile(NULL)
 {
 	// TODO: add one-time construction code here
 
@@ -160,10 +160,24 @@ BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 
 	try {
+		if (svnFile) {
+			theApp.svn.forgetFile(svnFile);
+			svnFile = NULL;
+		}
 		svnFile = theApp.svn.embraceFile(lpszPathName);
 		CString logLine;
-		logLine.Format(_T("File: %s, Tracked %s"), lpszPathName, svnFile->isTracked() ? _T("yes") : _T("no"));
+		logLine.Format(_T("File: %s, versioned: %s, tracked %s, owned: %s, latest: %s"), lpszPathName, 
+			svnFile->isVersioned() ? _T("yes") : _T("no"),
+			svnFile->isTracked() ? _T("yes") : _T("no"),
+			svnFile->isOwned() ? _T("yes") : _T("no"),
+			svnFile->isLatest() ? _T("yes") : _T("no"));
 		theApp.Log(logLine);
+
+		if (svnFile->isTracked() && !svnFile->isOwned()) {
+			if (AfxMessageBox(_T("This document is tracked in the repository.\nDo you want to lock it?"), MB_YESNO) == IDYES) {
+				svnFile->takeOwnership();
+			}
+		}
 		
 	}
 	catch (CSVNError e) {
@@ -180,6 +194,7 @@ void CsvnguiDoc::OnCloseDocument()
 	CDocument::OnCloseDocument();
 
 	theApp.svn.forgetFile(svnFile);
+	svnFile = NULL;
 }
 
 
@@ -193,7 +208,11 @@ BOOL CsvnguiDoc::OnSaveDocument(LPCTSTR lpszPathName)
 
 BOOL CsvnguiDoc::SaveModified()
 {
-	// TODO: Add your specialized code here and/or call the base class
+	if (svnFile && svnFile->isOwned()) {
+		svnFile->commit();
+	}
+
+	// TODO: unlock file if not changed
 
 	return CDocument::SaveModified();
 }

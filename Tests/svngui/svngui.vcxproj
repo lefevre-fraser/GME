@@ -143,6 +143,7 @@ xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapriconv-
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVNClient.h" />
+    <ClInclude Include="SVNDialogCommit.h" />
     <ClInclude Include="svngui.h" />
     <ClInclude Include="svnguiDoc.h" />
     <ClInclude Include="svnguiView.h" />
@@ -156,6 +157,7 @@ xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapriconv-
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SVNClient.cpp" />
+    <ClCompile Include="SVNDialogCommit.cpp" />
     <ClCompile Include="svngui.cpp" />
     <ClCompile Include="svnguiDoc.cpp" />
     <ClCompile Include="svnguiView.cpp" />
