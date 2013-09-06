@@ -191,10 +191,11 @@ void CsvnguiDoc::OnCloseDocument()
 {
 	// TODO: Add your specialized code here and/or call the base class
 
-	CDocument::OnCloseDocument();
+	
 
 	theApp.svn.forgetFile(svnFile);
 	svnFile = NULL;
+	CDocument::OnCloseDocument();
 }
 
 
