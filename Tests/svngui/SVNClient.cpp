@@ -88,7 +88,8 @@ CString CSVNError::msg() const
 ///////////////////////////////////////////////////////////////////////
 // SVN Client
 ///////////////////////////////////////////////////////////////////////
-CSVNClient::CSVNClient() : isInitialized(false), ctx(NULL), pool(NULL)
+CSVNClient::CSVNClient() 
+	: isInitialized(false), ctx(NULL), pool(NULL)
 {
 }
 
@@ -269,12 +270,20 @@ void CSVNClient::forgetFile(CSVNFile* svnFile)
 ///////////////////////////////////////////////////////////////////////
 // SVN Client Context Callbacks
 ///////////////////////////////////////////////////////////////////////
-void CSVNClient::cbNotify(void *baton, const svn_wc_notify_t *notify, apr_pool_t *pool)
+void CSVNClient::cbNotify(
+	void *baton, 
+	const svn_wc_notify_t *notify, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 }
 
-svn_error_t* CSVNClient::cbLog(const char **log_msg, const char **tmp_file, const apr_array_header_t *commit_items, void *baton, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbLog(
+	const char **log_msg, 
+	const char **tmp_file, 
+	const apr_array_header_t *commit_items, 
+	void *baton, 
+	apr_pool_t *pool)
 {
 	CSVNDialogCommit dlg;
 	*log_msg = NULL;
@@ -301,12 +310,20 @@ svn_error_t* CSVNClient::cbCancel(void *cancel_baton)
 	return SVN_NO_ERROR;
 }
 
-void CSVNClient::cbProgress(apr_off_t progress, apr_off_t total, void *baton, apr_pool_t *pool)
+void CSVNClient::cbProgress(
+	apr_off_t progress, 
+	apr_off_t total, 
+	void *baton, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 }
 
-svn_error_t* CSVNClient::cbConflict(svn_wc_conflict_result_t **result, const svn_wc_conflict_description2_t *description, void *baton, apr_pool_t *result_pool, apr_pool_t *scratch_pool)
+svn_error_t* CSVNClient::cbConflict(
+	svn_wc_conflict_result_t **result, 
+	const svn_wc_conflict_description2_t *description, 
+	void *baton, apr_pool_t *result_pool, 
+	apr_pool_t *scratch_pool)
 {
 	//TODO: implement this
 	return SVN_NO_ERROR;
@@ -315,21 +332,35 @@ svn_error_t* CSVNClient::cbConflict(svn_wc_conflict_result_t **result, const svn
 ///////////////////////////////////////////////////////////////////////
 // SVN Client Auth Callbacks
 ///////////////////////////////////////////////////////////////////////
-svn_error_t* CSVNClient::cbAuthPlaintextPrompt(svn_boolean_t *may_save_plaintext, const char *realmstring, void *baton, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthPlaintextPrompt(
+	svn_boolean_t *may_save_plaintext, 
+	const char *realmstring, 
+	void *baton, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	may_save_plaintext = FALSE;
 	return SVN_NO_ERROR;
 }
 
-svn_error_t* CSVNClient::cbAuthPlaintextPassphrasePrompt(svn_boolean_t *may_save_plaintext, const char *realmstring, void *baton, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthPlaintextPassphrasePrompt(
+	svn_boolean_t *may_save_plaintext, 
+	const char *realmstring, 
+	void *baton, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	may_save_plaintext = FALSE;
 	return SVN_NO_ERROR;
 }
 
-svn_error_t* CSVNClient::cbAuthSimplePrompt(svn_auth_cred_simple_t **cred, void *baton, const char *realm, const char *username, svn_boolean_t may_save, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthSimplePrompt(
+	svn_auth_cred_simple_t **cred, 
+	void *baton, 
+	const char *realm, 
+	const char *username, 
+	svn_boolean_t may_save, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	svn_auth_cred_simple_t *ret = (svn_auth_cred_simple_t *)apr_pcalloc(pool, sizeof(*ret));
@@ -339,7 +370,12 @@ svn_error_t* CSVNClient::cbAuthSimplePrompt(svn_auth_cred_simple_t **cred, void 
 	return SVN_NO_ERROR;
 }
 
-svn_error_t* CSVNClient::cbAuthUsernamePrompt(svn_auth_cred_username_t **cred, void *baton, const char *realm, svn_boolean_t may_save, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthUsernamePrompt(
+	svn_auth_cred_username_t **cred, 
+	void *baton, 
+	const char *realm, 
+	svn_boolean_t may_save, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	svn_auth_cred_username_t *ret = (svn_auth_cred_username_t *)apr_pcalloc(pool, sizeof(*ret));
@@ -348,7 +384,14 @@ svn_error_t* CSVNClient::cbAuthUsernamePrompt(svn_auth_cred_username_t **cred, v
 	return SVN_NO_ERROR;
 }
 
-svn_error_t* CSVNClient::cbAuthSSLServerTrustPrompt(svn_auth_cred_ssl_server_trust_t **cred, void *baton, const char *realm, apr_uint32_t failures, const svn_auth_ssl_server_cert_info_t *cert_info, svn_boolean_t may_save, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthSSLServerTrustPrompt(
+	svn_auth_cred_ssl_server_trust_t **cred, 
+	void *baton, 
+	const char *realm, 
+	apr_uint32_t failures, 
+	const svn_auth_ssl_server_cert_info_t *cert_info, 
+	svn_boolean_t may_save, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	svn_auth_cred_ssl_server_trust_t *ret = (svn_auth_cred_ssl_server_trust_t *)apr_pcalloc(pool, sizeof(*ret));
@@ -357,7 +400,12 @@ svn_error_t* CSVNClient::cbAuthSSLServerTrustPrompt(svn_auth_cred_ssl_server_tru
 	return SVN_NO_ERROR;
 }
 
-svn_error_t* CSVNClient::cbAuthSSLClientCertPWPrompt(svn_auth_cred_ssl_client_cert_pw_t **cred, void *baton, const char *realm, svn_boolean_t may_save, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthSSLClientCertPWPrompt(
+	svn_auth_cred_ssl_client_cert_pw_t **cred, 
+	void *baton, 
+	const char *realm, 
+	svn_boolean_t may_save, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	svn_auth_cred_ssl_client_cert_pw_t *ret = (svn_auth_cred_ssl_client_cert_pw_t *)apr_pcalloc(pool, sizeof(*ret));
@@ -366,7 +414,12 @@ svn_error_t* CSVNClient::cbAuthSSLClientCertPWPrompt(svn_auth_cred_ssl_client_ce
 	return SVN_NO_ERROR;
 }
 
-svn_error_t* CSVNClient::cbAuthSSLClientCertPrompt(svn_auth_cred_ssl_client_cert_t **cred, void *baton, const char *realm, svn_boolean_t may_save, apr_pool_t *pool)
+svn_error_t* CSVNClient::cbAuthSSLClientCertPrompt(
+	svn_auth_cred_ssl_client_cert_t **cred, 
+	void *baton, 
+	const char *realm, 
+	svn_boolean_t may_save, 
+	apr_pool_t *pool)
 {
 	//TODO: implement this
 	svn_auth_cred_ssl_client_cert_t *ret = (svn_auth_cred_ssl_client_cert_t *)apr_pcalloc(pool, sizeof(*ret));
@@ -397,8 +450,9 @@ void CSVNFile::updateStatus(bool checkServer)
 
 		apr_pool_t* scratch_pool = svn_pool_create(client->pool);
 
-		e = svn_client_status5(NULL, client->ctx, CStringA(filePath), &revision, svn_depth_immediates, TRUE, 
-			checkServer ? TRUE : FALSE, FALSE, FALSE, TRUE, NULL, cbStatus, this, scratch_pool);
+		e = svn_client_status5(NULL, client->ctx, CStringA(filePath), 
+			&revision, svn_depth_immediates, TRUE, checkServer ? TRUE : FALSE, 
+			FALSE, FALSE, TRUE, NULL, cbStatus, this, scratch_pool);
 
 		svn_pool_clear(scratch_pool);
 
@@ -460,7 +514,8 @@ void CSVNFile::commit()
 	apr_array_header_t* targets = apr_array_make(client->pool, 1, sizeof(target));
 	APR_ARRAY_PUSH(targets, const char*) = target;
 	
-	SVNTHROW(svn_client_commit6(targets, svn_depth_immediates, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, NULL, NULL, NULL, client->ctx, scratch_pool));
+	SVNTHROW(svn_client_commit6(targets, svn_depth_immediates, FALSE, FALSE, FALSE, 
+		FALSE, FALSE, NULL, NULL, NULL, NULL, client->ctx, scratch_pool));
 
 	// commit does not release the lock if the file was not changed (empty commit)
 	updateStatus();
@@ -475,7 +530,11 @@ void CSVNFile::commit()
 ///////////////////////////////////////////////////////////////////////
 // Operation Callbacks
 ///////////////////////////////////////////////////////////////////////
-svn_error_t* CSVNFile::cbStatus(void *baton, const char *path, const svn_client_status_t *status, apr_pool_t *scratch_pool)
+svn_error_t* CSVNFile::cbStatus(
+	void *baton, 
+	const char *path, 
+	const svn_client_status_t *status, 
+	apr_pool_t *scratch_pool)
 {
 	CSVNFile* self = (CSVNFile*)baton;
 
@@ -487,7 +546,10 @@ svn_error_t* CSVNFile::cbStatus(void *baton, const char *path, const svn_client_
 		self->tracked = false;
 		apr_hash_t* props;
 		svn_opt_revision_t revision = {svn_opt_revision_base, {0}};
-		SVNTHROW(svn_client_propget(&props, SVN_PROP_NEEDS_LOCK, CStringA(self->filePath), &revision, FALSE, self->client->ctx, scratch_pool));
+
+		SVNTHROW(svn_client_propget(&props, SVN_PROP_NEEDS_LOCK, CStringA(self->filePath), 
+			&revision, FALSE, self->client->ctx, scratch_pool));
+		
 		if (apr_hash_count(props)) {
 			svn_string_t *hval;
 			apr_hash_index_t* hi = apr_hash_first(scratch_pool, props);
