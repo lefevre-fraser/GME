@@ -459,7 +459,16 @@ void CSVNFile::commit()
 	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
 	apr_array_header_t* targets = apr_array_make(client->pool, 1, sizeof(target));
 	APR_ARRAY_PUSH(targets, const char*) = target;
+	
 	SVNTHROW(svn_client_commit6(targets, svn_depth_immediates, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, NULL, NULL, NULL, client->ctx, scratch_pool));
+
+	// commit does not release the lock if the file was not changed (empty commit)
+	updateStatus();
+	if (owned) {
+		SVNTHROW(svn_client_unlock(targets, FALSE, client->ctx, scratch_pool));
+		updateStatus();
+	}
+
 	svn_pool_clear(scratch_pool);
 }
 
