@@ -308,6 +308,7 @@ void CAggregateTreeCtrl::SaveTreeStateToRegistry(CString& strProjectName)
 		/* Saving the items to the registry		*/
 		// Getting item state
 		UINT nItemState=CTreeCtrlEx::GetItemState(hItem,0xffffffff);
+		nItemState = nItemState & ~TVIS_BOLD;
 
 		// Searching the map for the Mga pointer
 		LPUNKNOWN pUnknown;
@@ -1320,6 +1321,20 @@ void CAggregateTreeCtrl::SetItemProperties(HTREEITEM hItem, int p_fileLatentStat
 
 
 	CComQIPtr<IMgaObject> ccpMgaObject(ObjectProxy.m_pMgaObject);
+	if (ccpMgaObject)
+	{
+		CComBSTR id;
+		ccpMgaObject->get_ID(&id);
+		auto it = m_highlightedObjects.find(id);
+		if (it != m_highlightedObjects.end())
+		{
+			CTreeCtrl::SetItemState(hItem, TVIS_BOLD, TVIS_BOLD);
+		}
+		else
+		{
+			CTreeCtrl::SetItemState(hItem, 0, TVIS_BOLD);
+		}
+	}
 
 	/////////////// If it is an FCO cast it //////////////
 	// If not an Folder deal with Subtype/instance flags

@@ -19,7 +19,7 @@ library GMEACTIVEBROWSERLib
 
 	//  Primary dispatch interface for CGMEActiveBrowserCtrl
 
-	[ uuid(9D345706-0DE7-4A6A-B32A-DD1BB2F8B81F),
+	[ uuid(9D345706-0DE7-4A6A-B32A-DD1BB2F8B810),
 	  helpstring("Dispatch interface for GMEActiveBrowser Control"), hidden ]
 	dispinterface _DGMEActiveBrowser
 	{
@@ -46,6 +46,7 @@ library GMEACTIVEBROWSERLib
 			[id(11)] void Down();
 			[id(12)] void ChangePropPage(browser_page);
 			//}}AFX_ODL_METHOD
+			[id(50)] void HighlightItem(IUnknown* pMgaObject);
 	};
 
 	//  Event dispatch interface for CGMEActiveBrowserCtrl

@@ -49,6 +49,7 @@ BEGIN_DISPATCH_MAP(CGMEActiveBrowserCtrl, COleControl)
 	DISP_FUNCTION(CGMEActiveBrowserCtrl, "Down", Down, VT_EMPTY, VTS_NONE)
 	DISP_FUNCTION(CGMEActiveBrowserCtrl, "ChangePropPage", ChangePropPage, VT_EMPTY, VTS_I2)
 	//}}AFX_DISPATCH_MAP
+	DISP_FUNCTION(CGMEActiveBrowserCtrl, "HighlightItem", HighlightItem, VT_EMPTY, VTS_UNKNOWN VTS_I4)
 END_DISPATCH_MAP()
 
 
@@ -697,4 +698,31 @@ BOOL CGMEActiveBrowserCtrl::PreCreateWindow(CREATESTRUCT& cs)
 {
 	cs.dwExStyle |= WS_EX_CONTROLPARENT;
 	return COleControl::PreCreateWindow(cs);
+}
+
+
+void CGMEActiveBrowserCtrl::HighlightItem(IUnknown* item, int highlight)
+{
+	if (item == nullptr)
+		return;
+	CComPtr<IMgaObject> object;
+	item->QueryInterface(&object.p);
+	if (!object)
+		return;
+
+	CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
+	if (pApp)
+	{
+		pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(true);
+		try
+		{
+			m_pPropFrame->m_pModelessPropSheet->m_PageAggregate.HighlightItem(object, highlight);
+		}
+		catch (...)
+		{
+			pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(false);
+			throw;
+		}
+		pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(false);
+	}
 }

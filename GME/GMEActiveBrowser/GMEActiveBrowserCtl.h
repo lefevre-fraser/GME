@@ -140,6 +140,8 @@ private:
 	void PropagateMgaMessages();
 	CMgaObjectEventList m_MgaObjectEventList;
 	int CreateActiveBrowser();
+public:
+	void HighlightItem(IUnknown* item, int highlight);
 };
 
 //{{AFX_INSERT_LOCATION}}

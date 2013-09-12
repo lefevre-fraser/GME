@@ -2020,6 +2020,13 @@ void CAggregatePropertyPage::OnMgaEvent(CComPtr<IMgaObject> ccpMgaObject, unsign
 			m_TreeAggregate.DeleteItem(hItem);
 		}
 		
+		CComBSTR id;
+		ccpMgaObject->get_ID(&id);
+		auto highlightIt = m_TreeAggregate.m_highlightedObjects.find(id);
+		if (highlightIt != m_TreeAggregate.m_highlightedObjects.end())
+		{
+			m_TreeAggregate.m_highlightedObjects.erase(highlightIt);
+		}
 
 		// If the parent is in the object tree and there is dynamic loading
 		// we set the +/- button
@@ -4238,4 +4245,37 @@ void CAggregatePropertyPage::composeInfo( CString p_msgText, CComPtr<IMgaFolders
 	}
 
 	msg = p_msgText + (lst.IsEmpty()?_T("None"):lst);
+}
+
+void CAggregatePropertyPage::HighlightItem(IMgaObject* pObj, int highlight)
+{
+	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
+	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
+	CComPtr<IMgaObject> terrObj;
+	pMgaContext->m_ccpTerritory->OpenObj(pObj, &terrObj);
+	CComPtr<IUnknown> pUnk;
+	terrObj.QueryInterface(&pUnk.p);
+
+	CComBSTR id;
+	pObj->get_ID(&id);
+
+	auto& highlightedObjects = m_TreeAggregate.m_highlightedObjects;
+	if (highlight)
+	{
+		highlightedObjects[id] = highlight;
+	}
+	else
+	{
+		auto it = highlightedObjects.find(id);
+		if (it != highlightedObjects.end())
+		{
+			highlightedObjects.erase(it);
+		}
+	}
+	HTREEITEM hItem;
+	IUnknown* punk;
+	if (m_TreeAggregate.m_MgaMap.SearchTreeItem(id, hItem, punk))
+	{
+		m_TreeAggregate.SetItemProperties(hItem);
+	}
 }

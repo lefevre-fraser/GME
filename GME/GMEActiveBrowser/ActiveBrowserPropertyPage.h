@@ -42,6 +42,7 @@ public:
 	void DoCopySmart( int k = 0);
 	bool askUserAndDetach( CComPtr<IMgaObject> obj); // called when archetype is deleted
 	void accessRights( bool pbProtectIt);
+	void HighlightItem(IMgaObject* pUnk, int highlight);
 
 	
 	CComboEdit m_ComboEditCtrl;

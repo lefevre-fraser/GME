@@ -14,6 +14,21 @@
 #include <GdiPlus.h>
 #include <memory>
 #include <map>
+#include <unordered_map>
+
+struct CComBSTR_hashfunc : public stdext::hash_compare<CComBSTR> 
+{
+	size_t operator()(const CComBSTR &p_ob) const
+	{
+		size_t c = 0;
+		for(unsigned int i = 0; i < p_ob.Length(); i+= 3) c += p_ob[i];
+		return c;
+	}
+	bool operator()(const CComBSTR &p_ob1, const CComBSTR &p_ob2) const
+	{
+		return p_ob1 < p_ob2;
+	}
+};
 
 struct CAggregateMgaObjectProxy : public CMgaObjectProxy
 {
@@ -38,6 +53,7 @@ public:
     
 	void SetItemProperties(HTREEITEM hItem, int p_fileLatentState=0, CAggregateMgaObjectProxy* insertedProxy=nullptr);
 	std::map<_bstr_t, int> treeIcons;
+	std::unordered_map<CComBSTR, int, CComBSTR_hashfunc> m_highlightedObjects;
 	void GetCustomTreeIcon(IMgaObject* ccpMgaObject, TVITEM& tvItem);
 	BOOL DoDrop(eDragOperation doDragOp, COleDataObject *pDataObject, CPoint point);
 	BOOL DoDropWithoutChecking(eDragOperation doDragOp, COleDataObject *pDataObject, CPoint point);
