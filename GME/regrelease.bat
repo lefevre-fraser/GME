@@ -85,7 +85,8 @@ if errorlevel 1 goto errorlabel
 echo    OK
 
 echo GME.exe
-%windir%\Microsoft.NET\Framework\v4.0.30319\regtlibv12.exe "%~dp0%1\Release\GME.exe"
+: FIXME regtlibv12.exe doesnt exist on Win8
+if exit %windir%\Microsoft.NET\Framework\v4.0.30319\regtlibv12.exe %windir%\Microsoft.NET\Framework\v4.0.30319\regtlibv12.exe "%~dp0%1\Release\GME.exe"
 if errorlevel 1 goto errorlabel
 
 echo GME.exe
