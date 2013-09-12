@@ -51,7 +51,7 @@ public:
 	void SaveTreeStateToRegistry(CString&);
 	void LoadTreeStateFromRegistry(CString&);
 	void LoadItemStateFromRegistry(CString& strProjectName, HTREEITEM hItem);
-	HTREEITEM InsertItem(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType);
+	HTREEITEM InsertItem(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType, bool update=false);
 	HTREEITEM InsertItemUpdate(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType);
 
 	CAggregateTreeCtrl();

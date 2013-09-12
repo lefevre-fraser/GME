@@ -35,116 +35,38 @@ CAggregateTreeCtrl::~CAggregateTreeCtrl()
 
 }
 
-HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType)
+HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType, bool update)
 {
-	MGATREECTRL_LOGEVENT("CAggregateTreeCtrl::InsertItem "+strObjectName+"\r\n");
-
-	if(m_MgaMap.bIsInMap(pUnknown)) // Should not happen
+	if (update)
 	{
-		TRACE(" Duplicate element found inserting a new element into the aggregation tree map.\n");
-#ifdef _DEBUG
-		m_MgaMap.Dump(afxDump);
-#endif
-		ASSERT(FALSE);
-		
+		MGATREECTRL_LOGEVENT("CAggregateTreeCtrl::InsertItemUpdate "+strObjectName+"\r\n");
 
-		return NULL;
+		HTREEITEM hTreeItem;
+		if(m_MgaMap.LookupTreeItem(pUnknown,hTreeItem))
+		{
+			return hTreeItem;
+		}
+	}
+	else
+	{
+		MGATREECTRL_LOGEVENT("CAggregateTreeCtrl::InsertItem "+strObjectName+"\r\n");
+
+		if (m_MgaMap.bIsInMap(pUnknown)) // Should not happen
+		{
+			TRACE(" Duplicate element found inserting a new element into the aggregation tree map.\n");
+#ifdef _DEBUG
+			m_MgaMap.Dump(afxDump);
+			ASSERT(FALSE);
+#endif
+
+			return NULL;
+		}
 	}
 
 
 	TVINSERTSTRUCT tvInsert;
 	tvInsert.hParent = hParent;
 	tvInsert.hInsertAfter = NULL; // FIXME: does this mean we're doing insertion sort?
-	tvInsert.item.pszText = strObjectName.GetBuffer(0);
-
-	tvInsert.item.state=0;
-	tvInsert.item.stateMask=0;
-	tvInsert.item.lParam=NULL;
-
-	CAggregatePropertyPage* pParent=(CAggregatePropertyPage*)GetParent();
-
-	int sourceControlImageOffset = 0;
-	int sourceControlLatentState = 0;
-
-	if(pParent->m_Options.m_bIsDynamicLoading)
-	{
-		tvInsert.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE|TVIF_CHILDREN;
-		if(otObjectType==OBJTYPE_FOLDER || otObjectType==OBJTYPE_MODEL)
-		{
-			CComQIPtr<IMgaObject> ccpMgaObject(pUnknown);
-			tvInsert.item.cChildren=pParent->reqHasDisplayedChild(ccpMgaObject);
-			//sourceControlImageOffset = pParent->GetSourceControlStateOffset(ccpMgaObject, &sourceControlLatentState);
-		}
-		else
-		{
-			tvInsert.item.cChildren=0;
-		}
-		sourceControlImageOffset = pParent->GetSourceControlStateOffset(CComQIPtr<IMgaObject>( pUnknown), &sourceControlLatentState);
-	}
-	else
-	{
-		tvInsert.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-	}
-
-	if(hParent==NULL)	// Root folder
-	{
-
-		tvInsert.item.iImage=0+sourceControlImageOffset;
-		tvInsert.item.iSelectedImage=0+sourceControlImageOffset;
-	}
-	else
-	{
-		tvInsert.item.iImage=(int)otObjectType+sourceControlImageOffset;
-		tvInsert.item.iSelectedImage=(int)otObjectType+sourceControlImageOffset;
-	}
-
-	if(otObjectType==OBJTYPE_FOLDER)
-	{
-		bool has_dep;
-		if(IsLibrary(pUnknown, &has_dep))
-		{
-			tvInsert.item.iImage=10;
-			tvInsert.item.iSelectedImage=10;
-			if( has_dep)
-			{
-				tvInsert.item.iImage=54;
-				tvInsert.item.iSelectedImage=54;
-			}
-		}
-	}
-	CComPtr<IMgaObject> ccpObject;
-	QueryInterface(pUnknown, &ccpObject);
-	GetCustomTreeIcon(ccpObject, tvInsert.item);
-
-	// Inserting item into the tree control
-	HTREEITEM hItem = CTreeCtrl::InsertItem(&tvInsert);
-	strObjectName.ReleaseBuffer();
-
-	SetItemData(hItem,(DWORD)hItem);
-	
-	CAggregateMgaObjectProxy ObjectProxy(pUnknown, otObjectType);
-	CAggregateMgaObjectProxy& insertedProxy = m_MgaMap.AddEntry(hItem, ObjectProxy);
-
-	SetItemProperties(hItem, sourceControlLatentState, &insertedProxy);
-	
-	return hItem;
-}
-
-
-HTREEITEM CAggregateTreeCtrl::InsertItemUpdate(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType)
-{
-	MGATREECTRL_LOGEVENT("CAggregateTreeCtrl::InsertItemUpdate "+strObjectName+"\r\n");
-
-	HTREEITEM hTreeItem;
-	if(m_MgaMap.LookupTreeItem(pUnknown,hTreeItem))
-	{
-		return hTreeItem;
-	}
-
-
-	TVINSERTSTRUCT tvInsert;
-	tvInsert.hParent = hParent;
-	tvInsert.hInsertAfter = NULL;
 	tvInsert.item.pszText = strObjectName.GetBuffer(0);
 
 	tvInsert.item.state=0;
@@ -210,19 +132,25 @@ HTREEITEM CAggregateTreeCtrl::InsertItemUpdate(HTREEITEM hParent, CString strObj
 	GetCustomTreeIcon(ccpObject, tvInsert.item);
 
 	// Inserting item into the tree control
-	HTREEITEM hItem=CTreeCtrl::InsertItem(&tvInsert);
+	HTREEITEM hItem = CTreeCtrl::InsertItem(&tvInsert);
 	strObjectName.ReleaseBuffer();
 
-	tvInsert.item.iImage = 0;
+	// tvInsert.item.iImage = 0;
 	SetItemData(hItem,(DWORD)hItem);
 	
-	CAggregateMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
+	CAggregateMgaObjectProxy ObjectProxy(pUnknown, otObjectType);
 	CAggregateMgaObjectProxy& insertedProxy = m_MgaMap.AddEntry(hItem, ObjectProxy);
 
 	SetItemProperties(hItem, sourceControlLatentState, &insertedProxy);
 	
 	return hItem;
 
+}
+
+
+HTREEITEM CAggregateTreeCtrl::InsertItemUpdate(HTREEITEM hParent, CString strObjectName, LPUNKNOWN pUnknown, objtype_enum otObjectType)
+{
+	return InsertItem(hParent, strObjectName, pUnknown, otObjectType, true);
 }
 
 
