@@ -175,7 +175,18 @@ BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 		if (svnFile->isTracked() && !svnFile->isOwned()) {
 			if (AfxMessageBox(_T("This document is tracked in the repository.\nDo you want to lock it?"), MB_YESNO) == IDYES) {
-				svnFile->takeOwnership();
+				if (!svnFile->takeOwnership()) {
+					if (AfxMessageBox(_T("Failed to lock.\nDo you want to update?"), MB_YESNO) == IDYES) {
+						if (svnFile->update()) {
+							if (!svnFile->takeOwnership()) {
+								AfxMessageBox(_T("Failed to lock"), MB_ICONSTOP);
+							}
+						}
+						else {
+							AfxMessageBox(_T("Failed to update"), MB_ICONSTOP);
+						}
+					}
+				}
 			}
 		}
 		

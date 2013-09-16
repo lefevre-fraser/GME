@@ -44,9 +44,9 @@ public:
 	bool isOwned();
 	bool isLatest();
 
-	void update();
-	void takeOwnership();
-	void commit();
+	bool update();
+	bool takeOwnership();
+	bool commit();
 
 private:
 	CSVNClient *client;
@@ -96,5 +96,9 @@ private:
 	// These are valid only if initialized
 	svn_client_ctx_t *ctx;
 	apr_pool_t *pool;
+
+	// Internal communication
+	bool canceledOperation;
+	svn_wc_notify_action_t lastNotifyAction;
 };
 

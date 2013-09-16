@@ -275,7 +275,9 @@ void CSVNClient::cbNotify(
 	const svn_wc_notify_t *notify, 
 	apr_pool_t *pool)
 {
-	//TODO: implement this
+	CSVNClient *self = (CSVNClient*)baton;
+	ASSERT(self);
+	self->lastNotifyAction = notify->action;
 }
 
 svn_error_t* CSVNClient::cbLog(
@@ -285,8 +287,11 @@ svn_error_t* CSVNClient::cbLog(
 	void *baton, 
 	apr_pool_t *pool)
 {
+	CSVNClient *self = (CSVNClient*)baton;
 	CSVNDialogCommit dlg;
 	*log_msg = NULL;
+
+	ASSERT(self);
 
 	if (apr_is_empty_array(commit_items)) {
 		return SVN_NO_ERROR;
@@ -299,6 +304,10 @@ svn_error_t* CSVNClient::cbLog(
 	if (dlg.DoModal() == IDOK) {
 		svn_string_t* logMsg = svn_string_create(CStringA(dlg.logMessage), pool);
 		*log_msg = logMsg->data;
+		self->canceledOperation = false;
+	}
+	else {
+		self->canceledOperation = true;
 	}
 	
 	return SVN_NO_ERROR;
@@ -306,7 +315,7 @@ svn_error_t* CSVNClient::cbLog(
 
 svn_error_t* CSVNClient::cbCancel(void *cancel_baton)
 {
-	//TODO: implement this
+	// not needed now (cancel button on user interfaces ?)
 	return SVN_NO_ERROR;
 }
 
@@ -325,7 +334,7 @@ svn_error_t* CSVNClient::cbConflict(
 	void *baton, apr_pool_t *result_pool, 
 	apr_pool_t *scratch_pool)
 {
-	//TODO: implement this
+	// too advanced to handle in this client
 	return SVN_NO_ERROR;
 }
 
@@ -490,23 +499,40 @@ bool CSVNFile::isLatest()
 	return latest;
 }
 
-void CSVNFile::update()
-{
-	// TODO: Implement this
-}
-
-void CSVNFile::takeOwnership()
+bool CSVNFile::update()
 {
 	CStringA filePathA(filePath);
 	const char* target = filePathA;
 	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
 	apr_array_header_t* targets = apr_array_make(client->pool, 1, sizeof(target));
 	APR_ARRAY_PUSH(targets, const char*) = target;
-	SVNTHROW(svn_client_lock(targets, "GME auto-locking", FALSE, client->ctx, scratch_pool));
+
+	svn_opt_revision_t revision = {svn_opt_revision_head, {0}};
+
+	SVNTHROW(svn_client_update4(NULL, targets, &revision, svn_depth_files, FALSE, FALSE, FALSE,
+				TRUE, FALSE, client->ctx, scratch_pool)); 
+
 	svn_pool_clear(scratch_pool);
+
+	return (client->lastNotifyAction == svn_wc_notify_update_completed);
+}
+
+bool CSVNFile::takeOwnership()
+{
+	CStringA filePathA(filePath);
+	const char* target = filePathA;
+	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+	apr_array_header_t* targets = apr_array_make(client->pool, 1, sizeof(target));
+	APR_ARRAY_PUSH(targets, const char*) = target;
+	
+	SVNTHROW(svn_client_lock(targets, "GME auto-locking", FALSE, client->ctx, scratch_pool));
+	
+	svn_pool_clear(scratch_pool);
+
+	return (client->lastNotifyAction == svn_wc_notify_locked);
 } 
 
-void CSVNFile::commit()
+bool CSVNFile::commit()
 {
 	CStringA filePathA(filePath);
 	const char* target = filePathA;
@@ -518,13 +544,17 @@ void CSVNFile::commit()
 		FALSE, FALSE, NULL, NULL, NULL, NULL, client->ctx, scratch_pool));
 
 	// commit does not release the lock if the file was not changed (empty commit)
-	updateStatus();
-	if (owned) {
-		SVNTHROW(svn_client_unlock(targets, FALSE, client->ctx, scratch_pool));
+	if (!client->canceledOperation) {
 		updateStatus();
+		if (owned) {
+			SVNTHROW(svn_client_unlock(targets, FALSE, client->ctx, scratch_pool));
+			updateStatus();
+		}
 	}
 
 	svn_pool_clear(scratch_pool);
+
+	return !client->canceledOperation;
 }
 
 ///////////////////////////////////////////////////////////////////////
