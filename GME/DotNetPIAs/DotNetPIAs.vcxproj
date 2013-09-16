@@ -127,9 +127,9 @@
     <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
     <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.Util;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
     <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA.Parser;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
-    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.1.0\GME.MGA.Parser;PIAVersion=1.0.1.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
     <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
     <MSBuild Properties="InFile=..\Interfaces\CoreLib.tlb;OutName=GME.MGA.Core;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
+    <MSBuild Properties="OutName=..\DotNetPIAs_1.0.1.0\GME.MGA.Parser;PIAVersion=1.0.1.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
     <MSBuild Properties="InFile=..\Interfaces\MetaLib.tlb;OutName=GME.MGA.Meta;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
     <MSBuild Properties="InFile=..\Interfaces\MgaLib.tlb;OutName=GME.MGA;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
     <MSBuild Properties="InFile=..\Interfaces\MgaUtilLib.tlb;OutName=GME.Util;PIAVersion=$(PIAVersion)" Projects="$(MSBuildProjectFullPath)" Targets="CreatePIA;RegisterPIA" />
