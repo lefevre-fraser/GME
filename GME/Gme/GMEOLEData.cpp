@@ -405,6 +405,7 @@ BOOL CGMEDataSource::OnRenderFileData(LPFORMATETC lpFormatEtc, CFile* pFile)
 			
 			const int buffsize = 10240;
 			unsigned char buff[buffsize];
+			file.Read(buff, 2); // skip BOM
 			UINT c;
 			do
 			{
