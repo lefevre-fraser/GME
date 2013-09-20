@@ -170,9 +170,8 @@ BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
 			svnFile->isVersioned() ? _T("yes") : _T("no"),
 			svnFile->isTracked() ? _T("yes") : _T("no"),
 			svnFile->isOwned() ? _T("yes") : _T("no"),
-			svnFile->isLatest() ? _T("yes") : _T("no"));
+			svnFile->isLatest() ? _T("yes") : _T("no") /*_T("undefined")*/);
 		theApp.Log(logLine);
-
 		if (svnFile->isTracked() && !svnFile->isOwned()) {
 			if (AfxMessageBox(_T("This document is tracked in the repository.\nDo you want to lock it?"), MB_YESNO) == IDYES) {
 				if (!svnFile->takeOwnership()) {
@@ -191,7 +190,7 @@ BOOL CsvnguiDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		}
 		
 	}
-	catch (CSVNError e) {
+	catch (const CSVNError& e) {
 		theApp.Log(e.msg());
 	}
 	return TRUE;
@@ -220,10 +219,14 @@ BOOL CsvnguiDoc::OnSaveDocument(LPCTSTR lpszPathName)
 
 BOOL CsvnguiDoc::SaveModified()
 {
-	if (svnFile && svnFile->isOwned()) {
-		svnFile->commit();
+	try {
+		if (svnFile && svnFile->isOwned()) {
+			svnFile->commit();
+		}
 	}
-
+	catch (const CSVNError& e) {
+		theApp.Log(e.msg());
+	}
 	// TODO: unlock file if not changed
 
 	return CDocument::SaveModified();

@@ -73,6 +73,12 @@
     <ClInclude Include="SVNDialogCommit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SVNDialogPlaintext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNDialogSSLServerTrust.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="svngui.cpp">
@@ -97,6 +103,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SVNDialogCommit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVNDialogPlaintext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVNDialogSSLServerTrust.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
