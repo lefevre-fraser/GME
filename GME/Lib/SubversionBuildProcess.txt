@@ -1,0 +1,197 @@
+---------- TOOLS ----------
+0) Install tool dependecies:
+    - AWK95 from http://www.cs.princeton.edu/~bwk/btl.mirror/awk95.exe (rename it to awk.exe and put it in the path)
+    - ActivePython 2.5 or higher from http://www.activestate.com/activepython/downloads
+    - ActivePerl 5.8 or higher from http://www.activestate.com/activeperl/downloads
+    - NASM from http://www.nasm.us/pub/nasm/releasebuilds/ (put it in the path)
+    - Install Visual Studio 2010
+
+---------- SOURCES ----------
+1) Download subversion source distribution from: http://subversion.apache.org/download/#recommended-release
+    Current version: subversion-1.8.3.zip
+
+    Extract it to a working folder (e.g. E:\subversion-src)
+
+2) Download apr, apr-util and apr-iconv from: http://apr.apache.org/download.cgi
+    Current versions:  apr-1.4.8-win32-src.zip
+                       apr-util-1.5.2-win32-src.zip
+                       apr-iconv-1.2.1-win32-src-r2.zip
+
+    Extract them in the working folder WITHOUT version name (E:\subversion-src\apr and E:\subversion-src\apr-util and E:\subversion-src\apr-iconv)
+
+3) Download zlib from: http://www.zlib.net/
+    Current version: zlib128.zip
+
+    Extract it in the working folder WITHOUT version name (E:\subversion-src\zlib)
+
+4) Download openssl from: http://www.openssl.org/source/
+    Current version:  openssl-1.0.1e.tar.gz
+
+    Extract it in the working folder WITHOUT version name (E:\subversion-src\openssl)
+
+5) Download serf from: https://code.google.com/p/serf/downloads/list
+    Current version: serf-1.2.1.zip
+    NOTE: serf from v1.3.0 uses SCons to build - not compatible with the current subversion make process
+
+    Extract it in the working folder WITHOUT version name (E:\subversion-src\serf)
+
+6) Download SQLite version 3.6.18 or above from: http://www.sqlite.org/download.html
+    Current version: sqlite-amalgamation-3080002.zip
+
+    Extract them in the working folder WITHOUT version name (E:\subversion-src\sqlite-amalgamation)
+
+---------- BUILDING ----------
+7) Compile OpenSSL in "Visual Studio Command Prompt"
+    
+    cd E:\subversion-src\openssl
+    perl Configure VC-WIN32
+    call ms\do_nasm
+    nmake -f ms\ntdll.mak
+    cd out32dll
+    call ..\ms\test
+
+8) Compile apr and apr-util
+
+    Open and convert E:\subversion-src\apr-util\aprutil.dsw by Visual Studio 2010
+    Setup references between projects ("Add New Reference", Make sure "Link Library Dependecies" is ON)
+        libaprutil: libapr libaprapp libapriconv libapriconv_css_modules libapriconv_ces_modules xml
+        libapriconv: libapr
+        libapriconv_css_modules: libapriconv libapr
+        libapriconv_ces_modules: libapriconv libapr
+    Compile "libaprutil" in Debug mode
+    Compile "libaprutil" in Release mode
+
+      NOTE: This should be the following required projects: libapr, libaprutil, libapriconv, libapriconv_ccs_modules, libapriconv_ces_modules, xml
+
+9) Patch the zlib build process (proper debug pdb and msvcr dependecies)
+
+--- build\win32\vcnet-vcproj\build_zlib_ORIG.bat    2013-09-24 12:56:44.719205100 -0500
++++ build\win32\vcnet-vcproj\build_zlib.bat 2013-09-24 13:38:05.429251300 -0500
+@@ -44,13 +44,15 @@
+ @rem **************************************************************************
+ :release
+ set STATICLIB=zlibstat.lib
++set STATICPDB=zlibstat
+ set CC_OPTS=/MD /O2 /Zi
+ goto checkplatform
+ 
+ @rem **************************************************************************
+ :debug
+ set STATICLIB=zlibstatD.lib
+-set CC_OPTS=/MDd /Gm /ZI /Od /GZ /D_DEBUG
++set STATICPDB=zlibstatD
++set CC_OPTS=/MDd /Gm /ZI /Od /RTC1 /D_DEBUG
+ goto checkplatform
+ 
+ @rem **************************************************************************
+@@ -67,8 +69,8 @@
+ 
+ set BUILD_OPTS=%ASM_OPTS%
+ 
+-@echo nmake /f win32\Makefile.msc %BUILD_OPTS% STATICLIB=%STATICLIB% %target%
+-nmake /nologo /f win32\Makefile.msc %BUILD_OPTS% STATICLIB=%STATICLIB% %target%
++@echo nmake /f win32\Makefile.msc %BUILD_OPTS% STATICLIB=%STATICLIB% STATICPDB=%STATICPDB% CC_OPTS="%COMMON_CC_OPTS% %CC_OPTS%" %target%
++nmake /nologo /f win32\Makefile.msc %BUILD_OPTS% STATICLIB=%STATICLIB% STATICPDB=%STATICPDB% CC_OPTS="%COMMON_CC_OPTS% %CC_OPTS%" %target%
+ if errorlevel 1 goto err
+ goto end
+ 
+
+--- zlib\win32\Makefile_ORIG.msc    2013-04-13 17:54:56.000000000 -0500
++++ zlib\win32\Makefile.msc 2013-09-24 13:15:39.780699900 -0500
+@@ -18,6 +18,7 @@
+ 
+ # variables
+ STATICLIB = zlib.lib
++STATICPDB = zlib
+ SHAREDLIB = zlib1.dll
+ IMPLIB    = zdll.lib
+ 
+@@ -26,7 +27,7 @@
+ LD = link
+ AR = lib
+ RC = rc
+-CFLAGS  = -nologo -MD -W3 -O2 -Oy- -Zi -Fd"zlib" $(LOC)
++CFLAGS  = $(CC_OPTS) -Fd"$(STATICPDB)" $(LOC)
+ WFLAGS  = -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
+ ASFLAGS = -coff -Zi $(LOC)
+ LDFLAGS = -nologo -debug -incremental:no -opt:ref
+
+
+10) Compile Subversion (also compiles zlib, serf, sqlite)
+
+    cd E:\subversion-src
+    python gen-make.py -t vcproj --vsnet-version=2010 --with-openssl=openssl --with-zlib=zlib --with-serf=serf --with-sqlite=sqlite-amalgamation
+    Open E:\subversion-src\subversion_vcnet.sln in Visual Studio 2010
+    Compile "__ALL_TESTS__" in Debug mode
+    IMPORTANT: clean zlib project (only) before the next step 
+        There is a bug in VS2010 where the environment is not set properly for NMake clean commands. Add the following line to the begining of build\win32\vcnet-vcproj\build_zlib.bat:
+            call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+
+    Compile "__ALL_TESTS__" in Release mode
+
+---------- DEPLOYING ----------
+
+11) Collect/copy the following include files to 'GMESRC\GME\Include'
+
+    subversion-src\apr\include\* -> GMESRC\GME\Include\apr\*
+    subversion-src\apr-iconv\include\* -> GMESRC\GME\Include\apr-iconv\*
+    subversion-src\apr-util\include\* -> GMESRC\GME\Include\apr-util\*
+    subversion-src\subversion\include\* -> GMESRC\GME\Include\subversion\*
+    
+12) Collect/copy the following RELEASE only libraries (dll/lib) files to 'GMESRC\GME\Lib'
+
+    subversion-src\openssl\out32dll\libeay32.lib  ->  GMESRC\GME\Lib
+    subversion-src\openssl\out32dll\ssleay32.lib  ->  GMESRC\GME\Lib
+    subversion-src\openssl\out32dll\libeay32.dll  ->  GMESRC\GME\Lib
+    subversion-src\openssl\out32dll\ssleay32.dll  ->  GMESRC\GME\Lib
+
+    subversion-src\apr\Release\libapr-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr\Release\libapr-1.dll  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr\Release\libapr-1.pdb  ->  GMESRC\GME\Lib\subv_release
+
+    subversion-src\apr-iconv\Release\libapriconv-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-iconv\Release\libapriconv-1.dll  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-iconv\Release\libapriconv-1.pdb  ->  GMESRC\GME\Lib\subv_release
+
+    subversion-src\apr-util\Release\libaprutil-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-util\Release\libaprutil-1.dll  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-util\Release\libaprutil-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    
+    subversion-src\apr-util\xml\expat\lib\LibR\xml.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-util\xml\expat\lib\LibR\xml.pdb  ->  GMESRC\GME\Lib\subv_release
+    
+    subversion-src\zlib\zlibstat.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\zlib\zlibstat.pdb  ->  GMESRC\GME\Lib\subv_release
+    
+    subversion-src\serf\Release\serf-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\serf\Release\serf-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    
+    subversion-src\Release\subversion\libsvn_client\svn_client-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_client\svn_client-1.pdb  ->  GMESRC\GME\Lib\subv_release    
+    subversion-src\Release\subversion\libsvn_delta\svn_delta-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_delta\svn_delta-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_diff\svn_diff-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_diff\svn_diff-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_fs\svn_fs-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_fs\svn_fs-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_fs_fs\libsvn_fs_fs-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_fs_util\libsvn_fs_util-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_fs_util\libsvn_fs_util-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra\svn_ra-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra\svn_ra-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra_local\libsvn_ra_local-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra_serf\libsvn_ra_serf-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra_serf\libsvn_ra_serf-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_ra_svn\libsvn_ra_svn-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_repos\svn_repos-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_repos\svn_repos-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_subr\svn_subr-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_subr\svn_subr-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_wc\svn_wc-1.lib  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\Release\subversion\libsvn_wc\svn_wc-1.pdb  ->  GMESRC\GME\Lib\subv_release
+
+13) Collect/copy the DEBUG library (dll/lib/pdb) files to 'GMESRC\GME\Lib' by replacing 'LibR', 'zlibstat.lib', 'Release' and 'subv_release'
+    to 'LibD', 'zlibstatD.lib, 'Debug' and 'subv_debug' respectively from the previous step.
