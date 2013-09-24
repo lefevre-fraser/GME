@@ -18,9 +18,9 @@ namespace CSharpComponentWizard
         // DEFINES       
         public const string VS2010_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\10.0";
         public const string VS2012_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\11.0";
-        public const string VS2010_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
-        public const string VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
-        public const string VS2010_INSTALLDIR_KEYNAME = "InstallDir";
+        public const string VS_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
+        public const string VS_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
+        public const string VS_INSTALLDIR_KEYNAME = "InstallDir";
         public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A";
 
         public const string GUIDREGEXP = @"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$";
@@ -46,9 +46,25 @@ namespace CSharpComponentWizard
 
             if (type == null || Activator.CreateInstance(type, true) == null)
             {
-                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010 Professional or later. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010 or 2012 Professional. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 System.Environment.Exit(11);
             }
+            RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+            if (masterKey == null)
+            {
+                masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+            }
+
+            if (masterKey != null)
+            {
+                SolutionGenerator.ProjectTemplateLocation = masterKey.GetValue(MainWindow.VS_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME, "").ToString();
+            }
+            if (string.IsNullOrEmpty(SolutionGenerator.ProjectTemplateLocation))
+            {
+                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " cannot find Visual Studio registry information. Have you run Visual Studio at least once?", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Environment.Exit(11);
+            }
+
 
             InitializeComponent();
             errorWindow = new ErrorWindow(this);
@@ -93,15 +109,16 @@ namespace CSharpComponentWizard
             // Generate Guid
             this.txb_Guid.Text = Guid.NewGuid().ToString().ToUpper();
 
-            // Get Visual Studio 2010 Project folder
-            RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
+            // Get Visual Studio Project folder
             if (masterKey == null)
             {
                 this.txb_TargetFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             }
             else
             {
-                this.txb_TargetFolder.Text = masterKey.GetValue(MainWindow.VS2010_PROJECTFOLDER_REGISTRY_KEYNAME).ToString();
+                // this registry value is missing if the user never started devenv.exe
+                this.txb_TargetFolder.Text = masterKey.GetValue(MainWindow.VS_PROJECTFOLDER_REGISTRY_KEYNAME, 
+                    Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)).ToString();
                 masterKey.Close();
             }
             this.txb_TargetFolder.ToolTip = this.txb_TargetFolder.Text;
@@ -731,7 +748,7 @@ namespace CSharpComponentWizard
                 }
                 else
                 {
-                    DevenvLocation = masterKey.GetValue(MainWindow.VS2010_INSTALLDIR_KEYNAME).ToString();
+                    DevenvLocation = masterKey.GetValue(MainWindow.VS_INSTALLDIR_KEYNAME).ToString();
                 }
                 masterKey.Close();
 
@@ -742,6 +759,8 @@ namespace CSharpComponentWizard
                 pinfo.FileName = DevenvLocation;
                 pinfo.Verb = "runas"; // Registering needs elevated privileges
                 System.Diagnostics.Process myProc = System.Diagnostics.Process.Start(pinfo);
+
+                this.Close();
             }
             catch (Exception ex)
             {

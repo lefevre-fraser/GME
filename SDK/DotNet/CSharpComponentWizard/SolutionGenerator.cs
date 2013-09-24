@@ -29,7 +29,6 @@ namespace CSharpComponentWizard
         Independent
     }
 
-    enum VSVersion { VS_2010, VS_2012 };
     public static class SolutionGenerator
     {
         public const string ENTRYPOINTCODE_REPLACESTRING = "$GET_ROOTFOLDER_CODE$";
@@ -60,9 +59,6 @@ namespace CSharpComponentWizard
             object obj;
             string outputfolder = "";
 
-            VSVersion vsVersion = VSVersion.VS_2010;
-           
-
             try
             {
                 if (SolutionGenerator.SelectedType == CompType.Addon)
@@ -74,12 +70,12 @@ namespace CSharpComponentWizard
                     SolutionGenerator.TemplateFileName = "CSharpInterpreter.zip";
                 }
 
-                System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
+                // Prefer VS2012
+                System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
 
                 if (type == null)
                 {
-                    type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
-                    vsVersion = VSVersion.VS_2012;
+                    type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
                 }
 
                 obj = Activator.CreateInstance(type, true);
@@ -94,40 +90,15 @@ namespace CSharpComponentWizard
                     Directory.Delete(outputfolder, true);
                 }
 
-                // Determine the ProjectTemplateFolder of custom templates
-
-                using (RegistryKey currentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64))
-                {
-
-
-                    RegistryKey masterKey = currentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
-                    if (masterKey == null)
-                    {
-                        masterKey = currentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
-                    }
-
-                    if (masterKey == null)
-                    {
-
-
-                        throw new Exception("Cannot locate ProjectTemplate folder. Is Visual Studio installed?");
-                    }
-                    else
-                    {
-                        SolutionGenerator.ProjectTemplateLocation = masterKey.GetValue(MainWindow.VS2010_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME).ToString();
-                    }
-                    masterKey.Close();
-                }
-
-
                 // Unpack the sufficent template project
                 Stream TemplateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
                             System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".Templates." + SolutionGenerator.TemplateFileName);
                 FileStream FileWriter = new FileStream(Path.Combine(SolutionGenerator.ProjectTemplateLocation, SolutionGenerator.TemplateFileName), FileMode.Create);
-                byte[] ReadFile = new byte[TemplateStream.Length];
-                TemplateStream.Read(ReadFile, 0, ReadFile.Length);
-                FileWriter.Write(ReadFile, 0, ReadFile.Length);
-                FileWriter.Close();
+                using (TemplateStream)
+                using (FileWriter)
+                {
+                    TemplateStream.CopyTo(FileWriter);
+                }
 
                 sln.Create(outputfolder, solutionName);
 
