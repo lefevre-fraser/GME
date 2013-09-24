@@ -251,7 +251,7 @@ HRESULT FCO::CopyFolderDisp(IMgaFolder *copyfold, IMgaFolder **nobj)
 		q->Add( CComPtr<IMgaFolder>( copyfold));
 
 		CComPtr<IMgaFolders> newfols;
-		CopyFolders( q, &newfols);
+		COMTHROW(CopyFolders( q, &newfols));
 		
 		// extract ret value from returned coll
 		long cnt = 0; 
@@ -274,7 +274,7 @@ HRESULT FCO::MoveFolderDisp(IMgaFolder *movefold, IMgaFolder **nobj)
 		q->Add( CComPtr<IMgaFolder>( movefold));
 
 		CComPtr<IMgaFolders> newfols;
-		MoveFolders( q, &newfols);
+		COMTHROW(MoveFolders( q, &newfols));
 		
 		// extract ret value from returned coll
 		long cnt = 0; 
