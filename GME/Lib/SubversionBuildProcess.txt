@@ -135,8 +135,8 @@
 
     subversion-src\apr\include\* -> GMESRC\GME\Include\apr\*
     subversion-src\apr-iconv\include\* -> GMESRC\GME\Include\apr-iconv\*
-    subversion-src\apr-util\include\* -> GMESRC\GME\Include\apr-util\*
-    subversion-src\subversion\include\* -> GMESRC\GME\Include\subversion\*
+    subversion-src\apr-util\include\* -> GMESRC\GME\Include\apr-util\*      (Except "private" subdir, not needed)
+    subversion-src\subversion\include\* -> GMESRC\GME\Include\subversion\*  (Except "private" subdir, not needed)
     
 12) Collect/copy the following RELEASE only libraries (dll/lib) files to 'GMESRC\GME\Lib'
 
@@ -147,15 +147,15 @@
 
     subversion-src\apr\Release\libapr-1.lib  ->  GMESRC\GME\Lib\subv_release
     subversion-src\apr\Release\libapr-1.dll  ->  GMESRC\GME\Lib\subv_release
-    subversion-src\apr\Release\libapr-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr\Release\libapr.pdb  ->  GMESRC\GME\Lib\subv_release
 
     subversion-src\apr-iconv\Release\libapriconv-1.lib  ->  GMESRC\GME\Lib\subv_release
     subversion-src\apr-iconv\Release\libapriconv-1.dll  ->  GMESRC\GME\Lib\subv_release
-    subversion-src\apr-iconv\Release\libapriconv-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-iconv\Release\libapriconv.pdb  ->  GMESRC\GME\Lib\subv_release
 
     subversion-src\apr-util\Release\libaprutil-1.lib  ->  GMESRC\GME\Lib\subv_release
     subversion-src\apr-util\Release\libaprutil-1.dll  ->  GMESRC\GME\Lib\subv_release
-    subversion-src\apr-util\Release\libaprutil-1.pdb  ->  GMESRC\GME\Lib\subv_release
+    subversion-src\apr-util\Release\libaprutil.pdb  ->  GMESRC\GME\Lib\subv_release
     
     subversion-src\apr-util\xml\expat\lib\LibR\xml.lib  ->  GMESRC\GME\Lib\subv_release
     subversion-src\apr-util\xml\expat\lib\LibR\xml.pdb  ->  GMESRC\GME\Lib\subv_release
