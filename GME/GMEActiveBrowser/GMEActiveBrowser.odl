@@ -46,7 +46,7 @@ library GMEACTIVEBROWSERLib
 			[id(11)] void Down();
 			[id(12)] void ChangePropPage(browser_page);
 			//}}AFX_ODL_METHOD
-			[id(50)] void HighlightItem(IUnknown* pMgaObject);
+			[id(50)] void HighlightItem(IUnknown* pMgaObject, int hightlight);
 	};
 
 	//  Event dispatch interface for CGMEActiveBrowserCtrl
