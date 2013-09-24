@@ -75,7 +75,7 @@ namespace MyInterpreter
             //  In the new project, install the GME DSMLGenerator NuGet package (search for DSMLGenerator)
             //  Add a Reference in this project to the other project
             //  Add "using [ParadigmName] = ISIS.GME.Dsml.[ParadigmName].Classes.Interfaces;" to the top of this file
-            // if (currentobj.Meta.Name == "KindName")
+            // if (currentobj != null && currentobj.Meta.Name == "KindName")
             // [ParadigmName].[KindName] dsCurrentObj = ISIS.GME.Dsml.[ParadigmName].Classes.[KindName].Cast(currentobj);			
         }
 
