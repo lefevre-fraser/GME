@@ -1507,14 +1507,14 @@ STDMETHODIMP CMgaProject::GlobalNotify(globalevent_enum msg) {
 
 STDMETHODIMP CMgaProject::Notify(globalevent_enum event) {
 	COMTRY {
-		if(baseterr) COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
-		{
-			CComPtr<IMgaTerritory> t;
-			COMTHROW(CreateTerritory(NULL, &t));
-			COMTHROW(BeginTransaction(t, TRANSACTION_READ_ONLY));
-			GlobalNotify(event);
-			COMTHROW(CommitTransaction());
-		}
+		if (baseterr)
+			COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
+
+		CComPtr<IMgaTerritory> t;
+		COMTHROW(CreateTerritory(NULL, &t));
+		COMTHROW(BeginTransaction(t, TRANSACTION_READ_ONLY));
+		GlobalNotify(event);
+		COMTHROW(CommitTransaction());
     }
     COMCATCH(;);
 }
