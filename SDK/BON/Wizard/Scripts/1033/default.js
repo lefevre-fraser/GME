@@ -4,7 +4,10 @@ function OnFinish(selProj, selObj)
     {
         if (dte.Version == '10.0') {
 		    OnFinish100(selProj, selObj);
-		}
+        }
+        else if (dte.Version == '11.0') {
+            OnFinish100(selProj, selObj);
+        }
 		else {
 		    OnFinish90(selProj, selObj);
 		}
@@ -400,13 +403,19 @@ function AddCommonFilesToCustomProj(proj, InfFile)
 			strTpl = strTextStream.ReadLine();
 			if (strTpl != '')
 			{
+
+			   
+
 				var strFile = '$(GME_ROOT)\\SDK\\BON\\Common\\' + strTpl;
 				vcfile = proj.Object.AddFile(strFile);
 				
-				if (dte.Version != '10.0') {
+				if (dte.Version != '10.0' ) {
+
 				    // This is needed to remove the '.' from the beginning of the relative path (added by default)
-				    vcfile.RelativePath = '$(GME_ROOT)\\SDK\\BON\\Common\\' + strTpl;
+				    vcfile = '$(GME_ROOT)\\SDK\\BON\\Common\\' + strTpl;
+
 				}
+	
 			}
 		}
 		strTextStream.Close();
