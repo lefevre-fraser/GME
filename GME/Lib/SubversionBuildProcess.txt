@@ -95,9 +95,8 @@
  if errorlevel 1 goto err
  goto end
  
-
---- zlib\win32\Makefile_ORIG.msc    2013-04-13 17:54:56.000000000 -0500
-+++ zlib\win32\Makefile.msc 2013-09-24 13:15:39.780699900 -0500
+--- win32\Makefile_ORIG.msc 2013-04-13 17:54:56.000000000 -0500
++++ win32\Makefile.msc  2013-09-26 12:18:49.425619700 -0500
 @@ -18,6 +18,7 @@
  
  # variables
@@ -115,9 +114,31 @@
  WFLAGS  = -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
  ASFLAGS = -coff -Zi $(LOC)
  LDFLAGS = -nologo -debug -incremental:no -opt:ref
+@@ -158,6 +159,6 @@
+    -del *.res
+    -del *.exp
+    -del *.exe
+-   -del *.pdb
++   -del $(STATICPDB).pdb
+    -del *.manifest
+    -del foo.gz
 
 
-10) Compile Subversion (also compiles zlib, serf, sqlite)
+10) Patch the serf build process (proper pdb filename)
+
+--- serf_ORIG.mak   2013-06-03 14:23:32.000000000 -0500
++++ serf.mak    2013-09-26 11:13:21.524868900 -0500
+@@ -93,7 +93,7 @@
+ WIN32_DEFS = /D WIN32 /D WIN32_LEAN_AND_MEAN /D NOUSER /D NOGDI /D NONLS /D NOCRYPT /D SERF_HAVE_SSPI
+ 
+ CPP=cl.exe
+-CPP_PROJ = /c /nologo $(CFLAGS) $(WIN32_DEFS) $(APR_FLAGS) $(APRUTIL_FLAGS) $(OPENSSL_FLAGS) $(ZLIB_FLAGS) /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\"
++CPP_PROJ = /c /nologo $(CFLAGS) $(WIN32_DEFS) $(APR_FLAGS) $(APRUTIL_FLAGS) $(OPENSSL_FLAGS) $(ZLIB_FLAGS) /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\serf-1"
+ LIB32=link.exe
+ LIB32_FLAGS=/nologo
+
+
+11) Compile Subversion (also compiles zlib, serf, sqlite)
 
     cd E:\subversion-src
     python gen-make.py -t vcproj --vsnet-version=2010 --with-openssl=openssl --with-zlib=zlib --with-serf=serf --with-sqlite=sqlite-amalgamation
@@ -131,14 +152,14 @@
 
 ---------- DEPLOYING ----------
 
-11) Collect/copy the following include files to 'GMESRC\GME\Include'
+12) Collect/copy the following include files to 'GMESRC\GME\Include'
 
     subversion-src\apr\include\* -> GMESRC\GME\Include\apr\*
     subversion-src\apr-iconv\include\* -> GMESRC\GME\Include\apr-iconv\*
     subversion-src\apr-util\include\* -> GMESRC\GME\Include\apr-util\*      (Except "private" subdir, not needed)
     subversion-src\subversion\include\* -> GMESRC\GME\Include\subversion\*  (Except "private" subdir, not needed)
     
-12) Collect/copy the following RELEASE only libraries (dll/lib) files to 'GMESRC\GME\Lib'
+13) Collect/copy the following RELEASE only libraries (dll/lib) files to 'GMESRC\GME\Lib'
 
     subversion-src\openssl\out32dll\libeay32.lib  ->  GMESRC\GME\Lib
     subversion-src\openssl\out32dll\ssleay32.lib  ->  GMESRC\GME\Lib
@@ -193,5 +214,5 @@
     subversion-src\Release\subversion\libsvn_wc\svn_wc-1.lib  ->  GMESRC\GME\Lib\subv_release
     subversion-src\Release\subversion\libsvn_wc\svn_wc-1.pdb  ->  GMESRC\GME\Lib\subv_release
 
-13) Collect/copy the DEBUG library (dll/lib/pdb) files to 'GMESRC\GME\Lib' by replacing 'LibR', 'zlibstat.lib', 'Release' and 'subv_release'
+14) Collect/copy the DEBUG library (dll/lib/pdb) files to 'GMESRC\GME\Lib' by replacing 'LibR', 'zlibstat.lib', 'Release' and 'subv_release'
     to 'LibD', 'zlibstatD.lib, 'Debug' and 'subv_debug' respectively from the previous step.
