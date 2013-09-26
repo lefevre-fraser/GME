@@ -77,7 +77,7 @@ function main()
 	try
 	{
 		var strVC11Key = "HKLM\\Software\\Microsoft\\VisualStudio\\11.0\\Setup\\VC\\ProductDir";
-		strValue = WSShell.RegRead(strVC10Key);
+		strValue = WSShell.RegRead(strVC11Key);
 	}
 	catch(e)
 	{
