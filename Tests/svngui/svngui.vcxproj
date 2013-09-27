@@ -144,6 +144,7 @@ xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapriconv-
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVNClient.h" />
     <ClInclude Include="SVNDialogCommit.h" />
+    <ClInclude Include="SVNDialogLogin.h" />
     <ClInclude Include="SVNDialogPlaintext.h" />
     <ClInclude Include="SVNDialogSSLServerTrust.h" />
     <ClInclude Include="svngui.h" />
@@ -160,6 +161,7 @@ xcopy /Y/D/F $(SolutionDir)\..\..\GME\lib\subv_$(ConfigurationName)\libapriconv-
     </ClCompile>
     <ClCompile Include="SVNClient.cpp" />
     <ClCompile Include="SVNDialogCommit.cpp" />
+    <ClCompile Include="SVNDialogLogin.cpp" />
     <ClCompile Include="SVNDialogPlaintext.cpp" />
     <ClCompile Include="SVNDialogSSLServerTrust.cpp" />
     <ClCompile Include="svngui.cpp" />

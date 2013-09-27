@@ -3,7 +3,6 @@
 #include "svngui.h"
 
 #include "SVNClient.h"
-#include "svn_pools.h"
 #include "svn_dso.h"
 #include "svn_utf.h"
 #include "svn_nls.h"
@@ -14,6 +13,7 @@
 #include "SVNDialogCommit.h"
 #include "SVNDialogPlaintext.h"
 #include "SVNDialogSSLServerTrust.h"
+#include "SVNDialogLogin.h"
 
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "shfolder.lib")
@@ -88,6 +88,28 @@ CString CSVNError::msg() const
 }
 
 ///////////////////////////////////////////////////////////////////////
+// SVN Pool
+///////////////////////////////////////////////////////////////////////
+CSVNPool::CSVNPool(apr_pool_t* parentPool)
+{
+	pool = svn_pool_create(parentPool);
+}
+
+CSVNPool::~CSVNPool()
+{
+	if (pool) {
+		svn_pool_destroy(pool);
+		pool = NULL;
+	}
+}
+
+CSVNPool::operator apr_pool_ptr() const
+{
+	return pool;
+}
+
+
+///////////////////////////////////////////////////////////////////////
 // SVN Client
 ///////////////////////////////////////////////////////////////////////
 CSVNClient::CSVNClient() 
@@ -103,7 +125,10 @@ CSVNClient::~CSVNClient(void)
 	while (p) {
 		delete svnFiles.GetNext(p);
 	}
-	
+	// NOTE: there is a memory allocation problem in serf 
+	// it causes problems when SSL certificates are rejected during conn. setup
+	// svn_pool_destroy mitigates this problem (memory leaks "only" instead of accessing freed memory)
+	svn_pool_destroy(pool); 
 	apr_terminate();
 }
 
@@ -138,7 +163,7 @@ void CSVNClient::initialize(void)
 	pool = svn_pool_create(NULL);
 
 	/* Initialize the FS library. */
-	SVNTHROW(svn_fs_initialize(pool));
+	//SVNTHROW(svn_fs_initialize(pool));
 
 	/* Initialize the RA library. */
 	SVNTHROW(svn_ra_initialize(pool));
@@ -149,15 +174,17 @@ void CSVNClient::initialize(void)
 
 	/* All clients need to fill out a client_ctx object. */
 	{
+		apr_hash_t *cfg_hash;
 		svn_config_t *cfg_config;
 
-		/* Initialize and allocate the client_ctx object. */
-		SVNTHROW(svn_client_create_context (&ctx, pool));
-
 		/* Load the run-time config file into a hash */
-		SVNTHROW(svn_config_get_config (&(ctx->config), NULL, pool));
+		SVNTHROW(svn_config_get_config (&cfg_hash, NULL, pool));
 
-		cfg_config = (svn_config_t *)svn_hash_gets(ctx->config, SVN_CONFIG_CATEGORY_CONFIG);
+		cfg_config = (svn_config_t *)svn_hash_gets(cfg_hash, SVN_CONFIG_CATEGORY_CONFIG);
+
+		/* Initialize and allocate the client_ctx object. */
+		SVNTHROW(svn_client_create_context2(&ctx, cfg_hash, pool));
+
 
 		/* Set the working copy administrative directory name. */
 		if (getenv ("SVN_ASP_DOT_NET_HACK"))
@@ -380,12 +407,23 @@ svn_error_t* CSVNClient::cbAuthSimplePrompt(
 	svn_boolean_t may_save, 
 	apr_pool_t *pool)
 {
-	//TODO: implement this
-	svn_auth_cred_simple_t *ret = (svn_auth_cred_simple_t *)apr_pcalloc(pool, sizeof(*ret));
-	ret->username = "volgy";
-	ret->password = "7torpe";
-	ret->may_save = may_save;
-	*cred = ret;
+	CSVNDialogLogin dlg;
+	dlg.realm = realm;
+	dlg.passwordEnabled = TRUE;
+	dlg.permanentEnabled = may_save;
+
+	if (dlg.DoModal() == IDOK) {
+		svn_auth_cred_simple_t *ret = (svn_auth_cred_simple_t *)apr_pcalloc(pool, sizeof(*ret));
+		svn_string_t* username_s = svn_string_create(CStringA(dlg.username), pool);
+		ret->username = username_s ? username_s->data : NULL;
+		svn_string_t* password_s = svn_string_create(CStringA(dlg.password), pool);
+		ret->password = password_s ? password_s->data : NULL;
+		ret->may_save = dlg.permanent;
+		*cred = ret;
+	}
+	else {
+		*cred = NULL;
+	}
 	return SVN_NO_ERROR;
 }
 
@@ -396,10 +434,21 @@ svn_error_t* CSVNClient::cbAuthUsernamePrompt(
 	svn_boolean_t may_save, 
 	apr_pool_t *pool)
 {
-	//TODO: implement this
-	svn_auth_cred_username_t *ret = (svn_auth_cred_username_t *)apr_pcalloc(pool, sizeof(*ret));
-	ret->username = NULL;
-	ret->may_save = may_save;
+	CSVNDialogLogin dlg;
+	dlg.realm = realm;
+	dlg.passwordEnabled = FALSE;
+	dlg.permanentEnabled = may_save;
+
+	if (dlg.DoModal() == IDOK) {
+		svn_auth_cred_username_t *ret = (svn_auth_cred_username_t *)apr_pcalloc(pool, sizeof(*ret));
+		svn_string_t* username_s = svn_string_create(CStringA(dlg.username), pool);
+		ret->username = username_s ? username_s->data : NULL;
+		ret->may_save = dlg.permanent;
+		*cred = ret;
+	}
+	else {
+		*cred = NULL;
+	}
 	return SVN_NO_ERROR;
 }
 
@@ -412,7 +461,6 @@ svn_error_t* CSVNClient::cbAuthSSLServerTrustPrompt(
 	svn_boolean_t may_save, 
 	apr_pool_t *pool)
 {
-	/*
 	CSVNDialogSSLServerTrust dlg;
 	dlg.host = cert_info->hostname;
 	dlg.fingerprint = cert_info->fingerprint;
@@ -444,12 +492,7 @@ svn_error_t* CSVNClient::cbAuthSSLServerTrustPrompt(
 	else {
 		*cred = NULL;
 	}
-	*/
 
-svn_auth_cred_ssl_server_trust_t *ret = (svn_auth_cred_ssl_server_trust_t *)apr_pcalloc(pool, sizeof(*ret));
-ret->accepted_failures = failures; 
-ret->may_save = FALSE;
-*cred = ret;
 	return SVN_NO_ERROR;
 }
 
@@ -460,10 +503,8 @@ svn_error_t* CSVNClient::cbAuthSSLClientCertPWPrompt(
 	svn_boolean_t may_save, 
 	apr_pool_t *pool)
 {
-	//TODO: implement this
-	svn_auth_cred_ssl_client_cert_pw_t *ret = (svn_auth_cred_ssl_client_cert_pw_t *)apr_pcalloc(pool, sizeof(*ret));
-	ret->password = NULL;
-	ret->may_save = may_save;
+	// Unsupported
+	*cred = NULL;
 	return SVN_NO_ERROR;
 }
 
@@ -474,10 +515,8 @@ svn_error_t* CSVNClient::cbAuthSSLClientCertPrompt(
 	svn_boolean_t may_save, 
 	apr_pool_t *pool)
 {
-	//TODO: implement this
-	svn_auth_cred_ssl_client_cert_t *ret = (svn_auth_cred_ssl_client_cert_t *)apr_pcalloc(pool, sizeof(*ret));
-	ret->cert_file = NULL;
-	ret->may_save = may_save;
+	// Unsupported
+	*cred = NULL;
 	return SVN_NO_ERROR;
 }
 
@@ -499,15 +538,13 @@ void CSVNFile::updateStatus(bool checkServer)
 	svn_error_t* e;
 
 	if (client->isInitialized) {
-		apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+		CSVNPool scratch_pool(client->pool);
 
 		svn_opt_revision_t revision = {svn_opt_revision_head, {0}};
 
 		e = svn_client_status5(NULL, client->ctx, CStringA(filePath), 
 			&revision, svn_depth_immediates, TRUE, checkServer ? TRUE : FALSE, 
 			FALSE, FALSE, TRUE, NULL, cbStatus, this, scratch_pool);
-apr_terminate();
-		svn_pool_clear(scratch_pool);
 
 		if (e && e->apr_err == SVN_ERR_WC_NOT_WORKING_COPY) {
 			versioned = tracked = owned = latest = false;
@@ -547,7 +584,7 @@ bool CSVNFile::update()
 {
 	CStringA filePathA(filePath);
 	const char* target = filePathA;
-	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+	CSVNPool scratch_pool(client->pool);
 	apr_array_header_t* targets = apr_array_make(scratch_pool, 1, sizeof(target));
 	APR_ARRAY_PUSH(targets, const char*) = target;
 
@@ -556,8 +593,6 @@ bool CSVNFile::update()
 	SVNTHROW(svn_client_update4(NULL, targets, &revision, svn_depth_files, FALSE, FALSE, FALSE,
 				TRUE, FALSE, client->ctx, scratch_pool)); 
 
-	svn_pool_clear(scratch_pool);
-
 	return (client->lastNotifyAction == svn_wc_notify_update_completed);
 }
 
@@ -565,13 +600,11 @@ bool CSVNFile::takeOwnership()
 {
 	CStringA filePathA(filePath);
 	const char* target = filePathA;
-	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+	CSVNPool scratch_pool(client->pool);
 	apr_array_header_t* targets = apr_array_make(scratch_pool, 1, sizeof(target));
 	APR_ARRAY_PUSH(targets, const char*) = target;
 	
 	SVNTHROW(svn_client_lock(targets, "GME auto-locking", FALSE, client->ctx, scratch_pool));
-	
-	svn_pool_clear(scratch_pool);
 
 	return (client->lastNotifyAction == svn_wc_notify_locked);
 } 
@@ -580,7 +613,7 @@ bool CSVNFile::commit()
 {
 	CStringA filePathA(filePath);
 	const char* target = filePathA;
-	apr_pool_t* scratch_pool = svn_pool_create(client->pool);
+	CSVNPool scratch_pool(client->pool);
 	apr_array_header_t* targets = apr_array_make(scratch_pool, 1, sizeof(target));
 	APR_ARRAY_PUSH(targets, const char*) = target;
 	
@@ -595,8 +628,6 @@ bool CSVNFile::commit()
 			updateStatus();
 		}
 	}
-
-	svn_pool_clear(scratch_pool);
 
 	return !client->canceledOperation;
 }

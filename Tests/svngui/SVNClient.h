@@ -2,6 +2,7 @@
 
 #include "svn_client.h"
 #include "svn_config.h"
+#include "svn_pools.h"
 
 class CSVNClient;
 
@@ -14,6 +15,7 @@ class CSVNError
 
 private:
 	CSVNError(svn_error_t* e);
+	CSVNError(const CSVNError&) {ASSERT(("Copying CVSNError objects are not supported", false));}
 
 public:
 	virtual ~CSVNError();
@@ -23,6 +25,19 @@ private:
 	svn_error_t	*svnError;
 };
 
+class CSVNPool
+{
+	typedef apr_pool_t* apr_pool_ptr;
+public:
+	CSVNPool(apr_pool_t* parentPool);
+	CSVNPool(const CSVNPool&) {ASSERT(("Copying CSVNPool objects are not supported", false));}
+	virtual ~CSVNPool();
+
+	operator apr_pool_ptr() const;
+
+private:
+	apr_pool_ptr pool;
+};
 
 class CSVNFile
 {

@@ -30,11 +30,11 @@ CSVNDialogSSLServerTrust::~CSVNDialogSSLServerTrust()
 void CSVNDialogSSLServerTrust::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, host);
-	DDX_Text(pDX, IDC_EDIT2, fingerprint);
-	DDX_Text(pDX, IDC_EDIT3, issuer);
-	DDX_Text(pDX, IDC_EDIT4, problems);
-	DDX_Check(pDX, IDC_CHECK1, permanent);
+	DDX_Text(pDX, IDC_EDIT_HOST, host);
+	DDX_Text(pDX, IDC_EDIT_FINGERPRINT, fingerprint);
+	DDX_Text(pDX, IDC_EDIT_ISSUER, issuer);
+	DDX_Text(pDX, IDC_EDIT_PROBLEMS, problems);
+	DDX_Check(pDX, IDC_CHECK_PERMANENT, permanent);
 }
 
 
