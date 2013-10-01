@@ -1253,7 +1253,7 @@ void CMgaProject::StartAutoAddOns() {
 		vec.resize(p);
 		CopyTo(progids, &vec[0], (&vec[0])+vec.size());
 		inautoaddoncreate = true;
-		CComBSTR errs = L"Could not create AddOn: ";
+		CComBSTR errs;
 		for(std::vector<CComBstrObj>::iterator i = vec.begin(); i < vec.end(); ++i) {
 			try {
 				CComPtr<IMgaComponent> addon;
@@ -1282,9 +1282,9 @@ void CMgaProject::StartAutoAddOns() {
 		}
 		inautoaddoncreate = false;
 		autoaddoncreate_progid = L"";
-		if(errs) {
-				SetErrorInfo(errs);
-				COMTHROW(E_MGA_COMPONENT_ERROR); // change error type
+		if (errs) {
+			SetErrorInfo(_bstr_t(L"Could not create AddOn: ") + static_cast<const wchar_t*>(errs));
+			COMTHROW(E_MGA_COMPONENT_ERROR); // change error type
 		}		
 	}
 //	SetAutomatic();
