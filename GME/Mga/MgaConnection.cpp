@@ -75,7 +75,7 @@ HRESULT FCO::put_NamedRole(BSTR rolename,  IMgaFCOs *refs, IMgaFCO *endfco) {
 			}
 			if(endfco) {
 				CComPtr<IMgaConnPoint> tt;
-				COMTHROW(AddConnPoint(rolename, 1, endfco, refs, &tt));
+				COMRETURN_IN_TRANSACTION_MAYBE(AddConnPoint(rolename, 1, endfco, refs, &tt));
 			}
 	} COMCATCH_IN_TRANSACTION_MAYBE(;)
 }	
