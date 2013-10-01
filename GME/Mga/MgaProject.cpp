@@ -243,8 +243,10 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 	COMCATCH(
 		opened = CLOSED;
 		guidstat = CLEAN;
-		if(dataproject) dataproject->CloseProject(VARIANT_FALSE);
-		if(metapr) metapr->Close();
+		if (dataproject)
+			dataproject->CloseProject(VARIANT_TRUE);
+		if (metapr)
+			metapr->Close();
 		metapr = 0;
 		projconn.Empty(); 
 		parconn.Empty();
@@ -379,8 +381,10 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 	COMCATCH(
 		opened = CLOSED;
 		guidstat = CLEAN;
-		if(dataproject) dataproject->CloseProject(VARIANT_FALSE);
-		if(metapr) metapr->Close();
+		if (dataproject)
+			dataproject->CloseProject(VARIANT_TRUE);
+		if (metapr)
+			metapr->Close();
 		metapr = 0;
 		projconn.Empty(); 
 		parconn.Empty();
@@ -499,8 +503,10 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 	} 
 	COMCATCH(
 		opened = CLOSED;
-		if(dataproject) dataproject->CloseProject(VARIANT_FALSE);
-		if(metapr) metapr->Close();
+		if (dataproject)
+			dataproject->CloseProject(VARIANT_TRUE);
+		if (metapr)
+			metapr->Close();
 		metapr = 0;
 		projconn.Empty(); 
 		parconn.Empty();
