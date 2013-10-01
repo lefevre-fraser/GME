@@ -6,6 +6,9 @@
 #if !defined(AFX_STDAFX_H__270B4F89_B17C_11D3_9AD1_00AA00B6FE26__INCLUDED_)
 #define AFX_STDAFX_H__270B4F89_B17C_11D3_9AD1_00AA00B6FE26__INCLUDED_
 
+
+#pragma warning(3:4701) // Potentially uninitialized local variable 'name' used
+
 #pragma once
 
 //#define _SECURE_SCL 0

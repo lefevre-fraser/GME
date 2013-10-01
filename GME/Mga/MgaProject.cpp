@@ -428,7 +428,7 @@ STDMETHODIMP CMgaProject::Open(BSTR projectname, VARIANT_BOOL *ro_mode)
 		}
 
 		if(s.Length()) {
-			HRESULT hr;
+			HRESULT hr = S_OK;
 			if (ver.Length()) {
 				// Version string has precedence
 				hr = OpenParadigm(s,ver);
@@ -1935,7 +1935,7 @@ void ClearLocks(ICoreStorage * storage, std::set<metaobjidpair_type> &mset, shor
 					metaobjidpair_type *e = NULL;
 					GetArrayBounds(v, i, e);
 					while( i != e )	{
-		 				ClearLocks(storage, mset, (*i).metaid, (*i).objid, clear);
+		 				ClearLocks(storage, mset, (short)(*i).metaid, (*i).objid, clear);
 						i++;
 					}
 				}
