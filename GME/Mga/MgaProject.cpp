@@ -308,12 +308,14 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 			ver.Empty();
 			s = paradigmname;
 		}
-		if(paradigmGUID.vt != VT_EMPTY) {
+		if (paradigmGUID.vt != VT_EMPTY) {
 			ver.Empty();
-			if(CComVariant(true) == paradigmGUID) pGUID = NULLVARIANT;
-			else pGUID = paradigmGUID;
+			if (CComVariant(true) == paradigmGUID)
+				pGUID = NULLVARIANT; // use current version
+			else
+				pGUID = paradigmGUID;
 		}
-		if(s.Length()) {
+		if (s.Length()) {
 			if (ver.Length()) {
 				// Version string has precedence
 				COMTHROW(OpenParadigm(s,ver));

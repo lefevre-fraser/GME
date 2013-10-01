@@ -414,6 +414,7 @@ interface IMgaProject : IDispatch
 
 	[ helpstring("method Open (call when nothing is open)")] HRESULT Open([in] BSTR projectname,[out, defaultvalue(0)] VARIANT_BOOL *ro_mode);
 	[ helpstring("method OpenEx (call when nothing is open)")] 
+	// paradigmGUID==true means open with the currently-registered paradigm
 		HRESULT OpenEx([in] BSTR projectname, [in] BSTR paradigmname, [in] VARIANT paradigmGUID);
 	[ helpstring("method Close (call outside transaction)")] HRESULT Close([in, defaultvalue(0)] VARIANT_BOOL abort);
 	[ helpstring("method Save (call when outside transaction)")] HRESULT Save([in, defaultvalue("")] BSTR save_as_conn, [in, defaultvalue(0)] VARIANT_BOOL keepoldname);
