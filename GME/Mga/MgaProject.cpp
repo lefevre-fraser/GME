@@ -1463,11 +1463,15 @@ STDMETHODIMP CMgaProject::AbortTransaction() {
 
 STDMETHODIMP CMgaProject::CheckSupress(VARIANT_BOOL s) {
 	COMTRY_IN_TRANSACTION {
-		if(s) checkoff = true;
-		else { 
+		if (s)
+			checkoff = true;
+		else
+		{ 
 			for(objhash::iterator i = deferredchecks.begin(); i != deferredchecks.end(); ++i) {
-				if(GetMetaID((*i)->self) == DTID_FOLDER) COMTHROW((*i)->Check());
-				else COMTHROW((*i)->CheckRCS());
+				if (GetMetaID((*i)->self) == DTID_FOLDER)
+					COMTHROW((*i)->Check());
+				else
+					(*i)->CheckRCS();
 			}
 			deferredchecks.clear();
 			checkoff = false;

@@ -211,7 +211,9 @@ bool AddConnPTask::Do(CoreObj self, std::vector<CoreObj> *peers) {
 		}
 	}
 
-	COMTHROW(ObjForCore(self)->Check());
+	IMgaObjectPtr iObject;
+	ObjForCore(self)->getinterface(&iObject, 0);
+	iObject->__Check();
 	ObjForCore((*peers)[0])->SelfMark(OBJEVENT_CONNECTED);
 	ObjForCore(self)->SelfMark(OBJEVENT_RELATION);
 	(*peers)[peercnt-1] = role;

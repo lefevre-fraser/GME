@@ -385,7 +385,7 @@ public:
 	HRESULT CheckTree();
 
 	// check the relations in refs, conns and sets
-		HRESULT CheckRCS();
+		void CheckRCS();
 		// Get a list of basetypes this object is derived from
 		HRESULT FCO::get_AllBaseTypes(IMgaFCOs **bases);
 		// Get root parent of object
