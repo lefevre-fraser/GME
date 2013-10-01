@@ -465,10 +465,15 @@ void CAggregateContextMenu::OnInterpret()
 	// Calling the interpreter via MGA
 	// Disable the DCOM wait dialogs: if interpreters want them, they can do it themselves; but if they don't want them, they need to link to GME's mfc1xxu.dll
 	COleMessageFilter* messageFilter = AfxOleGetMessageFilter();
-	messageFilter->EnableBusyDialog(FALSE);
-	messageFilter->EnableNotRespondingDialog(FALSE);
-	std::shared_ptr<COleMessageFilter> busyRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableBusyDialog(TRUE); } );
-	std::shared_ptr<COleMessageFilter> notRespondingRestore(messageFilter, [](COleMessageFilter* filter){ filter->EnableNotRespondingDialog(TRUE); } );
+	std::shared_ptr<COleMessageFilter> busyRestore;
+	std::shared_ptr<COleMessageFilter> notRespondingRestore;
+	if (messageFilter)
+	{
+		messageFilter->EnableBusyDialog(FALSE);
+		messageFilter->EnableNotRespondingDialog(FALSE);
+		busyRestore = std::shared_ptr<COleMessageFilter>(messageFilter, [](COleMessageFilter* filter){ filter->EnableBusyDialog(TRUE); } );
+		notRespondingRestore = std::shared_ptr<COleMessageFilter>(messageFilter, [](COleMessageFilter* filter){ filter->EnableNotRespondingDialog(TRUE); } );
+	}
 	COMTHROW( ccpMgaLauncher->RunComponent(NULL,pMgaContext->m_ccpProject, NULL,
 				ccpSelFCOs,GME_BROWSER_START) );
 }
