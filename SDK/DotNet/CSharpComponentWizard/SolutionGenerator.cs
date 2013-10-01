@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using EnvDTE80;
 using EnvDTE100;
 using DSM;
+using System.Runtime.Versioning;
 
 namespace CSharpComponentWizard
 {
@@ -104,6 +105,10 @@ namespace CSharpComponentWizard
 
                 string TemplatePath = sln.GetProjectTemplate(SolutionGenerator.TemplateFileName, "CSharp");
                 sln.AddFromTemplate(TemplatePath, outputfolder, SolutionName, false);
+                var project = sln.Projects.Item(1);
+                var dotNetVersion = new FrameworkName(".NETFramework", new Version(4, 0));
+                var fullname = dotNetVersion.FullName;
+                project.Properties.Item("TargetFrameworkMoniker").Value = dotNetVersion.FullName;
                 sln.Close();
             }
             finally
