@@ -384,6 +384,10 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 		metapr = 0;
 		projconn.Empty(); 
 		parconn.Empty();
+		// We've already called SetErrorInfo, don't call it again
+		if (e.hr == E_MGA_COMPONENT_ERROR) {
+			return e.hr;
+		}
 	)
 }
 
@@ -1243,7 +1247,7 @@ void CMgaProject::StartAutoAddOns() {
 		vec.resize(p);
 		CopyTo(progids, &vec[0], (&vec[0])+vec.size());
 		inautoaddoncreate = true;
-		CComBSTR errs;
+		CComBSTR errs = L"Could not create AddOn: ";
 		for(std::vector<CComBstrObj>::iterator i = vec.begin(); i < vec.end(); ++i) {
 			try {
 				CComPtr<IMgaComponent> addon;
