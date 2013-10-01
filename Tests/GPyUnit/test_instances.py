@@ -94,4 +94,19 @@ class TestInstances(unittest.TestCase):
             self.assertEqual(asp.Referred.ID, attributes.ID)
         self.project.CommitTransaction()
 
+    @dec_disable_early_binding
+    def test_DetachFromArcheType_RelIDs(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        allproxy = self.project.RootFolder.GetObjectByPathDisp("/@Aspects/@AllRef")
+        subtype = self.project.RootFolder.DeriveRootObject(aspects, False)
+        allrefNew = subtype.CreateChildObject(allproxy.MetaRole)
+        setMembership = subtype.GetObjectByPathDisp("@SetMembership")
+        self.assertEquals(0x8000001, setMembership.RelID)
+        
+        subtype.DetachFromArcheType() # this changes RelIDs so there are no dups
+        self.assertEquals(list(range(1,50+1)), sorted([fco.RelID for fco in subtype.ChildFCOs]))
+        self.project.CommitTransaction()
+
 #GPyUnit.util.MUGenerator(globals(), TestInstances)
