@@ -5931,7 +5931,7 @@ void CGMEView::OnRButtonDown(UINT nFlags, CPoint point)
 				DROPEFFECT dropEffect = CGMEDoc::DoDragDrop(&selected, &selectedAnnotations, &desc,
 													DROPEFFECT_MOVE | DROPEFFECT_COPY | DROPEFFECT_LINK, &rectAwake,this);
 				if (validGuiObjects && dropEffect == DROPEFFECT_NONE) {
-					OnRButtonUp(nFlags,point);
+					OnRButtonUp(nFlags, trackPoint);
 				}
 				inDrag = false;
 			}
@@ -6494,9 +6494,10 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 	CPoint orig = point;
 	CPoint testPoint = point;
 
-	CoordinateTransfer(point);
 	CPoint screen = point;
 	ClientToScreen(&screen);
+
+	CoordinateTransfer(point);
 	CoordinateTransfer(testPoint);
 
 	point.x = (long)(point.x - dragOffset.x);
