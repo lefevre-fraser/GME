@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 13.7.10
+                 GME 13.10.8
        Copyright © 2000-2013 Vanderbilt University
 
 
@@ -25,6 +25,14 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 13.10.8
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - C# and C++ interpreter wizard support for Visual Studio 2012
+  - MgaProject: don't save if opening or creating fails
+  - Fix Model Editor drag-n-drop menu position
+  - Fix MgaModel::get_ChildObjectByRelID for Subtypes
 
 Release Notes of Release 13.8.28
 ----------------------------------
