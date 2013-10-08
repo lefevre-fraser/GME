@@ -2447,8 +2447,8 @@ void CGMEApp::OnFileXMLUpdate()
 		DeleteFile(backupname);
 		if(!MoveFile(fname, backupname)) {
 			backupname = fname;
-			TCHAR buf[300];
-			_stprintf_s( buf, _T("Could not save original file '%s' to '%s'"), 
+			CString buf;
+			buf.Format(L"Could not save original file '%s' to '%s'",
 				static_cast<const TCHAR*>(fname), static_cast<const TCHAR*>(backupname)); 
 			AfxMessageBox(buf);
 			COMTHROW(E_NOTFOUND);
@@ -2482,16 +2482,17 @@ void CGMEApp::OnFileXMLUpdate()
 		}
 	}
 	catch(hresult_exception &e)	{
-		TCHAR buf[200];
 		if(backupname.IsEmpty()) {
-			_stprintf_s(buf, _T("The upgrade failed: 0x%x\nThe model has not been closed"), e.hr);
+			CString buf;
+			buf.Format(L"The upgrade failed: 0x%x\nThe model has not been closed", e.hr);
 			AfxMessageBox(buf);
 		}
 		else {
 			if(backupname.Compare(fname)) {
 				if(MoveFile(backupname, fname)) backupname = fname;
 			}
-			_stprintf_s(buf, _T("The upgrade failed: 0x%x\nThe original model is in file %s"), e.hr, 
+			CString buf;
+			buf.Format(L"The upgrade failed: 0x%x\nThe original model is in file %s", e.hr, 
 				static_cast<const TCHAR*>(backupname));
 			AfxMessageBox(buf);
 		}
