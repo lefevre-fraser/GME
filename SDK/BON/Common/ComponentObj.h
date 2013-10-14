@@ -12,14 +12,12 @@
 
 #if defined(BUILDER_OBJECT_NETWORK)
 #else
-// BY PAKA BEGIN
 #ifdef BUILDER_OBJECT_NETWORK_V2
 #include "BON.h"
 #include <BON2Component.h>
 #else
 #include <RawComponent.h>
 #endif // BUILDER_OBJECT_NETWORK_V2
-// BY PAKA END
 #endif // BUILDER_OBJECT_NETWORK
 
 #pragma once
@@ -158,6 +156,16 @@ protected:
 		STDMETHODIMP get_version(enum GMEInterfaceVersion *pVal);
 	END_INTERFACE_PART(VersionInfo)
 
+	BEGIN_INTERFACE_PART(SupportErrorInfo, ISupportErrorInfo)
+		STDMETHODIMP InterfaceSupportsErrorInfo(REFIID riid)
+		{
+			if (riid == __uuidof(IMgaComponentEx) || riid == __uuidof(IMgaComponent))
+			{
+				return S_OK;
+			}
+			return S_FALSE;
+		}
+	END_INTERFACE_PART(SupportErrorInfo)
 public:
 	bool interactive;
 

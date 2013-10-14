@@ -346,6 +346,9 @@ BEGIN_INTERFACE_MAP(CComponentObj, CCmdTarget)
 #endif
 	INTERFACE_PART(CComponentObj, IID_IMgaComponent, Component)
 	INTERFACE_PART(CComponentObj, IID_IGMEVersionInfo, VersionInfo)
+#ifdef GME_COMPONENT_ISUPPORTERRORINFO
+	INTERFACE_PART(CComponentObj, IID_ISupportErrorInfo, SupportErrorInfo)
+#endif
 END_INTERFACE_MAP()
 
 // We register the ComponentClass
@@ -897,8 +900,9 @@ STDMETHODIMP COMCLASS::Invoke(IMgaProject *gme, IMgaFCOs *psa, long param)
 
 	ASSERT( gme != NULL );
 
-
-	return pThis->rawcomp.Invoke(gme, psa, param);
+	COMTRY {
+		return pThis->rawcomp.Invoke(gme, psa, param);
+	} COMCATCH(;);
 }
 
 
@@ -908,8 +912,9 @@ STDMETHODIMP COMCLASS::InvokeEx( IMgaProject *gme,  IMgaFCO *currentobj,  IMgaFC
 
 	ASSERT( gme != NULL );
 
-
-	return pThis->rawcomp.InvokeEx(gme, currentobj, selectedobjs, param);
+	COMTRY {
+		return pThis->rawcomp.InvokeEx(gme, currentobj, selectedobjs, param);
+	} COMCATCH(;);
 }
 
 STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *gme,  IMgaObject *currentobj,  IMgaObjects *selectedobjs,  long param) {
@@ -919,7 +924,9 @@ STDMETHODIMP COMCLASS::ObjectsInvokeEx( IMgaProject *gme,  IMgaObject *currentob
 	ASSERT( gme != NULL );
 
 
-	return pThis->rawcomp.ObjectsInvokeEx(gme, currentobj, selectedobjs, param);
+	COMTRY {
+		return pThis->rawcomp.ObjectsInvokeEx(gme, currentobj, selectedobjs, param);
+	} COMCATCH(;);
 }
 
 // You may also want to modify the implementations for the following methods
@@ -949,7 +956,8 @@ STDMETHODIMP COMCLASS::Enable(VARIANT_BOOL newVal) {
 };
 STDMETHODIMP COMCLASS::get_InteractiveMode(VARIANT_BOOL *enabled) {
 	COMPROLOGUE;
-	if(enabled) *enabled = pThis->interactive ? VARIANT_TRUE : VARIANT_FALSE;
+	if (enabled)
+		*enabled = pThis->interactive ? VARIANT_TRUE : VARIANT_FALSE;
 	return S_OK;
 };
 
@@ -965,15 +973,17 @@ STDMETHODIMP COMCLASS::put_InteractiveMode(VARIANT_BOOL enabled) {
 STDMETHODIMP COMCLASS::get_ComponentParameter( BSTR name, VARIANT *pVal )
 {
 	COMPROLOGUE;
-	pThis->rawcomp.get_ComponentParameter(name, pVal);
-	return S_OK;
+	COMTRY {
+		pThis->rawcomp.get_ComponentParameter(name, pVal);
+	} COMCATCH(;);
 }
 
 STDMETHODIMP COMCLASS::put_ComponentParameter( BSTR name, VARIANT newVal )
 {
 	COMPROLOGUE;
-	return pThis->rawcomp.put_ComponentParameter(name, newVal);
-	return S_OK;
+	COMTRY {
+		return pThis->rawcomp.put_ComponentParameter(name, newVal);
+	} COMCATCH(;);
 }
 
 #endif // BUILDER_OBJECT_NETWORK_V2
@@ -1041,6 +1051,33 @@ STDMETHODIMP COMCLASS::get_version(enum GMEInterfaceVersion *pVal)
 
 	*pVal = GMEInterfaceVersion_Current;
 	return S_OK;
+}
+
+#undef COMCLASS
+#undef COMPROLOGUE
+
+/////////////////////////////////////////////////////////////////////////////
+// CComponentObj::XSupportErrorInfo
+
+#define COMCLASS		CComponentObj::XSupportErrorInfo
+#define COMPROLOGUE		METHOD_PROLOGUE(CComponentObj, SupportErrorInfo)
+
+STDMETHODIMP_(ULONG) COMCLASS::AddRef()
+{
+	COMPROLOGUE;
+	return pThis->ExternalAddRef();
+}
+
+STDMETHODIMP_(ULONG) COMCLASS::Release()
+{
+	COMPROLOGUE;
+	return pThis->ExternalRelease();
+}
+
+STDMETHODIMP COMCLASS::QueryInterface(REFIID riid, void** ppv)
+{
+	COMPROLOGUE;
+	return pThis->ExternalQueryInterface(&riid, ppv);
 }
 
 #undef COMCLASS
