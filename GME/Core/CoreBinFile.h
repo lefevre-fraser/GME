@@ -565,7 +565,7 @@ public:
 	virtual void Set(CCoreBinFile *binfile, VARIANT v)
 	{
 		ASSERT( binfile != NULL );
-		ASSERT(v.vt = VT_DISPATCH);
+		ASSERT(v.vt == VT_DISPATCH);
 		binfile->modified = true;
 		dict = 0;
 		v.pdispVal->QueryInterface(&dict);

@@ -305,7 +305,7 @@ XmlAttrDict::XmlAttrDict()
 
 void XmlAttrDict::fromVariant(VARIANT v)
 {
-	ASSERT(v.vt = VT_DISPATCH);
+	ASSERT(v.vt == VT_DISPATCH);
 	m_value = 0;
 	v.pdispVal->QueryInterface(&m_value);
 }
