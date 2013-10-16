@@ -5113,7 +5113,7 @@ CTime CCoreXmlFile::findEarliestLogin( int p_nbOfDays, int p_nbOfHours, int p_nb
 		++it)
 	{
 		const char * date_last_logged_in = it->m_since.c_str();
-		const char * date_last_logged_out = it->m_until.c_str();
+		const std::string &date_last_logged_out = it->m_until;
 		int y(-1), M(-1), d(-1), h(-1), m(-1), s(-1);
 		if( 6 == sscanf( date_last_logged_in, "[%u-%u-%u %u:%u:%u]", &y, &M, &d, &h, &m, &s))
 		{
