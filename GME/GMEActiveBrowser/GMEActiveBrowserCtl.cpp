@@ -704,25 +704,32 @@ BOOL CGMEActiveBrowserCtrl::PreCreateWindow(CREATESTRUCT& cs)
 void CGMEActiveBrowserCtrl::HighlightItem(IUnknown* item, int highlight)
 {
 	if (item == nullptr)
-		return;
+		AfxThrowOleDispatchException(201, _T("First parameter must not be null."));
 	CComPtr<IMgaObject> object;
 	item->QueryInterface(&object.p);
 	if (!object)
-		return;
+		AfxThrowOleDispatchException(202, L"First parameter is of wrong type. It must be IMgaObject.");
 
 	CGMEActiveBrowserApp* pApp = (CGMEActiveBrowserApp*)AfxGetApp();
-	if (pApp)
+	try
 	{
-		pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(true);
-		try
+		if (pApp)
 		{
-			m_pPropFrame->m_pModelessPropSheet->m_PageAggregate.HighlightItem(object, highlight);
-		}
-		catch (...)
-		{
+			pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(true);
+			try
+			{
+				m_pPropFrame->m_pModelessPropSheet->m_PageAggregate.HighlightItem(object, highlight);
+			}
+			catch (...)
+			{
+				pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(false);
+				throw;
+			}
 			pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(false);
-			throw;
 		}
-		pApp->m_CurrentProject.m_MgaContext.SetEventTransactionMode(false);
+	}
+	catch (const _com_error& e)
+	{
+		AfxThrowOleDispatchException(203, e.Description());
 	}
 }

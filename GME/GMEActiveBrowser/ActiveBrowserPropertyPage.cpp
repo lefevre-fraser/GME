@@ -4252,12 +4252,11 @@ void CAggregatePropertyPage::HighlightItem(IMgaObject* pObj, int highlight)
 	CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 	CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 	CComPtr<IMgaObject> terrObj;
-	pMgaContext->m_ccpTerritory->OpenObj(pObj, &terrObj);
+	pMgaContext->m_ccpTerritory->__OpenObj(pObj, &terrObj);
 	CComPtr<IUnknown> pUnk;
 	terrObj.QueryInterface(&pUnk.p);
 
-	CComBSTR id;
-	pObj->get_ID(&id);
+	CComBSTR id = static_cast<BSTR>(pObj->ID);
 
 	auto& highlightedObjects = m_TreeAggregate.m_highlightedObjects;
 	if (highlight)
