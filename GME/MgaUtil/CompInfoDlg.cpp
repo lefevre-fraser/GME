@@ -65,6 +65,10 @@ void CCompInfoDlg::OnOK()
 	else if(_stscanf_s(m_version, _T("%d"), &v) != 1 || v <= 0) {
 		AfxMessageBox(_T("Version ID must start with a number > 0"));
 	}
+	else if (m_execeng.GetCurSel() == -1)
+	{
+		AfxMessageBox(_T("No execution engine selected"));
+	}
 	else {
 		m_execeng.GetLBText(m_execeng.GetCurSel(),engine);
 		CDialog::OnOK();

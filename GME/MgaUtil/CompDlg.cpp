@@ -530,7 +530,7 @@ void CCompDlg::RegisterPattern(const CString &path)
 	dlg.m_filename = path;
 
 	TCHAR paren, info[200] = {0};
-	if(_stscanf_s(CString(buf), _T(" $!COMMENT( %[^)]%c"), info, &paren) != 2 || paren != ')') {
+	if (swscanf_s(CString(buf), _T(" $!COMMENT( %[^)]%lc"), info, (unsigned)(sizeof(info)/sizeof(info[0]))-1, &paren, 1) != 2 || paren != ')') {
 nothing_understood:
 		AfxMessageBox("Cannot read component info in file " + path);
 	}
@@ -618,9 +618,9 @@ nothing_understood:
 	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR(L"ScriptFile"), CComBSTR(path)));
 	COMTHROW(registrar->put_ComponentExtraInfo(acmode, progid, CComBSTR(L"ScriptVersion"), CComBSTR(dlg.m_version)));
 
-	TCHAR *mpardup = (TCHAR *)alloca((dlg.m_paradigm.GetLength()+1)*sizeof(TCHAR));
-	_tcscpy(mpardup, dlg.m_paradigm);
-	const TCHAR *par = _tcstok(mpardup,_T("\t ,"));
+	std::unique_ptr<TCHAR[]> mpardup(new TCHAR[dlg.m_paradigm.GetLength()+1]);
+	_tcscpy(mpardup.get(), dlg.m_paradigm);
+	const TCHAR *par = _tcstok(mpardup.get(), _T("\t ,"));
 	while(par) {
 		COMTHROW(registrar->Associate(progid, CComBSTR(par), acmode));
 		par = _tcstok(NULL, _T("\t ,"));
