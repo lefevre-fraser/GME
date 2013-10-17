@@ -2354,7 +2354,7 @@ void CGuiConnectionLabelSet::Draw(Gdiplus::Graphics* gdip, COLORREF color, CGuiC
 CPoint CGuiConnectionLabelSet::GetLocation(int index) const
 {
 	CPoint pt(-1, -1);
-	if (index >= 0 || index < GME_CONN_LABEL_NUM)
+	if (index >= 0 && index < GME_CONN_LABEL_NUM)
 		pt = labels[index].GetLocation();
 	return pt;
 }
@@ -2362,7 +2362,7 @@ CPoint CGuiConnectionLabelSet::GetLocation(int index) const
 int CGuiConnectionLabelSet::GetAlignment(int index) const
 {
 	int alignment = 0;
-	if (index >= 0 || index < GME_CONN_LABEL_NUM)
+	if (index >= 0 && index < GME_CONN_LABEL_NUM)
 		alignment = labels[index].GetAlignment();
 	return alignment;
 }
@@ -2370,7 +2370,7 @@ int CGuiConnectionLabelSet::GetAlignment(int index) const
 CString CGuiConnectionLabelSet::GetLabel(int index) const
 {
 	CString label;
-	if (index >= 0 || index < GME_CONN_LABEL_NUM)
+	if (index >= 0 && index < GME_CONN_LABEL_NUM)
 		label = labels[index].GetLabel();
 	return label;
 }

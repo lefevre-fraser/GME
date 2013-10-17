@@ -1608,7 +1608,7 @@ STDMETHODIMP CCoreXmlFile::OpenProject(BSTR connection, VARIANT_BOOL *ro_mode)
 		// Check for the new session folder, create one on-demand
 		std::string sessionFolder =  m_folderPath + "\\" + HelperFiles::sessionFolderName;
 		DWORD atts = ::GetFileAttributes(sessionFolder.c_str());
-		if (atts == INVALID_FILE_ATTRIBUTES || !(atts | FILE_ATTRIBUTE_DIRECTORY) ) {
+		if (atts == INVALID_FILE_ATTRIBUTES || !(atts & FILE_ATTRIBUTE_DIRECTORY) ) {
 			sendMsg( "Detecting old session format. Upgrading to newer one (dedicated session folder).", MSG_INFO);
 			
 			BOOL  succ = ::CreateDirectory( sessionFolder.c_str(), NULL);

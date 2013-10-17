@@ -13,7 +13,7 @@ void CIUnknownPtrList::Load(SAFEARRAY** ppsa)
 
 	long bound;
 
-	ASSERT( (*ppsa)->fFeatures | FADF_UNKNOWN );
+	ASSERT( (*ppsa)->fFeatures & FADF_UNKNOWN );
 	ASSERT( (*ppsa)->cbElements == sizeof(IUnknown*) );
 	ASSERT( SafeArrayGetDim(*ppsa) == 1 );
 	COMASSERT(SafeArrayGetLBound(*ppsa, 1, &bound));
@@ -94,7 +94,7 @@ HRESULT SafeArrayDestroyNoRelease(SAFEARRAY* psa)
 {
 	ASSERT(psa);
 
-	ASSERT( psa->fFeatures | FADF_UNKNOWN );
+	ASSERT( psa->fFeatures & FADF_UNKNOWN );
 	ASSERT( psa->cbElements == sizeof(IUnknown*) );
 
 	psa->fFeatures &= ~FADF_UNKNOWN;
