@@ -228,6 +228,21 @@
     <ClCompile Include="CSGUIInterop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SVNClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVNDialogCommit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVNDialogLogin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVNDialogPlaintext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVNDialogSSLServerTrust.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="AnnotatorEventSink.rgs">
@@ -588,6 +603,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNDialogCommit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNDialogLogin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNDialogPlaintext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SVNDialogSSLServerTrust.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -114,7 +114,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../Common;../Interfaces;../Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;../Include;../Include/subversion;../Include/apr;../Include/apr-util;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -130,7 +130,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>gdiplus.lib;xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib;..\lib\subv_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -202,7 +202,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../Common;../Interfaces;../Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Common;../Interfaces;../Include;../Include/subversion;../Include/apr;../Include/apr-util;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -217,7 +217,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>gdiplus.lib;xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib;..\lib\subv_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -360,6 +360,11 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SVNClient.cpp" />
+    <ClCompile Include="SVNDialogCommit.cpp" />
+    <ClCompile Include="SVNDialogLogin.cpp" />
+    <ClCompile Include="SVNDialogPlaintext.cpp" />
+    <ClCompile Include="SVNDialogSSLServerTrust.cpp" />
     <ClCompile Include="SyncAspListCtrl.cpp" />
     <ClCompile Include="SyncObjsListCtrl.cpp" />
   </ItemGroup>
@@ -513,6 +518,11 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <ClInclude Include="search.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="SVNClient.h" />
+    <ClInclude Include="SVNDialogCommit.h" />
+    <ClInclude Include="SVNDialogLogin.h" />
+    <ClInclude Include="SVNDialogPlaintext.h" />
+    <ClInclude Include="SVNDialogSSLServerTrust.h" />
     <ClInclude Include="SyncAspListCtrl.h" />
     <ClInclude Include="SyncObjsListCtrl.h" />
     <ClInclude Include="targetver.h" />

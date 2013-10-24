@@ -99,6 +99,13 @@
 #define IDB_WINS_TOOLBAR24              222
 #define IDB_MODELING_TOOLBAR24          223
 #define IDB_MAIN_TOOLBAR24              224
+#define IDD_DIALOG_SVNCOMMIT            225
+#define IDD_DIALOG_SVNPLAINTEXT         226
+#define IDD_DIALOG_SVNSSLSERVERTRUST    227
+#define IDD_DIALOG_SVNLOGIN             228
+#define IDD_PRINT_DIALOG                229
+#define IDD_PRINTSETUP_DIALOG           230
+#define IDD_PARADIGMPROPERTIES_DIALOG   231
 #define IDC_NAME                        1000
 #define IDC_TYPENAME                    1001
 #define IDC_KINDNAME                    1002
@@ -201,9 +208,18 @@
 #define IDC_LIST1                       1124
 #define IDC_EMERGENCY_INFO_STATIC       1125
 #define IDC_MINIDUMP_INFO_STATIC        1126
-#define IDD_PRINT_DIALOG                1538
-#define IDD_PRINTSETUP_DIALOG           1539
-#define IDD_PARADIGMPROPERTIES_DIALOG   1540
+#define IDC_EDIT_SVNCOMMIT_FILENAME     1127
+#define IDC_EDIT_SVNCOMMIT_REPO         1128
+#define IDC_EDIT_SVNCOMMIT_REVISION     1129
+#define IDC_EDIT_FINGERPRINT            1130
+#define IDC_EDIT_SVNCOMMIT_LOG          1131
+#define IDC_EDIT_ISSUER                 1132
+#define IDC_EDIT_PROBLEMS               1133
+#define IDC_CHECK_PERMANENT             1134
+#define IDC_EDIT_REALM                  1135
+#define IDC_EDIT_USERNAME               1136
+#define IDC_EDIT_PASSWORD               1137
+#define IDC_EDIT_HOST                   1138
 #define ID_USER_TOOL1                   6150
 #define ID_USER_TOOL2                   6151
 #define ID_USER_TOOL3                   6152
@@ -523,9 +539,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        225
+#define _APS_NEXT_RESOURCE_VALUE        232
 #define _APS_NEXT_COMMAND_VALUE         33272
-#define _APS_NEXT_CONTROL_VALUE         1132
+#define _APS_NEXT_CONTROL_VALUE         1139
 #define _APS_NEXT_SYMED_VALUE           119
 #endif
 #endif
