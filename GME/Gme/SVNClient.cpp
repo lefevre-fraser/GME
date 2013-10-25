@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 
+#ifndef _WIN64
+
 #include "SVNClient.h"
 #include "svn_dso.h"
 #include "svn_utf.h"
@@ -666,3 +668,5 @@ svn_error_t* CSVNFile::cbStatus(
 
 	return SVN_NO_ERROR;
 }
+
+#endif // #ifndef _WIN64

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef _WIN64
+
 #include "svn_client.h"
 #include "svn_config.h"
 #include "svn_pools.h"
@@ -116,4 +118,44 @@ private:
 	bool canceledOperation;
 	svn_wc_notify_action_t lastNotifyAction;
 };
+
+#else // #ifndef _WIN64
+// Dummy implementation for x64
+
+class CSVNClient;
+
+class CSVNFile
+{
+	friend class CSVNClient;
+
+private:
+	CSVNFile() {}
+
+public:
+
+	bool isVersioned() {return false;}
+	bool isTracked() {return false;}
+	bool isOwned() {return false;}
+	bool isLatest() {return true;}
+
+	bool update() {}
+	bool takeOwnership() {}
+	bool commit() {}
+};
+
+class CSVNClient
+{
+public:
+	CSVNClient() : dummyFile() {}
+
+	void initialize() {}
+
+	CSVNFile* embraceFile(const CString & filePath) {return &dummyFile;}
+	void forgetFile(CSVNFile* svnFile) {}
+
+private:
+	CSVNFile dummyFile;
+};
+
+#endif // #ifndef _WIN64
 
