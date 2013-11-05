@@ -211,6 +211,7 @@ def compile_JBON():
         
 def compile_tools():
     "Compile external tool components"
+    import _winreg
     
     # Auto Layout
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln")
@@ -218,14 +219,16 @@ def compile_tools():
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
-
+    
+    with _winreg.CreateKeyEx(_winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\ISIS.GME.Common", 0, _winreg.KEY_WOW64_32KEY | _winreg.KEY_WRITE | _winreg.KEY_READ) as key:
+        _winreg.SetValueEx(key, None, 0, _winreg.REG_SZ, os.path.join(os.environ['windir'], r"Microsoft.NET\assembly\GAC_MSIL\ISIS.GME.Common\v4.0_1.0.4.0__1321e6b92842fe54"))
+    
     sln_file = os.path.join(GME_ROOT, "Tools", "DumpWMF", "DumpWMF.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
 
     if prefs['arch'] == 'x64':
         tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
                       os.path.join(GME_ROOT, 'Tools', 'DumpWMF', 'bin', 'Release', 'DumpWMF.dll')])
-        import _winreg
         with _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, r"CLSID\{A051FEEA-E310-3F6A-8D71-A55E3F4F2E14}", 0, _winreg.KEY_WRITE | _winreg.KEY_WOW64_64KEY) as key:
             _winreg.SetValueEx(key, "AppID", 0, _winreg.REG_SZ, "{461F30AF-3BF0-11D4-B3F0-005004D38590}")
 

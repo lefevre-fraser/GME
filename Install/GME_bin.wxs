@@ -858,6 +858,30 @@
             <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME\1.0.1.0__f240a760fe751c2e'/>
           </RegistryKey>
         </RegistryKey>
+        <RegistryKey Root='HKLM' Key='Software\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx'>
+          <RegistryKey Key='GME.MGA.Core' >
+            <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Core\1.0.1.0__f240a760fe751c2e'/>
+          </RegistryKey>
+          <RegistryKey Key='GME.MGA.Meta' >
+            <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Meta\1.0.1.0__f240a760fe751c2e'/>
+          </RegistryKey>
+          <RegistryKey Key='GME.MGA' >
+            <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA\1.0.1.0__f240a760fe751c2e'/>
+          </RegistryKey>
+          <RegistryKey Key='GME.MGA.Parser' >
+            <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Parser\1.1.0.0__f240a760fe751c2e'/>
+          </RegistryKey>
+          <RegistryKey Key='GME.Util' >
+            <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.Util\1.0.1.0__f240a760fe751c2e'/>
+          </RegistryKey>
+          <RegistryKey Key='GME' >
+            <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME\1.0.1.0__f240a760fe751c2e'/>
+          </RegistryKey>
+
+          <RegistryKey Key='ISIS.GME.Common' >
+            <RegistryValue Type='string' Value='[WindowsFolder]Microsoft.NET\assembly\GAC_MSIL\ISIS.GME.Common\v4.0_1.0.4.0__1321e6b92842fe54'/>
+          </RegistryKey>
+          </RegistryKey>
       </Component>
     </DirectoryRef>
 

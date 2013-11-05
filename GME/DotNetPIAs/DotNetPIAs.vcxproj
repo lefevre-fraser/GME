@@ -120,6 +120,7 @@
     <Exec Command="&quot;$(SDK35ToolsPath)\gacutil&quot; /nologo /i $(OutName).dll" />
     <!-- nb must execute 32bit -->
     <Exec Command="reg add HKLM\SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\$([System.IO.Path]::GetFileName($(OutName))) /ve /d c:\WINDOWS\assembly\GAC_MSIL\$([System.IO.Path]::GetFileName($(OutName)))\$(PIAVersion)__f240a760fe751c2e /f" />
+    <Exec Command="reg add HKLM\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\$([System.IO.Path]::GetFileName($(OutName))) /ve /d c:\WINDOWS\assembly\GAC_MSIL\$([System.IO.Path]::GetFileName($(OutName)))\$(PIAVersion)__f240a760fe751c2e /f" />
   </Target>
   <Target Name="AfterBuild">
     <MSBuild Properties="OutName=..\DotNetPIAs_1.0.0.0\GME.MGA.Core;PIAVersion=1.0.0.0" Projects="$(MSBuildProjectFullPath)" Targets="RegisterPIA" />
