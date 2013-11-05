@@ -220,8 +220,9 @@ def compile_tools():
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
     
-    with _winreg.CreateKeyEx(_winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\ISIS.GME.Common", 0, _winreg.KEY_WOW64_32KEY | _winreg.KEY_WRITE | _winreg.KEY_READ) as key:
-        _winreg.SetValueEx(key, None, 0, _winreg.REG_SZ, os.path.join(os.environ['windir'], r"Microsoft.NET\assembly\GAC_MSIL\ISIS.GME.Common\v4.0_1.0.4.0__1321e6b92842fe54"))
+    with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft", 0, _winreg.KEY_WOW64_32KEY | _winreg.KEY_WRITE | _winreg.KEY_READ) as ms:
+        with _winreg.CreateKey(ms, r".NETFramework\v4.0.30319\AssemblyFoldersEx\ISIS.GME.Common") as key:
+            _winreg.SetValueEx(key, None, 0, _winreg.REG_SZ, os.path.join(os.environ['windir'], r"Microsoft.NET\assembly\GAC_MSIL\ISIS.GME.Common\v4.0_1.0.4.0__1321e6b92842fe54"))
     
     sln_file = os.path.join(GME_ROOT, "Tools", "DumpWMF", "DumpWMF.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
