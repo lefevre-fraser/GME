@@ -378,19 +378,22 @@ else \
 	return S_OK;
 
 #define COMRETURN_IN_TRANSACTION_MAYBE(hr) \
-	if (FAILED(hr)) { \
+  do { \
+	HRESULT _hr = hr; \
+	if (FAILED(_hr)) { \
 		if (!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX)) \
 		{ \
 			HRESULT hrTx = ttt.Abort(); \
 			if (FAILED(hrTx)) return hrTx; \
 		} \
-		return hr; \
+		return _hr; \
 	} else { \
 		if (!(this->mgaproject->preferences & MGAPREF_NO_NESTED_TX)) \
 			return ttt.Commit(); \
 		else \
 			return S_OK; \
-	}
+	} \
+  } while(0);
 
 
 
