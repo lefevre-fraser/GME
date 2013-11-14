@@ -32,6 +32,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CGridDlg)
 	enum { IDD = IDD_GRIDDLG };
+	CButton	m_btnImport;
 	CStatic	m_stcFilters;
 	CStatic	m_stcSelect;
 	CButton	m_btnAllTypes;
@@ -46,6 +47,7 @@ public:
 	CButton	m_btnCon;
 	CButton	m_btnAtom;
 	CListBox	m_lstKind;
+	CButton	m_btnExport;
 	CButton	m_btnCANCEL;
 	CButton	m_btnOK;
 	BOOL	m_chkAllKinds;
@@ -94,6 +96,7 @@ protected:
 	//{{AFX_MSG(CGridDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnBtnExport();
 	afx_msg void OnRecursivelyShowItems();
 	afx_msg void OnButtonDisplay();
 	afx_msg void OnCheckAllKinds();
@@ -103,6 +106,7 @@ protected:
 	afx_msg void OnChkModel();
 	afx_msg void OnChkRef();
 	afx_msg void OnChkSet();
+	afx_msg void OnBtnImport();
 	//}}AFX_MSG
 	afx_msg void OnGridDblClick(NMHDR *pNotifyStruct, LRESULT* pResult);
     afx_msg void OnGridClick(NMHDR *pNotifyStruct, LRESULT* pResult);

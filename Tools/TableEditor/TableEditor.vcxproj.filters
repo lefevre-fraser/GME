@@ -51,6 +51,12 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TableEditorDumper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TableEditorParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GridCtrl_src\GridCell.cpp">
       <Filter>GridCtrl</Filter>
     </ClCompile>
