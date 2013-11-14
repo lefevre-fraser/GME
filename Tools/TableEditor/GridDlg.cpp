@@ -51,7 +51,7 @@ CGridDlg::CGridDlg(CWnd* pParent /*=NULL*/)
 	m_OldSize = CSize(-1,-1);
 }
 
-CGridDlg::CGridDlg(IMgaFCOs* selectedObjs, CWnd* pParent /*=NULL*/)
+CGridDlg::CGridDlg(IMgaProject* project, IMgaFCO *currentobj, IMgaFCOs *selectedobjs, CWnd* pParent /*=NULL*/)
 	: CDialog(CGridDlg::IDD, pParent), m_bInited(false)
 {
 	//{{AFX_DATA_INIT(CGridDlg)
@@ -66,10 +66,33 @@ CGridDlg::CGridDlg(IMgaFCOs* selectedObjs, CWnd* pParent /*=NULL*/)
 
 	m_OldSize = CSize(-1,-1);
 
-	m_FCOs = selectedObjs;
+	m_Project = project;
+	m_currentobj = currentobj;
+	m_selectedobjs = selectedobjs;
 
-	
+	long count = 0;
+	if (selectedobjs)
+		COMTHROW(selectedobjs->get_Count(&count));
 
+	// If there are selected objects, display those.
+	// If there is no current model, display the children of the root folder.
+	// If nothing is selected, display the children of the current
+	// object (assuming it's a model).
+	if (count > 0) {
+		m_FCOs = selectedobjs;
+	} else	{
+		m_Filter = NULL;
+		COMTHROW(m_Project->CreateFilter(&m_Filter));
+		m_FCOs = NULL;
+
+		CComQIPtr<IMgaModel> currentobj_model;
+		if (currentobj)
+			currentobj_model = currentobj;
+		if (currentobj_model)
+			COMVERIFY(currentobj_model->GetDescendantFCOs(m_Filter, &m_FCOs));
+		else
+			COMVERIFY(m_Project->AllFCOs(m_Filter, &m_FCOs));
+	}
 }
 	
 
@@ -88,10 +111,11 @@ BOOL CGridDlg::OnInitDialog()
 	OnCheckAllKinds();
 	OnChkAllTypes();
 
-	long count;
-	COMTHROW(m_FCOs->get_Count(&count));
+	long count = 0;
+	if (m_selectedobjs)
+		COMTHROW(m_selectedobjs->get_Count(&count));
 
-	if(count>0)
+	if (count > 0)
 	{
 		m_btnAtom.EnableWindow(FALSE);
 		m_btnModel.EnableWindow(FALSE);
@@ -151,7 +175,7 @@ void CGridDlg::InitGrid() //really long function to init the grid, in the future
 	m_Grid.SetRowCount(0);
 	m_Grid.SetColumnCount(0);
 
-	if(m_FCOs == NULL)//if nothing was selected for the table editor invocation.
+	if (m_FCOs == NULL)//if nothing was selected for the table editor invocation.
 		return;
 
 
@@ -666,11 +690,6 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CGridDlg message handlers
 
-void CGridDlg::SetFilter(IMgaFilter *filter)
-{
-	m_Filter = filter;
-}
-
 
 /* void CGridDlg::Trace(LPCTSTR szFmt, ...)
 {    
@@ -1164,8 +1183,13 @@ void CGridDlg::OnButtonDisplay()
 		COMVERIFY(m_Filter->put_Kind(CComBSTR(m_kindsFiltered)));
 		
 		m_FCOs = NULL;
-	
-		COMVERIFY(m_Project->AllFCOs(m_Filter, &m_FCOs));
+		CComQIPtr<IMgaModel> currentobj_model;
+		if (m_currentobj)
+			currentobj_model = m_currentobj;
+		if (currentobj_model)
+			COMVERIFY(currentobj_model->GetDescendantFCOs(m_Filter, &m_FCOs));
+		else
+			COMVERIFY(m_Project->AllFCOs(m_Filter, &m_FCOs));
 
 
 		InitGrid();

@@ -204,8 +204,8 @@ void CSelectDlg::OnOK() //Display the grid
 		COMVERIFY(m_Filter->put_ObjType(CComBSTR(m_ObjType)));
 		COMVERIFY(m_Filter->put_Kind(CComBSTR(m_kindsFiltered)));	
 
-		m_Table.SetProject(m_Project);
-		m_Table.SetFilter(m_Filter);
+		// FIXME m_Table.m_Project = m_Project;
+		// FIXME m_Table.SetFilter(m_Filter);
 		if (m_Table.DoModal() == IDOK)
 			CDialog::OnOK();
 		else

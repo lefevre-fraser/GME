@@ -47,43 +47,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 		COMTHROW(project->CreateTerritory(NULL, &terr));
 		COMTHROW(project->BeginTransaction(terr));
 		try {
-			CComPtr<IMgaFCOs> gridFCOs = NULL;
-
-			long count = 0;
-			COMTHROW(selectedobjs->get_Count(&count));
-
-			// If there are selected objects, display those.
-			// If there is no current model, display the children of the root folder.
-			// If nothing is selected, display the children of the current
-			// object (assuming it's a model).
-			// If the current object isn't a model, display an empty list.
-			if (count > 0) {
-				gridFCOs = selectedobjs;
-			}
-			else if (!currentobj) {
-				IMgaFolder* rootFolder = NULL;
-				COMTHROW(project->get_RootFolder(&rootFolder));
-				COMTHROW(rootFolder->get_ChildFCOs(&gridFCOs));
-			}
-			else {
-				IMgaMetaFCO* meta = NULL;
-				objtype_enum type = OBJTYPE_NULL;
-
-				COMTHROW(currentobj->get_Meta(&meta));
-				COMTHROW(meta->get_ObjType(&type));
-
-				if (type == OBJTYPE_MODEL) {
-					IMgaModel* model = static_cast<IMgaModel*>(currentobj);
-					COMTHROW(model->get_ChildFCOs(&gridFCOs));
-				}
-				else {
-					// empty list
-					COMTHROW(gridFCOs.CoCreateInstance(L"Mga.MgaFCOs"));
-				}
-			}
-
-			CGridDlg m_Dlg(gridFCOs);
-			m_Dlg.SetProject(project);
+			CGridDlg m_Dlg(project, currentobj, selectedobjs);
 		
 			if( m_Dlg.DoModal() == IDCANCEL)
 				COMTHROW(project->AbortTransaction());//don't want to see those changes

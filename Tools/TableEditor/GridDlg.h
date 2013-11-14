@@ -22,12 +22,8 @@ class CGridDlg : public CDialog
 public:
 	CGridDlg(CWnd* pParent = NULL);   // standard constructor
 
-	CGridDlg(IMgaFCOs* selectedObjs, CWnd* pParent = NULL);
+	CGridDlg(IMgaProject *project, IMgaFCO *currentobj, IMgaFCOs *selectedobjs, CWnd* pParent = NULL);
 
-
-	void SetProject(IMgaProject *proj) {m_Project = proj;}
-
-	void SetFilter(IMgaFilter *filter);
 
 // Dialog Data
 	//{{AFX_DATA(CGridDlg)
@@ -75,6 +71,8 @@ protected:
 
 	CGridCtrl m_Grid;
 	CComPtr<IMgaProject> m_Project;
+	CComPtr<IMgaFCO> m_currentobj;
+	CComPtr<IMgaFCOs> m_selectedobjs;
 	CComPtr<IMgaFCOs> m_FCOs;
 	CComPtr<IMgaFilter> m_Filter;
 	CComPtr<IMgaMetaFolder> m_rootMetaFolder;
