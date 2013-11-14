@@ -97,7 +97,7 @@ protected:
 	afx_msg void Zoom(long percent);
 	afx_msg void ZoomTo(LPDISPATCH mgaFCOs);
 	afx_msg void Scroll(long bar, long scroll);
-	afx_msg HRESULT DumpModelGeometryXML(LPCTSTR filePath);
+	afx_msg void DumpModelGeometryXML(LPCTSTR filePath);
 
 	afx_msg BOOL GetValid();
 	afx_msg void SetValid(BOOL);

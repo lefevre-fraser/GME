@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <deque>
 #include <new>
+#include <sstream>
 #include "GMEstd.h"
 
 #include "GuiMeta.h"
@@ -39,6 +40,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
+#include <xercesc/util/IOException.hpp>
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
 #else
@@ -7797,7 +7799,7 @@ public :
 
 	XStr(const wchar_t* const toTranscode)
 	{
-		XMLString::copyString(fUnicodeForm, toTranscode);
+		fUnicodeForm = XMLString::replicate(toTranscode);
 	}
 	~XStr()
 	{
@@ -7844,7 +7846,7 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 
 				DOMElement* rootElem = doc->getDocumentElement();
 				rootElem->setAttribute(X("name"), X(name));
-				rootElem->setAttribute(X("id"), X(CString(currentModId)));
+				rootElem->setAttribute(X("id"), X(currentModId));
 
 				DOMElement* aspectsElem = doc->createElement(X("aspects"));
 				rootElem->appendChild(aspectsElem);
@@ -7988,22 +7990,31 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 			catch (const OutOfMemoryException&)
 			{
 				XERCES_STD_QUALIFIER cerr << "OutOfMemoryException" << XERCES_STD_QUALIFIER endl;
-				hr = E_FAIL;
+				SetStandardOrGMEErrorInfo(E_OUTOFMEMORY);
+				hr = E_OUTOFMEMORY;
 			}
 			catch (const DOMException& e)
 			{
 				XERCES_STD_QUALIFIER cerr << "DOMException code is:  " << e.code << XERCES_STD_QUALIFIER endl;
+				SetErrorInfo(E_FAIL, L"DOMException");
+				hr = E_FAIL;
+			}
+			catch (const IOException& e)
+			{
+				SetErrorInfo(E_FAIL, (wchar_t*)e.getMessage());
 				hr = E_FAIL;
 			}
 			catch (...)
 			{
 				XERCES_STD_QUALIFIER cerr << "An error occurred creating the document" << XERCES_STD_QUALIFIER endl;
+				SetStandardOrGMEErrorInfo(E_FAIL);
 				hr = E_FAIL;
 			}
 		} // (inpl != NULL)
 		else
 		{
 			XERCES_STD_QUALIFIER cerr << "Requested implementation is not supported" << XERCES_STD_QUALIFIER endl;
+			SetStandardOrGMEErrorInfo(E_FAIL);
 			hr = E_FAIL;
 		}
 
@@ -8011,11 +8022,12 @@ HRESULT CGMEView::DumpModelGeometryXML(LPCTSTR filePath)
 	}
 	catch(const XMLException& toCatch)
 	{
-		char *pMsg = XMLString::transcode(toCatch.getMessage());
-		XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
-			 << "  Exception message:"
-			 << pMsg;
-		XMLString::release(&pMsg);
+		// FIXME does this leak XMLPlatformUtils::Terminate();
+		std::basic_stringstream<wchar_t> err;
+		err << L"Error during Xerces-c Initialization.\n"
+			 << L"  Exception message:"
+			 << (wchar_t*)toCatch.getMessage();
+		SetErrorInfo(err.str().c_str());
 	}
 
 	return hr;

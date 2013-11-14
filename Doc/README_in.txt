@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 13.10.8
+                 GME 13.11.14
        Copyright © 2000-2013 Vanderbilt University
 
 
@@ -25,6 +25,13 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 13.11.14
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix gme.OleIt.DumpModelGeometryXML
+  - TableEditor: Excel Import/Export has been re-enabled
+  - VS 2012: Register PIAs and ISIS.GME.Common in Add Reference dialog
 
 Release Notes of Release 13.10.8
 ----------------------------------

@@ -626,7 +626,7 @@ BEGIN_DISPATCH_MAP(CGMEOLEIt, CCmdTarget)
 	DISP_FUNCTION(CGMEOLEIt, "Zoom", Zoom, VT_EMPTY, VTS_I4)
 	DISP_FUNCTION(CGMEOLEIt, "ZoomTo", ZoomTo, VT_EMPTY, VTS_DISPATCH)
 	DISP_FUNCTION(CGMEOLEIt, "Scroll", Scroll, VT_EMPTY, VTS_I2 VTS_I2)
-	DISP_FUNCTION(CGMEOLEIt, "DumpModelGeometryXML", DumpModelGeometryXML, VT_HRESULT, VTS_BSTR)
+	DISP_FUNCTION(CGMEOLEIt, "DumpModelGeometryXML", DumpModelGeometryXML, VT_EMPTY, VTS_BSTR)
 
 
 	DISP_FUNCTION(CGMEOLEIt, "ShowFCO", ShowFCO, VT_EMPTY, VTS_BSTR VTS_BOOL)
@@ -1082,13 +1082,20 @@ void CGMEOLEIt::Scroll(long bar, long scroll)
 	m_theView->Invalidate();
 }
 
-HRESULT CGMEOLEIt::DumpModelGeometryXML(LPCTSTR filePath) 
+void CGMEOLEIt::DumpModelGeometryXML(LPCTSTR filePath) 
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEOLEIt::DumpModelGeometryXML()\r\n"));
 
 	PRECONDITION_VALID_MODEL
 
-	return m_theView->DumpModelGeometryXML(filePath);
+	HRESULT hr = m_theView->DumpModelGeometryXML(filePath);
+	if (FAILED(hr))
+	{
+		_bstr_t err;
+		GetErrorInfo(err.GetAddress());
+		if (err.length())
+			AfxThrowOleDispatchException(201, err);
+	}
 }
 
 //static
@@ -3171,7 +3178,8 @@ STDMETHODIMP CGMEOLEIt::XDual::DumpModelGeometryXML(BSTR filePath)
 
 	TRY_DUAL(__uuidof(IGMEOLEIt))
 	{
-		return pThis->DumpModelGeometryXML(CString(filePath));
+		pThis->DumpModelGeometryXML(CString(filePath));
+		return NOERROR;
 	}
 	CATCH_ALL_DUAL
 }
