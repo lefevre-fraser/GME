@@ -622,6 +622,7 @@ void CTreeCtrlEx::OnRButtonDown( UINT nFlags, CPoint point )
 			}
 		}
 		m_hClickedItem = hClickedItem;
+		m_ptClick = point;
 	}
 	// Modified: 01/26/2002 Tihamer Levendovszky
 	else
