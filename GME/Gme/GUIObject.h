@@ -145,7 +145,7 @@ public:
 	static void MoveAnnotations(CGuiAnnotatorList& annList, CPoint& pt);
 	static void FindUpperLeft(CGuiAnnotatorList& anns, int& left, int& top);
 	static void ShiftAnnotations(CGuiAnnotatorList& annList, CPoint& shiftBy);
-	static bool Showable( CComPtr<IMgaRegNode>& mRootNode);
+	static bool Showable( CComPtr<IMgaRegNode>& mRootNode, CComPtr<IMgaFCO>& baseType);
 	static int  Hide( CComPtr<IMgaRegNode>& mRootNode);
 	CComPtr<IMgaElementDecorator> GetDecorator(int asp) { return decoratorData[asp]->decorator; }
 

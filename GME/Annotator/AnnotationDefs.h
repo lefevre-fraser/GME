@@ -10,7 +10,6 @@
 #define AN_ROOT						_T("annotations")
 #define AN_INHERITABLE				_T("inheritable")
 #define AN_HIDDEN					_T("hidden")
-#define AN_BROKEN_DERIV				_T("brokenDeriv")
 #define AN_COLOR_PREF				_T("color")
 #define AN_BGCOLOR_PREF				_T("bgcolor")
 #define AN_GRADIENTCOLOR_PREF		_T("gradientcolor")

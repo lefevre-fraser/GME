@@ -137,6 +137,7 @@ BOOL CAnnotationBrowserDlg::OnInitDialog()
 		CComBSTR bstr_tmp;
 		COMTHROW(m_model->get_Name(&bstr_tmp));
 		CopyTo(bstr_tmp, m_modelName);
+		SetWindowTextW(L"Annotations for '" + m_modelName + "'");
 
 		CComPtr<IMgaMetaFCO> metaFco;
 		COMTHROW(m_model->get_Meta(&metaFco));
@@ -301,7 +302,7 @@ void CAnnotationBrowserDlg::FillAnnotations()
 		MGACOLL_ITERATE(IMgaRegNode, subNodes) {
 			CComPtr<IMgaRegNode> subNode;
 			subNode = MGACOLL_ITER;
-			CAnnotationNode *node = new CAnnotationNode(subNode);
+			CAnnotationNode *node = new CAnnotationNode(subNode, m_model->DerivedFrom);
 			node->Read(this);
 			m_annotations.AddTail(node);
 		}
@@ -410,11 +411,25 @@ void CAnnotationBrowserDlg::LoadNodeToPanel(CAnnotationNode *node) {
 	m_inheritable.SetCheck( node->m_inheritable? BST_CHECKED:BST_UNCHECKED );
 	
 	// rederive btn
-	m_rederiveBtn.EnableWindow(node->m_canBeRederived || node->m_virtual);
+	m_rederiveBtn.EnableWindow(node->m_canBeRederived);
 	
 	// show/hide btn
 	m_showHideBtn.SetWindowText(node->m_hidden?show_str:hide_str);
-	m_showHideBtn.EnableWindow(node->m_hidden || node->m_canBeRederived || node->m_virtual);// show only in case of subtype/instance or if hidden
+	m_showHideBtn.EnableWindow(node->m_hidden);
+	if (node->m_hidden == false && node->m_archetype)
+	{
+		IMgaRegNodePtr archetypeRegNode = node->m_archetype->RegistryNode[node->m_regNode->Path];
+		long status = ATTSTATUS_UNDEFINED;
+		archetypeRegNode->GetStatus(&status);
+		if (status == ATTSTATUS_UNDEFINED)
+		{
+			m_showHideBtn.EnableWindow(FALSE);
+		}
+		else
+		{
+			m_showHideBtn.EnableWindow(TRUE);
+		}
+	}
 
 	memcpy(&m_anLogFont, &(node->m_logfont), sizeof(LOGFONT));
 	m_colorbtn.currentcolor = node->m_color;
@@ -533,7 +548,8 @@ void CAnnotationBrowserDlg::OnBnClickedRederivebutton()
 		CAnnotationNode *node = (CAnnotationNode *)m_wndAnnotationList.GetItemData(nItem);
 		
 		// rederive by clearing the node contents
-		if(node && !node->m_virtual) COMTHROW(node->m_regNode->RemoveTree());
+		if (node)
+			COMTHROW(node->m_regNode->RemoveTree());
 		
 		// read back the values from node->regNode, this time (i)nherited values are read
 		node->Read( this);

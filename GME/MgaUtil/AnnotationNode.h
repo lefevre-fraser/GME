@@ -9,6 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "..\Annotator\AnnotationDefs.h"
+#include <deque>
 
 class CAnnotationBrowserDlg;
 class CAnnotationAspect;
@@ -31,6 +33,7 @@ class CAnnotationNode
 {
 public:
 	CComPtr<IMgaRegNode> m_regNode;
+	IMgaFCOPtr m_archetype;
 	LOGFONT		m_logfont;
 	COLORREF	m_color;
 	COLORREF	m_bgcolor;
@@ -46,7 +49,6 @@ public:
 	bool		m_bRoundCornerRect;
 	int			m_iRoundCornerRadius;
 
-	bool		m_virtual;			// if status of the main regnode is 'inherited'
 	bool		m_canBeRederived;	// the "broken_deriv" entry signals that
 									// the annotation was once inherited,
 									// so it could be rederived
@@ -55,9 +57,33 @@ public:
 	bool		m_hidden;			// hide inherited annotation in this subtype/instance only
 	CAnnotationAspectArray	m_aspects;
 
-	CAnnotationNode(const CComPtr<IMgaRegNode> &regNode);
+	CAnnotationNode(const CComPtr<IMgaRegNode> &regNode, IMgaFCOPtr& archetype);
 	void Read(CAnnotationBrowserDlg *dlg);
 	void Write(CAnnotationBrowserDlg *dlg);
+
+	template<typename Func>
+	void for_each_subnode(Func f)
+	{
+		std::deque<IMgaRegNodePtr> regnodes;
+		regnodes.push_back(IMgaRegNodePtr(m_regNode.p));
+		while (regnodes.size())
+		{
+			IMgaRegNodePtr regnode = regnodes.front();
+			regnodes.pop_front();
+			f(regnode);
+			IMgaRegNodesPtr subnodes = regnode->GetSubNodes(VARIANT_FALSE);
+			for (int i = 1; i <= subnodes->Count; i++)
+			{
+				auto subnode = subnodes->GetItem(i);
+				if (regnode == m_regNode && wcscmp(subnode->Name, AN_HIDDEN) == 0)
+				{
+					continue;
+				}
+				regnodes.push_back(subnodes->GetItem(i));
+			}
+		}
+	}
+
 
 public:
 	static void InitializeClass();

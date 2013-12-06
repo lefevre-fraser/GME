@@ -2050,7 +2050,7 @@ void CGMEView::CreateAnnotators(CComPtr<IMgaRegNodes> &regNodes, CGuiAnnotatorLi
 		CComPtr<IMgaRegNode> anNode;
 		anNode = MGACOLL_ITER;
 		bool arch = !isSubType && isType; // archetype if not subtype and not instance (type)
-		if( arch || !arch && CGuiAnnotator::Showable( anNode ))
+		if( arch || (!arch && CGuiAnnotator::Showable(anNode, baseType)))
 		{
 			CGuiAnnotator *annotator = new CGuiAnnotator(currentModel, anNode, this, guiMeta->NumberOfAspects());
 			annList.AddTail(annotator);

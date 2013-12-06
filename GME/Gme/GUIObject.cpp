@@ -612,26 +612,25 @@ void  CGuiAnnotator::ReadLocation(int aspect, CComPtr<IMgaRegNode>& aspNode)
 		if(_stscanf(str,_T("%d,%d"), &lx, &ly) == 2) {
 			decoratorData[aspect]->location.left = lx;
 			decoratorData[aspect]->location.top = ly;
-		}
-		else {
-			throw hresult_exception();
+			return;
 		}
 	}
 	catch (hresult_exception &) {
-		try {
-			CComPtr<IMgaRegNode> rootNode;
-			COMTHROW(aspNode->get_ParentNode(&rootNode));
-			CComBSTR bstrRoot;
-			COMTHROW(rootNode->get_Value(&bstrRoot));
-			CString strRoot(bstrRoot);
-			long lxr, lyr;
-			if(_stscanf(strRoot,_T("%d,%d"), &lxr, &lyr) == 2) {
-				decoratorData[aspect]->location.left = lxr;
-				decoratorData[aspect]->location.top = lyr;
-			}
+	}
+	try {
+		CComPtr<IMgaRegNode> rootNode;
+		COMTHROW(aspNode->get_ParentNode(&rootNode));
+		CComBSTR bstrRoot;
+		COMTHROW(rootNode->get_Value(&bstrRoot));
+		CString strRoot(bstrRoot);
+		long lxr, lyr;
+		if(_stscanf(strRoot,_T("%d,%d"), &lxr, &lyr) == 2) {
+			decoratorData[aspect]->location.left = lxr;
+			decoratorData[aspect]->location.top = lyr;
+			return;
 		}
-		catch (hresult_exception &) {
-		}
+	}
+	catch (hresult_exception &) {
 	}
 }
 
@@ -771,12 +770,6 @@ int CGuiAnnotator::Hide(CComPtr<IMgaRegNode>& mRootNode )
 
 	CComBSTR bstr(L"1");
 
-	// inheritance broken node inserted
-	CComPtr<IMgaRegNode> brokNode;
-	CComBSTR brokNm(AN_BROKEN_DERIV);
-	COMTHROW( mRootNode->get_SubNodeByName(brokNm, &brokNode));
-	COMTHROW( brokNode->put_Value(bstr));
-
 	// hidden node set to true
 	CComPtr<IMgaRegNode> hideNode;
 	CComBSTR hideNm(AN_HIDDEN);
@@ -787,7 +780,7 @@ int CGuiAnnotator::Hide(CComPtr<IMgaRegNode>& mRootNode )
 }
 
 // static
-bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode>& mRootNode )
+bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode>& mRootNode, CComPtr<IMgaFCO>& baseType )
 {   // decides whether an annotation should be displayed in case of a subtype/instance
 	// Subtype/instance may have: owned annotations (not present in the ancestor) -> main status = ATTSTATUS_HERE
 	//                            inherited annotations                           -> main status = ATTSTATUS_INHERITED1,2,...
@@ -796,41 +789,39 @@ bool CGuiAnnotator::Showable( CComPtr<IMgaRegNode>& mRootNode )
 		CComBSTR bName;
 		COMTHROW(mRootNode->get_Name(&bName));
 
-		// if value of rootnode defined HERE, then show it only iff 'hide' not set
-		long status;
-		COMTHROW(mRootNode->get_Status(&status));
-		if( status == ATTSTATUS_HERE)
+		bool hidden_set = false;
+		CComPtr<IMgaRegNode> hideNode;
+		CComBSTR hideNm(AN_HIDDEN);
+		COMTHROW(mRootNode->get_SubNodeByName( hideNm, &hideNode));
+		if (hideNode)
 		{
-			bool hidden_set = false;
-			CComPtr<IMgaRegNode> hideNode;
-			CComBSTR hideNm(AN_HIDDEN);
-			COMTHROW(mRootNode->get_SubNodeByName( hideNm, &hideNode));
-			if (hideNode)
+			long hideStatus;
+			COMTHROW( hideNode->get_Status( &hideStatus));
+			if( hideStatus != ATTSTATUS_UNDEFINED)  // meta, here or inherited
 			{
-				long hideStatus;
-				COMTHROW( hideNode->get_Status( &hideStatus));
-				if( hideStatus != ATTSTATUS_UNDEFINED)  // meta, here or inherited
-				{
-					CComBSTR bstr;
-					COMTHROW( hideNode->get_Value( &bstr));
-					if( bstr == L"1")
-						hidden_set = true;
-				}
+				CComBSTR bstr;
+				COMTHROW( hideNode->get_Value( &bstr));
+				if( bstr == L"1")
+					return false;
 			}
-
-			return !hidden_set;
 		}
 
-		// the value of mRootNode is inherited (is NOT HERE)
-		CComPtr<IMgaRegNode> inheritNode;
-		CComBSTR inhName(AN_INHERITABLE);
-		COMTHROW(mRootNode->get_SubNodeByName( inhName, &inheritNode));
+		if (baseType->GetRegistryValue(mRootNode->Path).length())
+		{
+			CComPtr<IMgaRegNode> inheritNode;
+			CComBSTR inhName(AN_INHERITABLE);
+			COMTHROW(mRootNode->get_SubNodeByName( inhName, &inheritNode));
 
-		if (inheritNode) {
-			CComBSTR bstr;
-			COMTHROW(inheritNode->get_Value( &bstr));
-			if (bstr == L"1") // if "inheritable" is 1 show it
-				return true;
+			if (inheritNode) {
+				CComBSTR bstr;
+				COMTHROW(inheritNode->get_Value( &bstr));
+				if (bstr == L"1") // if "inheritable" is 1 show it
+					return true;
+			}
+		}
+		else
+		{
+			return true;
 		}
 	}
 	catch(hresult_exception &e) {

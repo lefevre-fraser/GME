@@ -36,9 +36,10 @@ int  CAnnotationNode::defShadowDirection	= 45;
 bool CAnnotationNode::defRoundCornerRect	= false;
 int  CAnnotationNode::defRoundCornerRadius	= 9;
 
-CAnnotationNode::CAnnotationNode(const CComPtr<IMgaRegNode> &regNode)
+CAnnotationNode::CAnnotationNode(const CComPtr<IMgaRegNode> &regNode, IMgaFCOPtr& archetype)
 {
 	m_regNode = regNode;
+	m_archetype = archetype;
 	if (!classIsInitialized) {
 		InitializeClass();
 	}
@@ -46,36 +47,24 @@ CAnnotationNode::CAnnotationNode(const CComPtr<IMgaRegNode> &regNode)
 
 void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 {
-	// virtual: if status of m_regNode is 'inherited'
 	try {
-		m_virtual = false;
-		long st;
-		COMTHROW( m_regNode->get_Status( &st));
-		if( st > ATTSTATUS_HERE) // -1: meta, 0: here, >=1: inherited
-			m_virtual = true;
-	}
-	catch (hresult_exception &) {
-		ASSERT(("Error while reading annotation from registry.", false));
-		m_virtual = false;
-	}
-
-	// it can be rederived if 'broken deriv' entry present with '1'
-	try {
-		m_canBeRederived = defCanBeRederived;
-		CComBSTR bstr;
-		CComPtr<IMgaRegNode> lfNode;
-		CComBSTR lfName(AN_BROKEN_DERIV);
-		COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-		if (lfNode != NULL) {
-			COMTHROW(lfNode->get_Value(&bstr));
-			if (bstr == L"1")
-				m_canBeRederived = true;
+		m_canBeRederived = false;
+		if (m_archetype)
+		{
+			for_each_subnode([&](IMgaRegNodePtr& regnode)
+			{
+				long status = ATTSTATUS_UNDEFINED;
+				regnode->GetStatus(&status);
+				if (status == ATTSTATUS_HERE)
+				{
+					m_canBeRederived = true;
+				}
+			});
 		}
 	}
 	catch (hresult_exception &) {
-		m_canBeRederived = defCanBeRederived;
+		ASSERT(("Error while reading annotation from registry.", false));
 	}
-
 
 	// Annotation name
 	try {
@@ -145,7 +134,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		}
 		CString str(bstr);
 		if (!CAnnotationUtil::LogfontDecode(str, &m_logfont)) {
-			throw hresult_exception();
+			memcpy(&m_logfont, &defFont, sizeof(LOGFONT));
 		}
 	}
 	catch (hresult_exception &) {
@@ -170,7 +159,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 			m_color = RGB(r,g,b);
 		}
 		else {
-			throw hresult_exception();
+			m_color = defColor;
 		}
 	}
 	catch (hresult_exception &) {
@@ -458,38 +447,7 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 		CString old_m_text = bstr1;
 		old_m_text = CAnnotationUtil::ResolveNewLinesToCRLF(old_m_text);
 
-		if(!m_virtual) COMTHROW(m_regNode->RemoveTree()); // remove the old node if it was HERE, because we will write a new node there
-		else // virtual node: still inherited
-		{ 
-			// keep the derivation chain if the text has not been changed
-			if( old_m_text == m_text)
-				return;
-			else// This value will only signal that the chain is broken.
-				// By writing under the same node into a subtype's registry
-				// we can hide the inherited value with a HERE value.
-				broken_inheritance = true;
-		}
-
-		bool collision = true;
-		while (collision) {
-			m_regNode = NULL;
-			CComBSTR bstrName(m_name);
-			COMTHROW(parentNode->get_SubNodeByName(bstrName, &m_regNode));
-			long status;
-			COMTHROW(m_regNode->get_Status(&status));
-			if (status == ATTSTATUS_UNDEFINED) {
-				collision = false;
-			}
-			else {
-				if(broken_inheritance // if we broke right now the inheritance
-				 || m_canBeRederived) // or it was broken in the past
-					collision = false;// don't signal a 'collision' since we
-				                      // have to hide the old (i)nherited value
-				                      // with a (h)ere value
-				else
-					m_name += _T("Copy");
-			}
-		}
+		COMTHROW(m_regNode->RemoveTree()); // we will write a new one
 	}
 	catch (hresult_exception &) {
 		ASSERT(("Error while creating annotation to registry.", false));
@@ -506,50 +464,70 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 		ASSERT(("Error while writing annotation to registry.", false));
 	}
 
-	// Store 'broken derivation' preference (if text has been altered in the subtyped object's annotation)
-	// either broken in the past (canBeRederived) or broken right now(broken_inh)
-	if( m_canBeRederived || broken_inheritance) {
-		try {
-			CComBSTR bstr(L"1");
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_BROKEN_DERIV);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
-
-	// Store 'inheritable' preference
+	CComPtr<IMgaRegNode>& regNode = m_regNode;
+	auto storeInt = [&regNode](int default_, int value, const TCHAR* regName)
 	{
 		try {
-			CString str(m_inheritable?_T("1"):_T("0"));
-			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_INHERITABLE);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
+			CComBSTR lfName(regName);
+			COMTHROW(regNode->get_SubNodeByName(lfName, &lfNode));
+			if (default_ != value)
+			{
+				CString str;
+				str.Format(_T("%ld"), value);
+				CComBSTR bstr(str);
+				COMTHROW(lfNode->put_Value(bstr));
+			}
 		}
 		catch (hresult_exception &) {
 			ASSERT(("Error while writing annotation to registry.", false));
 		}
-	}
+	};
 
-	// Store 'hidden' preference
+	auto storeBool = [&regNode](bool default_, bool value, const TCHAR* regName)
 	{
 		try {
-			CString str(m_hidden?_T("1"):_T("0"));
-			CComBSTR bstr(str);
 			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_HIDDEN);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
+			CComBSTR lfName(regName);
+			COMTHROW(regNode->get_SubNodeByName(lfName, &lfNode));
+			if (default_ != value)
+			{
+				CString str(value ? _T("1") : _T("0"));
+				CComBSTR bstr(str);
+				COMTHROW(lfNode->put_Value(bstr));
+			}
 		}
 		catch (hresult_exception &) {
 			ASSERT(("Error while writing annotation to registry.", false));
 		}
-	}
+	};
+
+	auto storeColorRef = [&regNode](COLORREF default_, COLORREF value, const TCHAR* regName)
+	{
+		try {
+			CComPtr<IMgaRegNode> colNode;
+			CComBSTR colName(regName);
+			COMTHROW(regNode->get_SubNodeByName(colName, &colNode));
+			if (default_ != value) {
+				unsigned long ival = value;
+				unsigned long r = (ival & 0xff0000) >> 16;
+				unsigned long g = (ival & 0xff00) >> 8;
+				unsigned long b = ival & 0xff;
+				ival = (unsigned long)(RGB(r,g,b));
+				CString str;
+				str.Format(_T("0x%06x"), (unsigned long)ival);
+				CComBSTR bstr(str);
+				COMTHROW(colNode->put_Value(bstr));
+			}
+		}
+		catch (hresult_exception &) {
+			ASSERT(("Error while writing annotation to registry.", false));
+		}
+	};
+
+	storeInt(defInheritable, m_inheritable, AN_INHERITABLE);
+
+	storeBool(defHidden, m_hidden, AN_HIDDEN);
 
 	// Store color,bgcolor,font preferences
 	if (memcmp(&m_logfont, &defFont, sizeof(LOGFONT)) != 0) {
@@ -567,198 +545,27 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 		}
 	}
 
-	if (m_color != defColor) {
-		try {
-			unsigned long ival = m_color;
-			unsigned long r = (ival & 0xff0000) >> 16;
-			unsigned long g = (ival & 0xff00) >> 8;
-			unsigned long b = ival & 0xff;
-			ival = (unsigned long)(RGB(r,g,b));
-			CString str;
-			str.Format(_T("0x%06x"), (unsigned long)ival);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> colNode;
-			CComBSTR colName(AN_COLOR_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(colName, &colNode));
-			COMTHROW(colNode->put_Value(bstr));
-		
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeColorRef(defColor, m_color, AN_COLOR_PREF);
 
-	if (m_bgcolor != defBgcolor) {
-		try {
-			unsigned long ival = m_bgcolor;
-			unsigned long r = (ival & 0xff0000) >> 16;
-			unsigned long g = (ival & 0xff00) >> 8;
-			unsigned long b = ival & 0xff;
-			ival = (unsigned long)(RGB(r,g,b));
-			CString str;
-			str.Format(_T("0x%06x"), (unsigned long)ival);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> bgcolNode;
-			CComBSTR bgcolName(AN_BGCOLOR_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(bgcolName, &bgcolNode));
-			COMTHROW(bgcolNode->put_Value(bstr));
-		
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeColorRef(defBgcolor, m_bgcolor, AN_BGCOLOR_PREF);
 
-	if (m_crShadow != defShadowcolor) {
-		try {
-			unsigned long ival = m_crShadow;
-			unsigned long r = (ival & 0xff0000) >> 16;
-			unsigned long g = (ival & 0xff00) >> 8;
-			unsigned long b = ival & 0xff;
-			ival = (unsigned long)(RGB(r,g,b));
-			CString str;
-			str.Format(_T("0x%06x"), (unsigned long)ival);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> bordercolNode;
-			CComBSTR bordercolName(AN_SHADOWCOLOR_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(bordercolName, &bordercolNode));
-			COMTHROW(bordercolNode->put_Value(bstr));
-		
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeColorRef(defShadowcolor, m_crShadow, AN_SHADOWCOLOR_PREF);
 
-	if (m_crGradient != defGradientcolor) {
-		try {
-			unsigned long ival = m_crGradient;
-			unsigned long r = (ival & 0xff0000) >> 16;
-			unsigned long g = (ival & 0xff00) >> 8;
-			unsigned long b = ival & 0xff;
-			ival = (unsigned long)(RGB(r,g,b));
-			CString str;
-			str.Format(_T("0x%06x"), (unsigned long)ival);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> gradientcolNode;
-			CComBSTR gradientcolName(AN_GRADIENTCOLOR_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(gradientcolName, &gradientcolNode));
-			COMTHROW(gradientcolNode->put_Value(bstr));
-		
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeColorRef(defGradientcolor, m_crGradient, AN_GRADIENTCOLOR_PREF);
 
-	// Store 'gradientfill' preference
-	{
-		try {
-			CString str(m_bGradientFill ? _T("1") : _T("0"));
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_GRADIENTFILL_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeBool(defGradientFill, m_bGradientFill, AN_GRADIENTFILL_PREF);
 
-	// Store 'gradientdirection' preference
-	{
-		try {
-			CString str;
-			str.Format(_T("%ld"), m_iGradientDirection);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_GRADIENTDIRECTION_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeInt(defGradientDirection, m_iGradientDirection, AN_GRADIENTDIRECTION_PREF);
 
-	// Store 'castshadow' preference
-	{
-		try {
-			CString str(m_bCastShadow ? _T("1") : _T("0"));
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_CASTSHADOW_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeBool(defCastShadow, m_bCastShadow, AN_CASTSHADOW_PREF);
 
-	// Store 'shadowdepth' preference
-	{
-		try {
-			CString str;
-			str.Format(_T("%ld"), m_iShadowDepth);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_SHADOWDEPTH_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeInt(defShadowDepth, m_iShadowDepth, AN_SHADOWDEPTH_PREF);
 
-	// Store 'shadowdirection' preference
-	{
-		try {
-			CString str;
-			str.Format(_T("%ld"), m_iShadowDirection);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_SHADOWDIRECTION_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeInt(defShadowDirection, m_iShadowDirection, AN_SHADOWDIRECTION_PREF);
 
-	// Store 'roundcornerrect' preference
-	{
-		try {
-			CString str(m_bRoundCornerRect ? _T("1") : _T("0"));
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_ROUNDCORNERRECT_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeBool(defRoundCornerRect, m_bRoundCornerRect, AN_ROUNDCORNERRECT_PREF);
 
-	// Store 'roundcornerradius' preference
-	{
-		try {
-			CString str;
-			str.Format(_T("%ld"), m_iRoundCornerRadius);
-			CComBSTR bstr(str);
-			CComPtr<IMgaRegNode> lfNode;
-			CComBSTR lfName(AN_ROUNDCORNERRADIUS_PREF);
-			COMTHROW(m_regNode->get_SubNodeByName(lfName, &lfNode));
-			COMTHROW(lfNode->put_Value(bstr));
-		}
-		catch (hresult_exception &) {
-			ASSERT(("Error while writing annotation to registry.", false));
-		}
-	}
+	storeInt(defRoundCornerRadius, m_iRoundCornerRadius, AN_ROUNDCORNERRADIUS_PREF);
 
 	// Store default location & aspect visibility
 	CComPtr<IMgaRegNode> aspRoot;
@@ -803,6 +610,26 @@ void CAnnotationNode::Write(CAnnotationBrowserDlg *dlg)
 			}
 		}
 	}
+
+	if (m_archetype)
+	{
+		for_each_subnode([&](IMgaRegNodePtr& regnode)
+		{
+			/*
+			IMgaRegNodePtr archetypeReg = m_archetype->RegistryNode[regnode->Path];
+			long status = ATTSTATUS_UNDEFINED;
+			archetypeReg->GetStatus(&status);
+			if (status != ATTSTATUS_UNDEFINED && archetypeReg->Value == regnode->Value)
+			{
+				regnode->
+			}*/
+			if (m_archetype->RegistryValue[regnode->Path] == regnode->Value)
+			{
+				regnode->Clear();
+			}
+		});
+	}
+
 }
 
 void CAnnotationNode::InitializeClass()
