@@ -155,10 +155,18 @@ void CMgaProject::OpenParadigm(BSTR s, VARIANT *pGUID) {
 	}
 	ASSERT(connstr);
 	COMTHROW(metapr.CoCreateInstance(OLESTR("Mga.MgaMetaProject")));
-	metapr->__Open(connstr);
+	HRESULT hr = metapr->Open(connstr);
+	if (FAILED(hr))
+	{
+		_bstr_t err;
+		if (GetErrorInfo(err.GetAddress()))
+			throw_com_error(E_MGA_PARADIGM_INVALID, static_cast<const wchar_t*>(err)); // change HRESULT
+		COMTHROW(E_MGA_PARADIGM_INVALID);
+	}
 	CComVariant metaGUID;
 	COMTHROW(metapr->get_GUID(&metaGUID));
-	if(guidcmp(metaGUID, *pGUID)) COMTHROW(E_MGA_PARADIGM_INVALID);
+	if (guidcmp(metaGUID, *pGUID)) 
+		throw_com_error(E_MGA_PARADIGM_INVALID, L".mta file paradigm GUID does not match registered GUID");
 	parconn = connstr.GetBSTR();
 }
 

@@ -26,6 +26,10 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Fix opening mga file when its paradigm mta no longer exists
+
 Release Notes of Release 13.11.14
 ----------------------------------
   - Binary compatibility with 11.12.2

@@ -1402,6 +1402,8 @@ void CGMEApp::OpenProject(const CString &conn) {
 		COMTHROW( mgaProject->EnableAutoAddOns(VARIANT_TRUE));
 		HRESULT hr = mgaProject->Open(PutInBstr(conn), &readable_only);
 		if(hr != S_OK) {
+			_bstr_t mgaProjectOpenError;
+			GetErrorInfo(mgaProjectOpenError.GetAddress());
 			CComBSTR parn;
 			CComBSTR parv;
 			long version;
@@ -1447,8 +1449,10 @@ void CGMEApp::OpenProject(const CString &conn) {
 				}
 				if(hr == E_MGA_PARADIGM_INVALID) {
 					msg = _T("WARNING: Project could not access its original version of\n")
-						_T("paradigm '") + CString(parn) + _T("'\n")
-						_T("Do you want to try with the current version of the paradigm?");
+						_T("paradigm '") + CString(parn) + _T("'\n");
+					if (mgaProjectOpenError.length())
+						msg += static_cast<const wchar_t*>(mgaProjectOpenError);
+					msg += _T("Do you want to try with the current version of the paradigm?");
 					if (AfxMessageBox(msg ,MB_OKCANCEL) == IDOK) {
 						guidpar = true;
 						tryit = true;
