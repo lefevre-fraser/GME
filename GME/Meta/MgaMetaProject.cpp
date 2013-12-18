@@ -54,7 +54,7 @@ STDMETHODIMP CMgaMetaProject::Open(BSTR connection)
 	COMTRY
 	{
 		if( coreproject != NULL )
-			COMTHROW( Close() );
+			__Close();
 
 		CComPtr<ICoreMetaProject> coremetaproject;
 		CreateCoreMetaProject(coremetaproject);
@@ -64,17 +64,17 @@ STDMETHODIMP CMgaMetaProject::Open(BSTR connection)
 
 		coreproject->__OpenProject(connection, coremetaproject, NULL);
 
-		COMTHROW( coreproject->CreateTerritory(PutOut(coreterritory)) );
+		coreproject->__CreateTerritory(PutOut(coreterritory));
 		ASSERT( coreterritory != NULL );
 
-		COMTHROW( coreproject->BeginTransaction(TRANSTYPE_READFIRST) );
-		COMTHROW( coreproject->PushTerritory(coreterritory) );
+		coreproject->__BeginTransaction(TRANSTYPE_READFIRST);
+		coreproject->__PushTerritory(coreterritory);
 
-		COMTHROW( coreproject->get_RootObject(PutOut(rootobject)) );
+		rootobject.p = coreproject->RootObject;
 
 		CMgaMetaFolder::Traverse(this, rootobject);
 
-		COMTHROW( coreproject->CommitTransaction(TRANSTYPE_READFIRST) );
+		coreproject->__CommitTransaction(TRANSTYPE_READFIRST);
 	}
 	COMCATCH(
 		metaobj_lookup.clear();
@@ -99,7 +99,7 @@ STDMETHODIMP CMgaMetaProject::Create(BSTR connection)
 
 		coreproject->__CreateProject(connection, coremetaproject);
 
-		COMTHROW( coreproject->CreateTerritory(PutOut(coreterritory)) );
+		coreproject->__CreateTerritory(PutOut(coreterritory));
 		ASSERT( coreterritory != NULL );
 
 		COMTHROW( coreproject->BeginTransaction(TRANSTYPE_FIRST) );
@@ -127,40 +127,38 @@ STDMETHODIMP CMgaMetaProject::Create(BSTR connection)
 
 STDMETHODIMP CMgaMetaProject::BeginTransaction()
 {
-	if( coreproject == NULL )
-		COMRETURN(E_INVALID_USAGE);
-
 	COMTRY
 	{
-		COMTHROW( coreproject->BeginTransaction(TRANSTYPE_FIRST) );
+		_ThrowExceptionIfNotOpen();
+
+		coreproject->__BeginTransaction(TRANSTYPE_FIRST);
 
 		ASSERT( coreterritory != NULL );
-		COMTHROW( coreproject->PushTerritory(coreterritory) );
+		coreproject->__PushTerritory(coreterritory);
 	}
 	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::CommitTransaction()
 {
-	if( coreproject == NULL )
-		COMRETURN(E_INVALID_USAGE);
-
 	COMTRY
 	{
-		COMTHROW( rootobject->put_AttributeValue(ATTRID_MDATE, CurrentTime()) );
-		COMTHROW( coreproject->CommitTransaction(TRANSTYPE_FIRST) );
+		_ThrowExceptionIfNotOpen();
+
+		rootobject->AttributeValue[ATTRID_MDATE] = CurrentTime();
+		coreproject->__CommitTransaction(TRANSTYPE_FIRST);
 	}
 	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::AbortTransaction()
 {
-	if( coreproject == NULL )
-		COMRETURN(E_INVALID_USAGE);
 
 	COMTRY
 	{
-		COMTHROW( coreproject->AbortTransaction(TRANSTYPE_FIRST) );
+		_ThrowExceptionIfNotOpen();
+
+		coreproject->__AbortTransaction(TRANSTYPE_FIRST);
 	}
 	COMCATCH(;)
 }
@@ -216,7 +214,7 @@ STDMETHODIMP CMgaMetaProject::Close()
 				coreterritory = NULL;
 			}
 
-			COMTHROW( coreproject->CloseProject(VARIANT_TRUE) );
+			coreproject->__CloseProject(VARIANT_TRUE);
 			coreproject = NULL;
 		}
 
@@ -230,13 +228,13 @@ STDMETHODIMP CMgaMetaProject::Close()
 
 STDMETHODIMP CMgaMetaProject::get_GUID(VARIANT *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
 
 	CHECK_OUT(p);
 
 	COMTRY
 	{
+		_ThrowExceptionIfNotOpen();
+
 		CCoreObjectPtr me(rootobject);
 		me.GetVariantValue(ATTRID_GUID, p);
 
@@ -253,125 +251,170 @@ STDMETHODIMP CMgaMetaProject::get_GUID(VARIANT *p)
 
 STDMETHODIMP CMgaMetaProject::put_GUID(VARIANT p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(::GUID) )
-		COMRETURN(E_INVALIDARG);
+		if( p.vt != (VT_UI1 | VT_ARRAY) || GetArrayLength(p) != sizeof(::GUID) )
+			COMRETURN(E_INVALIDARG);
 
-	return ComPutAttrValue(rootobject, ATTRID_GUID, p);
+		return ComPutAttrValue(rootobject, ATTRID_GUID, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_Name(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetAttrValue(rootobject, ATTRID_PARNAME, p);
+		return ComGetAttrValue(rootobject, ATTRID_PARNAME, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_Name(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_PARNAME, p);
+		return ComPutAttrValue(rootobject, ATTRID_PARNAME, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_DisplayedName(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetDisplayedName(rootobject, ATTRID_PARDISPNAME, ATTRID_PARNAME, p);
+		return ComGetDisplayedName(rootobject, ATTRID_PARDISPNAME, ATTRID_PARNAME, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_DisplayedName(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_PARDISPNAME, p);
+		return ComPutAttrValue(rootobject, ATTRID_PARDISPNAME, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_Version(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetAttrValue(rootobject, ATTRID_VERSION, p);
+		return ComGetAttrValue(rootobject, ATTRID_VERSION, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_Version(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_VERSION, p);
+		return ComPutAttrValue(rootobject, ATTRID_VERSION, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_Author(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetAttrValue(rootobject, ATTRID_AUTHOR, p);
+		return ComGetAttrValue(rootobject, ATTRID_AUTHOR, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_Author(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_AUTHOR, p);
+		return ComPutAttrValue(rootobject, ATTRID_AUTHOR, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_Comment(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetAttrValue(rootobject, ATTRID_COMMENT, p);
+		return ComGetAttrValue(rootobject, ATTRID_COMMENT, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_Comment(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_COMMENT, p);
+		return ComPutAttrValue(rootobject, ATTRID_COMMENT, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_CreatedAt(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetAttrValue(rootobject, ATTRID_CDATE, p);
+		return ComGetAttrValue(rootobject, ATTRID_CDATE, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_CreatedAt(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_CDATE, p);
+		return ComPutAttrValue(rootobject, ATTRID_CDATE, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_ModifiedAt(BSTR *p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComGetAttrValue(rootobject, ATTRID_MDATE, p);
+		return ComGetAttrValue(rootobject, ATTRID_MDATE, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::put_ModifiedAt(BSTR p)
 {
-	if( rootobject == NULL )
-		COMRETURN(E_META_NOTOPEN);
+	COMTRY
+	{
+		_ThrowExceptionIfNotOpen();
 
-	return ComPutAttrValue(rootobject, ATTRID_MDATE, p);
+		return ComPutAttrValue(rootobject, ATTRID_MDATE, p);
+	}
+	COMCATCH(;)
 }
 
 STDMETHODIMP CMgaMetaProject::get_FindObject(metaref_type metaref, IMgaMetaBase **p)
@@ -515,4 +558,10 @@ void CMgaMetaProject::CreateJointPaths(BSTR paths, jointpaths_type &jointpaths)
 			++i;
 		}
 	}
+}
+
+void CMgaMetaProject::_ThrowExceptionIfNotOpen()
+{
+	if (rootobject == NULL)
+		throw_com_error(E_META_NOTOPEN, L"MgaMetaProject is not open");
 }

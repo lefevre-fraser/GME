@@ -12,7 +12,8 @@ class CMgaMetaBase;
 class ATL_NO_VTABLE CMgaMetaProject : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaMetaProject, &__uuidof(MgaMetaProject)>,
-	public IDispatchImpl<IMgaMetaProject, &__uuidof(IMgaMetaProject), &__uuidof(__MGAMetaLib)>
+	public IDispatchImpl<IMgaMetaProject, &__uuidof(IMgaMetaProject), &__uuidof(__MGAMetaLib)>,
+	public ISupportErrorInfoImpl<&__uuidof(IMgaMetaProject)>
 {
 public:
 	CMgaMetaProject();
@@ -25,6 +26,7 @@ DECLARE_REGISTRY_RESOURCEID(IDR_MGAMETAPROJECT)
 BEGIN_COM_MAP(CMgaMetaProject)
 	COM_INTERFACE_ENTRY(IMgaMetaProject)
 	COM_INTERFACE_ENTRY2(IDispatch, IMgaMetaProject)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 
 // ------- Methods
@@ -102,6 +104,8 @@ public:
 public:
 	void CreatePathItems(bstr_const_iterator i, bstr_const_iterator e, pathitems_type &pathitems);
 	void CreateJointPaths(BSTR paths, jointpaths_type &jointpaths);
+private:
+	void _ThrowExceptionIfNotOpen();
 };
 
 #endif//MGA_MGAMETAPROJECT_H
