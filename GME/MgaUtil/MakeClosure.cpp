@@ -692,7 +692,7 @@ void CMakeClosure::markObj( CComObjPtr<T> obj)
 		COMTHROW( obj->get_RegistryValue( CComBSTR( m_markerNode), &buf0));
 
 		// check if the new marker appears already in the marker list
-		std::wstring str_buf = buf0;
+		std::wstring str_buf = buf0.Length() ? buf0 : L"";
 
 		TCHAR buf1[12];
 		swprintf_s( buf1, L",%i", m_markWith);
