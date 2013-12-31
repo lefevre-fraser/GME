@@ -737,7 +737,8 @@ namespace CSharpComponentWizard
                 string DevenvLocation = String.Empty;
                 RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
 
-                if (masterKey == null)
+                // KMS: on my machine, I had HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\VC\Runtimes\x64 with VS2012 not installed (but no "InstallDir")
+                if (masterKey == null || masterKey.GetValue(MainWindow.VS_INSTALLDIR_KEYNAME) == null)
                 {
                     masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
                 }
