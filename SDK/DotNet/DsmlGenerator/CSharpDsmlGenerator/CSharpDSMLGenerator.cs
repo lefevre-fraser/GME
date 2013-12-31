@@ -51,7 +51,7 @@ namespace CSharpDSMLGenerator
 
         /// <summary>
         /// This function is called for each interpreter invocation before Main.
-        /// Don't perform MGA operations here unless you open a tansaction.
+        /// Don't perform MGA operations here unless you open a transaction.
         /// </summary>
         /// <param name="project">The handle of the project opened in GME, for 
         /// which the interpreter was called.</param>
