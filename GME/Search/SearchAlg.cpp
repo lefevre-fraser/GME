@@ -457,76 +457,57 @@ void CSearch::SearchReferences(IMgaFCO *referenced)
     } MGACOLL_ITERATE_END;
 }
 
+struct AttributePair {
+	CComPtr<IMgaMetaAttribute> metaAttribute;
+	Attribute& searchAttribute;
+	int expressionStackIndex;
+};
+
 bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 {	
-    int index=0;
-    	
     bool found = false;
     CComPtr<IMgaFCO> cObj = obj;
 
-    CStringList attributeList;
-
-    //stores type of the attribute
-    std::vector<attval_enum> typeList;
-
-    //stores indices of the attribute in expression stack to access it randomly
-    //all attributes in the expression stack may not match the criteria
-    //so for the ones matching the criteria the index is stored so that it can be accessed 
-    //easily
-    std::vector<int> indices;
-
     //Get appropriate expression stack, either first or second 
-    std::vector<Attribute> expressionStack=first?filter.GetFirstAttributeStack():filter.GetSecondAttributeStack();
+    std::vector<Attribute> expressionStack = first ? filter.GetFirstAttributeStack() : filter.GetSecondAttributeStack();
 
     CComPtr<IMgaMetaFCO> cmeta;
     CComPtr<IMgaMetaAttributes> mattrs;
     COMTHROW(cObj->get_Meta(&cmeta));
     COMTHROW(cmeta->get_Attributes(&mattrs));
 
-    index = 0;
+	std::vector<AttributePair> attributePairs;
 
     //iterate thru attributes and make a list if it matches search criteria
     //also store its type and the index in original expression stack
+	// TODO: profile this and see if it is worth it to memoize
     MGACOLL_ITERATE(IMgaMetaAttribute, mattrs) {
-        attval_enum type;
 		CComBSTR strDisplayedName;
         COMTHROW(MGACOLL_ITER->get_DisplayedName(&strDisplayedName) );
-		CComBSTR strName;
-		COMTHROW(MGACOLL_ITER->get_Name(&strName) );
-        index=0; 
         for(std::vector<Attribute>::iterator it=expressionStack.begin();it!=expressionStack.end();++it)
         {
-            Attribute attr=*it;
+            Attribute& attr = *it;
             CString name=(CString) strDisplayedName;
             if (filter.IsCaseIgnored()) name.MakeLower();
             if(std::tr1::regex_search((LPCTSTR)name,attr.GetRegExp(attr.name,filter.MatchWholeWord())))
             {
-                COMTHROW(MGACOLL_ITER->get_ValueType(&type) );
-                attributeList.AddTail(CString(strName));
-
-                //put the attribute type in a vector
-                typeList.push_back(type);
-
-                //also put the appropriate index of the attribute name in the list
-                indices.push_back(index);
+				AttributePair p = { MGACOLL_ITER, attr };
+				attributePairs.emplace_back(std::move(p));
             }
-            index++;
         }
     } MGACOLL_ITERATE_END;
 
-
     //now check the attributes one by one
-    POSITION strpos = attributeList.GetHeadPosition();
-    index=0;
-  
-    while(strpos)
+    for (auto attributePairIt = attributePairs.begin(); attributePairIt != attributePairs.end(); ++attributePairIt)
     {
-        CString strAttribute = attributeList.GetNext(strpos);
-        
-        //aceess the corresponding attribute by using the index stored in a vector
-        Attribute& attribute = expressionStack[indices[index]];
+		CComPtr<IMgaMetaAttribute>& metaAttribute = attributePairIt->metaAttribute;
+		CComBSTR strName;
+		COMTHROW(metaAttribute->get_Name(&strName));
+        CString strAttribute = strName;
 
-        CString objVal=expressionStack[indices[index]].value;
+		Attribute& attribute = attributePairIt->searchAttribute;
+
+        CString objVal = attribute.value;
         if(!objVal.IsEmpty())
         {
             //place holders for actual attribute values
@@ -544,7 +525,9 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
             long value;
             VARIANT_BOOL vb;
 
-            switch(typeList[index])
+	        attval_enum type;
+			COMTHROW(metaAttribute->get_ValueType(&type));
+            switch(type)
             {
             case ATTVAL_STRING:
 			case ATTVAL_ENUM:
@@ -603,11 +586,9 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
         }
         else
             attribute.eval = TRUE;
-
-        
-        ++index;
     }		
-    return EvaluateResult(expressionStack); 
+
+	return EvaluateResult(expressionStack); 
 }
 
 //Evaluate the logical combination result
@@ -702,7 +683,7 @@ bool CSearch::PerformLogical(int x,int y)
     return false;
 }
 
-//check if the searcc criteri matches agaibst the fco
+//check if the search criteria matches against the fco
 int CSearch::Matches(IMgaFCO* fco,bool first)
 {
     CString partName;
