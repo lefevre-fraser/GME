@@ -66,9 +66,9 @@ void CAutoComboBox::OnEditKeyDown(int nVKeyCode)
 void CAutoComboBox::Fill(CString& strText, BOOL bReload)
 {
 	// Clear combo
-	while(GetCount()!=0)
+	for (int i = GetCount() - 1; i >= 0; i--)
 	{
-		DeleteString(0);
+		DeleteString(i);
 	}
 
 	if(strText=="")

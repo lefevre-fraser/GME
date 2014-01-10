@@ -10,6 +10,8 @@ class CSearchCtrl;
 #include "ComHelp.h"
 #include "afxwin.h"
 #include "afxcmn.h"
+#include <vector>
+#include <algorithm>
 // SearchDlg.h : header file
 //
 
@@ -50,6 +52,20 @@ ListItemCompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
    return _tcscmp(strItem2, strItem1);
 }
 
+class AutocompleteComboBox : public CComboBox
+{
+	CString m_previous;
+	std::vector<CString> m_options;
+public:
+	void SetOptions(std::vector<CString>&& options)
+	{
+		m_options = std::move(options);
+	}
+	DECLARE_MESSAGE_MAP()
+	void OnEditChange();
+protected:
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+};
 
 class CSearchDlg : public CDialog
 {
@@ -119,14 +135,14 @@ public:
 
     //first search criteria controls
 	CComboBox	m_edtNameCtrlFirst;
-	CComboBox	m_edtKindNameCtrlFirst;
+	AutocompleteComboBox m_edtKindNameCtrlFirst;
 	CComboBox	m_edtRoleNameCtrlFirst;
 	CComboBox	m_edtAttributeCtrlFirst;
 	
     //second search criteria controls
     CComboBox m_edtNameCtrlSecond;
     CComboBox m_edtRoleNameCtrlSecond;
-    CComboBox m_edtKindNameCtrlSecond;
+    AutocompleteComboBox m_edtKindNameCtrlSecond;
     CComboBox m_edtAttributeCtrlSecond;
      
     CButton m_logicalGrp;
@@ -178,7 +194,28 @@ protected:
    
    	CComPtr<IMgaFCOs> results;
 	CComPtr<IMgaFCO> specialSearchFCO;
+public:
+	void GetKinds(CComPtr<IMgaProject>& project)
+	{
+		std::vector<CString> kinds;
+		CComPtr<IMgaMetaProject> meta;
+		project->get_RootMeta(&meta);
+		CComPtr<IMgaMetaFolder> root;
+		meta->get_RootFolder(&root);
+		CComPtr<IMgaMetaFCOs> metaFCOs;
+		root->get_DefinedFCOs(&metaFCOs);
+		MGACOLL_ITERATE(IMgaMetaFCO, metaFCOs)
+		{
+			_bstr_t name;
+			MGACOLL_ITER->get_Name(name.GetAddress());
+			kinds.push_back(CString(static_cast<const wchar_t*>(name)));
+		} MGACOLL_ITERATE_END;
+		std::sort(kinds.begin(), kinds.end());
+		m_edtKindNameCtrlFirst.SetOptions(std::vector<CString>(kinds));
+		m_edtKindNameCtrlSecond.SetOptions(std::move(kinds));
+	}
 
+protected:
 	BOOL m_scopedCtrlEnabled; // whether to enable scoped search at all
 
 

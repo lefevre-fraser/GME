@@ -17,6 +17,53 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+
+BEGIN_MESSAGE_MAP(AutocompleteComboBox, CComboBox)
+	ON_CONTROL_REFLECT(CBN_EDITCHANGE, OnEditChange)
+END_MESSAGE_MAP()
+
+LRESULT AutocompleteComboBox::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
+{
+	if (message == WM_KEYDOWN && wParam == VK_DOWN)
+	{ // FIXME this doesn't work
+		this->ShowDropDown();
+		return 0;
+	}
+
+	return __super::WindowProc(message, wParam, lParam);
+}
+
+void AutocompleteComboBox::OnEditChange()
+{
+	CString str;
+	GetWindowTextW(str);
+	if (m_previous.GetLength() >= str.GetLength())
+	{
+		m_previous = str;
+		return;
+	}
+	auto substr_eq = [&str](const wchar_t* str2) { return wcsncmp(str, str2, str.GetLength()) == 0; };
+	ResetContent();
+	auto it = std::find_if(m_options.begin(), m_options.end(), substr_eq);
+	auto first = it;
+	for (; it != m_options.end() && substr_eq(*it); ++it)
+	{
+		InsertString(-1, *it);
+	}
+	if (first != m_options.end())
+	{
+		SetWindowTextW(*first);
+		SetEditSel(str.GetLength(), -1);
+	}
+	else
+	{
+		SetWindowTextW(str);
+		SetEditSel(str.GetLength(), -1);
+	}
+	m_previous = str;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CSearchDlg dialog
 

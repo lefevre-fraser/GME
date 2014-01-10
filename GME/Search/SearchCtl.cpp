@@ -327,6 +327,7 @@ void CSearchCtrl::SetMgaProject(LPUNKNOWN newValue)
 		m_territory = NULL;
 		COMTHROW( m_project->CreateTerritory(&m_xEventSink,&m_territory,NULL) );
 		m_searchDlg.EnableSearch();
+		m_searchDlg.GetKinds(m_project);
 
 	}
 	else {
