@@ -38,12 +38,10 @@ public:
     wregex &GetFirstNameRegExp() {return m_regNameFirst;}
     wregex &GetFirstRoleRegExp() {return m_regRoleFirst;}
     wregex &GetFirstKindRegExp() {return m_regKindFirst;}
-    wregex &GetFirstAttributeRegExp() {return m_regAttributeFirst;}
 
     wregex &GetSecondNameRegExp() {return m_regNameSecond;}
     wregex &GetSecondRoleRegExp() {return m_regRoleSecond;}
     wregex &GetSecondKindRegExp() {return m_regKindSecond;}
-    wregex &GetSecondAttributeRegExp() {return m_regAttributeSecond;}
 
     //getter methods string forms
     CString &GetFirstName() {return m_strNameFirst;}
@@ -80,15 +78,12 @@ private:
 	wregex m_regRoleFirst;
 	/// The kind of object the user is searching for.
 	wregex m_regKindFirst;
-	/// The name of the attribute the user wants to search for.
-	wregex m_regAttributeFirst;
 	/// The type of attribute the user wants to search for.
 	//attval_enum getAttrType;
 	/// The value of the attribute the user wants to search for.
     wregex m_regNameSecond;
     wregex m_regRoleSecond;
     wregex m_regKindSecond;
-    wregex m_regAttributeSecond;
    
 	//String forms of input
     CString m_strNameFirst;

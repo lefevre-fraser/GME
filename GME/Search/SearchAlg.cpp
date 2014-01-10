@@ -186,7 +186,8 @@ void CSearch::CheckAllModels(IMgaFCOs *allObjects)
 void CSearch::SearchFolderHierarchy(IMgaFolder *root)
 {
     // Search in Root Models & Below
-    CComPtrList<IMgaModel> *rootmodlist = new CComPtrList<IMgaModel>; //needed to use new or the addtail below would fail	
+	std::unique_ptr<CComPtrList<IMgaModel>> rootmodlist_cleanup(new CComPtrList<IMgaModel>);
+    CComPtrList<IMgaModel> *rootmodlist = rootmodlist_cleanup.get(); //needed to use new or the addtail below would fail	
     CComPtr<IMgaFCOs> children;
     COMTHROW( root->get_ChildFCOs(&children));
     MGACOLL_ITERATE(IMgaFCO, children) {
@@ -230,8 +231,6 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
         SearchModelHierarchy(rootmodel);
     }
 
-    delete rootmodlist; //no longer needed, (used new above)
-
     // Search in Folders & Below
     CComPtr<IMgaFolders> flist;
     COMTHROW( root->get_ChildFolders(&flist));
@@ -244,7 +243,8 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
         //uncomment next line, and comment out rest of function for more dfs approach
         //		SearchFolderHierarchy(MGACOLL_ITER);
 
-        CComPtrList<IMgaModel> *mlist = new CComPtrList<IMgaModel>;	//needed to use new or the addtail below would fail
+		std::unique_ptr<CComPtrList<IMgaModel>> mlist_cleanup(new CComPtrList<IMgaModel>);
+        CComPtrList<IMgaModel> *mlist = mlist_cleanup.get();	//needed to use new or the addtail below would fail
         CComPtr<IMgaFCOs> subchildren;
         COMTHROW( MGACOLL_ITER->get_ChildFCOs(&subchildren));
         MGACOLL_ITERATE(IMgaFCO, subchildren) {
@@ -287,8 +287,6 @@ void CSearch::SearchFolderHierarchy(IMgaFolder *root)
             CComPtr<IMgaModel> submodel = mlist->GetNext(mpos);
             SearchModelHierarchy(submodel);
         }
-
-        delete mlist; //no longer needed, (used new above)
 
         // Search in SubFolders & Below
         CComPtr<IMgaFolders> sflist;
@@ -497,6 +495,34 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
         }
     } MGACOLL_ITERATE_END;
 
+	for(std::vector<Attribute>::iterator it=expressionStack.begin();it!=expressionStack.end();++it)
+    {
+        Attribute& attr = *it;
+		_bstr_t id;
+		if (_wcsicmp(attr.name, L"_id") == 0)
+		{
+			if (FAILED(cObj->get_ID(id.GetAddress())))
+			{
+				attr.eval = FALSE;
+				continue;
+			}
+			attr.eval = attr.CheckString(std::tr1::regex_search(static_cast<const wchar_t*>(id), attr.GetRegExp(attr.value,filter.MatchWholeWord())));
+			continue;
+		}
+		else if (_wcsicmp(attr.name, L"_guid") == 0)
+		{
+			if (FAILED(cObj->GetGuidDisp(id.GetAddress())))
+			{
+				attr.eval = FALSE;
+				continue;
+			}
+			if (attr.value.GetLength() == 38 && attr.value.GetAt(0) == L'{' && attr.value.GetAt(37) == L'}') // special case for _guid={00000000-0000-0000-0000-00000000000}
+				attr.eval = wcscmp(static_cast<const wchar_t*>(id), attr.value) == 0;
+			else
+				attr.eval = attr.CheckString(std::tr1::regex_search(static_cast<const wchar_t*>(id), attr.GetRegExp(attr.value,filter.MatchWholeWord())));
+		}
+    }
+
     //now check the attributes one by one
     for (auto attributePairIt = attributePairs.begin(); attributePairIt != attributePairs.end(); ++attributePairIt)
     {
@@ -586,7 +612,7 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
         }
         else
             attribute.eval = TRUE;
-    }		
+    }
 
 	return EvaluateResult(expressionStack); 
 }

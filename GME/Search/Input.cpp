@@ -60,12 +60,10 @@ void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKin
     m_regNameFirst = GetRegExp(strNameFirst);
     m_regRoleFirst = GetRegExp(strRoleFirst);
     m_regKindFirst = GetRegExp(strKindFirst);
-    m_regAttributeFirst = GetRegExp(strAttributeFirst);
 
     m_regNameSecond=GetRegExp(strNameSecond);
     m_regKindSecond=GetRegExp(strKindSecond);
     m_regRoleSecond=GetRegExp(strRoleSecond);
-    m_regAttributeSecond=GetRegExp(strAttributeSecond);
 
     //get string forms
 

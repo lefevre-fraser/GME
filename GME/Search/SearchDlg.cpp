@@ -179,6 +179,9 @@ BOOL CSearchDlg::OnInitDialog()
     m_pgsSearch.SetRange(1,16000);
     m_pgsSearch.SetStep(1);
 
+	InsertTextToControl(CString(L"_id="), m_edtAttributeCtrlFirst);
+	InsertTextToControl(CString(L"_guid="), m_edtAttributeCtrlFirst);
+
     //load search history from registry
     LoadSearchHistory();
 
@@ -326,8 +329,15 @@ void CSearchDlg::OnButtonGo()
             //this might throw error related to regular expression
             inp.GetInput(m_edtNameFirst,m_edtRoleNameFirst,m_edtKindNameFirst,m_edtAttributeFirst,m_edtNameSecond,m_edtRoleNameSecond,m_edtKindNameSecond,m_edtAttributeSecond,m_edtAttrValue,
             m_chkMod,m_chkAtom,m_chkRef,m_chkSet,m_chkConnection,m_chkSplSearch,m_chkFullWord,NULL,0,m_chkMatchCase,m_radioScope,m_radioLogical);
-        }
-        catch(...)
+
+			if (results == NULL)
+				COMTHROW(results.CoCreateInstance(L"Mga.MgaFCOs"));
+			CSearch searchGME(inp);
+			searchGME.Search(rootInput, ccpObjectsInTerr, specialSearchFCO,results,&m_pgsSearch);
+			DisplayResults();
+
+		}
+        catch (std::tr1::regex_error& err)
         {
             m_pgsSearch.ShowWindow(SW_HIDE);
             m_pgsSearch.SetPos(1);
@@ -339,14 +349,6 @@ void CSearchDlg::OnButtonGo()
             return;
         }
 
-
-		if (results == NULL)
-			COMTHROW(results.CoCreateInstance(L"Mga.MgaFCOs"));
-        CSearch searchGME(inp);
-        searchGME.Search(rootInput, ccpObjectsInTerr, specialSearchFCO,results,&m_pgsSearch);
-        //		AfxMessageBox(_T("Finished Searching"));
-
-        DisplayResults();
         m_pgsSearch.ShowWindow(SW_HIDE);
         m_pgsSearch.SetPos(1);
 

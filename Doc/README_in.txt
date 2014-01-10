@@ -29,6 +29,8 @@ You must uninstall GME versions prior to version
 Release Notes
 ----------------------------------
   - Fix opening mga file when its paradigm mta no longer exists
+  - Attribute search: allow searching for _id=id-0065-00000001 or _guid={...}
+  - Search: Autocomplete for Kind
 
 Release Notes of Release 13.11.14
 ----------------------------------
