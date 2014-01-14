@@ -2620,7 +2620,7 @@ void CAggregatePropertyPage::OnKeyDownTreeAggregate(NMHDR* pNMHDR, LRESULT* pRes
 					if( m_TreeAggregate.DoDrop( DRAGOP_COPY, &OleDataObject, CPoint( 0, 0))) {
 						// what about set focus back
 						m_TreeAggregate.SetFocus();
-					} else msg = _T("Cannot paste data from the clipboard. Please select valid target item.");
+					}
 				} else msg = _T("Cannot recover data from the clipboard.");
 
 				if( !msg.IsEmpty()) MessageBox( msg, _T("Paste Error"), MB_ICONERROR);

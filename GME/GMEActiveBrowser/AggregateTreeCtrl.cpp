@@ -826,10 +826,11 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 
 					// first move the selected folders. The order matters 
 					// since the NEWCHILD event must be the last one.
-					if( ccpDroppedFolders) COMTHROW( ccpTargetFolder->MoveFolders( ccpDroppedFolders, &ccpNewFolders));
+					if (ccpDroppedFolders)
+						ccpTargetFolder->__MoveFolders(ccpDroppedFolders, &ccpNewFolders);
 
 					// then move the selected fcos
-					COMTHROW( ccpTargetFolder->MoveFCOs( ccpDroppedFCOs, &ccpNewFCOs));
+					ccpTargetFolder->__MoveFCOs(ccpDroppedFCOs, &ccpNewFCOs);
 
 					// this ensures that the new parent is notified in the right time and place
 					// a NEWCHILD event is sent to the target folder
@@ -840,10 +841,11 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 				case DRAGOP_COPY:
 				{
 					CComPtr<IMgaFolders> ccpNewFolders;
-					if( ccpDroppedFolders) COMTHROW(ccpTargetFolder->CopyFolders(ccpDroppedFolders,&ccpNewFolders));
+					if (ccpDroppedFolders)
+						ccpTargetFolder->__CopyFolders(ccpDroppedFolders,&ccpNewFolders);
 
 					CComPtr<IMgaFCOs> ccpNewFCOs;
-					COMTHROW(ccpTargetFolder->CopyFCOs(ccpDroppedFCOs,&ccpNewFCOs));
+					ccpTargetFolder->__CopyFCOs(ccpDroppedFCOs,&ccpNewFCOs);
 					
 					MGACOLL_ITERATE(IMgaFCO, ccpNewFCOs) { // for smart copy related entries
 						MakeSureGUIDIsUniqueForSmartCopy( CComPtr<IMgaFCO>( MGACOLL_ITER) );
@@ -983,9 +985,8 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 								COMTHROW(ccpFCO->get_MetaRole(&ccpMetaRole));
 								CComPtr<IMgaMetaFCO> ccpKind;
 								COMTHROW(ccpFCO->get_Meta(&ccpKind));
-								CComPtr<IMgaMetaRole> ccpNewRole;
-
-								COMTHROW(ccpMgaResolver->get_RoleByMeta(ccpTargetModel,ccpKind,OBJTYPE_NULL,ccpMetaRole,NULL,&ccpNewRole));
+								
+								IMgaMetaRolePtr ccpNewRole = ccpMgaResolver->RoleByMeta[ccpTargetModel,ccpKind,OBJTYPE_NULL,ccpMetaRole,NULL];
 								COMTHROW(ccpMetaRoles->Append(ccpNewRole));
 							}
 							MGACOLL_ITERATE_END;
@@ -1014,9 +1015,9 @@ BOOL CAggregateTreeCtrl::DoDrop(eDragOperation doDragOp, COleDataObject *pDataOb
 						COMTHROW(ccpFCO->get_MetaRole(&ccpMetaRole));
 						CComPtr<IMgaMetaFCO> ccpKind;
 						COMTHROW(ccpFCO->get_Meta(&ccpKind));
-						CComPtr<IMgaMetaRole> ccpNewRole;
+						IMgaMetaRolePtr ccpNewRole;
 
-						COMTHROW(ccpMgaResolver->get_RoleByMeta(ccpTargetModel,ccpKind,OBJTYPE_NULL,ccpMetaRole,NULL,&ccpNewRole));
+						ccpNewRole = ccpMgaResolver->RoleByMeta[ccpTargetModel,ccpKind,OBJTYPE_NULL,ccpMetaRole,NULL];
 						COMTHROW(ccpMetaRoles->Append(ccpNewRole));
 					}
 					MGACOLL_ITERATE_END;

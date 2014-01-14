@@ -28,9 +28,28 @@ void docheck(CMgaProject *mgaproject) {
 //#pragma bookmark todo: put back stuff that needs testing
 	}
 	for(i = list.begin(); i != list.end(); ++i) {
-		if(((*i).first).IsDeleted()) continue;
-		if((*i).second & CHK_ILLEGAL) { COMTHROW(E_MGA_OP_REFUSED); }
-		else if((*i).second & CHK_SELF) { COMTHROW(ObjForCore((*i).first)->Check()); }
+		if (((*i).first).IsDeleted())
+			continue;
+		if ((*i).second & CHK_ILLEGAL)
+		{
+			COMTHROW(E_MGA_OP_REFUSED);
+		}
+		else if((*i).second & CHK_SELF)
+		{
+			HRESULT hr = ObjForCore((*i).first)->Check();
+			if (FAILED(hr))
+			{
+				_bstr_t err;
+				if (GetErrorInfo(err.GetAddress()))
+				{
+					throw_com_error(hr, err);
+				}
+				else
+				{
+					COMTHROW(hr);
+				}
+			}
+		}
 	}
 	list.clear();
 }
@@ -221,8 +240,15 @@ HRESULT FCO::Check() {
 								// ok, if current element and its parent are both rootfolders
 								stillok = COM_EQUAL( metaf, parentmf) && COM_EQUAL( metaf, mf);
 							}
+							if (!stillok)
+								COMTHROW(E_MGA_META_VIOLATION);
 					}
-					if(!stillok) COMTHROW(E_MGA_META_VIOLATION);
+					else
+					{
+						_bstr_t err = L"'";
+						err += parentmf->Name + "' cannot contain '" + metaf->Name + L"'";
+						throw_com_error(E_MGA_META_VIOLATION, err);
+					}
 				}
 				MGACOLL_ITERATE_END;
 			}
@@ -259,7 +285,13 @@ HRESULT FCO::Check() {
 				MGACOLL_ITERATE(IMgaMetaFCO, kinds) {
 				  if(COM_EQUAL(meta, MGACOLL_ITER)) break;
 				}
-				if(MGACOLL_AT_END) COMTHROW(E_MGA_META_VIOLATION);
+				if (MGACOLL_AT_END)
+				{
+					IMgaMetaFCOPtr r = meta.p;
+					_bstr_t err = L"'";
+					err += r->Name + "' cannot be contained in the root folder";
+					throw_com_error(E_MGA_META_VIOLATION, err);
+				}
 				MGACOLL_ITERATE_END;
 			}
 			else if(parenttyp == OBJTYPE_NULL) {
