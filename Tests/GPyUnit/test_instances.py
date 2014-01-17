@@ -2,7 +2,7 @@ import unittest
 import os
 import win32com.client
 import GPyUnit.util
-from GPyUnit.util import dec_disable_early_binding
+from GPyUnit.util import dec_disable_early_binding, DispatchEx
 
 def _adjacent_file(file):
     import os.path
@@ -108,5 +108,40 @@ class TestInstances(unittest.TestCase):
         subtype.DetachFromArcheType() # this changes RelIDs so there are no dups
         self.assertEquals(list(range(1,50+1)), sorted([fco.RelID for fco in subtype.ChildFCOs]))
         self.project.CommitTransaction()
+
+    @dec_disable_early_binding
+    def test_RemoveArchetypeConnpoint(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        allproxy = self.project.RootFolder.GetObjectByPathDisp("/@Aspects/@AllRef")
+        subtype = self.project.RootFolder.DeriveRootObject(aspects, False)
+        allrefNew = subtype.CreateChildObject(allproxy.MetaRole)
+        stc = aspects.GetObjectByPathDisp("@SourceToConnector")
+        model = aspects.GetObjectByPathDisp("@Model")
+        stc.SetSrc(DispatchEx("Mga.MgaFCOs"), model)
+
+        self.project.CommitTransaction()
+        self.project.Save(r"MGA=C:\Users\meta\tmp.mga")
+
+    @dec_disable_early_binding
+    def test_Connection_RevertToBase(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.Preferences = self.project.Preferences & (0xffffffff - 4) # MGAPREF_IGNORECONNCHECKS
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        subtype = self.project.RootFolder.DeriveRootObject(aspects, False)
+        subtype2 = self.project.RootFolder.DeriveRootObject(subtype, False)
+        stc = subtype.GetObjectByPathDisp("@SourceToConnector")
+        model = subtype.GetObjectByPathDisp("@Model")
+        stc.SetSrc(DispatchEx("Mga.MgaFCOs"), model)
+        self.assertEqual(stc.Src.ID, model.ID)
+        
+        self.assertEqual(1, stc.CompareToBase([cp for cp in stc.ConnPoints if cp.ConnRole == 'src'][0]))
+        self.assertEqual(0, stc.CompareToBase([cp for cp in stc.ConnPoints if cp.ConnRole == 'dst'][0]))
+        stc.RevertToBase(None)
+
+        self.project.CommitTransaction()
+        self.project.Save(r"MGA=C:\Users\meta\tmp.mga")
 
 #GPyUnit.util.MUGenerator(globals(), TestInstances)

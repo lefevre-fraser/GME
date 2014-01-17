@@ -727,7 +727,7 @@ void redo_derivs(CMgaProject *mgaproject, CoreObj &oldnode, CoreObj &newnode, bo
 					if(!CoreObj(ITER[ATTRID_MASTEROBJ])) {
 						CoreObj rr;
 						if(ObjForCore(newnode)->findroleobj(CComBSTR(ITER[ATTRID_NAME]), rr)) {
-							RemoveConnPTask().DoWithDeriveds(rr);
+							MgaConnPointDelete(rr);
 						}
 // todo: propagate
 						ITER[ATTRID_CONNROLE] = newnode;

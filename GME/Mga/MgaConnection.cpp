@@ -337,31 +337,30 @@ STDMETHODIMP CMgaConnPoint::get_References(IMgaFCOs **pVal) {
 void SingleObjTreeDelete(CoreObj &self, bool deleteself = true);
 
 
-bool RemoveConnPTask::Do(CoreObj self, std::vector<CoreObj> *peers) {
-		CoreObj fco = self[ATTRID_CONNROLE];
-		CoreObj target = self[ATTRID_XREF];
-		SingleObjTreeDelete(self);
-		COMTHROW(ObjForCore(fco)->Check());
+void MgaConnPointDelete(CoreObj& cobj)
+{
+		CoreObj fco = cobj[ATTRID_CONNROLE];
+		CoreObj target = cobj[ATTRID_XREF];
+		CoreObjs children = cobj[ATTRID_MASTEROBJ + ATTRID_COLLECTION];
+		ITERATE_THROUGH(children)
+		{
+			MgaConnPointDelete(ITER);
+		}
+		SingleObjTreeDelete(cobj);
 		ObjForCore(fco)->SelfMark(OBJEVENT_RELATION);
 		ObjForCore(target)->SelfMark(OBJEVENT_DISCONNECTED);
-		return true;
 }
-
-
 
 STDMETHODIMP CMgaConnPoint::Remove() {
 	CMgaProject *mgaproject = fco->mgaproject;
 	COMTRY_IN_TRANSACTION {
 		fco->CheckWrite();
-// removed		// do not allow deletion of inherited connpoints:
-//		if(CoreObj(cobj[ATTRID_MASTEROBJ])) COMTHROW(E_MGA_OP_REFUSED);  
-		RemoveConnPTask().DoWithDeriveds(cobj);;
+
+		CoreObj fco = cobj[ATTRID_CONNROLE];
+		MgaConnPointDelete(cobj);
+		COMTHROW(ObjForCore(fco)->Check());
 	} COMCATCH_IN_TRANSACTION(;);
 }
-
-
-
-
 
 
 // get conn points pointed at by this object
@@ -448,8 +447,10 @@ HRESULT FCO::ConnRevertToBase(IMgaConnPoint *p)  {
 			std::set<CoreObj> vv;
 			{
 				ITERATE_THROUGH(self[ATTRID_CONNROLE + ATTRID_COLLECTION]) {
-					if(CoreObj(ITER[ATTRID_MASTEROBJ])) vv.insert(ITER[ATTRID_MASTEROBJ]);
-					else RemoveConnPTask().DoWithDeriveds(ITER);;
+					if (CoreObj(ITER[ATTRID_MASTEROBJ]))
+						vv.insert(ITER[ATTRID_MASTEROBJ]);
+					else
+						MgaConnPointDelete(ITER);
 				}
 			}
 			ITERATE_THROUGH(base[ATTRID_CONNROLE + ATTRID_COLLECTION]) {

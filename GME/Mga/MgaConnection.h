@@ -108,9 +108,8 @@ public:
 	STDMETHOD(Remove)();
 };
 
-class RemoveConnPTask : public DeriveTreeTask {
-	bool Do(CoreObj self, std::vector<CoreObj> *peers = NULL);
-};
+void MgaConnPointDelete(CoreObj& cobj);
+
 
 class AddConnPTask : public DeriveTreeTask {
 	CComBSTR rolename;
