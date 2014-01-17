@@ -122,7 +122,6 @@ class TestInstances(unittest.TestCase):
         stc.SetSrc(DispatchEx("Mga.MgaFCOs"), model)
 
         self.project.CommitTransaction()
-        self.project.Save(r"MGA=C:\Users\meta\tmp.mga")
 
     @dec_disable_early_binding
     def test_Connection_RevertToBase(self):
@@ -142,6 +141,5 @@ class TestInstances(unittest.TestCase):
         stc.RevertToBase(None)
 
         self.project.CommitTransaction()
-        self.project.Save(r"MGA=C:\Users\meta\tmp.mga")
 
 #GPyUnit.util.MUGenerator(globals(), TestInstances)
