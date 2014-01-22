@@ -125,7 +125,7 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 
 	fprintf(fpt,"#include <string.h>\n");
 	fprintf(fpt,"#include <mgk60.h>\n");
-	fprintf(fpt,"#include \"%s\"\n\n",hfile);
+	fprintf(fpt,"#include \"%s\"\n\n",hfile.c_str());
 
 	ParamImpl::writeGlobals(fpt,false);
 	fprintf(fpt,"\n");
