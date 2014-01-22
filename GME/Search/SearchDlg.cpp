@@ -37,7 +37,8 @@ void AutocompleteComboBox::OnEditChange()
 {
 	CString str;
 	GetWindowTextW(str);
-	if (m_previous.GetLength() >= str.GetLength())
+	DWORD sel = GetEditSel();
+	if (m_previous.GetLength() >= str.GetLength() || wcsncmp(m_previous, str, m_previous.GetLength()) != 0)
 	{
 		m_previous = str;
 		return;
@@ -53,12 +54,12 @@ void AutocompleteComboBox::OnEditChange()
 	if (first != m_options.end())
 	{
 		SetWindowTextW(*first);
-		SetEditSel(str.GetLength(), -1);
+		SetEditSel(sel, -1);
 	}
 	else
 	{
 		SetWindowTextW(str);
-		SetEditSel(str.GetLength(), -1);
+		SetEditSel(sel, sel);
 	}
 	m_previous = str;
 }
