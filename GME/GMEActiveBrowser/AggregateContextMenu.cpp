@@ -159,7 +159,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 
 							CComBSTR bszDispName;
 							ccpMetaFolder->get_DisplayedName(&bszDispName);
-							bszDispName=CString(_T("New"))+CString(bszDispName);
+							bszDispName = CString(bszDispName);
 							
 
 							// Starting transaction
@@ -186,7 +186,7 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 							// Setting name to the newly created object
 							CComBSTR bszDispName;
 							ccpMetaFCO->get_DisplayedName(&bszDispName);
-							bszDispName=CString(_T("New"))+CString(bszDispName);
+							bszDispName = CString(bszDispName);
 							
 							// Starting transaction
 							CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
@@ -213,17 +213,13 @@ void CAggregateContextMenu::OnCustomItems(UINT nID)
 					{
 						CComPtr<IMgaFCO> ccpNewFCO;
 
-						// Setting name to the newly created object
-						CComBSTR bszDispName;
-						ccpMetaRole->get_DisplayedName(&bszDispName);
-						bszDispName=CString(_T("New"))+CString(bszDispName);
-						
 						// Starting transaction
 						CGMEActiveBrowserApp* pApp=(CGMEActiveBrowserApp*)AfxGetApp();
 						CMgaContext* pMgaContext=&pApp->m_CurrentProject.m_MgaContext;
 						pMgaContext->BeginTransaction(false);
 
 						COMTHROW( ccpParentModel->CreateChildObject(ccpMetaRole,&ccpNewFCO) );
+						// Setting name to the newly created object
 						if (ccpMetaRole->Name == ccpMetaRole->Kind->Name)
 						{
 							ccpNewFCO->Name = ccpMetaRole->Kind->DisplayedName;
