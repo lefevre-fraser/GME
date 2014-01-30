@@ -92,6 +92,20 @@ class CoreAbortTransaction(unittest.TestCase):
         project.Close(False)
         del(terr)
     
+    def testCloseWithOpenTx(self):
+        project = DispatchEx('Mga.MgaProject')
+        project.Create(self.connstr, 'MetaGME')
+        paradigmSheet = project.RootMeta.RootFolder.DefinedFCOByName('ParadigmSheet', True)
+        terr = project.BeginTransactionInNewTerr()
+        base = project.RootFolder.CreateRootObject(paradigmSheet)
+        base.CreateChildObject(paradigmSheet.RoleByName('Atom'))
+        for i in range(8):
+            base.ParentFolder.DeriveRootObject(base, True)
+        base_id = base.ID
+        # don't: project.CommitTransaction()
+        project.Close(True)
+        del(terr)
+
     @property
     def connstr(self):
         return 'MGA=' + _adjacent_file('tmp.mga')
