@@ -2300,6 +2300,39 @@ void CGMEView::Reset(bool doInvalidate)
 				contextAnnotation = ann;
 		}
 
+		SendNow(true);
+
+		try {
+			POSITION pos = selected.GetHeadPosition();
+			while (pos) {
+				CGuiObject* go = selected.GetNext(pos);
+				if (go && go->mgaFco) {
+					// Sending decorator events (for efficiency)
+					CGuiAspect* pAspect = go->GetCurrentAspect();
+					if (pAspect != NULL) {
+						CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
+						if (newDecorator)
+							HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE); // FIXME: decorators expect a transaction to be open
+					}
+				}
+			}
+		}
+		catch (hresult_exception&) {
+			AfxMessageBox(_T("Unable to refresh selected status to decorators"));
+			CGMEEventLogger::LogGMEEvent(_T("CGMEView::Reset - Unable to refresh selected status to decorators.\r\n"));
+		}
+
+		if (selConn != NULL) {
+			POSITION pos = connections.GetHeadPosition();
+			while(pos) {
+				CGuiConnection *conn = connections.GetNext(pos);
+				if (conn->mgaFco == selConn) {
+					selectedConnection = conn;
+					conn->SetSelect(true);
+					break;
+				}
+			}
+		}
 		CommitTransaction();
 	}
 	catch (hresult_exception& e) {
@@ -2314,43 +2347,10 @@ void CGMEView::Reset(bool doInvalidate)
 
 	Invalidate(doInvalidate);
 	AutoRoute();
+	SetScroll(); // TODO: will this work?
 	DoPannWinRefresh();
 
 	EndWaitCursor();
-
-	SendNow(true);
-
-	try {
-		POSITION pos = selected.GetHeadPosition();
-		while (pos) {
-			CGuiObject* go = selected.GetNext(pos);
-			if (go && go->mgaFco) {
-				// Sending decorator events (for efficiency)
-				CGuiAspect* pAspect = go->GetCurrentAspect();
-				if (pAspect != NULL) {
-					CComQIPtr<IMgaElementDecorator> newDecorator(pAspect->GetDecorator());
-					if (newDecorator)
-						HRESULT retVal = newDecorator->SetSelected(VARIANT_TRUE);
-				}
-			}
-		}
-	}
-	catch (hresult_exception&) {
-		AfxMessageBox(_T("Unable to refresh selected status to decorators"));
-		CGMEEventLogger::LogGMEEvent(_T("CGMEView::Reset - Unable to refresh selected status to decorators.\r\n"));
-	}
-
-	if (selConn != NULL) {
-		POSITION pos = connections.GetHeadPosition();
-		while(pos) {
-			CGuiConnection *conn = connections.GetNext(pos);
-			if (conn->mgaFco == selConn) {
-				selectedConnection = conn;
-				conn->SetSelect(true);
-				break;
-			}
-		}
-	}
 }
 
 void CGMEView::InitSets()
