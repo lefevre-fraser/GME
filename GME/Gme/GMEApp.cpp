@@ -893,6 +893,11 @@ void CGMEApp::UpdateMainFrameTitle(const CString& projName, bool retrievePath)
 		CChildFrame* childFrame = STATIC_DOWNCAST(CChildFrame, pChild);
 		projectName = childFrame->GetTitle() + _T(" - ") + childFrame->GetAppTitle();
 	}
+	if (mgaProject && isMgaProj()) {
+		CString filename, dirname;
+		getMgaPaths(filename, dirname);
+		projectName = projectName + L" (" + filename + L")";
+	}
 	CMainFrame::theInstance->UpdateTitle(projectName);
 }
 
