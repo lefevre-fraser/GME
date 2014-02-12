@@ -5839,12 +5839,21 @@ void CGMEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 						aspectName = asp->name;
 				}
 			}
+			auto guiport = selection->FindPort(point);
+			CComPtr<IMgaFCO> port;
+			if (guiport)
+				port = guiport->mgaFco; // n.b. get the MgaFCO here, or double-clicking on refport fails (guiport is deleted?)
 			if(model != 0) {
 				ShowModel(model, aspectName);
 #if !defined (ACTIVEXGMEVIEW)
 				CGMEView *view = CGMEDoc::theInstance->FindView(model);
-				if(view)
-					view->SetCenterObject(referred);
+				if (view)
+				{
+					if (port)
+						view->SetCenterObject(port); // this may change the aspect. (does it matter?)
+					else
+						view->SetCenterObject(referred);
+				}
 #endif
 			}
 		}
