@@ -479,10 +479,13 @@ void CCompDlg::RegisterDll(const CString &path)
 		DisplayError(_T("Unable to create component registrar"), hr);
 		return;
 	}
-	hr = registrar->RegisterComponentLibrary(PutInBstr(path), regacc_translate(m_accessmode));
-	if (FAILED(hr)) {
-		DisplayError(_T("Unable to register component"), hr);
+
+
+	MSGTRY
+	{
+		hr = registrar->__RegisterComponentLibrary(_bstr_t(path), regacc_translate(m_accessmode));
 	}
+	MSGCATCH(_T("Unable to register component"),;)
 }
 
 HRESULT CCompDlg::GetElevatedRegistrar(IMgaRegistrar** registrar)

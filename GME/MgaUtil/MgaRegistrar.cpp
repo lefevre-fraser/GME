@@ -5,7 +5,7 @@
 #include "Parser.h"
 
 #import "mscorlib.tlb"
-#import "libid:5f45c5d6-4e11-42fc-a558-cfa0b6c7bea6"
+#import "libid:5f45c5d6-4e11-42fc-a558-cfa0b6c7bea6" // MgaDotNetServices
 
 #include "atlsafe.h"
 
