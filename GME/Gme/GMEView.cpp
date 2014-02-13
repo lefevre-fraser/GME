@@ -625,6 +625,7 @@ CGMEView::CGMEView()
 	guiMeta							= 0;
 	currentAspect					= 0;
 	currentSet						= 0;
+	last_Connection					= 0;
 	lastObject						= 0;
 	lastPort						= 0;
 	dragSource						= 0;
@@ -2831,6 +2832,11 @@ void CGMEView::IncrementalAutoRoute()
 void CGMEView::ModeChange()
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::ModeChange in ")+path+name+_T("\r\n"));
+	if (last_Connection)
+	{
+		last_Connection->ToggleHover();
+		last_Connection = 0;
+	}
 	this->SendUnselEvent4List( &selected);
 	selected.RemoveAll();
 	ChangeAttrPrefObjs(selected);
@@ -9858,7 +9864,6 @@ void CGMEView::OnMouseMove(UINT nFlags, CPoint screenpoint)
 		CGuiObject *object = self? self->FindObject(point): 0;
 		// if object found, curr_Connection will be 0
 		CGuiConnection        *curr_Connection = object? 0: router.FindConnection( point);
-		static CGuiConnection *last_Connection = 0;
 		if( last_Connection != curr_Connection) // state change for at most two connections
 		{
 			if( last_Connection) last_Connection->ToggleHover(); // if a previous was selected, now it will become unselected
@@ -10573,7 +10578,7 @@ void CGMEView::SetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int val)
 	ASSERT( p_ccpMgaFCO);
 	if( !p_ccpMgaFCO) return;
 
-	static const CComBSTR bstrRegPath(L"namePosition");
+	const CComBSTR bstrRegPath(L"namePosition");
 	CString valString;
 	valString.Format(_T("%d"), val);
 	CComBSTR bstrValue( valString);
@@ -10588,7 +10593,7 @@ bool CGMEView::GetNamePositionVal(CComPtr<IMgaFCO>& p_ccpMgaFCO, int* p_valRet)
 	ASSERT( p_valRet);
 	if( !p_ccpMgaFCO) return false;
 
-	static const CComBSTR bstrRegPath(L"namePosition");
+	const CComBSTR bstrRegPath(L"namePosition");
 	CString strRegValue;
 
 	// Getting regnode

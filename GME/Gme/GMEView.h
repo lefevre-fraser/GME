@@ -154,6 +154,7 @@ public:
 	CGuiMetaAspect*			currentAspect;
 	CGuiFco*				contextSelection;
 	CGuiAnnotator*			contextAnnotation;
+	CGuiConnection *last_Connection;
 	CGuiSet*				currentSet;
 	CGuiPort*				contextPort;
 	CString					currentSetID;
