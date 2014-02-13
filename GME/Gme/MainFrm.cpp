@@ -1594,3 +1594,25 @@ void CMainFrame::OnUpdateWindowNew(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(FALSE);
 }
+
+void CMainFrame::CheckForOffscreenPanes()
+{
+	// it seems Windows does this for us when resolution is changed, so no need to handle WM_DISPLAYCHANGE
+	// but it is possible to float a pane, then close GME, then change the screen resolution
+
+	// TODO: these can float offscreen too...
+	//m_wndComponentBar; m_wndStatusBar; m_wndToolBarMain; m_wndToolBarModeling; m_wndToolBarWins; m_wndMenuBar; m_wndModeBar; m_wndNaviBar;
+	CDockablePane* panes[] = { &m_panningWindow, &m_console, &m_partBrowser, &m_browser, &m_objectInspector, &m_search, nullptr };
+	CDockablePane** pane = panes;
+	while (*pane)
+	{
+		HMONITOR mon = MonitorFromWindow((*pane)->GetSafeHwnd(), MONITOR_DEFAULTTONULL);
+		bool flt = (*pane)->IsFloating();
+		if (mon == nullptr && flt)
+		{
+			DockPane(*pane, AFX_IDW_DOCKBAR_BOTTOM);
+		}
+		pane++;
+	}
+	return;
+}

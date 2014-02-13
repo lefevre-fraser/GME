@@ -194,6 +194,8 @@ public:
 	{
 		m_wndClientArea.GetMDITabs().EnableActivateLastActive(enable);
 	}
+
+	void CheckForOffscreenPanes();
 };
 
 /////////////////////////////////////////////////////////////////////////////

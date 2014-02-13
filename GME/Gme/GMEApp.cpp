@@ -378,6 +378,7 @@ BOOL CGMEApp::InitInstance()
 		return FALSE;
 	}
 	m_pMainWnd = pMainFrame;
+	pMainFrame->CheckForOffscreenPanes();
 
 #if !defined(ADDCRASHTESTMENU) && defined(_DEBUG)
 	bNoProtect = true;
