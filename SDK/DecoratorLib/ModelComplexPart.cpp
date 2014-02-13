@@ -1285,7 +1285,7 @@ struct PortLess
 		if (posA.y != posB.y)
 			return posA.y < posB.y;
 
-		return posA.x < posB.y;
+		return posA.x < posB.x;
 	}
 };
 
