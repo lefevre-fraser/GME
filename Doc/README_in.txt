@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 13.11.14
+                 GME 14.2.18
        Copyright © 2000-2014 Vanderbilt University
 
 
@@ -26,11 +26,16 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes or Release 14.2.18
 ----------------------------------
+  - Binary compatibility with 11.12.2
+  - Model Editor: double-clicking port or refport now shows that port, instead of its parent
+  - Show .mga filename in the title bar
   - Fix opening mga file when its paradigm mta no longer exists
   - Attribute search: allow searching for _id=id-0065-00000001 or _guid={...}
   - Search: Autocomplete for Kind
+  - Fix bug where deleting and changing archetype connpoints would fail sometimes
+  - Make annotation inheritance less confusing
 
 Release Notes of Release 13.11.14
 ----------------------------------
