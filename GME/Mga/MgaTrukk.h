@@ -240,7 +240,7 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)
 	{
 //		return (InlineIsEqualGUID(riid,*piid)) ? S_OK : S_FALSE;
-		ASSERT(InlineIsEqualGUID(riid,*piid));
+		// ASSERT(InlineIsEqualGUID(riid,*piid)); not correct in many cases: e.g. riid=IMgaFCO on CMgaConnection, riid=IMgaSimpleConnection, riid=IDispatch, ....
 		return S_OK;
 	}
 };
