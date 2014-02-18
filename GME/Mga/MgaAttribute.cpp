@@ -634,43 +634,46 @@ STDMETHODIMP CMgaRegNode::get_Status( long *status) {
 }
 
 
+void MgaRegNode_get_Value(CMgaProject* mgaproject, FCO * fco, CoreObj s, BSTR mypath, BSTR *pVal)
+{
+	do {
+		CComVariant attr = s[ATTRID_REGNODE];
+		CComPtr<ICoreDictionaryAttributeValue> dict;
+		COMTHROW(attr.pdispVal->QueryInterface(&dict));
+		VARIANT vmap;
+		COMTHROW(dict->get_Map(&vmap));
+		CMgaRegNode::map_type* map = (CMgaRegNode::map_type*)(void*)vmap.llVal;
+
+		CMgaRegNode::map_type::iterator it = map->find(mypath);
+		if (it != map->end()) {
+			*pVal = CComBSTR(it->second).Detach();
+			return;
+		}
+		if (!s.IsFCO())
+			break;
+	} while (s = s[ATTRID_DERIVED]);
+
+	metaref_type mref = fco->self[ATTRID_META];
+	if(mref) {
+		CComQIPtr<IMgaMetaBase> m(mgaproject->FindMetaRef(mref));
+		CComPtr<IMgaMetaRegNode> rn;
+		HRESULT hr = m->get_RegistryNode(mypath, &rn);
+		if(hr == S_OK) {
+			COMTHROW(rn->get_Value(pVal));
+			return;
+		}
+		else if(hr != E_NOTFOUND)
+			COMTHROW(hr);
+	}
+	*pVal = NULL;
+}
+
 STDMETHODIMP CMgaRegNode::get_Value(BSTR *pVal) {
-		COMTRY {
-			CHECK_OUTVARIANTPAR(pVal);
-
-			CoreObj s = fco->self;
-			do {
-				CComVariant attr = s[ATTRID_REGNODE];
-				CComPtr<ICoreDictionaryAttributeValue> dict;
-				COMTHROW(attr.pdispVal->QueryInterface(&dict));
-				VARIANT vmap;
-				COMTHROW(dict->get_Map(&vmap));
-				map_type* map = (map_type*)(void*)vmap.llVal;
-
-				map_type::iterator it = map->find(mypath);
-				if (it != map->end()) {
-					*pVal = CComBSTR(it->second).Detach();
-					return S_OK;
-				}
-				if (!s.IsFCO())
-					break;
-			} while (s = s[ATTRID_DERIVED]);
-
-			metaref_type mref = fco->self[ATTRID_META];
-			if(mref) {
-				CComQIPtr<IMgaMetaBase> m(mgaproject->FindMetaRef(mref));
-				CComPtr<IMgaMetaRegNode> rn;
-				HRESULT hr = m->get_RegistryNode(mypath, &rn);
-				if(hr == S_OK) {
-					COMTHROW(rn->get_Value(pVal));
-					return S_OK;
-				}
-				else if(hr != E_NOTFOUND)
-					COMTHROW(hr);
-			}
-			*pVal = NULL;
-
-		} COMCATCH(;)
+	COMTRY {
+		CHECK_OUTVARIANTPAR(pVal);
+		CoreObj s = fco->self;
+		MgaRegNode_get_Value(mgaproject, fco, s, mypath, pVal);
+	} COMCATCH(;)
 }
 
 STDMETHODIMP CMgaRegNode::get_FCOValue(IMgaFCO **pVal) {

@@ -823,11 +823,10 @@ HRESULT FCO::get_Registry(VARIANT_BOOL virtuals, IMgaRegNodes **pVal) {
 	} COMCATCH(;);
 }
 HRESULT FCO::get_RegistryValue( BSTR path,  BSTR *pVal) {  
-	COMTRY {  // no arg check, called methods will do that
+	COMTRY {
 		CheckRead();
-		CComPtr<IMgaRegNode> node;
-		COMTHROW(get_RegistryNode(path, &node));
-		COMTHROW(node->get_Value(pVal));
+		CHECK_OUTVARIANTPAR(pVal);
+		MgaRegNode_get_Value(mgaproject, this, self, path, pVal);
 	} COMCATCH(;)
 }
 HRESULT FCO::put_RegistryValue( BSTR path,  BSTR newval) {  

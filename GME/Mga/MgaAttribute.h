@@ -16,6 +16,8 @@ struct CComBSTR_Length {
 	}
 };
 
+void MgaRegNode_get_Value(CMgaProject* mgaproject, FCO * fco, CoreObj s, BSTR mypath, BSTR *pVal);
+
 /////////////////////////////////////////////////////////////////////////////
 // CMgaAttribute
 class ATL_NO_VTABLE CMgaAttribute : 
