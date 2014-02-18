@@ -42,7 +42,9 @@ CViolationDialog::CViolationDialog( bool bExpanded, CWnd* pParent /*=NULL*/, IMg
 	{	
 		CComBSTR app(L"GME.Application");
 		CComPtr<IMgaClient> client;
-		COMTHROW(m_spProject->GetClientByName((BSTR)app, &client));
+		HRESULT hr = m_spProject->GetClientByName((BSTR)app, &client);
+		if (FAILED(hr))
+			return;
 
 		CComPtr<IDispatch> gui;
 		COMTHROW(client->get_OLEServer(&gui));
