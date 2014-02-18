@@ -15,10 +15,11 @@ class CComboBoxSelectDlg : public CDialog
 {
 	bool m_bInited;
 	bool m_bClosed;
+	int m_ComboboxLineHeight;
 
 // Construction
 public:
-	CComboBoxSelectDlg(CWnd* pParent = NULL);   // standard constructor
+	CComboBoxSelectDlg(CWnd* pParent, int comboboxLineHeight);
 
 // Attributes
 protected :

@@ -625,7 +625,7 @@ void CInPlaceManager::DisplayCompassOpt(CRect rectBound)
 
 void CInPlaceManager::DisplayCombo(CRect rectBound)
 {
-	CComboBoxSelectDlg dlg(m_pInspectorList);
+	CComboBoxSelectDlg dlg(m_pInspectorList, m_pInspectorList->m_ComboboxLineHeight);
 
 	CListItem& ListItem = m_pInspectorList->m_ListItemArray.ElementAt( m_nCurrentIndex );
 	m_pInspectorList->ClientToScreen( &rectBound );

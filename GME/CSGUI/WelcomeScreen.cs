@@ -53,6 +53,9 @@ namespace CSGUI
         {
             this.recents = recents;
             int y = 20;
+            using (Graphics g = this.CreateGraphics())
+            {
+
             foreach (string recent_ in recents)
             {
                 string recent = recent_;
@@ -62,14 +65,16 @@ namespace CSGUI
                 recentLink.AutoSize = false;
                 recentLink.AutoEllipsis = true;
                 recentLink.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                recentLink.Size = new Size(grpRecents.Size.Width - 14, 20);
+                recentLink.Size = new Size(grpRecents.Size.Width - 14,
+                    (int)Math.Ceiling(20 * g.DpiY / 96));
                 recentLink.LinkClicked += delegate(object sender, LinkLabelLinkClickedEventArgs args)
                 {
                     this.SelectedProject = recent;
                     this.Close();
                 };
                 grpRecents.Controls.Add(recentLink);
-                y += 23;
+                y += 4 + recentLink.Size.Height;
+            }
             }
 
             this.btnOpen.Click += new EventHandler(delegate(object o, EventArgs args)

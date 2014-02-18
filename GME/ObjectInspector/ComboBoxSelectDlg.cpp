@@ -19,8 +19,8 @@ static char THIS_FILE[] = __FILE__;
 
 class CListItem;
 
-CComboBoxSelectDlg::CComboBoxSelectDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CComboBoxSelectDlg::IDD, pParent)
+CComboBoxSelectDlg::CComboBoxSelectDlg(CWnd* pParent, int comboboxLineHeight)
+	: CDialog(CComboBoxSelectDlg::IDD, pParent), m_ComboboxLineHeight(comboboxLineHeight)
 {
 	//{{AFX_DATA_INIT(CComboBoxSelectDlg)
 		// NOTE: the ClassWizard will add member initialization here
@@ -73,7 +73,7 @@ BOOL CComboBoxSelectDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	SetWindowPos( NULL, m_RectBound.left, m_RectBound.top, m_RectBound.Width(), m_RectBound.Height(), SWP_NOZORDER );
-	CRect rect( 0, 0, m_RectBound.Width(), m_RectBound.Height() + 13 /* FIXME: m_ComboboxLineHeight */ );
+	CRect rect( 0, 0, m_RectBound.Width(), m_RectBound.Height() + m_ComboboxLineHeight);
 	m_lstBox.Create( LBS_NOTIFY | WS_VSCROLL, rect, this, IDC_COMBO_LISTBOX );
 	m_lstBox.SetFont( m_pFontWnd );
 
