@@ -1341,6 +1341,15 @@ STDMETHODIMP CMgaProject::get_ProjectStatus(long *status) {
 STDMETHODIMP CMgaProject::BeginTransaction(IMgaTerritory *ter, transactiontype_enum mode)
 {
 	COMTRY {
+		ASSERT(temporalobjs.empty());
+		while (temporalobjs.size())
+			temporalobjs.pop();
+		ASSERT(changedobjs.empty());
+		while (changedobjs.size())
+			changedobjs.pop();
+		ASSERT(notifyobjs.empty());
+		while (notifyobjs.size())
+			notifyobjs.pop();
 		CComPtr<IMgaTerritory> ttemp;
 		if(baseterr)
 			COMTHROW(E_MGA_ALREADY_IN_TRANSACTION);
@@ -1411,6 +1420,8 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 //			self[ATTRID_MDATE] = Now();
 		}
 		HRESULT hr = CommitNotify();
+		while (temporalobjs.size()) // CommitNotify may make changes. Don't notify for them.
+			temporalobjs.pop();
 		if (FAILED(hr))
 			return hr;
 		COMTHROW(dataproject->PopTerritory());
