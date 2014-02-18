@@ -184,9 +184,9 @@ public:
 
 	virtual void ParseParam(const TCHAR* pszParam, BOOL bFlag, BOOL bLast) {
 		
-		if(bFlag && !wcsicmp(pszParam, L"d")) bNoProtect = true;
- 		else if(bFlag && !wcsicmp(pszParam, L"l")) bOpenLast = true;
-		else if(bFlag && wcsnicmp(pszParam, L"run:", 4) == 0)
+		if(bFlag && !_wcsicmp(pszParam, L"d")) bNoProtect = true;
+ 		else if(bFlag && !_wcsicmp(pszParam, L"l")) bOpenLast = true;
+		else if(bFlag && _wcsnicmp(pszParam, L"run:", 4) == 0)
 		{
 			run = pszParam + 4;
 		}
