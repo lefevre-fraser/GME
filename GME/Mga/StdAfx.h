@@ -74,7 +74,22 @@ inline void NOOP_TRACE2(LPCSTR, ...) { }
 #define INTERFACECOLL_INCLUDED
 // End Imports
 
+#if 1
 #define ASSERT ATLASSERT
+#else
+static int _MgaDbgReportW(const wchar_t* file, __int64 line, const wchar_t* msg)
+{
+	wchar_t message[1024 * 2];
+	swprintf_s(message, L"Assert failed at %s:%I64d\n\nExpression: %s\n\nPress Ok to debug.", file, line, msg);
+	return ::MessageBox(0, message, L"Assert failed", MB_OKCANCEL);
+}
+
+#define _MGAASSERTE(expr, msg) \
+        (void) ((!!(expr)) || \
+                (IDOK == _MgaDbgReportW(_CRT_WIDE(__FILE__), __LINE__, msg)) && (DebugBreak(), 0))
+#define ASSERT(expr)  _MGAASSERTE((expr), _CRT_WIDE(#expr))
+
+#endif
 #include "CommonSmart.h"
 #include "CommonStl.h"
 #include "CommonError.h"
