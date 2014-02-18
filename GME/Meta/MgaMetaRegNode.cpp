@@ -14,8 +14,7 @@ HRESULT CMgaMetaRegNodes::get_RegistryNode(IUnknown *me, BSTR bpath, IMgaMetaReg
 	{
 		CCoreObjectPtr self(me);
 
-		std::string path;
-		CopyTo(bpath, path);
+		std::wstring path = bpath;
 
 		CComObjPtr<ICoreProject> coreproject;
 		COMTHROW( self->get_Project(PutOut(coreproject)) );
@@ -23,11 +22,10 @@ HRESULT CMgaMetaRegNodes::get_RegistryNode(IUnknown *me, BSTR bpath, IMgaMetaReg
 
 		for(;;)
 		{
-			size_t pos = path.find('/');//pos will be either in range 0..len-1 or will be equal with string::npos 
-			std::string name(path, 0, pos);
+			size_t pos = path.find(L'/');//pos will be either in range 0..len-1 or will be equal with string::npos 
+			std::wstring name(path, 0, pos);
 
-			CComBstrObj bname;
-			CopyTo(name, bname);
+			CComBstrObj bname(name.c_str());
 
 			CCoreObjectPtr node;
 

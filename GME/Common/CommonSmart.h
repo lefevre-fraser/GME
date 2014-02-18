@@ -10,6 +10,8 @@
 #include <AtlBase.h>
 #endif
 
+#include<string>
+
 // --------------------------- CComObjPtr
 
 // in containers we need the default "operator &",
@@ -420,9 +422,13 @@ class PutInBstr
 {
 public:
 	template<class T>
-	PutInBstr(const T t) { CopyTo(t, b); }
+	PutInBstr(const T& t) { CopyTo(t, b); }
 
-	template<> PutInBstr(BSTR a) : b(a) { }
+	template<> PutInBstr(const BSTR& a) : b(a) { }
+
+	template<> PutInBstr(const std::wstring& t) {
+		b.p = SysAllocStringLen(t.c_str(), t.length());
+	}
 
 	operator BSTR () { return b; }
 

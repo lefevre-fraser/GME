@@ -420,19 +420,19 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 				ASSERT( dumper != NULL );
 
 				COMTHROW(dumper->put_FormatVersion(0));
-				COMTHROW(dumper->DumpProject( p, PutInBstr( szTempXmeFileName)) );
+				COMTHROW(dumper->DumpProject( p, _bstr_t(szTempXmeFileName)) );
 
 				COMTHROW(p->Close(VARIANT_FALSE));
 
 				// Create a new 'paradigmname' project
 				COMTHROW(connstr_upgraded.Append( szTempMgaFileName)); // connection string prepared
-				hr = p->CreateEx( PutInBstr( connstr_upgraded), PutInBstr( paradigmname), paradigmGUID);
+				hr = p->CreateEx(connstr_upgraded, paradigmname, paradigmGUID);
 				if( SUCCEEDED( hr)) {
 					CComPtr<IMgaParser> parser;
 					COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
 					ASSERT( parser != NULL );
 
-					COMTHROW(parser->ParseProject( p, PutInBstr( szTempXmeFileName)) );
+					COMTHROW(parser->ParseProject( p, _bstr_t(szTempXmeFileName)) );
 					COMTHROW(p->Close(VARIANT_FALSE));
 					upgraded = true;
 				}
