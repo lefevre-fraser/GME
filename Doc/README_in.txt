@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 14.2.18
+                 GME 14.2.19
        Copyright © 2000-2014 Vanderbilt University
 
 
@@ -26,7 +26,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes or Release 14.2.18
+Release Notes or Release 14.2.19
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Model Editor: double-clicking port or refport now shows that port, instead of its parent
