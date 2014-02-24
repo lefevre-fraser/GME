@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 14.2.19
+                 GME 14.2.24
        Copyright © 2000-2014 Vanderbilt University
 
 
@@ -25,6 +25,11 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes or Release 14.2.24
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix bug where the GME Browser and Object Inspector would try to read a deleted FCO after an AddOn modified it
 
 Release Notes or Release 14.2.19
 ----------------------------------
