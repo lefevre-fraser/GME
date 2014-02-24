@@ -94,6 +94,12 @@ def update_version_str():
     if text != old_text:
         with open(os.path.join(GME_ROOT, 'GME/Gme/GMEVersion.h'), 'w') as header:
             header.write(text)
+    # resource compiler doesn't do dependency tracking well
+    #  echo `grep -rlI GME_VERSION GME | grep \\.rc | sed 's/^/"/; s/$/",/'`
+    for filename in ("GME/Console/Console.rc", "GME/ConstraintManager/ConstraintManager.rc", "GME/Core/Core.rc", "GME/Gme/GME.rc", "GME/Gme/res/AboutBox.rc", 
+            "GME/GMEActiveBrowser/GMEActiveBrowser.rc", "GME/Meta/Meta.rc", "GME/Mga/Mga.rc", "GME/MgaUtil/MgaUtil.rc", "GME/ObjectInspector/ObjectInspector.rc", 
+            "GME/PanningView/PanningView.rc", "GME/Parser/Parser.rc", "GME/PartBrowser/PartBrowser.rc", "GME/Search/Search.rc", "GME/XmlBackEnd/XmlBackEnd.rc"):
+        os.utime(os.path.join(GME_ROOT, filename), None)
 
 def _remove_dlldata_from_tlog():
     ''' Workaround for http://connect.microsoft.com/VisualStudio/feedback/details/763929/incremental-build-of-idl-files-behavior-changes-after-installing-visual-studio-2012
