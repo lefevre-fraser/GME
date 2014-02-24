@@ -1420,8 +1420,19 @@ STDMETHODIMP CMgaProject::CommitTransaction()
 //			self[ATTRID_MDATE] = Now();
 		}
 		HRESULT hr = CommitNotify();
-		while (temporalobjs.size()) // CommitNotify may make changes. Don't notify for them.
-			temporalobjs.pop();
+		if (!temporalobjs.empty()) // CommitNotify may make changes. Notify only territories
+		{
+			while (!temporalobjs.empty()) {
+				temporalobjs.front()->objrecordchange();
+				temporalobjs.pop();
+			}
+			while (!changedobjs.empty()) {
+				FCOPtr f = changedobjs.front();
+				changedobjs.pop();
+			}
+			CommitNotify();
+			ASSERT(temporalobjs.empty());
+		}
 		if (FAILED(hr))
 			return hr;
 		COMTHROW(dataproject->PopTerritory());

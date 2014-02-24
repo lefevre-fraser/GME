@@ -180,7 +180,9 @@ HRESULT FCO::PreNotify(unsigned long changemask, CComVariant param) {
 		CMgaProject::addoncoll::iterator ai, abeg = mgaproject->alladdons.begin(), aend = mgaproject->alladdons.end();
 		if(abeg != aend) 
 		{
-			COMTHROW(mgaproject->pushterr(*mgaproject->reserveterr));
+			bool push_terr = mgaproject->activeterr != mgaproject->reserveterr; // this method can be reentrant
+			if (push_terr)
+				COMTHROW(mgaproject->pushterr(*mgaproject->reserveterr));
 			for(ai = abeg; ai != aend; ) 
 			{
 				CComPtr<CMgaAddOn> t = *ai++;	
@@ -195,7 +197,8 @@ HRESULT FCO::PreNotify(unsigned long changemask, CComVariant param) {
 				    t->notified = true;
 				}
 			}
-			COMTHROW(mgaproject->popterr());
+			if (push_terr)
+				COMTHROW(mgaproject->popterr());
 		}
 	} COMCATCH(;)
 }
