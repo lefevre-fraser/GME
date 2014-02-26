@@ -586,8 +586,11 @@ LPDISPATCH CGMEOLEApp::GetMgaProject()
 
 	// PRECONDITIONS: None
 
-	LPDISPATCH ret;
-	theApp.mgaProject->QueryInterface(IID_IDispatch, (void**)&ret);
+	LPDISPATCH ret = nullptr;
+	if (theApp.mgaProject)
+	{
+		theApp.mgaProject->QueryInterface(IID_IDispatch, (void**)&ret);
+	}
 	return ret;
 }
 
