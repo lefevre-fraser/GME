@@ -351,7 +351,26 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 					pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, width);
 				}
 			}
-			gdip->DrawLine(pen, last.x, last.y, pt.x, pt.y);
+			if (currEdgeIndex == points.GetSize()-2 /* -2: pt is the second item when currEdgeIndex==0 */)
+			{
+				gdip->DrawLine(pen, last.x, last.y, pt.x, pt.y);
+			}
+			else
+			{
+				using Gdiplus::REAL;
+				using Gdiplus::PointF;
+				PointF flast((REAL)last.x, (REAL)last.y);
+				PointF fpt((REAL)pt.x, (REAL)pt.y);
+				if (last.x == pt.x)
+				{
+					fpt.Y += (REAL)width / 2 * ((flast.Y < fpt.Y) ? 1 : -1);
+				}
+				else if (last.y == pt.y)
+				{
+					fpt.X += (REAL)width / 2 * ((flast.X < fpt.X) ? 1 : -1);
+				}
+				gdip->DrawLine(pen, flast, fpt);
+			}
 			if (drawBullets && currEdgeIndex < numEdges - 1)
 				gdip->FillEllipse(bulletBrush, pt.x - bulletOffset, pt.y - bulletOffset, bulletRadius, bulletRadius);
 			beforeLast = last;
