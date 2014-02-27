@@ -307,7 +307,10 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 		return;
 
 	long numEdges = points.GetCount() - 1;
-	ASSERT(numEdges >= 1);
+	if (numEdges < 1) {
+		ASSERT(false);
+		return;
+	}
 
 	// TODO?
 //	HDC hDC = gdip->GetHDC();
@@ -316,71 +319,63 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 //	if (isPrinting)
 //		color = GME_BLACK_COLOR;
 
-	Gdiplus::Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, width);
 	Gdiplus::Brush* brush = GetGdipBrush(color);
 	Gdiplus::Brush* bulletBrush = brush;
 	long bulletOffset = (width + 4) / 2;
 	long bulletRadius = width + 4;
 
-	bool hasCustomizedEdges = (customizedEdgeIndexes.size() > 0);
-	std::map<long,long> customizedIndexes;
-	if (hasCustomizedEdges) {	// convert array to a map for easier lookup
+	if (customizedEdgeIndexes.size() > 0)	{
+		std::map<long,long> customizedIndexes; // FIXME if customizedEdgeIndexes is sorted, use binary search to avoid allocations
+		// convert array to a map for easier lookup
 		std::vector<long>::const_iterator ii = customizedEdgeIndexes.begin();
 		while (ii != customizedEdgeIndexes.end())
 		{
 			customizedIndexes.insert(Long_Pair(*ii, 0));
 			++ii;
 		}
-	}
-	std::map<long,long>::const_iterator indIter;
+		std::map<long,long>::const_iterator indIter;
 
-	CPoint beforeLast;
-	CPoint last;
-	POSITION pos = points.GetHeadPosition();
-	if (pos) {
-		CPoint pt = points.GetNext(pos);
-		last = pt;
-		long currEdgeIndex = 0;
-		while (pos) {
-			pt = points.GetNext(pos);
-			if (hasCustomizedEdges) {
+		CPoint last;
+		POSITION pos = points.GetHeadPosition();
+		if (pos) {
+			CPoint pt = points.GetNext(pos);
+			last = pt;
+			long currEdgeIndex = 0;
+			while (pos) {
+				pt = points.GetNext(pos);
+				Gdiplus::Pen* pen;
 				indIter = customizedIndexes.find(currEdgeIndex);
 				if (indIter != customizedIndexes.end()) {
 					pen = GetGdipPen(gdip, color, isPrinting, GME_LINE_CUSTOMIZED, isViewMagnified, width);
 				} else {
 					pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, width);
 				}
-			}
-			if (currEdgeIndex == points.GetSize()-2 /* -2: pt is the second item when currEdgeIndex==0 */)
-			{
 				gdip->DrawLine(pen, last.x, last.y, pt.x, pt.y);
-			}
-			else
-			{
-				using Gdiplus::REAL;
-				using Gdiplus::PointF;
-				PointF flast((REAL)last.x, (REAL)last.y);
-				PointF fpt((REAL)pt.x, (REAL)pt.y);
-				if (last.x == pt.x)
-				{
-					fpt.Y += (REAL)width / 2 * ((flast.Y < fpt.Y) ? 1 : -1);
+				if (drawBullets && currEdgeIndex < numEdges - 1) {
+					gdip->FillEllipse(bulletBrush, pt.x - bulletOffset, pt.y - bulletOffset, bulletRadius, bulletRadius);
 				}
-				else if (last.y == pt.y)
-				{
-					fpt.X += (REAL)width / 2 * ((flast.X < fpt.X) ? 1 : -1);
-				}
-				gdip->DrawLine(pen, flast, fpt);
+				last = pt;
+				currEdgeIndex++;
 			}
-			if (drawBullets && currEdgeIndex < numEdges - 1)
-				gdip->FillEllipse(bulletBrush, pt.x - bulletOffset, pt.y - bulletOffset, bulletRadius, bulletRadius);
-			beforeLast = last;
-			last = pt;
-			currEdgeIndex++;
 		}
+	}
+	else {
+		// Same pen for all edges. Use DrawLines.
+		using namespace Gdiplus;
+		std::vector<Point> gpoints;
+		gpoints.reserve(points.GetSize());
+		POSITION pos = points.GetHeadPosition();
+		while (pos) {
+			CPoint pt = points.GetNext(pos);
+			gpoints.push_back(Point(pt.x, pt.y));
+		}
+		Pen* pen = GetGdipPen(gdip, color, isPrinting, lineType, isViewMagnified, width);
+		gdip->DrawLines(pen, &gpoints[0], gpoints.size()); // n.b. this is different than a sequence of DrawLine()s (GME-419)
 	}
 
 	Gdiplus::Pen* headpen = GetGdipPen(gdip, color, isPrinting);
 
+	{
 	POSITION pos2 = points.GetHeadPosition();
 	CPoint first = points.GetNext(pos2);
 	CPoint second = points.GetNext(pos2);
@@ -391,17 +386,28 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 							  srcEnd == GME_EMPTYBULLET_END) ? GME_WHITE_COLOR : color);
 
 	DrawArrow(gdip, headpen, headBrush, second, first, srcEnd);
+	}
 
+	{
+	POSITION pos = points.GetTailPosition();
+	CPoint last = points.GetPrev(pos);
+	CPoint beforeLast = points.GetPrev(pos);
+
+	Gdiplus::Brush* headBrush = NULL;
 	headBrush = GetGdipBrush((dstEnd == GME_EMPTYDIAMOND_END ||
 							  dstEnd == GME_EMPTYAPEX_END ||
 							  dstEnd == GME_EMPTYBULLET_END) ? GME_WHITE_COLOR : color);
 
 	DrawArrow(gdip, headpen, headBrush, beforeLast, last, dstEnd);
+	}
 }
 
 void CGraphics::DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,
 						  const CPoint& beforeLast, const CPoint& last, int iEnd)
 {
+	if (iEnd == GME_BUTT_END) {
+		return;
+	}
 	int dir = 0;
 	double alpha = 0.0;
 	bool skew = false;
