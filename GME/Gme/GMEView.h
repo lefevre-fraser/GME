@@ -15,6 +15,7 @@
 #include "GuiObject.h"
 #include "AspectSyncDlg.h"
 #include "ScrollZoomView.h"
+#include "GMEViewOverlay.h"
 #include <list>
 
 class CViewDriver;
@@ -26,6 +27,15 @@ class CGMEView :	public CScrollZoomView
 {
 	friend class CGMEOLEModel;
 	friend class CGMEOLEIt;
+	friend class GMEViewOverlay;
+	std::unique_ptr<GMEViewOverlay> m_overlay;
+	void HighlightConnection(CGuiConnection* connection);
+public:
+	virtual BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll = TRUE) {
+		m_overlay = nullptr;
+		return __super::OnScrollBy(sizeScroll, bDoScroll);
+	}
+
 protected: // create from serialization only
 	CGMEView();
 	DECLARE_DYNCREATE(CGMEView)
@@ -241,6 +251,7 @@ public:
 	bool					FollowLine(CGuiConnection* guiConn, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiObject* guiObj, bool reverse, bool tryPort);
 	bool					FollowLine(CGuiPort* guiPort, bool reverse, bool tryPort);
+	bool jumpToSelectedEnd( CGuiConnectionList& p_collOfConns, bool p_reverse, bool p_tryPort);
 	std::list<CGuiObject*>	m_lstSelect;
 	std::list<CGuiObject*>	m_lstUnselect;
 	void					Reset(bool doInvalidate = false);
@@ -405,6 +416,7 @@ public:
 	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
 	virtual void OnActivateFrame( UINT nState, CFrameWnd* pFrameWnd );
 	//}}AFX_VIRTUAL
+	afx_msg void OnKillFocus(CWnd* pNewWnd);
 
 // Implementation
 public:

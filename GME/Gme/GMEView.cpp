@@ -562,6 +562,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_VIEW_HISTORYFORWKEY, OnHistoryForw)
 	ON_COMMAND(ID_MULTIUSER_SHOWOWNER, OnViewMultiUserShowObjectOwner)
 	ON_UPDATE_COMMAND_UI( ID_MULTIUSER_SHOWOWNER, OnUpdateViewMultiUserShowObjectOwner)
+	ON_WM_KILLFOCUS()
 
 	ON_COMMAND(ID_VIEW_SHOWCONNECTEDPORTSONLY, &CGMEView::OnViewShowconnectedportsonly)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWCONNECTEDPORTSONLY, &CGMEView::OnUpdateViewShowconnectedportsonly)
@@ -1511,6 +1512,7 @@ void CGMEView::OnDestroy()
 
 void CGMEView::OnSize(UINT nType, int cx, int cy)
 {
+	m_overlay = nullptr;
 	CScrollZoomView::OnSize(nType, cx, cy);
 }
 
@@ -3058,6 +3060,7 @@ void CGMEView::Invalidate(bool thorough)
 		modelGrid.Clear();
 		FillModelGrid();
 	}
+	m_overlay = nullptr;
 	SetScroll();
 	CScrollZoomView::Invalidate();
 }
@@ -7512,6 +7515,7 @@ void CGMEView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeac
 	//I tried logging pActivateView and pDeactiveView, but they always seemed to be "this"
 	//anyways, OnActivateView is called on both views, so you would know if going from
 	//one to another by the ACTIVATE/DEACTIVATE - Brian
+	m_overlay = nullptr;
 
 	if (bActivate && (!initDone || needsReset)) {
 		if( theApp.isHistoryEnabled())
@@ -8464,7 +8468,89 @@ void CGMEView::OnDeleteConnRouteCustomDataAllAspects()
 	selectedContextConnection = NULL;
 }
 
-bool jumpToSelectedEnd( CGuiConnectionList& p_collOfConns, bool p_reverse, bool p_tryPort)
+void CGMEView::OnKillFocus(CWnd* pNewWnd)
+{
+	bool destroyOverlay = true;
+	CString name;
+	if (pNewWnd)
+	{
+		CWnd* parent = pNewWnd->GetParent();
+		CWnd* wnd = pNewWnd;
+		while (wnd)
+		{
+			if (wnd == parent)
+			{
+				destroyOverlay = false;
+				break;
+			}
+			wnd = wnd->GetParent();
+		}
+	}
+	if (destroyOverlay)
+	{
+		//overlay = nullptr;
+	}
+}
+
+void CGMEView::HighlightConnection(CGuiConnection* connection)
+{
+	m_overlay = std::unique_ptr<GMEViewOverlay>(new GMEViewOverlay());
+	CRect rect;
+	GetWindowRect(&rect);
+	if (this->GetStyle() & WS_VSCROLL)
+	{
+		rect.right -= GetSystemMetrics(SM_CXVSCROLL);
+	}
+	if (this->GetStyle() & WS_HSCROLL)
+	{
+		rect.bottom -= GetSystemMetrics(SM_CYHSCROLL);
+	}
+	rect.top++;
+	rect.left++;
+	rect.right--;
+	rect.bottom--;
+	LPCTSTR pszClassName = _T("GMEViewOverlay");
+	WNDCLASS wndcls = {0};
+    if (!::GetClassInfo(AfxGetInstanceHandle(), pszClassName, &wndcls))
+    {
+		wndcls.style = CS_VREDRAW | CS_HREDRAW;
+        wndcls.lpszClassName = pszClassName;
+		wndcls.lpfnWndProc = AfxWndProc;
+		wndcls.hInstance = AfxGetInstanceHandle();
+        VERIFY(::RegisterClass(&wndcls));
+    }
+
+	if (m_overlay->CreateEx(0 /* GMEViewOverlay::style*/, L"GMEViewOverlay", NULL, GMEViewOverlay::exstyle, rect, 0, 0, 0) == FALSE)
+	{
+		ASSERT(false);
+		return;
+	}
+	
+	bool selected = connection->IsSelected();
+	connection->SetSelect(true);
+	
+	m_overlay->Init1();
+	if (1) {
+		OnPrepareDC(m_overlay->m_memcdc, NULL);
+		CPoint point = m_overlay->m_memcdc->GetViewportOrg();
+		{
+			Gdiplus::Graphics gdip(*m_overlay->m_memcdc);
+			//gdip.Clear(Gdiplus::Color(0));
+			//gdip.SetTransform(
+			gdip.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+			gdip.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
+			connection->Draw(*m_overlay->m_memcdc, &gdip);
+		}
+		m_overlay->m_memcdc->SetViewportOrg(0, 0);
+	}
+	m_overlay->Init2();
+
+	connection->SetSelect(selected);
+
+	AfxGetApp()->OnIdle(0); // update button status immediately (ON_UPDATE_COMMAND_UI)
+}
+
+bool CGMEView::jumpToSelectedEnd( CGuiConnectionList& p_collOfConns, bool p_reverse, bool p_tryPort)
 {
 	int hmany = p_collOfConns.GetCount();
 
@@ -8492,6 +8578,7 @@ bool jumpToSelectedEnd( CGuiConnectionList& p_collOfConns, bool p_reverse, bool 
 				CGMEDoc::theInstance->ShowObject( CComPtr<IUnknown>( a_port->mgaFco), TRUE);
 			else
 				CGMEDoc::theInstance->ShowObject( CComPtr<IUnknown>( a_neighbor->mgaFco), TRUE);
+			HighlightConnection(a_conn);
 			return true;
 		}
 	}

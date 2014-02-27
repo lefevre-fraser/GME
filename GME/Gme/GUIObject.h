@@ -442,6 +442,7 @@ public:
 	void GrayOutEndPoints();
 	void ToggleHover()										{ hovered = !hovered; }
 	void SetSelect(bool sel)								{ selected = sel; }
+	bool IsSelected() { return selected; }
 	void GiveConnectionEndErroMessage(const TCHAR* mainMsg, const TCHAR* srcOrDst, const CGuiPort* otherPort) const;
 	void Resolve();
 	void ReadARPreferences();

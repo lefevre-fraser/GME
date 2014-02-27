@@ -327,6 +327,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <ClCompile Include="GmePrintDialog.cpp" />
     <ClCompile Include="GMESearch.cpp" />
     <ClCompile Include="GMEView.cpp" />
+    <ClCompile Include="GMEViewOverlay.cpp" />
     <ClCompile Include="GMEVistaUtil.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -495,6 +496,7 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <ClInclude Include="GMEStd.h" />
     <ClInclude Include="GMEVersion.h" />
     <ClInclude Include="GMEView.h" />
+    <ClInclude Include="GMEViewOverlay.h" />
     <ClInclude Include="GraphicsUtil.h" />
     <ClInclude Include="GuiMeta.h" />
     <ClInclude Include="GUIObject.h" />
