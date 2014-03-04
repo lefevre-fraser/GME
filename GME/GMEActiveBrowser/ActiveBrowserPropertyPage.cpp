@@ -2617,7 +2617,12 @@ void CAggregatePropertyPage::OnKeyDownTreeAggregate(NMHDR* pNMHDR, LRESULT* pRes
 				COleDataObject OleDataObject;
 				CString msg;
 				if( OleDataObject.AttachClipboard()) {
-					if( m_TreeAggregate.DoDrop( DRAGOP_COPY, &OleDataObject, CPoint( 0, 0))) {
+					auto op = DRAGOP_COPY;
+					if (::GetKeyState(VK_SHIFT) & 0x8000)
+					{
+						op = DRAGOP_REFERENCE;
+					}
+					if( m_TreeAggregate.DoDrop(op, &OleDataObject, CPoint( 0, 0))) {
 						// what about set focus back
 						m_TreeAggregate.SetFocus();
 					}
