@@ -132,7 +132,6 @@ void LabelPart::ExecuteOperation(const CString& newString)
 void LabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							HWND parentWnd, PreferenceMap& preferences)
 {
-	preferences[DecoratorSDK::PREF_TEXTOVERRIDE] = DecoratorSDK::PreferenceVariant(true);
 	TextPart::InitializeEx(pProject, pPart, pFCO, parentWnd, preferences);
 	PreferenceMap::iterator it = preferences.find(PREF_LABEL);
 	if (it != preferences.end())
