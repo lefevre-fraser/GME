@@ -27,9 +27,6 @@ AnnotatorTextPart::AnnotatorTextPart(DecoratorSDK::PartBase* pPart, CComPtr<IMga
 	m_crText					= AN_DEFAULT_COLOR;
 	memset(&m_logFont, 0, sizeof(LOGFONT));
 
-	textStringVariableName		= "";	// disable
-	textColorVariableName		= "";	// disable
-	textMaxLengthVariableName	= DecoratorSDK::PREF_LABELLENGTH;
 }
 
 AnnotatorTextPart::~AnnotatorTextPart()

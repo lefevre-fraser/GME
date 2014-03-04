@@ -25,15 +25,6 @@ namespace DecoratorSDK {
 class TextPart: public PartBase
 {
 protected:
-	// Preference variable name strings
-	CString						textStringVariableName;
-	CString						textFontVariableName;
-	CString						textMaxLengthVariableName;
-	CString						textColorVariableName;
-	CString						textLocationVariableName;
-	CString						textStatusVariableName;
-	CString						textWrapStatusVariableName;
-
 	// Members
 	ResizeLogic					resizeLogic;
 	CRect						location;
@@ -42,15 +33,14 @@ protected:
 	bool						m_bCursorSaved;
 
 	CString						m_strText;
-	std::vector<CString>		m_vecText;
 	ELocation					m_eTextLocation;
 	bool						m_bTextEnabled;
 	bool						m_bTextEditable;
+	bool						m_bMultiLine;
 	long						m_iTextWrapCount;
 	COLORREF					m_crText;
 	int							m_iFontKey;
 	int							m_iMaxTextLength;
-	bool						m_bMultiLine;
 
 public:
 	TextPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
@@ -75,7 +65,6 @@ public:
 
 	virtual long	GetLongest					(void) const;
 
-	virtual void	SetText						(const CString& text) { m_strText = text; };
 	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const = 0;
 	virtual void	SetTextRelYPosition			(long relYPosition) = 0;
 	virtual CRect	GetTextLocation				(CDC* pDC, Gdiplus::Graphics* gdip) const = 0;
