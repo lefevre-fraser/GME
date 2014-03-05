@@ -1,5 +1,5 @@
               Generic Modeling Environment
-                 GME 14.2.24
+                 GME 14.3.5
        Copyright © 2000-2014 Vanderbilt University
 
 
@@ -25,6 +25,12 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes or Release 14.3.5
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Ctrl-Shift-V: paste as reference
+  - For both Right-click on connection, Jump to source (or destination); and Jump along Incoming (or Outgoing) connection: highlight connection that is followed
 
 Release Notes or Release 14.2.24
 ----------------------------------
