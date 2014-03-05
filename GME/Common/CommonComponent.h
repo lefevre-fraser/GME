@@ -29,7 +29,12 @@ inline HRESULT CreateMgaComponent(CComPtr<IMgaComponent> &comp, LPCOLESTR ProgID
 			}
 		}
 	} else {
-		SetStandardOrGMEErrorInfo(hr);
+		_bstr_t error;
+		GetErrorInfo(hr, error.GetAddress());
+		if (static_cast<LPOLESTR>(error))
+		{
+			SetErrorInfo(static_cast<LPOLESTR>(error + L": '" + ProgID + L"'"));
+		}
 	}
 	return hr;
 }

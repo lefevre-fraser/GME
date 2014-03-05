@@ -526,7 +526,12 @@ STDMETHODIMP CMgaLauncher::RunComponent(BSTR progid, IMgaProject *project, IMgaF
 				compex->ComponentParameter[_bstr_t(L"script")] = CComVariant(scriptfile);
 			}
 		}
-		else COMTHROW(CreateMgaComponent(component, prgid));  // Before DispatchProxy: COMTHROW(component.CoCreateInstance(prgid));
+		else
+		{
+			HRESULT hr = CreateMgaComponent(component, prgid);
+			if (FAILED(hr))
+				return hr;
+		}
 
 
 		if(component == NULL) {
