@@ -11,6 +11,8 @@
 #include <sstream>
 #include <stack>
 
+#include "..\Gme\GMEOLEData.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -185,6 +187,8 @@ BOOL CSearchDlg::OnInitDialog()
 
     //load search history from registry
     LoadSearchHistory();
+
+	dropTarget.Register(this);
 
 	return true;
 }
@@ -1179,4 +1183,149 @@ void CSearchDlg::OnBnClickedButtonClear()
 {
     m_treeSearchHistory.DeleteAllItems();
     SaveSearchHistory();
+}
+
+DROPEFFECT CSearchDropTarget::OnDragEnter(CWnd* pWnd, COleDataObject* pDataObject, DWORD dwKeyState, CPoint point)
+{
+	CSearchDlg *ctrl = STATIC_DOWNCAST(CSearchDlg, pWnd);
+	CSearchCtrl *TheCtrl = ctrl->GetCtrl();
+	if (CGMEDataSource::IsGmeNativeDataAvailable(pDataObject, TheCtrl->GetProject()))
+	{
+		return DROPEFFECT_LINK;
+	}
+	return DROPEFFECT_NONE;
+}
+
+void CSearchDropTarget::OnDragLeave(CWnd* pWnd)
+{
+}
+
+DROPEFFECT CSearchDropTarget::OnDragOver(CWnd* pWnd, COleDataObject* pDataObject, DWORD dwKeyState, CPoint point)
+{
+	CSearchDlg *ctrl = STATIC_DOWNCAST(CSearchDlg, pWnd);
+	CSearchCtrl *TheCtrl = ctrl->GetCtrl();
+	if (CGMEDataSource::IsGmeNativeDataAvailable(pDataObject, TheCtrl->GetProject()))
+	{
+		return DROPEFFECT_LINK;
+	}
+	return DROPEFFECT_NONE;
+}
+
+BOOL CSearchDropTarget::OnDrop(CWnd* pWnd, COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point)
+{
+	COMTRY {
+	CSearchDlg *ctrl = STATIC_DOWNCAST(CSearchDlg, pWnd);
+	CSearchCtrl *TheCtrl = ctrl->GetCtrl();
+	if (CGMEDataSource::IsGmeNativeDataAvailable(pDataObject, TheCtrl->GetProject()))
+	{
+		
+		CComPtr<IDataObject> p = pDataObject->GetIDataObject(FALSE);
+		CComPtr<IMgaDataSource> pt;
+		COMTHROW(p.QueryInterface(&pt));
+
+		CComPtr<IUnknown> unk;
+		COMTHROW(pt->get_Data(&unk));
+
+		CComPtr<IMgaFCOs> fcos;
+		// CComPtr<IMgaMetaRole> metaRole; TODO: put Kind or Role based on partbrowser drag-n-drop
+		if (SUCCEEDED(unk.QueryInterface(&fcos)))
+		{
+			CComPtr<IMgaFCO> fco;
+			long count = 0;
+			if (SUCCEEDED(fcos->get_Count(&count)) && count > 0)
+			{
+				COMTHROW(fcos->get_Item(1, &fco));
+			}
+			if (fco == nullptr)
+			{
+				return FALSE;
+			}
+
+			CWnd *dropTarget = ctrl->ChildWindowFromPoint(point);
+			CWnd *editKind = STATIC_DOWNCAST(CButton, ctrl->GetDlgItem(IDC_EDITKIND));
+			CWnd *editRole = STATIC_DOWNCAST(CButton, ctrl->GetDlgItem(IDC_EDITROLE));
+			CWnd *editName = STATIC_DOWNCAST(CButton, ctrl->GetDlgItem(IDC_EDITNAME));
+			if (dropTarget->GetSafeHwnd() == editKind->GetSafeHwnd())
+			{
+				TheCtrl->BeginTransaction();
+				try
+				{
+					CComPtr<IMgaMetaFCO> meta;
+					COMTHROW(fco->get_Meta(&meta));
+					_bstr_t kind;
+					COMTHROW(meta->get_Name(kind.GetAddress()));
+					editKind->SetWindowTextW(static_cast<const wchar_t*>(kind));
+					TheCtrl->CommitTransaction();
+				}
+				catch (hresult_exception)
+				{
+					TheCtrl->AbortTransaction();
+					throw;
+				}
+			}
+			else if (dropTarget->GetSafeHwnd() == editRole->GetSafeHwnd())
+			{
+				try
+				{
+					TheCtrl->BeginTransaction();
+					CComPtr<IMgaMetaRole> meta;
+					COMTHROW(fco->get_MetaRole(&meta));
+					_bstr_t rolename;
+					COMTHROW(meta->get_Name(rolename.GetAddress()));
+					editRole->SetWindowTextW(static_cast<const wchar_t*>(rolename));
+					TheCtrl->CommitTransaction();
+				}
+				catch (hresult_exception)
+				{
+					TheCtrl->AbortTransaction();
+					throw;
+				}
+			}
+			else if (dropTarget->GetSafeHwnd() == editName->GetSafeHwnd())
+			{
+				TheCtrl->BeginTransaction();
+				try
+				{
+					_bstr_t name;
+					COMTHROW(fco->get_Name(name.GetAddress()));
+					editName->SetWindowTextW(static_cast<const wchar_t*>(name));
+					TheCtrl->CommitTransaction();
+				}
+				catch (hresult_exception)
+				{
+					TheCtrl->AbortTransaction();
+					throw;
+				}
+			}
+			else
+			{
+				ctrl->results = NULL;
+				COMTHROW(ctrl->results.CoCreateInstance(L"Mga.MgaFCOs"));
+				COMTHROW(ctrl->results->Append(fco));
+				TheCtrl->BeginTransaction();
+				try
+				{
+					ctrl->DisplayResults();
+					TheCtrl->CommitTransaction();
+					ctrl->m_lstResults.SetFocus();
+					int ind = ctrl->m_lstResults.GetTopIndex();
+					VERIFY(ctrl->m_lstResults.SetItemState(ind, LVIS_SELECTED, LVIS_SELECTED));
+					ctrl->m_lstResults.SetSelectionMark(ind);
+					ctrl->itemClicked();
+					CButton *special_check = STATIC_DOWNCAST(CButton, ctrl->GetDlgItem(IDC_CHECKSPLSEARCH));
+					special_check->SetCheck(TRUE);
+					ctrl->OnCheckSplSearch();
+				}
+				catch (hresult_exception)
+				{
+					TheCtrl->AbortTransaction();
+					throw;
+				}
+			}
+
+			return TRUE;
+		}
+	}
+	return FALSE;
+	} COMCATCH(return FALSE;)
 }

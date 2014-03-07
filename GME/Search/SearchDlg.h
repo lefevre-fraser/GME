@@ -18,6 +18,15 @@ class CSearchCtrl;
 /////////////////////////////////////////////////////////////////////////////
 // CSearchDlg dialog
 
+class CSearchDropTarget : public COleDropTarget
+{
+public:
+	virtual DROPEFFECT OnDragEnter(CWnd* pWnd, COleDataObject* pDataObject, DWORD dwKeyState, CPoint point);
+	virtual void OnDragLeave(CWnd* pWnd);
+	virtual DROPEFFECT OnDragOver(CWnd* pWnd, COleDataObject* pDataObject, DWORD dwKeyState, CPoint point);
+	virtual BOOL OnDrop(CWnd* pWnd, COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint point);
+};
+
 //struct used for sending information to sort function usd by List Control
 
 struct SortParam
@@ -227,6 +236,9 @@ protected:
 	afx_msg void OnKeyDownListResults(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	friend class CSearchDropTarget;
+	CSearchDropTarget dropTarget;
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);

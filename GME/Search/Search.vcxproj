@@ -225,6 +225,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Gme\GMEOLEData.cpp" />
     <ClCompile Include="Attribute.cpp" />
     <ClCompile Include="ComHelp.cpp" />
     <ClCompile Include="..\Common\CommonError.cpp" />
