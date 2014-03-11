@@ -48,7 +48,7 @@ void PortLabelPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMet
 
 	// Text's Max Length
 	m_iMaxTextLength = MAX_LABEL_LENGTH;
-	PreferenceMap::iterator it = preferences.find(PREF_PORTLABELLENGTH);
+	PreferenceMap::iterator it = preferences.find(PREF_LABELLENGTH);
 	if (it != preferences.end())
 		m_iMaxTextLength = it->second.uValue.lValue;
 }
