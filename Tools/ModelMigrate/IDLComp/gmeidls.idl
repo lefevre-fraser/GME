@@ -1,22 +1,10 @@
 
 // This file will be processed by the MIDL compiler to produce the necessary header file
 
-#define GME_BASE ../../../gme
-
-#define MAKE_STR(PAR) #PAR
-#define PATH3(X,Y) MAKE_STR(X##Y)
-#define PATH2(X,Y) PATH3(X,Y)
-#define PATH(NAME) PATH2(GME_BASE,NAME)
-
-
-#include PATH(/Interfaces/InterfaceColl.h)
-#include PATH(/Interfaces/meta.idl)
-#include PATH(/Interfaces/mga.idl)
-#include PATH(/Interfaces/mgautil.idl)
-#include PATH(/Interfaces/gme.idl)
-#include PATH(/Interfaces/parser.idl)
-
-
-
-
-
+#include "InterfaceColl.h"
+import "Core.idl";
+import "Meta.idl";
+import "Mga.idl";
+import "MgaUtil.idl";
+import "GME.idl";
+import "Parser.idl";

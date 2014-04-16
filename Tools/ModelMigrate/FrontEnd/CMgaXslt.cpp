@@ -11,7 +11,7 @@
 
 
 void CXslt::doNativeXslt( LPCTSTR pScrF, LPCTSTR pInF, LPCTSTR pOutF, CString& resError)
-{
+{/*
 	// native vtable based
 	CComPtr<IMgaXslt> xslt;
 	HRESULT hr = xslt.CoCreateInstance(L"Mga.MgaXslt");
@@ -34,6 +34,7 @@ void CXslt::doNativeXslt( LPCTSTR pScrF, LPCTSTR pInF, LPCTSTR pOutF, CString& r
 		else 
 			resError = "COM Error!";
 	}
+	*/
 }
 
 void CXslt::doDispatchXslt( LPCTSTR pScrF, LPCTSTR pInF, LPCTSTR pOutF, CString& resError)

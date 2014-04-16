@@ -33,7 +33,8 @@ void Extractor::doJob( std::string& pName)
 		// 
 		file.getline( buff, 1024);
 		std::string bf( buff);
-		for( unsigned int i = 0; i < bf.length() && (bf[i] == ' ' || bf[i] == 9); ++i);
+		unsigned int i = 0;
+		for (; i < bf.length() && (bf[i] == ' ' || bf[i] == 9); ++i);
 		const int kindsNo = 6;
 		std::string kinds[ kindsNo ] =
 			{ "<atom name"
