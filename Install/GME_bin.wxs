@@ -712,7 +712,10 @@
             </AppId>
             <Interface Id="{70C41B24-E3CE-11D3-B37A-005004D38590}" Name="IMgaMetaParser" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{94D6FB53-1F7C-11D4-B3D0-005004D38590}" Name="IMgaParser" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{E39BEA37-384D-423B-ADDF-2BB13550F577}" Name="IMgaParser2" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{5CAB528B-474B-4C52-BE40-74FF29AFBB58}" Name="IMgaParser3" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
             <Interface Id="{A5D0DAE6-16EE-11D4-B3C2-005004D38590}" Name="IMgaDumper" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
+            <Interface Id="{3813768B-5A4C-477D-BCD5-1776089948EC}" Name="IMgaDumper2" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
           </TypeLib>
         </File>
       </Component>
