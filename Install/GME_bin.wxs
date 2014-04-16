@@ -725,6 +725,9 @@
       <Component Id="mga.dtd">
         <File Id="mga.dtd" Name="mga.dtd" Source="..\GME\Parser\mga.dtd" />
       </Component>
+      <Component Id="mga2.dtd">
+        <File Id="mga2.dtd" Name="mga2.dtd" Source="..\GME\Parser\mga2.dtd" />
+      </Component>
       <Component Id="mgaclosure.dtd">
         <File Id="mgaclosure.dtd" Name="mgaclosure.dtd" Source="..\GME\Parser\mgaclosure.dtd" />
       </Component>
