@@ -35,7 +35,7 @@ rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include
 #  c:\Python27\python.exe install_setup.py py2exe && move /y dist\install.exe .\install.exe
 
 Install GME on VM, check for missing symbols
-set _NT_SYMBOL_PATH=C:\Windows\symbols\dll;C:\Windows\system32;srv*c:\symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
+set _NT_SYMBOL_PATH=srv*c:\GME_14.3.5_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files\GME"
-
+"c:\Program Files\7-Zip\7z.exe" a -xr!.svn GME_14.3.5_symbols.zip c:\GME_14.3.5_symbols
