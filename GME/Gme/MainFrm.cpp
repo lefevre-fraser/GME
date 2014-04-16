@@ -152,14 +152,21 @@ static UINT indicators[] =
 	ID_INDICATOR_SCRL,
 };
 
-/////////////////////////////////////////////////////////////////////////////
-// CMainFrame construction/destruction
+class CGMEMDIClientAreaWnd : public CMDIClientAreaWnd
+{
+	virtual CMFCTabCtrl* CreateTabGroup(CMFCTabCtrl* pWndTab)
+	{
+		pWndTab = new CGMEMFCTabCtrl;
+		return __super::CreateTabGroup(pWndTab);
+	}
+};
 
 CMainFrame::CMainFrame()
 {
 	theInstance = this;	
 	m_autosaveTimerID = NULL;
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2005);
+	new ((void*)&m_wndClientArea) CGMEMDIClientAreaWnd();
 }
 
 CMainFrame::~CMainFrame()

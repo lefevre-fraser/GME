@@ -17,6 +17,31 @@
 #include "GMEPanningWindow.h"
 #include "GMEOLEApp.h"
 
+struct CGMEMFCTabCtrl : public CMFCTabCtrl
+{
+	virtual CWnd* GetLastVisibleTab(int& iTabNum)
+	{
+		if (m_bActivateLastActiveTab)
+		{
+			iTabNum = m_iActiveTab;
+			return GetTabWnd(m_iActiveTab);
+		}
+		// this is a hack to fix the tab behavior when you close the current tab
+		EnableActivateLastVisible(TRUE);
+		iTabNum = m_iActiveTab;
+		return GetTabWnd(m_iActiveTab);
+	}
+
+	void _SetLastActiveTab()
+	{
+		m_iLastActiveTab = m_iActiveTab;
+	}
+
+	void EnableActivateLastVisible(BOOL enable)
+	{
+		m_bActivateLastVisibleTab = enable;
+	}
+};
 
 // Tooltip helper for components
 class CComponentBar : public CMFCToolBar {

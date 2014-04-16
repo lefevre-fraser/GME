@@ -145,12 +145,24 @@ void CChildFrame::OnClose()
 
 	if(doClose)
 	{
-		// Avoid losing TreeBrowser focus when deleting this (inactive) model from the TreeBrowser
-		CMainFrame::theInstance->EnableActivateLastActive(FALSE);
+		CGMEMFCTabCtrl& tabs = *(CGMEMFCTabCtrl*)m_pRelatedTabGroup;
+		
+		tabs.EnableActivateLastActive(TRUE);
+		tabs.EnableActivateLastVisible(TRUE);
+		tabs._SetLastActiveTab();
+		if (tabs.GetTabsNum() > 2)
+		{
+			int active = tabs.GetActiveTab();
+			int visible;
+			CWnd* activeWnd = tabs.GetFirstVisibleTab(active, visible);
+			bool thisWindowActive = activeWnd != NULL && activeWnd->GetSafeHwnd() == GetSafeHwnd();
+			if (thisWindowActive && active != tabs.GetTabsNum())
+			{
+				tabs.EnableActivateLastActive(FALSE);
+			}
+		}
 		// CFramewWnd::OnClose calls CMDIChildWnd::DestroyWindow
 		CMDIChildWndEx::OnClose();
-		// End avoid (and prevent flicker on opening new ChildFrms)
-		CMainFrame::theInstance->EnableActivateLastActive(TRUE);
 	}
 
 
