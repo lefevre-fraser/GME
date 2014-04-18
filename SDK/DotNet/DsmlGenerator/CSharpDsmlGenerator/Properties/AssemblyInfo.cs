@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 // Keep in sync with app.manifest, GME_SDK.wxs, and GME.DSMLGenerator.nuspec
-[assembly: AssemblyVersion("1.0.12.1")]
-[assembly: AssemblyFileVersion("1.0.12.1")]
+[assembly: AssemblyVersion("1.0.13.0")]
+[assembly: AssemblyFileVersion("1.0.13.0")]

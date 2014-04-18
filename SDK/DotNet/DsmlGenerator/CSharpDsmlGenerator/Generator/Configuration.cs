@@ -337,6 +337,33 @@ namespace CSharpDSMLGenerator.Generator
 			}
 		}
 
+        internal static string GetNamespacePrefixedName(MgaObject obj)
+        {
+            string ns = GetNamespaceName(obj);
+            if (string.IsNullOrEmpty(ns) == false)
+            {
+                return ns + "_" + obj.Name;
+            }
+            return obj.Name;
+        }
+
+        internal static IEnumerable<Tuple<MgaFCO, string>> GetUniqueNames(IEnumerable<MgaFCO> children, int count)
+        {
+            IEnumerable<Tuple<MgaFCO, string>> childNames;
+            HashSet<string> names = new HashSet<string>(children.Distinct().Select(x => x.Name));
+            if (names.Count != count)
+            {
+                childNames = children.Distinct().GroupBy(child => child.Name).Select(g => g.Count() > 1 ?
+                    g.Select(x => new Tuple<MgaFCO, string>(x, Configuration.GetNamespacePrefixedName((MgaObject)x))) :
+                    g.Select(x => new Tuple<MgaFCO, string>(x, x.Name))).SelectMany(child => child);
+            }
+            else
+            {
+                childNames = children.Distinct().Select(child => new Tuple<MgaFCO, string>(child, child.Name));
+            }
+            return childNames;
+        }
+
 		internal static string GetClassName(MgaFCO item)
 		{
 			return GetClassName(item as MgaObject);

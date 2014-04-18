@@ -62,6 +62,7 @@ namespace CSharpDSMLGenerator.Generator
 
 				newSrcConn.Members.Add(ctor);
 
+                var uniqueNames = Configuration.GetUniqueNames(connections.Select(x => x.Item1), connections.Count).ToDictionary(x => x.Item1, x => x.Item2);
 				foreach (IGrouping<MgaFCO, string> group in connections.GroupBy(x => x.Item1, x => x.Item2))
 				{
                     MgaFCO item = group.Key;
@@ -73,7 +74,7 @@ namespace CSharpDSMLGenerator.Generator
 					{
 						Attributes = MemberAttributes.Public,
 						HasGet = true,
-						Name = item.Name + "Collection",
+                        Name = uniqueNames[item] + "Collection",
 						Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
 					};
 
@@ -215,6 +216,7 @@ namespace CSharpDSMLGenerator.Generator
 
 				newDstConn.Members.Add(ctor);
 
+                var uniqueNames = Configuration.GetUniqueNames(connections.Select(x => x.Item1), connections.Count).ToDictionary(x => x.Item1, x => x.Item2);
 				foreach (IGrouping<MgaFCO, string> group in connections.GroupBy(x => x.Item1, x => x.Item2))
 				{
                     MgaFCO item = group.Key;
@@ -226,7 +228,7 @@ namespace CSharpDSMLGenerator.Generator
 					{
 						Attributes = MemberAttributes.Public,
 						HasGet = true,
-						Name = item.Name + "Collection",
+						Name = uniqueNames[item] + "Collection",
 						Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(item as MgaObject) + ">"),
 					};
 

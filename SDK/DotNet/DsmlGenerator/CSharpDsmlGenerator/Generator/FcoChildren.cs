@@ -86,8 +86,9 @@ namespace CSharpDSMLGenerator.Generator
 				childBases.ForEach(x => children.AddRange(GetDerivedClasses(x)));
 
 				// skip multiple containments
-				foreach (var child in children.Distinct())
+                foreach (var childName in Configuration.GetUniqueNames(children, children.Count))
 				{
+                    var child = childName.Item1;
 					// include all derived class child objects
 					IEnumerable<MgaFCO> derivedClasses = GetDerivedClasses(child);
 
@@ -96,13 +97,13 @@ namespace CSharpDSMLGenerator.Generator
 						Attributes = MemberAttributes.Public | MemberAttributes.Final,
 						HasGet = true,
                         Type = new CodeTypeReference("global::System.Collections.Generic.IEnumerable<" + Configuration.GetInterfaceName(child as MgaObject) + ">"),
-						Name = child.Name + "Collection",
+						Name = childName.Item2 + "Collection",
 					};
 
 					StringBuilder sb = new StringBuilder();
 					sb.AppendLine("<summary>");
 					sb.AppendLine("<para>");
-					sb.AppendLine("Retirves with specific kinds in the container.");
+					sb.AppendLine("Retrieves with specific kinds in the container.");
 					sb.AppendLine("</para>");
 
 					var filteredDerivedClasses = derivedClasses.
