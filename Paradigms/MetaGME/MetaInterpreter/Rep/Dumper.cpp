@@ -954,16 +954,16 @@ void Dumper::doDump()
 			if ( !(*it_b)->isAbstract())
 			{
 				mmm += (*it_b)->doDump();
-
-				this_name = (*it_b)->getName();
-				if (last_name != "" && last_name == this_name)
-					global_vars.err << MSG_ERROR << "Error: Duplicate atom name found \"" << this_name << "\".\n";
-				else if (already_dumped[ this_name])
-					global_vars.err << MSG_ERROR << "Error: Duplicate fco name found \"" << this_name << "\".\n";
-
-				already_dumped[ this_name] = true;
-				last_name = this_name;
 			}
+
+			this_name = (*it_b)->getName();
+			if (last_name != "" && last_name == this_name)
+				global_vars.err << MSG_ERROR << "Error: Duplicate atom name found \"" << this_name << "\".\n";
+			else if (already_dumped[ this_name])
+				global_vars.err << MSG_ERROR << "Error: Duplicate fco name found \"" << this_name << "\".\n";
+
+			already_dumped[this_name] = true;
+			last_name = this_name;
 		}
 		DMP( mmm);
 		mmm = "";
@@ -981,16 +981,16 @@ void Dumper::doDump()
 			if ( !(*it_c)->isAbstract())
 			{
 				mmm += (*it_c)->doDump();
-
-				this_name = (*it_c)->getName();
-				if ( last_name != "" && last_name == this_name)
-					global_vars.err << MSG_ERROR << "Error: Duplicate set name found \"" << this_name << "\".\n";
-				else if (already_dumped[ this_name])
-					global_vars.err << MSG_ERROR << "Error: Duplicate fco name found \"" << this_name << "\".\n";
-
-				already_dumped[ this_name] = true;
-				last_name = this_name;
 			}
+
+			this_name = (*it_c)->getName();
+			if (last_name != "" && last_name == this_name)
+				global_vars.err << MSG_ERROR << "Error: Duplicate set name found \"" << this_name << "\".\n";
+			else if (already_dumped[ this_name])
+				global_vars.err << MSG_ERROR << "Error: Duplicate fco name found \"" << this_name << "\".\n";
+
+			already_dumped[this_name] = true;
+			last_name = this_name;
 		}
 		DMP( mmm);
 		mmm = "";
@@ -1008,16 +1008,16 @@ void Dumper::doDump()
 			if ( !(*it_cn)->isAbstract())
 			{
 				mmm += (*it_cn)->doDump();
-
-				this_name = (*it_cn)->getName();
-				if ( last_name != "" && last_name == this_name)
-					global_vars.err << MSG_ERROR << "Error: Duplicate connection name found \"" << this_name << "\".\n";
-				else if (already_dumped[ this_name])
-					global_vars.err << MSG_ERROR << "Error: Duplicate fco name found \"" << this_name << "\".\n";
-
-				already_dumped[ this_name] = true;
-				last_name = this_name;
 			}
+
+			this_name = (*it_cn)->getName();
+			if (last_name != "" && last_name == this_name)
+				global_vars.err << MSG_ERROR << "Error: Duplicate connection name found \"" << this_name << "\".\n";
+			else if (already_dumped[this_name])
+				global_vars.err << MSG_ERROR << "Error: Duplicate fco name found \"" << this_name << "\".\n";
+
+			already_dumped[this_name] = true;
+			last_name = this_name;
 		}
 		DMP( mmm);
 		mmm = "";
@@ -1035,16 +1035,16 @@ void Dumper::doDump()
 			if ( !(*it_ref)->isAbstract())
 			{
 				mmm += (*it_ref)->doDump();
-
-				this_name = (*it_ref)->getName();
-				if ( last_name != "" && last_name == this_name)
-					global_vars.err << MSG_ERROR  << "Error: Duplicate reference name found \"" << this_name << "\".\n";
-				else if (already_dumped[ this_name])
-					global_vars.err << MSG_ERROR  << "Error: Duplicate fco name found \"" << this_name << "\".\n";
-
-				already_dumped[ this_name] = true;
-				last_name = this_name;
 			}
+
+			this_name = (*it_ref)->getName();
+			if (last_name != "" && last_name == this_name)
+				global_vars.err << MSG_ERROR  << "Error: Duplicate reference name found \"" << this_name << "\".\n";
+			else if (already_dumped[this_name])
+				global_vars.err << MSG_ERROR  << "Error: Duplicate fco name found \"" << this_name << "\".\n";
+
+			already_dumped[this_name] = true;
+			last_name = this_name;
 		}
 		DMP( mmm);
 		mmm = "";
@@ -1059,19 +1059,19 @@ void Dumper::doDump()
 	{
 		for( ; it_m != m_modelList.end(); ++it_m)
 		{
+			this_name = (*it_m)->getName();
 			if ( !(*it_m)->isAbstract())
 			{
 				mmm += (*it_m)->doDump();
-
-				this_name = (*it_m)->getName();
-				if ( last_name != "" && last_name == this_name)
-					global_vars.err << MSG_ERROR  << "Error: Duplicate model name found \"" << this_name << "\".\n";
-				else if (already_dumped[ this_name])
-					global_vars.err << MSG_ERROR  << "Error: Duplicate fco name found \"" << this_name << "\".\n";
-
-				already_dumped[ this_name] = true;
-				last_name = this_name;
 			}
+			if (last_name != "" && last_name == this_name)
+				global_vars.err << MSG_ERROR  << "Error: Duplicate model name found \"" << this_name << "\".\n";
+			else if (already_dumped[this_name])
+				global_vars.err << MSG_ERROR  << "Error: Duplicate fco name found \"" << this_name << "\".\n";
+
+			already_dumped[this_name] = true;
+
+			last_name = this_name;
 		}
 		DMP( mmm);
 		mmm = "";
