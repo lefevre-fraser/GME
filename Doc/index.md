@@ -14,8 +14,8 @@ GME is the generic modeling environment.
 
 Download GME  
 &nbsp; [README/changelog](http://repo.isis.vanderbilt.edu/GME/14.3.5/README.txt)  
-&nbsp; [GME-14.3.5.msi](http://repo.isis.vanderbilt.edu/GME/14.3.5/GME-14.3.5.msi)  
-&nbsp; [GME_x64-14.3.5.msi](http://repo.isis.vanderbilt.edu/GME/14.3.5/GME_x64-14.3.5.msi)  
+&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/14.3.5/GME-14.3.5.msi" id="win32_installer">GME-14.3.5.msi</a>  
+&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/14.3.5/GME_x64-14.3.5.msi" id="win64_installer">GME_x64-14.3.5.msi</a>  
 &nbsp; [older releases and source code](http://repo.isis.vanderbilt.edu/GME/old/)  
 
 [GME User's Manual](GME Manual and User Guide/GME Manual and User Guide.pdf)
@@ -25,3 +25,20 @@ Download GME
 [Issue tracking](http://escher.isis.vanderbilt.edu/JIRA/browse/GME)
 
 [gme-users Mailing list](http://list.isis.vanderbilt.edu/mailman/listinfo/gme-users)
+
+<script>
+var platform = 'Unknown';
+function find_platform() {
+  ua = navigator.userAgent;
+
+  if (ua.search(/Win64; x64;/i) >= 0 || ua.search(/WOW64/i) >= 0) {
+    platform = 'win64';
+  } else if (ua.search(/Intel Mac OS X 10.[6789]/i) >= 0) {
+    platform = 'macintel64';
+  } else if (navigator.platform) {
+    platform = navigator.platform.toLowerCase();
+  }
+};
+find_platform();
+document.getElementById(platform + "_installer").style.fontWeight = "bold";
+</script>
