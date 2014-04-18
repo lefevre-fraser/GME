@@ -87,5 +87,39 @@
     <ComponentGroupRef Id='GME.MGA.Meta'/>
     <ComponentGroupRef Id='GME.MGA.Parser'/>
     <ComponentGroupRef Id='GME.Util'/>
+    
+    <DirectoryRef Id="INSTALLDIR_PARADIGMS32">
+        <Directory Id="PIApolicy" Name="PIApolicy"/>
+    </DirectoryRef>
+        <Component Directory="PIApolicy" Guid="{E9E9C0FB-4B8D-4F27-90A4-7987A822B956}">
+            <Condition>NETFRAMEWORK</Condition>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.dll" Assembly=".net" KeyPath="yes"/>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.config"/>
+        </Component>
+        <Component Directory="PIApolicy" Guid="{877114E5-6F7D-41C7-9985-0E6B01044EF4}">
+            <Condition>NETFRAMEWORK</Condition>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.dll" Assembly=".net" KeyPath="yes"/>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.config"/>
+        </Component>
+        <Component Directory="PIApolicy" Guid="{F3995FC8-B839-4807-9363-079DEE3D9283}">
+            <Condition>NETFRAMEWORK</Condition>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.Core.dll" Assembly=".net" KeyPath="yes"/>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.Core.config"/>
+        </Component>
+        <Component Directory="PIApolicy" Guid="{54513982-DA3B-4165-AD08-A8989007DB88}">
+            <Condition>NETFRAMEWORK</Condition>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.Meta.dll" Assembly=".net" KeyPath="yes"/>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.Meta.config"/>
+        </Component>
+        <Component Directory="PIApolicy" Guid="{74AED912-FAA1-4604-A638-06CF214731FD}">
+            <Condition>NETFRAMEWORK</Condition>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.Util.dll" Assembly=".net" KeyPath="yes"/>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.Util.config"/>
+        </Component>
+        <Component Directory="PIApolicy" Guid="{CCF7A1A5-60BA-42C0-AB42-1637E11210EB}">
+            <Condition>NETFRAMEWORK</Condition>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.Parser.dll" Assembly=".net" KeyPath="yes"/>
+            <File Source="..\GME\DotNetPIAs_1.0.1.0\policy.1.0.GME.MGA.Parser.config"/>
+        </Component>
   </Module>
 </Wix>

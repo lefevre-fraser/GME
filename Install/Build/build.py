@@ -135,7 +135,17 @@ def compile_GME():
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
     sln_file = os.path.join(GME_ROOT, "GME", "DotNetPIAs", "DotNetPIAs.vcxproj")
     tools.build_VS( sln_file, "Release" )
-
+    
+    for filename in ('policy.1.0.GME.MGA.Core', 'policy.1.0.GME.MGA.Meta', 'policy.1.0.GME.MGA', 'policy.1.0.GME', 'policy.1.0.GME.Util', 'policy.1.0.GME.MGA.Parser'):
+        pia_dir = os.path.join(GME_ROOT, "GME", "DotNetPIAs_1.0.1.0")
+        config = '%s.config' % filename
+        dll = '%s.dll' % filename
+        if newer(os.path.join(pia_dir, config), os.path.join(pia_dir, dll)):
+            tools.system([r'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\al.exe',
+                '/link:' + config, '/out:' + dll,
+                '/keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk', '/platform:anycpu', '/version:1.0.0.0'], pia_dir)
+            tools.system([r'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\gacutil.exe', '/i', dll], pia_dir)
+    
 def _Release_PGO_dir():
     if prefs['arch'] == 'x64':
         return os.path.join(GME_ROOT, 'GME', 'x64', 'Release_PGO')
