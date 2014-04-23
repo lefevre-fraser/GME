@@ -34,5 +34,6 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 // Keep in sync with app.manifest, GME_SDK.wxs, and GME.DSMLGenerator.nuspec
-[assembly: AssemblyVersion("1.0.13.0")]
-[assembly: AssemblyFileVersion("1.0.13.0")]
+// Do not end with .0: NuGet gallery will strip it!
+[assembly: AssemblyVersion("1.0.13.1")]
+[assembly: AssemblyFileVersion("1.0.13.1")]
