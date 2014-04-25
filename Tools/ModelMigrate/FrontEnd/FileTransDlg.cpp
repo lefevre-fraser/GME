@@ -602,13 +602,10 @@ void FileTransDlg::OnOK()
 
 void FileTransDlg::OnCancel()
 {
-	if( AfxMessageBox( "Do you really want to exit?", MB_YESNOCANCEL) == IDYES)
-	{
-		closeDlgRuleEditor( IDCANCEL);
+	closeDlgRuleEditor( IDCANCEL);
 
-		EndDialog( IDCANCEL);
-		DestroyWindow();
-	}
+	EndDialog(IDCANCEL);
+	DestroyWindow();
 }
 
 void FileTransDlg::quit()

@@ -551,7 +551,7 @@ int RuleListCtrl::genIntoSeparate( const std::string& pOutputFileName, const std
 		// will use the file name given without extension
 		std::string output_file_name( pOutputFileName.substr(0, pos_of_dot));
 		char buff[16];
-		sprintf( buff, "%0.3i.xsl", rule_nmb);
+		sprintf_s( buff, "%0.3i.xsl", rule_nmb);
 		output_file_name += buff; // append something like: "001.xsl"
 
 		std::fstream f;

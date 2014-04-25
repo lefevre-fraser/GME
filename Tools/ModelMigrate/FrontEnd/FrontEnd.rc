@@ -538,10 +538,10 @@ IDR_MENU1 MENU
 BEGIN
     POPUP "File"
     BEGIN
-        MENUITEM "Add File\tF6",                ID_FILES_ADDFILE
-        MENUITEM "Add Directory\tF7",           ID_FILES_ADDDIRECTORY
-        MENUITEM "Remove All",                  ID_FILES_REMOVEALL
-        MENUITEM "Remove Selected",             ID_FILES_REMOVESELECTED
+        MENUITEM "Add XME File\tF6",                ID_FILES_ADDFILE
+        MENUITEM "Add Directory of XMEs\tF7",           ID_FILES_ADDDIRECTORY
+        MENUITEM "Remove All XMEs",                  ID_FILES_REMOVEALL
+        MENUITEM "Remove Selected XMEs",             ID_FILES_REMOVESELECTED
         MENUITEM SEPARATOR
         MENUITEM "Exit",                        ID_FILES_EXIT
     END
