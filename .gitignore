@@ -415,3 +415,4 @@ Tests/GPyUnit/ISIS.GME.Dsml.MetaGME.xml
 Tests/LeakDiff.txt
 Tests/LeakDump1.txt
 Tests/LeakDump2.txt
+Tools/ModelMigrate/IDLComp/GMEIDLs_h.h

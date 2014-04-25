@@ -11,6 +11,7 @@
 #include "AboutDlg.h"
 
 #include <afxwin.h>
+#include <comdef.h>
 #include ".\filetransdlg.h"
 
 #define DEF_APPEND_STR                              "_out"
@@ -509,9 +510,11 @@ void FileTransDlg::loadScriptDir( CString pDir)
 	}
 }
 
-void FileTransDlg::apply( CString pScrF, CString pInF, CString pOutF, CString& pErrMsg)
+void FileTransDlg::apply(CString xsltFilename, CString inputXmlFilename, CString outputXmlFilename, CString& pErrMsg)
 {
-	CXslt::doNativeXslt( pScrF, pInF, pOutF, pErrMsg);
+	_bstr_t err;
+	CXslt::doNativeXslt(xsltFilename, inputXmlFilename, outputXmlFilename, err);
+	pErrMsg = static_cast<const TCHAR*>(err);
 }
 
 void FileTransDlg::loadMyOptions( CString& pStrVal1, CString& pStrVal2, CString& pStrVal3, CString& pStrVal4, CString& pStrVal5)

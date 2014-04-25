@@ -1,64 +1,139 @@
-#include "stdafx.h"
+//#include "stdafx.h"
+
+#define __msxml_h__
+struct IXMLElement;
+#import <msxml6.dll> no_namespace
+
+#include <Windows.h>
 #include "CMgaXslt.h"             
 
-#define DISPATCH_XSLT 0
-#if(DISPATCH_XSLT)
-// it seems Mga.MgaXSLT is not really Dispatch compatible yet
-#else
-// in this case we use MIDL produced h file from an idl file which includes only the gme idls
 #include "..\IDLComp\GMEIDLs_h.h" 
-#endif
+
+#include <stdio.h>
+#include <tchar.h>
+#include <comdef.h>
+#include <new>
 
 
-void CXslt::doNativeXslt( LPCTSTR pScrF, LPCTSTR pInF, LPCTSTR pOutF, CString& resError)
-{/*
-	// native vtable based
-	CComPtr<IMgaXslt> xslt;
-	HRESULT hr = xslt.CoCreateInstance(L"Mga.MgaXslt");
-	ASSERT( xslt != NULL );
-	if( FAILED( hr) || xslt == NULL) { resError = "COM Error at CreateInstance!"; return; }
-	
-	CComBSTR x_scr( pScrF);
-	CComBSTR f_iin( pInF);
-	CComBSTR f_out( pOutF);
-	CComBSTR error;
-
-	try 
-	{
-		hr = xslt->ApplyXslt( x_scr, f_iin, f_out, &error);
-		if( FAILED( hr)) throw hr;
-	} catch( HRESULT&)
-	{
-		if( error && error.Length() > 0)
-			resError = COLE2T( error);
-		else 
-			resError = "COM Error!";
+_bstr_t GetErrorInfo(HRESULT hr)
+{
+	LPWSTR errorText = NULL;
+	FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER |FORMAT_MESSAGE_IGNORE_INSERTS,  
+		NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&errorText, 0, NULL);
+	if (errorText != NULL) {
+		_bstr_t ret = errorText;
+		LocalFree(errorText);
+		return ret;
 	}
-	*/
+	return _bstr_t(L"Unknown error");
 }
 
-void CXslt::doDispatchXslt( LPCTSTR pScrF, LPCTSTR pInF, LPCTSTR pOutF, CString& resError)
-{
-	// dispatch based, if it worked
-	CComPtr<IUnknown> unknwn;
+struct XslException {
 	HRESULT hr;
-	hr = unknwn.CoCreateInstance( L"Mga.MgaXslt");
-	if( FAILED( hr)) { resError = "COM Error at CreateInstance!"; return; }
-	CComPtr<IDispatch> disp;
-	hr = unknwn.QueryInterface( &disp);
-	if( FAILED( hr)) { resError = "COM Error at QueryInterface!"; return; }
-	CMgaXsltDriver xslt( disp);
-	CComBSTR error;
-	try 
-	{
-		hr = xslt.ApplyXslt( pScrF, pInF, pOutF, &error);
+	_bstr_t message;
+	explicit XslException(HRESULT hr, _bstr_t message)
+		: hr(hr), message(message)
+	{}
+};
 
-		if( FAILED( hr)) throw hr;
-	} catch( HRESULT&)
+#define CHK_HR(stmt) do { HRESULT hr = (stmt); if (FAILED(hr)) throw XslException(hr, GetErrorInfo(hr)); } while(0)
+#define CHK_ALLOC(p) do { if (!(p)) { throw XslException(E_OUTOFMEMORY, L"Out of memory"); } } while(0)
+
+HRESULT VariantFromString(PCWSTR wszValue, VARIANT &Variant)
+{
+    HRESULT hr = S_OK;
+    BSTR bstrString = SysAllocString(wszValue);
+    CHK_ALLOC(bstrString);
+
+    V_VT(&Variant)   = VT_BSTR;
+    V_BSTR(&Variant) = bstrString;
+
+    return hr;
+}
+
+void CreateAndInitDOM(IXMLDOMDocument **ppDoc)
+{
+    HRESULT hr = CoCreateInstance(__uuidof(DOMDocument60), NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(ppDoc));
+	if (FAILED(hr))
 	{
-		if( error && error.Length() > 0)
-			resError = COLE2T( error);
-		else // error is empty
-			resError = "COM Error";
+		throw XslException(hr, GetErrorInfo(hr));
+	}
+    (*ppDoc)->async = VARIANT_FALSE;
+    (*ppDoc)->validateOnParse = VARIANT_FALSE;
+    (*ppDoc)->resolveExternals = VARIANT_FALSE;
+	IXMLDOMDocument2Ptr dom2 = (*ppDoc);
+	dom2->setProperty(L"ProhibitDTD", VARIANT_FALSE);
+}
+
+HRESULT LoadXMLFile(IXMLDOMDocument *pXMLDom, LPCWSTR lpszXMLFile)
+{
+    HRESULT hr = S_OK;
+    VARIANT_BOOL varStatus;
+    _variant_t varFileName;
+    IXMLDOMParseErrorPtr pXMLErr;
+    
+    CHK_HR(VariantFromString(lpszXMLFile, varFileName));
+    varStatus = pXMLDom->load(varFileName);
+
+    if(varStatus != VARIANT_TRUE)
+    {
+		_bstr_t bstrErr = pXMLDom->parseError->reason;
+		wchar_t error[512];
+        swprintf_s(error, L"Failed to load %s:\n%s\n", lpszXMLFile, static_cast<const wchar_t*>(bstrErr));
+		throw XslException(E_FAIL, error);
+    }
+
+    return hr;
+}
+
+HRESULT TransformDOM2Obj(IXMLDOMDocument *pXMLDom, IXMLDOMDocument *pXSLDoc, wchar_t* outputFilename)
+{
+    HRESULT hr = S_OK;
+    _bstr_t bstrXML;
+    IXMLDOMDocumentPtr pXMLOut;
+    IDispatchPtr pDisp;
+    _variant_t varFileName;
+
+    CreateAndInitDOM(&pXMLOut);
+    CHK_HR(pXMLOut->QueryInterface(IID_IDispatch, (void**)&pDisp));
+
+	_variant_t varXMLOut((IDispatch*)pDisp);
+
+    pXMLDom->transformNodeToObject(pXSLDoc, varXMLOut);
+	// pXMLOut->get_xml(bstrXML.GetAddress());
+
+    CHK_HR(VariantFromString(outputFilename, varFileName));
+    pXMLOut->save(varFileName);
+
+    return hr;
+}
+
+void CXslt::doNativeXslt(LPCTSTR xsltFilename, LPCTSTR inputXmlFilename, LPCTSTR outputXmlFilename, _bstr_t& resError)
+{
+	try
+	{
+		IXMLDOMDocumentPtr pXMLDom;
+		IXMLDOMDocumentPtr pXSLDoc;
+
+		CreateAndInitDOM(&pXMLDom);
+		CHK_HR(LoadXMLFile(pXMLDom, _bstr_t(inputXmlFilename)));
+		CreateAndInitDOM(&pXSLDoc);
+		CHK_HR(LoadXMLFile(pXSLDoc, _bstr_t(xsltFilename)));
+
+		CHK_HR(TransformDOM2Obj(pXMLDom, pXSLDoc, _bstr_t(outputXmlFilename)));
+	}
+	catch (_com_error& err)
+	{
+		if (err.Description().length())
+			resError = err.Description();
+		else
+			resError = L"Unknown error";
+	}
+	catch (XslException& err)
+	{
+		if (err.message.length())
+			resError = err.message;
+		else
+			resError = L"Unknown error";
 	}
 }
