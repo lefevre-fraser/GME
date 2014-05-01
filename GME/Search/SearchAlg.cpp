@@ -469,6 +469,25 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
     //Get appropriate expression stack, either first or second 
     std::vector<Attribute> expressionStack = first ? filter.GetFirstAttributeStack() : filter.GetSecondAttributeStack();
 
+	CString& attributeString = first ? filter.GetFirstAttribute() : filter.GetSecondAttribute();
+	if (attributeString.Find(L"_abspath=") == 0)
+	{
+		BOOL eval;
+		_bstr_t id;
+		if (FAILED(cObj->get_AbsPath(id.GetAddress())))
+		{
+			eval = FALSE;
+		}
+		else
+			eval = wcscmp(static_cast<const wchar_t*>(id), static_cast<const wchar_t*>(attributeString) + wcslen(L"_abspath=")) == 0;
+		return eval;
+		for(std::vector<Attribute>::iterator it=expressionStack.begin();it!=expressionStack.end();++it)
+	    {
+			it->eval = eval;
+		}
+		return EvaluateResult(expressionStack);
+	}
+
     CComPtr<IMgaMetaFCO> cmeta;
     CComPtr<IMgaMetaAttributes> mattrs;
     COMTHROW(cObj->get_Meta(&cmeta));

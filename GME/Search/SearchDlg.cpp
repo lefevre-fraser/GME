@@ -184,6 +184,7 @@ BOOL CSearchDlg::OnInitDialog()
 
 	InsertTextToControl(CString(L"_id="), m_edtAttributeCtrlFirst);
 	InsertTextToControl(CString(L"_guid="), m_edtAttributeCtrlFirst);
+	InsertTextToControl(CString(L"_abspath="), m_edtAttributeCtrlFirst);
 
     //load search history from registry
     LoadSearchHistory();
