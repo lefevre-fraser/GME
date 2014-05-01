@@ -616,8 +616,16 @@ HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 			str_scan_name( &p2, lenOf + path - p2, name_b, kind_b, relpos_b); // 2nd parameter = the # of characters left
 			ASSERT( name_b != 0);
 
+			int relpos = -1;
+			if (relpos_b.Length())
+			{
+				if (swscanf(static_cast<const wchar_t*>(relpos_b), L"%d", &relpos) != 1)
+					return E_INVALIDARG;
+			}
+
 			bool found = false;
 			bool conflict = false;
+			int n_found = 0;
 			CoreObjs children = self[ATTRID_FCOPARENT+ATTRID_COLLECTION];
 			ITERATE_THROUGH(children) {
 				CComBSTR n = ITER[ATTRID_NAME];//if name is empty then n = "" and n.p != 0 that is why we added to name_b the "" value
@@ -627,19 +635,23 @@ HRESULT FCO::get_ObjectByPath(BSTR path, IMgaObject ** pVal) {
 				bool similar = n == name_b;
 				similar = similar || ITER[ATTRID_PERMISSIONS] == LIBROOT_FLAG && libraryNameEqual(n, name_b);
 				similar = similar && (kind_b == L"" || kind == kind_b);
-				if( similar && !found)
+				if (similar && (!found || relpos != -1))
 				{
-					if ( *p2 != 0)
+					if (relpos == -1 || relpos == n_found)
 					{
-						ObjForCore(ITER)->get_ObjectByPath( CComBSTR(p2), pVal);
-					}
-					else
-					{
-						ObjForCore(ITER)->getinterface( pVal);
-					}
+						if ( *p2 != 0)
+						{
+							ObjForCore(ITER)->get_ObjectByPath( CComBSTR(p2), pVal);
+						}
+						else
+						{
+							ObjForCore(ITER)->getinterface( pVal);
+						}
 
-					if ( *pVal)
-						found = true;
+						if ( *pVal)
+							found = true;
+					}
+					n_found++;
 				}
 				else if( similar && found) // found at least two objects with similar names at this level (samename siblings) and the first sibling contains the needed object already
 				{
