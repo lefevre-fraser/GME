@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "mgautil.h"
 #include "MetaPurgeDialog.h"
+#include "atlsafe.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,6 +15,108 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CMetaPurgeDialog dialog
 
+int CheckParadigms(BSTR paradigm, bool remove_invalid_entries)
+{
+	int num_invalid = 0;
+	IMgaRegistrarPtr registrar;
+	COMTHROW(registrar.CreateInstance(__uuidof(MgaRegistrar)));
+	CComVariant vguids;
+	registrar->__QueryParadigmAllGUIDs(paradigm, PutOut(vguids), REGACCESS_BOTH);
+	if (vguids.vt != (VT_ARRAY | VT_BSTR))
+		throw E_INVALIDARG;
+	ATL::CComSafeArray<BSTR> guids(vguids.parray);
+
+	CComBstrObj currentguid;
+	{
+		CComBSTR dummy;
+		CComVariant vv;
+		registrar->__QueryParadigm(paradigm, &dummy, &vv, REGACCESS_PRIORITY);
+		GUID guid;
+		CopyTo(vv, guid);
+		CopyTo(guid, currentguid);
+	}
+
+	for (int i = guids.GetLowerBound(); i <= guids.GetUpperBound(); ++i)	{
+		GUID gg;
+		CopyTo(guids[i], gg);
+		CComVariant vRegGuid;
+		CopyTo(gg, vRegGuid);
+
+		_bstr_t connstr;
+		_bstr_t version;
+		TCHAR statc = 'u';
+		HRESULT hr = registrar->QueryParadigm(paradigm, connstr.GetAddress(), &vRegGuid, REGACCESS_USER);
+		if(hr == E_NOTFOUND) {
+			statc = 's';
+			hr = registrar->QueryParadigm(paradigm, connstr.GetAddress(), &vRegGuid, REGACCESS_SYSTEM);
+		} 
+		if(hr != S_OK) {
+			statc = ' ';
+			connstr = _T("<<error reading this reg.entry>>");
+		}
+
+		hr = registrar->VersionFromGUID(paradigm, vRegGuid, version.GetAddress(), statc ==  'u' ? REGACCESS_USER : REGACCESS_SYSTEM);
+		if (FAILED(hr)) {
+			version = _T("N/A");
+		}
+
+		bool valid = false;
+		IMgaMetaProjectPtr project;
+		COMTHROW(project.CreateInstance(__uuidof(MgaMetaProject)));
+		try
+		{
+			project->__Open(connstr);
+			try
+			{
+				if (project->Version != version)
+					throw _com_error(E_PROJECT_MISMATCH);
+				_variant_t vFileGUID = project->GUID;
+				if (vFileGUID.vt != (VT_ARRAY | VT_UI1))
+					throw _com_error(E_PROJECT_MISMATCH);
+				ATL::CComSafeArray<BYTE> fileGUID(vFileGUID.parray);
+				if (fileGUID.GetCount() != sizeof(GUID))
+					throw _com_error(E_PROJECT_MISMATCH);
+				GUID gFileGUID;
+				CopyTo(vFileGUID, gFileGUID);
+				if (gFileGUID != gg)
+					throw _com_error(E_PROJECT_MISMATCH);
+				valid = true;
+			}
+			catch (_com_error&)
+			{
+				project->__Close();
+				throw;
+			}
+		}
+		catch (_com_error& e)
+		{
+		}
+		if (valid == false)
+		{
+			num_invalid++;
+			if (remove_invalid_entries)
+			{
+				registrar->UnregisterParadigmGUID(paradigm, vRegGuid, statc ==  'u' ? REGACCESS_USER : REGACCESS_SYSTEM);
+			}
+		}
+	}
+	return num_invalid;
+}
+
+void CMetaPurgeDialog::OnCheckFiles()
+{
+	int invalid = CheckParadigms(_bstr_t(paradigm), false);
+	if (invalid > 0)
+	{
+		wchar_t msg[256];
+		swprintf_s(msg, L"Found %d invalid registry entries. Do you want to remove them?", invalid);
+		if (IDYES == AfxMessageBox(msg, MB_YESNO))
+		{
+			CheckParadigms(_bstr_t(paradigm), true);
+			ResetItems();
+		}
+	}
+}
 
 CMetaPurgeDialog::CMetaPurgeDialog(CString &paradigmname,  IMgaRegistrar *reg, CWnd* pParent /*=NULL*/)
 	: CDialog(CMetaPurgeDialog::IDD, pParent), paradigm(paradigmname), registrar(reg)
@@ -39,6 +142,7 @@ BEGIN_MESSAGE_MAP(CMetaPurgeDialog, CDialog)
 	ON_WM_CANCELMODE()
 	ON_BN_CLICKED(IDC_PURGE2, OnPurge)
 	ON_BN_CLICKED(IDC_SETCURRENT, OnSetcurrent)
+	ON_BN_CLICKED(IDC_CHECK_FILES, OnCheckFiles)
 	ON_BN_CLICKED(IDOK, OnOK)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_PURGELIST, OnParadigmsHeader)
 	

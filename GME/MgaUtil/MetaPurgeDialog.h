@@ -45,6 +45,7 @@ protected:
 	afx_msg void OnClose();
 	afx_msg void OnOK();
 	//}}AFX_MSG
+	void OnCheckFiles();
 	DECLARE_MESSAGE_MAP()
 private:
 	void ResetItems();

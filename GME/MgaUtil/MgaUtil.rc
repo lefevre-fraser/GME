@@ -171,6 +171,7 @@ BEGIN
     LTEXT           "Select versions no longer needed. \nThe current version (*) cannot be purged.",IDC_STATIC,7,7,496,19
     CONTROL         "Delete files",IDC_DELFILES,"Button",BS_AUTORADIOBUTTON | WS_GROUP,521,62,51,10
     CONTROL         "Unregister\nonly",IDC_NODELFILES,"Button",BS_AUTORADIOBUTTON | BS_MULTILINE,522,76,50,21
+    PUSHBUTTON      "Check files",IDC_CHECK_FILES,521,108,50,14
 END
 
 IDD_REGISTRY_BROWSER DIALOGEX 0, 0, 406, 220
