@@ -200,6 +200,8 @@ bool AddConnPTask::Do(CoreObj self, std::vector<CoreObj> *peers) {
 	{
 		CoreObj last_ref = (*peers)[peercnt - 3];
 		CoreObj tgt_model= last_ref[ATTRID_REFERENCE];
+		if (!last_ref.p)
+			throw_com_error(E_MGA_INVALID_ARG, L"Cannot add refport to null reference");
 		CoreObj tgt_elem = (*peers)[peercnt - 2];
 		CoreObj parent   = tgt_elem[ATTRID_FCOPARENT];
 		CoreObj bas_model= tgt_model[ATTRID_DERIVED]; // tgt_model must be a derived for GetDerivedEquivalent to succeed
