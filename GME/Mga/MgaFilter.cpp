@@ -267,7 +267,8 @@ STDMETHODIMP CMgaFilter::put_Level(BSTR newVal)
 STDMETHODIMP CMgaFilter::get_Project(IMgaProject **pVal) {
   COMTRY {
 	CHECK_OUTPTRPAR(pVal);
-	if(!mgaproject) COMTHROW(E_MGA_ZOMBIE_NOPROJECT);
+	if (!mgaproject)
+		throw_com_error(E_MGA_ZOMBIE_NOPROJECT, L"MgaFilter must be created by IMgaProject.CreateFilter, and not CoCreateInstance");
 	(*pVal = mgaproject)->AddRef();
   } COMCATCH(;);
 }
