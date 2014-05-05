@@ -5,22 +5,22 @@ Update release notes: Doc/README_in.txt
 Update version number: Doc/index.md
 curl -s -S http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastBuild/consoleText | grep Finding\ ID
 curl -s -S http://build.isis.vanderbilt.edu/job/GME_x64/lastBuild/label=build-slave6/consoleText | grep Finding\ ID
-ssh kms1 'cd symbolstmp && python ~/bin/pdb_promote.py 0000009304  0000009305' # x2 "Finding ID"
+ssh kms1 'cd symbolstmp && python ~/bin/pdb_promote.py 0000010154 0000010155' # x2 "Finding ID"
 ssh kms1 rsync -avP symbols /media/7ce1528b-2101-4764-81e3-aed9112e3ad8/214/
 export PATH=$PATH:/c/cygwin/bin:"/c/Program Files/7-Zip/:/cygdrive/c/Program Files/7-Zip/"
-curl -o GME_x64-14.2.24.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
-curl -o GME-14.2.24.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
+curl -o GME_x64-14.5.5.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
+curl -o GME-14.5.5.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
 curl -o README.txt http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
 
 for file in http://build.isis.vanderbilt.edu/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.msm http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.msm http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.msm http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.msm; do curl -O $file; done
 
-svn cp -m 'Tag Release 14.2.24' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.2.24
-svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.2.24 GME-14.2.24_src && \
-7z.exe a GME-14.2.24_src.zip GME-14.2.24_src/
+svn cp -m 'Tag Release 14.5.5' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.5.5
+svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.5.5 GME-14.5.5_src && \
+7z.exe a GME-14.5.5_src.zip GME-14.5.5_src/
 
-ssh repo@repo.isis.vanderbilt.edu mkdir GME/14.2.24/ && \
-scp README.txt GME-14.2.24.msi GME_x64-14.2.24.msi GME-14.2.24_src.zip repo@repo.isis.vanderbilt.edu:GME/14.2.24/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.2.24/
+ssh repo@repo.isis.vanderbilt.edu mkdir GME/14.5.5/ && \
+scp README.txt GME-14.5.5.msi GME_x64-14.5.5.msi GME-14.5.5_src.zip repo@repo.isis.vanderbilt.edu:GME/14.5.5/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.5.5/
 
 
 # Update online documentation:
@@ -35,7 +35,10 @@ rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include
 #  c:\Python27\python.exe install_setup.py py2exe && move /y dist\install.exe .\install.exe
 
 Install GME on VM, check for missing symbols
-set _NT_SYMBOL_PATH=srv*c:\GME_14.3.5_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
+set _NT_SYMBOL_PATH=srv*c:\GME_14.5.5_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files\GME"
-"c:\Program Files\7-Zip\7z.exe" a -xr!.svn GME_14.3.5_symbols.zip c:\GME_14.3.5_symbols
+"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_14.5.5_symbols.zip c:\GME_14.5.5_symbols
+
+scp GME_14.5.5_symbols.zip repo@repo.isis.vanderbilt.edu:GME/14.5.5/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.5.5/
