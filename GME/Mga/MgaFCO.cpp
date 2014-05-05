@@ -491,6 +491,7 @@ void giveme( CMgaProject *mgaproject, CoreObj par, CoreObj cur, CComBSTR cur_kin
 // gives back the path to an object starting from the rootfolder (does not include project name)
 HRESULT FCO::get_AbsPath(BSTR *pVal)		{ 
 	COMTRY {
+		CheckRead();
 		CComBSTR path("");
 
 		CoreObj par = self[ATTRID_PARENT];
