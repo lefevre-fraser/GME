@@ -26,18 +26,27 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes or Release 14.3.5
+Release Notes of Release 14.5.5
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Drag-n-drop to Search pane to search for 'what references this'.
+  - MetaInterpreter: detect duplicate names for abstract FCOs
+  - Fix ObjectByPath: relpos was ignored sometimes
+  - DSMLGenerator: fix for some namespace name clashes
+  - Add newer Parser.idl interfaces to installer. Fixes QueryInterface calls for out-of-proc IMgaDumper2, IMgaParser2, and IMgaParser3
+
+Release Notes of Release 14.3.5
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Ctrl-Shift-V: paste as reference
   - For both Right-click on connection, Jump to source (or destination); and Jump along Incoming (or Outgoing) connection: highlight connection that is followed
 
-Release Notes or Release 14.2.24
+Release Notes of Release 14.2.24
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix bug where the GME Browser and Object Inspector would try to read a deleted FCO after an AddOn modified it
 
-Release Notes or Release 14.2.19
+Release Notes of Release 14.2.19
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Model Editor: double-clicking port or refport now shows that port, instead of its parent
