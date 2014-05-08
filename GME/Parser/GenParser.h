@@ -62,6 +62,10 @@ public:
 	virtual void setDocumentLocator(const Locator *const locator);
 	virtual void fireStartFunction(const std::tstring& name, const attributes_type& attributes) = 0;
 	virtual void fireEndFunction(const std::tstring& name) = 0;
+	virtual void resetDocument() {
+		// GME-441
+		locator = NULL;
+	}
 
 public:
 	const Locator *locator;
