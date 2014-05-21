@@ -26,7 +26,9 @@ HRESULT FCO::get_NamedRoleReferences(BSTR rolename, IMgaFCOs **pVal) {
 			CHECK_OUTPTRPAR(pVal); 
 			CoreObj r;
 			if(!findroleobj(rolename, r))
-				COMTHROW(E_MGA_NAME_NOT_FOUND);
+			{
+				COMRETURN(E_MGA_NAME_NOT_FOUND);
+			}
 			CoreObjs segs = r[ATTRID_CONNSEG+ATTRID_COLLECTION];
 			segs.Sort();
 			CREATEEXCOLLECTION_FOR(MgaFCO, q);
