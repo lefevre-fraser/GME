@@ -88,7 +88,8 @@ STDMETHODIMP CMgaRegistrar::get_IconPath(regaccessmode_enum mode, BSTR *path)
 			CString str2;
 			if(res == ERROR_SUCCESS) {
 				str2 = QueryValue(mga, _T("IconPath"));
-			} else if (res == ERROR_FILE_NOT_FOUND) {
+			}
+			if (str2 == "") {
 				str2 = "$PARADIGMDIR\\icons;$PROJECTDIR\\icons";
 			}
 			str2.TrimLeft(_T(" ;,\t"));
