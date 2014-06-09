@@ -17,7 +17,9 @@ DECLARE_ONLY_AGGREGATABLE(CMgaMetaPointerSpec)
 
 BEGIN_COM_MAP(CMgaMetaPointerSpec)
 	COM_INTERFACE_ENTRY(IMgaMetaPointerSpec)
-	COM_INTERFACE_ENTRY2(IDispatch, IMgaMetaPointerSpec)
+	// intentionally omitted: COM_INTERFACE_ENTRY2(IDispatch, IMgaMetaPointerSpec)
+	//    if CMgaMetaPointerSpec would expose this interface, we can't get IDispatch for IMgaMetaReference
+	//    (of course now we can't get IDispatch for IMgaMetaPointerSpec, but this is less bad)
 END_COM_MAP()
 
 public:
