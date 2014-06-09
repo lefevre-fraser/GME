@@ -1179,7 +1179,7 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 					}
 					toolmenu->InsertMenu(idx,
 								plugins.GetSize() ? MF_BYPOSITION | MF_POPUP | MF_ENABLED : MF_BYPOSITION | MF_POPUP | MF_GRAYED,
-								(UINT)pluginmenu.Detach(), runPluginLabel);
+								(UINT_PTR)pluginmenu.Detach(), runPluginLabel);
 				}
 				found = true;
 			}
@@ -1194,12 +1194,28 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 				} else {
 					CMenu pluginmenu;
 					pluginmenu.CreatePopupMenu();
-					for(int i = 0; i < min(interpreters.GetSize(), ID_FILE_INTERPRET_LAST - ID_FILE_INTERPRET1); ++i) {
-						pluginmenu.AppendMenu(MF_ENABLED, ID_FILE_INTERPRET1 + i, interpreterTooltips[i]);
+
+					struct TooltipSorter {
+						CString tooltip;
+						int id;
+						bool operator<(const TooltipSorter& that) {
+							return this->tooltip < that.tooltip;
+						}
+					};
+					std::vector<TooltipSorter> interpreters_sorted;
+
+					for (int i = 0; i < min(interpreters.GetSize(), ID_FILE_INTERPRET_LAST - ID_FILE_INTERPRET1); ++i) {
+						TooltipSorter tt = { interpreterTooltips[i], ID_FILE_INTERPRET1 + i };
+						interpreters_sorted.push_back(std::move(tt));
 					}
+					std::sort(begin(interpreters_sorted), end(interpreters_sorted));
+					std::for_each(begin(interpreters_sorted), end(interpreters_sorted), [&](const TooltipSorter& tt)
+					{
+						pluginmenu.AppendMenu(MF_ENABLED, tt.id, tt.tooltip);
+					});
 					toolmenu->InsertMenu(idx,
 								interpreters.GetSize() ? MF_BYPOSITION | MF_POPUP | MF_ENABLED : MF_BYPOSITION | MF_POPUP | MF_GRAYED,
-								(UINT)pluginmenu.Detach(), runInterpreterLabel);
+								(UINT_PTR)pluginmenu.Detach(), runInterpreterLabel);
 				}
 				found = true;
 			}
