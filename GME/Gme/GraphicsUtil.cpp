@@ -152,10 +152,10 @@ void CGraphics::Initialize(void)
 	rightHalfCoords.push_back(CPoint(-1, 0));
 	rightHalfCoords.push_back(CPoint(-10, 5));
 	std::vector<CPoint> diamondCoords;
-	diamondCoords.push_back(CPoint(-11, 0));
-	diamondCoords.push_back(CPoint(-6, -3));
-	diamondCoords.push_back(CPoint(-1, 0));
-	diamondCoords.push_back(CPoint(-6, 3));
+	diamondCoords.push_back(CPoint(-10, 0));
+	diamondCoords.push_back(CPoint(-5, -3));
+	diamondCoords.push_back(CPoint(-0, 0));
+	diamondCoords.push_back(CPoint(-5, 3));
 	std::vector<CPoint> apexCoords;
 	apexCoords.push_back(CPoint(-9, -5));
 	apexCoords.push_back(CPoint(-9, 5));
