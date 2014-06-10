@@ -30,6 +30,7 @@ namespace CSGUI
             switcher.UpdateSublibrary();
         }
 
+        [ComVisible(false)]
         public void PrintLine(Func<string, string, string> f, IMgaFCO a, IMgaFCO b)
         {
             Console.Out.WriteLine(f(Switcher.getPath(a), Switcher.getPath(b)));
