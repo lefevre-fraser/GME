@@ -16,11 +16,12 @@ public:
 	virtual ~CArrowHead();
 public:
 	std::vector<CPoint> path;
+	int dir;
 
 public:
 	CRect GetLineCoords(long index1, long index2, double angle, bool skew);
 	virtual void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
-					  double angle);
+					  double angle, bool bold);
 };
 
 class CBulletArrowHead: public CArrowHead
@@ -31,7 +32,7 @@ public:
 
 public:
 	virtual void Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
-					  double angle);
+					  double angle, bool bold);
 };
 
 class CGraphics
@@ -74,7 +75,7 @@ public:
 						COLORREF color, GMEConnLineType lineType, int srcEnd, int dstEnd, bool isViewMagnified,
 						bool drawBullets, int width = 1);
 	void DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,
-				   const CPoint& beforeLast, const CPoint& last, int iEnd );
+				   const CPoint& beforeLast, const CPoint& last, int iEnd, bool bold);
 	void DrawGdipText(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font, COLORREF color,
 					  int align);
 	Gdiplus::RectF MeasureText2(Gdiplus::Graphics* gdip, const CString& txt, const CPoint& pt, Gdiplus::Font* font);

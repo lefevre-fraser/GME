@@ -15,6 +15,7 @@ static int  fontSizes[GME_FONT_KIND_NUM]		= { 16, 15, 12 };
 
 CArrowHead::CArrowHead(int dir, const std::vector<CPoint>& coords)
 {
+	this->dir = dir;
 	ASSERT(coords.size() > 0);
 	std::vector<CPoint>::const_iterator ii = coords.begin();
 	while(ii != coords.end()) {
@@ -67,23 +68,57 @@ CRect CArrowHead::GetLineCoords(long index1, long index2, double angle, bool ske
 }
 
 void CArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
-					  double angle)
+					  double angle, bool bold)
 {
 	bool skew = (abs(angle) > 1.0e-6);
-	Gdiplus::GraphicsPath* arrowHeadPath = new Gdiplus::GraphicsPath();
+	Gdiplus::GraphicsPath arrowHeadPath;
 	int segments = path.size();
+	long lastx;
+	long lasty;
 	for (int i = 1; i < segments; i++) {
 		CRect line = GetLineCoords(i - 1, i, angle, skew);
-		arrowHeadPath->AddLine(line.left + tip.x, line.top + tip.y, line.right + tip.x, line.bottom + tip.y);
+		arrowHeadPath.AddLine(line.left + tip.x, line.top + tip.y, line.right + tip.x, line.bottom + tip.y);
+		lastx = line.left + tip.x;
+		lasty = line.top + tip.y;
 	}
-	gdip->FillPath(brush, arrowHeadPath);
+
+	if (bold && !bPen)
+	{
+		if (dir == GME_LEFT_DIRECTION || dir == GME_RIGHT_DIRECTION)
+		{
+			Gdiplus::Matrix matrix(1.0f, 0.0f, 0.0f, 1.7f, 0, (Gdiplus::REAL)-lasty * (1.7 - 1));
+			arrowHeadPath.Transform(&matrix);
+		}
+		else
+		{
+			Gdiplus::Matrix matrix(1.7f, 0.0f, 0.0f, 1.0f, (Gdiplus::REAL)-lastx * (1.7 - 1), 0);
+			arrowHeadPath.Transform(&matrix);
+		}
+	}
+	gdip->FillPath(brush, &arrowHeadPath);
 
 	if (bPen) {
+		std::vector<Gdiplus::Point> points;
+		points.reserve(path.size() + 2);
+		for (int i = 0; i < path.size(); i++) {
+			points.push_back(Gdiplus::Point((int)path[i].x + tip.x, (int)path[i].y + tip.y));
+		}
 		CRect line = GetLineCoords(segments - 1, 0, angle, skew);
-		arrowHeadPath->AddLine(line.left + tip.x, line.top + tip.y, line.right + tip.x, line.bottom + tip.y);
-		gdip->DrawPath(pen, arrowHeadPath);
+		points.push_back(Gdiplus::Point((int)path[0].x + tip.x, (int)path[0].y + tip.y));
+		points.push_back(Gdiplus::Point((int)path[1].x + tip.x, (int)path[1].y + tip.y)); // <- extra point gives nice sharp corner, instead of butt-end
+		if (bold)
+		{
+			pen = pen->Clone();
+			Gdiplus::Matrix mat(3.0, 0.0, 0.0, 3.0, 0, 0);
+			pen->MultiplyTransform(&mat); // FIXME only shows up at higher zoom for some reason
+		}
+		gdip->DrawLines(pen, &points[0], points.size());
+		if (bold)
+		{
+			delete pen;
+		}
 	}
-	delete arrowHeadPath;
+
 }
 
 
@@ -99,7 +134,7 @@ CBulletArrowHead::~CBulletArrowHead()
 }
 
 void CBulletArrowHead::Draw(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush, const CPoint& tip, bool bPen,
-							double angle)
+							double angle, bool bold)
 {
 	ASSERT(path.size() == 2);
 	int ox = 0;
@@ -385,7 +420,7 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 							  srcEnd == GME_EMPTYAPEX_END ||
 							  srcEnd == GME_EMPTYBULLET_END) ? GME_WHITE_COLOR : color);
 
-	DrawArrow(gdip, headpen, headBrush, second, first, srcEnd);
+	DrawArrow(gdip, headpen, headBrush, second, first, srcEnd, width > 2);
 	}
 
 	{
@@ -398,12 +433,12 @@ void CGraphics::DrawConnection(Gdiplus::Graphics* gdip, const CPointList& points
 							  dstEnd == GME_EMPTYAPEX_END ||
 							  dstEnd == GME_EMPTYBULLET_END) ? GME_WHITE_COLOR : color);
 
-	DrawArrow(gdip, headpen, headBrush, beforeLast, last, dstEnd);
+	DrawArrow(gdip, headpen, headBrush, beforeLast, last, dstEnd, width > 2);
 	}
 }
 
 void CGraphics::DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::Brush* brush,
-						  const CPoint& beforeLast, const CPoint& last, int iEnd)
+						  const CPoint& beforeLast, const CPoint& last, int iEnd, bool bold)
 {
 	if (iEnd == GME_BUTT_END) {
 		return;
@@ -442,25 +477,25 @@ void CGraphics::DrawArrow(Gdiplus::Graphics* gdip, Gdiplus::Pen* pen, Gdiplus::B
 
 	switch (iEnd) {
 		case GME_ARROW_END :
-			arrows[dir]->Draw(gdip, pen, brush, last, false, alpha);
+			arrows[dir]->Draw(gdip, pen, brush, last, false, alpha, bold);
 			break;
 		case GME_DIAMOND_END :
 		case GME_EMPTYDIAMOND_END :
-			diamonds[dir]->Draw(gdip, pen, brush, last, iEnd == GME_EMPTYDIAMOND_END, alpha);
+			diamonds[dir]->Draw(gdip, pen, brush, last, iEnd == GME_EMPTYDIAMOND_END, alpha, bold);
 			break;
 		case GME_APEX_END :
 		case GME_EMPTYAPEX_END :
-			apexes[dir]->Draw(gdip, pen, brush, last, iEnd == GME_EMPTYAPEX_END, alpha);
+			apexes[dir]->Draw(gdip, pen, brush, last, iEnd == GME_EMPTYAPEX_END, alpha, bold);
 			break;
 		case GME_BULLET_END :
 		case GME_EMPTYBULLET_END :
-			bullets[dir]->Draw(gdip, pen, brush, last, iEnd == GME_EMPTYBULLET_END, alpha);
+			bullets[dir]->Draw(gdip, pen, brush, last, iEnd == GME_EMPTYBULLET_END, alpha, bold);
 			break;
 		case GME_HALFARROWLEFT_END :
-			leftHalfArrows[dir]->Draw(gdip, pen, brush, last, true, alpha);
+			leftHalfArrows[dir]->Draw(gdip, pen, brush, last, true, alpha, bold);
 			break;
 		case GME_HALFARROWRIGHT_END :
-			rightHalfArrows[dir]->Draw(gdip, pen, brush, last, true, alpha);
+			rightHalfArrows[dir]->Draw(gdip, pen, brush, last, true, alpha, bold);
 			break;
 	}
 }
