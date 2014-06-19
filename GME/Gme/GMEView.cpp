@@ -10267,11 +10267,11 @@ void CGMEView::SetAllAutoRouterPref( bool bSrc, bool bClear )
 	}
 }
 
-void CGMEView::OnPrintMetafile() 
+void CGMEView::OnPrintMetafile()
 {
 	CString filePath = _T(""); // "c:\\tmp\\meta.emf";
 	// call FileOpenDialog
-	CFileDialog filedlg(FALSE, _T("emf"), NULL, OFN_OVERWRITEPROMPT|OFN_HIDEREADONLY,
+	CFileDialog filedlg(FALSE, _T("emf"), name, OFN_OVERWRITEPROMPT|OFN_HIDEREADONLY,
 		_T("Enhanced Metafile Files (*.emf)|*.emf|All Files (*.*)|*.*||"));
 	if (filedlg.DoModal() != IDOK)
 		return;
