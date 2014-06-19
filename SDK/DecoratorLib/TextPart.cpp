@@ -74,6 +74,13 @@ CRect TextPart::GetLabelLocation(void) const
 void TextPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO,
 							HWND parentWnd, PreferenceMap& preferences)
 {
+	VARIANT_BOOL libObject = VARIANT_FALSE;
+	if (pFCO) {
+		pFCO->get_IsLibObject(&libObject);
+	}
+	if (libObject != VARIANT_FALSE) {
+		m_bTextEditable = false;
+	}
 	// Check if editability is disabled/enabled
 	PreferenceMap::iterator it = preferences.find(PREF_ITEMEDITABLE);
 	if (it != preferences.end())
