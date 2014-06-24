@@ -133,12 +133,15 @@ HRESULT FCO::GetRelMetaPath(IMgaFCO *begfco, BSTR *rp, IMgaFCOs *refs) {
 
 HRESULT FCO::CheckTree() {
 	COMTRY {
-		COMTHROW(Check());
+		HRESULT hr = Check();
+		if (FAILED(hr))
+			return hr;
 		objtype_enum typ;
 		COMTHROW(get_ObjType(&typ));
 		if(typ == OBJTYPE_FOLDER) {
 				ITERATE_THROUGH(self[ATTRID_FCOPARENT+ATTRID_COLLECTION]) {
-					COMTHROW(ObjForCore(ITER)->CheckTree());
+					if (FAILED(hr = ObjForCore(ITER)->CheckTree()))
+						return hr;
 				}
 		}
 		else {
@@ -194,7 +197,13 @@ HRESULT FCO::Check() {
 		if(typ == OBJTYPE_FOLDER) {
 			CComPtr<IMgaMetaFolder> parentmf, metaf;
 			COMTHROW(get_MetaFolder(&metaf));
-			if(!parent) {												// root folder
+			if (!metaf) {
+				_bstr_t name;
+				this->get_Name(name.GetAddress());
+				_bstr_t err = L"'";
+				err += parent->Name + "' contains child '" + name + L"' with no assigned kind";
+				throw_com_error(E_MGA_META_VIOLATION, err);
+			} else if(!parent) {												// root folder
 				CComPtr<IMgaMetaProject> mp;
 				COMTHROW(mgaproject->get_RootMeta(&mp));
 				CComPtr<IMgaMetaFolder> mf;
@@ -264,7 +273,13 @@ HRESULT FCO::Check() {
 			COMTHROW(get_MetaRole( &metarole));
 		
 	
-			if(parenttyp == OBJTYPE_MODEL) {
+			if (meta == NULL) {
+				_bstr_t name;
+				this->get_Name(name.GetAddress());
+				_bstr_t err = L"'";
+				err += parent->Name + "' contains child '" + name + L"' with no assigned kind";
+				throw_com_error(E_MGA_META_VIOLATION, err);
+			} else if(parenttyp == OBJTYPE_MODEL) {
 				if(!metarole)  COMTHROW(E_MGA_NO_ROLE);
 				CComPtr<IMgaMetaModel> parentmeta1;
 				CComPtr<IMgaMetaFCO> parentmeta2;

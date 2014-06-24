@@ -124,6 +124,19 @@ void throw_com_error(HRESULT hr, LPCOLESTR desc)
 	}
 }
 
+void throw_last_com_error(HRESULT hr)
+{
+	_bstr_t err;
+	if (GetErrorInfo(err.GetAddress()))
+	{
+		throw_com_error(hr, static_cast<const wchar_t*>(err));
+	}
+	else
+	{
+		throw hresult_exception(hr);
+	}
+}
+
 void SetErrorInfo(LPCOLESTR desc)
 {
 	ASSERT( desc != NULL );

@@ -343,14 +343,23 @@ STDMETHODIMP CMgaProject::OpenEx(BSTR projectname, BSTR paradigmname, VARIANT pa
 				try {
 					CComPtr<IMgaFolder> rf;
 					COMTHROW(get_RootFolder(&rf));
-					COMTHROW(ObjFor(rf)->CheckTree());
+					HRESULT hr = ObjFor(rf)->CheckTree();
+					if (FAILED(hr))
+					{
+						throw_last_com_error(hr);
+					}
 					rf = 0;
 					COMTHROW(CommitTransaction());
 				} catch(hresult_exception &e) {
 					lm->Flush();
 					AbortTransaction();
 					throw e;
+				} catch(_com_error&) {
+					lm->Flush();
+					AbortTransaction();
+					throw;
 				}
+
 				guidchanged = true;
 			}
 			if(s != soldname || guidchanged) {
@@ -1268,14 +1277,6 @@ void CMgaProject::StartAutoAddOns() {
 				autoaddoncreate_progid = *i;
 				COMTHROW(CreateMgaComponent(addon, *i)); // Was: COMTHROW( addon.CoCreateInstance(*i) );
 				ASSERT( addon != NULL );
-				CComQIPtr<IGMEVersionInfo> vv = addon;
-				if (vv)
-				{
-					GMEInterfaceVersion_enum v;
-					COMTHROW(vv->get_version(&v));
-					if (v != GMEInterfaceVersion_Current)
-						HR_THROW(E_MGA_COMPONENT_ERROR);
-				}
 
 				COMTHROW( addon->Initialize(this));
 				autocomps.push_front(addon.Detach());

@@ -464,9 +464,9 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 
 		try 
 		{
-			COMTHROW(p->OpenEx( upgraded?connstr_upgraded:connstr, paradigmname, paradigmGUID));
+			p->__OpenEx( _bstr_t(upgraded?connstr_upgraded:connstr), _bstr_t(paradigmname), _variant_t(paradigmGUID));
 
-			COMTHROW(p->BeginTransaction( NULL, TRANSACTION_READ_ONLY));
+			p->__BeginTransaction( NULL, TRANSACTION_READ_ONLY);
 
 			CComPtr<IMgaFolder> libroot;
 			COMTHROW(p->get_RootFolder(&libroot));
@@ -509,6 +509,15 @@ void CreateLibraryImage(CMgaProject *mgaproject, LibWorker& lw, CoreObj &libimgr
 
 			fixup.fixPointers();
 		}	
+		catch(_com_error&)
+		{
+			CComBSTR msg( "Exception while loading external library ");
+			COMTHROW(msg.Append( connstr));
+			COMTHROW(msg.Append( " ."));
+			reporter.show( msg);
+
+			throw;
+		}
 		catch(...)
 		{
 			CComBSTR msg( "Exception while loading external library ");

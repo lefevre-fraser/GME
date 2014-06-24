@@ -136,6 +136,7 @@ inline bool CheckOut_IsBound(const SAFEARRAY *p) { return p != NULL; }
 
 
 void throw_com_error(HRESULT hr, LPCOLESTR desc);
+void throw_last_com_error(HRESULT hr);
 void SetErrorInfo(LPCOLESTR desc) NOTHROW;
 void SetErrorInfo(HRESULT hr, LPOLESTR desc2 = NULL) NOTHROW;
 bool GetErrorInfo(BSTR *p) NOTHROW;
