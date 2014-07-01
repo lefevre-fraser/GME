@@ -206,7 +206,7 @@ namespace CSharpDSMLGenerator.Generator
                     { Configuration.DsmlModel.Paradigm.folder.metaref, Configuration.DsmlModel.Paradigm.folder.name }
                 };
 
-                foreach (var item in Configuration.DsmlModel.Paradigm.folder.Items)
+                foreach (var item in Configuration.DsmlModel.Paradigm.folder.Items ?? new object[] {})
                 {
                     if (item is atom)
                     {
