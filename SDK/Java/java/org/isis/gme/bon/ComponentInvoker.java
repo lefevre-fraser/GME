@@ -110,7 +110,7 @@ public final class ComponentInvoker
             }
             else if(comp instanceof BONComponent)
             {
-            	JBuilderFactory.setClassLoader(cl);
+                JBuilderFactory.setClassLoader(cl);
                 builder = new JBuilder(project,(BONComponent)comp);
                 currentBONObj = null;
                 if(currentObj != null)
@@ -125,7 +125,7 @@ public final class ComponentInvoker
                 else
                     selected = null;
                                                                        
-                ((BONComponent)comp).invokeEx(builder, currentBONObj, selected, param);                                       
+                ((BONComponent)comp).invokeEx(builder, currentBONObj, selected, param);
             }
             else
             {
@@ -136,24 +136,17 @@ public final class ComponentInvoker
         {
             reportError(e);                                   
         }
-        
-        // free all objects
-        project       = null;
-        currentObj    = null;
-        selectedObjs  = null;
-        builder       = null;
-        currentBONObj = null;
-        selected      = null;       
-        
-        // leave apartment
-        try
+        finally
         {
+            // free all objects
+            project       = null;
+            currentObj    = null;
+            selectedObjs  = null;
+            builder       = null;
+            currentBONObj = null;
+            selected      = null;
             if( entered )
                 Apartment.leave();
         }
-        catch( Exception e )
-        {
-            reportError(e);
-        }       
     }
 }
