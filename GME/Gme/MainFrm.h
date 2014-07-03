@@ -27,7 +27,12 @@ struct CGMEMFCTabCtrl : public CMFCTabCtrl
 			return GetTabWnd(m_iActiveTab);
 		}
 		// this is a hack to fix the tab behavior when you close the current tab
+		// Activate the next tab (same tab index), except if the last tab was closed. In that case, activate the new last tab (index - 1)
 		EnableActivateLastVisible(TRUE);
+		if (GetTabsNum() == m_iActiveTab)
+		{
+			m_iActiveTab--;
+		}
 		iTabNum = m_iActiveTab;
 		return GetTabWnd(m_iActiveTab);
 	}
