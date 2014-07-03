@@ -445,7 +445,8 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				COMTHROW(bstr.AppendBSTR( nm));
 				COMTHROW(bstr.Append(_T("</A>: ")));
 				COMTHROW(bstr.Append(OclCommonEx::Convert(item.spConstraint.Ptr()->GetMessage())));
-				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
+				if (m_oleapp)
+					COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
 			catch(hresult_exception &)// in case the constraint is not attached to any fco in the metamodel
 			{                         // the constraint becomes project scoped, thus QueryInterface fails
@@ -455,7 +456,8 @@ void CViolationDialog::OnClickConstraintsColumn(NMHDR* pNMHDR, LRESULT* pResult)
 				bstr.Append(_T(" Violated! Description: \""));
 				bstr.Append(OclCommonEx::Convert(item.spConstraint.Ptr()->GetMessage())); // FIXME suspect
 				bstr.Append(_T("\"."));
-				COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
+				if (m_oleapp)
+					COMTHROW(m_oleapp->ConsoleMessage(bstr, MSG_ERROR));
 			}
 		}
 		catch(hresult_exception &)
