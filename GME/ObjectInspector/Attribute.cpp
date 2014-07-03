@@ -494,8 +494,7 @@ void CAttribute::WriteItemToMga(CListItem ListItem,const CMgaFCOPtrList& MgaFCOP
 
 					strValue.Replace(_T("\r\n"), _T("\n"));
 
-					CComBSTR bstrValue(strValue);
-					COMTHROW(ccpCurrFCO->put_StrAttrByName(bstrAttrName,bstrValue));					
+					ccpCurrFCO->__SetStrAttrByNameDisp(static_cast<const BSTR>(bstrAttrName), _bstr_t(strValue));					
 				}break;
 			
 				case ITEMDATA_FIXED_LIST:
@@ -508,17 +507,17 @@ void CAttribute::WriteItemToMga(CListItem ListItem,const CMgaFCOPtrList& MgaFCOP
 
 				case ITEMDATA_INTEGER:
 					{
-						COMTHROW(ccpCurrFCO->put_IntAttrByName(bstrAttrName,ListItem.Value.intVal));
+						ccpCurrFCO->IntAttrByName[static_cast<const BSTR>(bstrAttrName)] = ListItem.Value.intVal;
 					}break;
 
 				case ITEMDATA_DOUBLE:
 					{
-						COMTHROW(ccpCurrFCO->put_FloatAttrByName(bstrAttrName,ListItem.Value.doubleVal));
+						ccpCurrFCO->FloatAttrByName[static_cast<const BSTR>(bstrAttrName)] = ListItem.Value.doubleVal;
 					}break;
 
 				case ITEMDATA_BOOLEAN:
 					{
-						COMTHROW(ccpCurrFCO->put_BoolAttrByName(bstrAttrName,ListItem.Value.boolVal));
+						ccpCurrFCO->BoolAttrByName[static_cast<const BSTR>(bstrAttrName)] = ListItem.Value.boolVal ? VARIANT_TRUE : VARIANT_FALSE;
 					}break;
 
 				default:

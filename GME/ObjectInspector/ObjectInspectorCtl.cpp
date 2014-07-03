@@ -910,6 +910,12 @@ void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
 		m_project->AbortTransaction();
 		CWnd::MessageBox(_T("Object Inspector could not write attribute data due to an unexpected error. We apologize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
 	}
+	catch (_com_error& e)
+	{
+		ASSERT(0);
+		m_project->AbortTransaction();
+		CWnd::MessageBox(CString(L"Object Inspector could not write attribute data: ") + static_cast<const wchar_t*>(e.Description()), L"Object inspector",MB_ICONERROR);
+	}
 
 }
 
@@ -965,6 +971,16 @@ void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIs
 			CWnd::MessageBox(_T("Library objects cannot be modified."), _T("GME"), MB_ICONERROR);
 		else if (e.hr != E_MGA_CONSTRAINT_VIOLATION)
 			CWnd::MessageBox(_T("GME could not write object preference data due to an unexpected MGA error. We apologize for the inconvenience."), _T("GME"), MB_ICONERROR);
+	}
+	catch (_com_error& e)
+	{
+		m_project->AbortTransaction();
+		if(bIsForKind)
+		{
+			ccpMetaProject->AbortTransaction();
+		}
+		if (e.Error() != E_MGA_CONSTRAINT_VIOLATION)
+			CWnd::MessageBox(CString(L"GME could not write attribute data: ") + static_cast<const wchar_t*>(e.Description()), L"GME",MB_ICONERROR);
 	}
 	
 }
