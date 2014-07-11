@@ -476,7 +476,7 @@ void CInPlaceManager::OnClickEditorButton()
 		catch (hresult_exception &) {
 		}
 
-		CString szCommandLine = _T(" ");
+		CString szCommandLine = szAppPath + _T(" ");
 		szCommandLine += szTempFileName;
 		int nCommandLineLength = szCommandLine.GetLength();
 
@@ -488,7 +488,7 @@ void CInPlaceManager::OnClickEditorButton()
 
 		// start notepad.exe with the XML file name as the command line parameter
 
-		launched = ::CreateProcess(szAppPath,szCommandLine.GetBuffer(nCommandLineLength),
+		launched = ::CreateProcess(NULL, szCommandLine.GetBuffer(nCommandLineLength),
 			NULL,NULL,FALSE,0,NULL,NULL,&startUpInfo,&processInfo);
 		szCommandLine.ReleaseBuffer();
 		CloseHandle(processInfo.hProcess);
@@ -496,7 +496,10 @@ void CInPlaceManager::OnClickEditorButton()
 	}
 
 	// DWORD h = ::WaitForSingleObject(processInfo.hProcess, INFINITE);
-	if( launched) m_EditorButton.MessageBox(_T("Click OK to finish."), _T("Using External Text Editor"), MB_ICONINFORMATION);
+	if (launched)
+	{
+		m_EditorButton.MessageBox(_T("Click OK to finish."), _T("Using External Text Editor"), MB_ICONINFORMATION);
+	}
 
 	// open temporary file
 	if (tempFile.Open(szTempFileName, CFile::modeRead | CFile::typeText) == 0) {
