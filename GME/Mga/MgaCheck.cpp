@@ -200,9 +200,12 @@ HRESULT FCO::Check() {
 			if (!metaf) {
 				_bstr_t name;
 				this->get_Name(name.GetAddress());
-				_bstr_t err = L"'";
-				err += parent->Name + "' contains child '" + name + L"' with no assigned kind";
-				throw_com_error(E_MGA_META_VIOLATION, err);
+				metaref_type metaRef = 0;
+				this->get_MetaRef(&metaRef);
+				int iMetaRef = metaRef;
+				wchar_t buf[512];
+				swprintf_s(buf, L"'%s' contains child '%s' with unknown metaref %d", static_cast<const wchar_t*>(parent->Name), static_cast<const wchar_t*>(name), iMetaRef);
+				throw_com_error(E_MGA_META_VIOLATION, buf);
 			} else if(!parent) {												// root folder
 				CComPtr<IMgaMetaProject> mp;
 				COMTHROW(mgaproject->get_RootMeta(&mp));
@@ -276,9 +279,12 @@ HRESULT FCO::Check() {
 			if (meta == NULL) {
 				_bstr_t name;
 				this->get_Name(name.GetAddress());
-				_bstr_t err = L"'";
-				err += parent->Name + "' contains child '" + name + L"' with no assigned kind";
-				throw_com_error(E_MGA_META_VIOLATION, err);
+				metaref_type metaRef = 0;
+				this->get_MetaRef(&metaRef);
+				int iMetaRef = metaRef;
+				wchar_t buf[512];
+				swprintf_s(buf, L"'%s' contains child '%s' with unknown metaref %d", static_cast<const wchar_t*>(parent->Name), static_cast<const wchar_t*>(name), iMetaRef);
+				throw_com_error(E_MGA_META_VIOLATION, buf);
 			} else if(parenttyp == OBJTYPE_MODEL) {
 				if(!metarole)  COMTHROW(E_MGA_NO_ROLE);
 				CComPtr<IMgaMetaModel> parentmeta1;

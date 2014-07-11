@@ -1622,6 +1622,7 @@ void CGMEApp::OpenProject(const CString &conn) {
 						AfxMessageBox(_T("Upgrade failed, probably due to incompatibility.\n")
 									   _T("You can probably reopen the file without upgrade,\n")
 									   _T("and use the 'Upgrade through XML' function later."));
+						throw_last_com_error(hr);
 					}
 					else readable_only = false;
 					COMTHROW(hr);
