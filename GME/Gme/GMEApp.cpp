@@ -1943,7 +1943,7 @@ BOOL CGMEApp::SaveAllModified()
 		int ret = IDNO;
 		long l;
 		COMTHROW(mgaProject->get_ProjectStatus(&l));
-		if (IsUndoPossible() && (l & PROJECT_STATUS_CHANGED))
+		if (l & PROJECT_STATUS_CHANGED)
 		{
 			CString filename;
 			CString connstr = static_cast<const wchar_t*>(mgaProject->ProjectConnStr);
