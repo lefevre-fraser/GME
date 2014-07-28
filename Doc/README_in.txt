@@ -1,5 +1,4 @@
               Generic Modeling Environment
-                 GME 14.3.5
        Copyright © 2000-2014 Vanderbilt University
 
 
@@ -25,6 +24,16 @@ You must uninstall GME versions prior to version
 ************************************************
 1. Release Notes
 ************************************************
+
+Release Notes of Release 14.7.28
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix bug where 'Do you want to save?' dialog does not appear sometimes
+  - Decorators: disable editing of labels in libraries
+  - Fix unit test crash caused by ConstraintManager and a constraint violation
+  - Upgrade SVN libraries for multiuser projects
+  - Fix use-after-free bug triggered under scripts that reuse IMgaParser and fail to parse (GME-441)
+  - Fix crash for deleted_object.AbsPath
 
 Release Notes of Release 14.5.5
 ----------------------------------
