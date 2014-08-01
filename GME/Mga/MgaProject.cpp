@@ -1300,11 +1300,23 @@ void CMgaProject::StartAutoAddOns() {
 	
 }
 
+
+MIDL_INTERFACE("805D7A98-D4AF-3F0F-967F-E5CF45312D2C")
+IDisposable : public IDispatch {
+public:
+    virtual VOID STDMETHODCALLTYPE Dispose() = 0;
+};
+
 void CMgaProject::StopAutoAddOns() {
 	while(!autocomps.empty()) {
 			CComPtr<IMgaComponent> addon;
 			addon.Attach(autocomps.front());
 			autocomps.pop_front();
+			CComPtr<IDisposable> disposable;
+			if (SUCCEEDED(addon->QueryInterface(&disposable)))
+			{
+				disposable->Dispose();
+			}
 			addon.Release();
 	}
 #ifdef DEBUG
