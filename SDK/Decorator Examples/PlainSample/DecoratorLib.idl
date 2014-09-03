@@ -6,10 +6,10 @@ import "ocidl.idl";
 
 
 #include <InterfaceColl.h>
-#include <meta.idl>
-#include <mga.idl>
-#include <gme.idl>
-#include <MgaDecorator.idl>
+
+import "core.idl";
+import "mga.idl";
+import "gme.idl";
 
 
 [
@@ -21,6 +21,9 @@ library DecoratorLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
+	importlib("mga.dll");
+	importlib("meta.dll");
+	importlib("gme.exe");
 
 	[
 		uuid(COCLASS_UUID),
