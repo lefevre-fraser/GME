@@ -211,7 +211,7 @@ namespace OclMeta
 				if ( (*i).second.pType->IsDynamic() )
 					i->second.pType.reset();
 				else
-					m_mapTypes.insert( TypeResultMap::value_type( std::move((*i).first), std::move((*i).second) ) );
+					m_mapTypes.insert( TypeResultMap::value_type( (*i).first, std::move((*i).second) ) );
 	}
 
 	void TypeManager::ClearGlobals()

@@ -196,7 +196,10 @@ bool CGMEDataSource::IsGmeNativeDataAvailable(COleDataObject *pDataObject, IMgaP
 	if( p!= NULL && p.QueryInterface(&source) == S_OK )
 	{
 		CComPtr<IUnknown> unknown;
-		COMTHROW( source->get_Project(&unknown) );
+		HRESULT hr = source->get_Project(&unknown);
+		if (hr == HRESULT_FROM_WIN32(RPC_S_CALL_FAILED)) // crashrpt 17f8cc45-c369-464b-8162-5dc7bf3bf04c
+			return false;
+		COMTHROW(hr);
 		ASSERT( unknown != NULL );
 
 		if (unknown == NULL)
@@ -207,7 +210,7 @@ bool CGMEDataSource::IsGmeNativeDataAvailable(COleDataObject *pDataObject, IMgaP
 
 		CComPtr<IMgaProject> source_project;
 		// KMS: fixing crashrpt 8895373f-396e-490f-b882-036ba9d42961: this QI may fail
-		HRESULT hr = unknown.QueryInterface(&source_project);
+		hr = unknown.QueryInterface(&source_project);
 		if ( source_project == NULL ) {
 			ASSERT(false);
 			return false;
