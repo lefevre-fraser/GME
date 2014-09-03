@@ -493,6 +493,13 @@ void CSearchCtrl::ClickOnObject(CComPtr<IMgaObject> object)
 	FireClickMgaObject(unk);
 }
 
+void CSearchCtrl::ClickOnObject(CComPtr<IMgaObjects> object)
+{
+	CComPtr<IUnknown> unk;
+	COMTHROW(object.QueryInterface(&unk));
+	FireClickMgaObject(unk);
+}
+
 
 void CSearchCtrl::DblClickOnObject(CComPtr<IMgaObject> object)
 {

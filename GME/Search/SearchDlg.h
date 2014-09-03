@@ -224,6 +224,20 @@ public:
 		m_edtKindNameCtrlSecond.SetOptions(std::move(kinds));
 	}
 
+	template<typename F>
+	void ForEachSelectedFCO(F f)
+	{
+		POSITION pos = m_lstResults.GetFirstSelectedItemPosition();
+		while (pos)
+		{
+			int nItem = m_lstResults.GetNextSelectedItem(pos);
+			long lParam = m_lstResults.GetItemData(nItem);
+			CComPtr<IMgaFCO> selected;
+			COMTHROW(results->get_Item(lParam + 1, &selected));
+			f(selected);
+		}
+	}
+
 protected:
 	BOOL m_scopedCtrlEnabled; // whether to enable scoped search at all
 

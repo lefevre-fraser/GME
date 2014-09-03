@@ -527,21 +527,9 @@ void CSearchDlg::OnKeyDownListResults(NMHDR* pNMHDR, LRESULT* pResult)
 		}
         try
         {
-            int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
-            //LVITEM lvItem;
-            long lParam = m_lstResults.GetItemData(selected-1);
-           // m_lstResults.GetItem(&lvItem);
-            CComPtr<IMgaFCO> selectedFCO;
-            // selected might be 0 because GeSelectionMark might have returned -1
-            if( selected >= 1 && selected <= count)
-            {
-                COMTHROW(results->get_Item(lParam+1, &selectedFCO));
-            }
-			VARIANT_BOOL isInstance, isLibObject;
-			COMTHROW(selectedFCO->get_IsInstance(&isInstance));
-			COMTHROW(selectedFCO->get_IsLibObject(&isLibObject));
-            CComQIPtr<IMgaObject> selectedObject(selectedFCO);
-			COMTHROW(selectedObject->DestroyObject());
+			ForEachSelectedFCO([&](CComPtr<IMgaFCO> selectedFCO) {
+				COMTHROW(selectedFCO->DestroyObject());
+			});
             TheCtrl->CommitTransaction();
 			// RemoveZombies
         }
@@ -633,7 +621,7 @@ void CSearchDlg::itemClicked()
             int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
             long lParam = m_lstResults.GetItemData(selected-1);
             CComPtr<IMgaFCO> selectedFCO;
-            // selected might be 0 because GeSelectionMark might have returned -1
+            // selected might be 0 because GetSelectionMark might have returned -1
             if( selected >= 1 && selected <= count)
             {
                 COMTHROW(results->get_Item(lParam+1, &selectedFCO)); // crashed probably when called with 0
@@ -648,10 +636,15 @@ void CSearchDlg::itemClicked()
                 specialSearchFCO = selectedFCO;
             }
 
-            //CComPtr<IMgaObject> selectedObject = (IMgaObject *)(selectedFCO.p); // WAS this the scapegoat?
-            CComQIPtr<IMgaObject> selectedObject( selectedFCO);
+			CComPtr<IMgaObjects> selectedObjects;
+			COMTHROW(selectedObjects.CoCreateInstance(L"Mga.MgaObjects", 0, CLSCTX_INPROC));
+			ForEachSelectedFCO([&](CComPtr<IMgaFCO> selected) {
+				CComQIPtr<IMgaObject> selectedObject(selected);
+				selectedObjects->Append(selectedObject);
+			});
+			
             TheCtrl->CommitTransaction();
-            if( selectedObject) TheCtrl->ClickOnObject(selectedObject);
+            TheCtrl->ClickOnObject(selectedObjects);
         }
         catch( ...)
         {

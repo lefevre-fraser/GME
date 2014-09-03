@@ -44,6 +44,7 @@ public: //there is a "protected:" in the AFX section above..
 	CComPtr<IMgaTerritory> Terr();
 	CComPtr<IMgaObjects> PutInMyTerritory(CComPtr<IMgaObjects> &in_coll);
 	void ClickOnObject(CComPtr<IMgaObject> object);
+	void ClickOnObject(CComPtr<IMgaObjects> object);
 	void DblClickOnObject(CComPtr<IMgaObject> object);
 	void WantToBeClosed();
 	void LocateMgaObject(CComPtr<IMgaObject> object);

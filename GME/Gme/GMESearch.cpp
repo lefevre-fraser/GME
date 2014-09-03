@@ -179,11 +179,16 @@ void CGMESearch::LocateObject(LPCTSTR mgaObjectId)
 void CGMESearch::SelectObject(LPUNKNOWN mgaObject)
 {
 	CComQIPtr<IMgaObject> ccpmgaObject = mgaObject;
-	if (mgaObject) {
+	if (ccpmgaObject) {
 		CComPtr<IMgaObjects> ccpSelectedObjects;
 		COMTHROW(ccpSelectedObjects.CoCreateInstance(OLESTR("Mga.MgaObjects")));
 		COMTHROW(ccpSelectedObjects->Append(ccpmgaObject));
 		CGMEObjectInspector::theInstance->SetObjects(ccpSelectedObjects);
+	} else {
+		CComQIPtr<IMgaObjects> ccpSelectedObjects = mgaObject;
+		if (ccpSelectedObjects) {
+			CGMEObjectInspector::theInstance->SetObjects(ccpSelectedObjects);
+		}
 	}
 }
 
