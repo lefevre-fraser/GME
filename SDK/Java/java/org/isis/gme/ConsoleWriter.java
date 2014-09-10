@@ -36,6 +36,7 @@ import org.isis.gme.GMEOLEApp;
 import org.isis.gme.bon.JBuilder;
 import org.isis.gme.mga.MgaClient;
 import org.isis.gme.mga.MgaClients;
+import org.isis.gme.mga.MgaProject;
 import org.isis.jaut.Apartment;
 import org.isis.jaut.Dispatch;
 
@@ -46,22 +47,34 @@ public class ConsoleWriter {
 	private static AreaPrinter errorPrinter = null;
 	private static AreaPrinter stdPrinter = null;
 	
-	private ConsoleWriter(JBuilder builder){
-		Object clients =builder.getProject().get("Clients");
+	private ConsoleWriter(JBuilder builder)
+	{
+		this(builder.getProject());
+	}
+	
+	private ConsoleWriter(MgaProject project)
+	{
+		Object clients = project.get("Clients");
 		MgaClients mgaClients = new MgaClients((Dispatch)clients);
-			for(MgaClient c: mgaClients.getAll()){
-				if(c.getName().equals("GME.Application")){
-					gmeApp = new GMEOLEApp(c.getOLEServer());
-					stdPrinter = new AreaPrinter(GMEOLEApp.MSG_NORMAL);
-					errorPrinter = new AreaPrinter(GMEOLEApp.MSG_ERROR);
-					return;
-				}			
-			}
-			JOptionPane.showMessageDialog(null,"Unable to redirect streams");
+		for(MgaClient c: mgaClients.getAll()){
+			if(c.getName().equals("GME.Application")){
+				gmeApp = new GMEOLEApp(c.getOLEServer());
+				stdPrinter = new AreaPrinter(GMEOLEApp.MSG_NORMAL);
+				errorPrinter = new AreaPrinter(GMEOLEApp.MSG_ERROR);
+				return;
+			}			
+		}
+		JOptionPane.showMessageDialog(null,"Unable to redirect streams");
 	}
 	
 	public static void redirectStreamsToConsole(JBuilder builder){
 		_instance = new ConsoleWriter(builder);
+		System.setOut(new PrintStream(stdPrinter));
+		System.setErr(new PrintStream(errorPrinter));
+	}
+	
+	public static void redirectStreamsToConsole(MgaProject project){
+		_instance = new ConsoleWriter(project);
 		System.setOut(new PrintStream(stdPrinter));
 		System.setErr(new PrintStream(errorPrinter));
 	}
@@ -98,25 +111,11 @@ public class ConsoleWriter {
 		
 		@Override
 		public void write(int b) throws IOException {
-			
-			
-			synchronized(line){
-				if((char)b == '<'){
-					line += "&lt;";
-				}else if((char)b == '>'){					
-					line += "&gt;";
-				}else{  
-					line += ""+(char)b;
-				}
-				
-			}
-			if(line.endsWith("\n")){
-				//gmeApp.consoleMessage(line, type);
-				
-				//line = "";
+
+			// "<" or ">" requires explicit "&lt" or "&gt"
+			synchronized(line) {
+				line += "" + (char)b;	
 			}			
-			
-			
 		}
 		
 		public void flushContent(){

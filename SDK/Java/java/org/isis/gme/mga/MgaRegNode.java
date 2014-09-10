@@ -147,4 +147,9 @@ public class MgaRegNode extends Dispatch
 	{
 		Dispatch.CallSub(this, "RemoveTree");
 	}*/	
+
+  public void removeTree()
+  {
+    call("RemoveTree");
+  }
 }

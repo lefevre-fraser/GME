@@ -293,6 +293,11 @@ public class MgaProject extends Dispatch
         return new MgaFolder( (Dispatch)get("RootFolder") );
     }
     
+    public MgaFilter createFilter()
+    {
+        return new MgaFilter( (Dispatch)call( "CreateFilter") );
+    }
+    
 /*	public void createFilter(VT_PTR lastParam)
         {
                 call( "CreateFilter", lastParam);

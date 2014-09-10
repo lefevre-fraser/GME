@@ -259,9 +259,14 @@ public class MgaFolder extends MgaObject
          
                 if( lastParam != null && lastParam.length > 0 )
                         lastParam[0] = vnt_lastParam.toVT_PTR();
-        }
-         
-        public MgaRegNode getRegistryNode(String lastParam)
+        }*/
+    
+    public MgaRegNode getRegistryNode(String path)
+    {
+        return new MgaRegNode((Dispatch) get( "RegistryNode", path));
+    }
+    
+        /*public MgaRegNode getRegistryNode(String lastParam)
         {
                 return new MgaRegNode(call( "RegistryNode", lastParam).toDispatch());
         }
@@ -282,9 +287,19 @@ public class MgaFolder extends MgaObject
          
          
                 return result_of_Registry;
-        }
-         
-        public String getRegistryValue(String lastParam)
+        }*/
+
+    public String getRegistryValue(String path)
+    {
+        return get( "RegistryValue", path).toString();
+    }
+     
+    public void setRegistryValue(String path, String value)
+    {
+        put("RegistryValue", path, value);
+    }
+
+        /*public String getRegistryValue(String lastParam)
         {
                 return call( "RegistryValue", lastParam).toString();
         }
@@ -369,9 +384,14 @@ public class MgaFolder extends MgaObject
         /*public MgaFCO getChildFCO(String lastParam)
         {
                 return new MgaFCO(call( "ChildFCO", lastParam).toDispatch());
-        }
+        }*/
          
-        public void getDescendantFCOs(MgaFilter filter, VT_PTR lastParam)
+    public MgaFCOs getDescendantFCOs(MgaFilter filter)
+    {
+      return new MgaFCOs( (Dispatch)call("GetDescendantFCOs", filter) );
+    }
+    
+        /*public void getDescendantFCOs(MgaFilter filter, VT_PTR lastParam)
         {
                 Dispatch.CallSub(this, "GetDescendantFCOs", filter, lastParam);
         }

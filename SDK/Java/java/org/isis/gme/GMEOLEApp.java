@@ -42,9 +42,15 @@ public class GMEOLEApp  extends Dispatch{
     	
     }
     
-    public GMEOLEApp(JBuilder builder){
+    public GMEOLEApp(JBuilder builder)
+    {
+		this(builder.getProject());
+    }
+	
+    public GMEOLEApp(MgaProject project)
+    {
     	MgaClient client = null;
-    	Object clients =builder.getProject().get("Clients");
+    	Object clients = project.get("Clients");
 		MgaClients mgaClients = new MgaClients((Dispatch)clients);
 		for(MgaClient c: mgaClients.getAll()){
 			if(c.getName().equals("GME.Application")){
@@ -54,9 +60,6 @@ public class GMEOLEApp  extends Dispatch{
 		}
         attach( client.getOLEServer() );
         changeInterface( "{81191A44-B898-4143-BF8B-CA7501FEC19A}" );
-
-
-
     }
     
     public GMEOLEApp( Dispatch d )
