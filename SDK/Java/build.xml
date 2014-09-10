@@ -20,8 +20,6 @@
         <javac destdir="./bin" source="1.5" target="1.5" debug="true">
             <src path="./java"/>
         	<exclude name="org/isis/gme/attributeview/**"/>
-        	<exclude name="org/isis/gme/mgadecorator/**"/>
-        	<exclude name="org/isis/gme/mgautil/**"/>
             <exclude name="org/isis/gme/modeleditor/**"/>
             <exclude name="org/isis/gme/modelexplorer/**"/>
         	<exclude name="org/isis/gme/multipageeditortest/**"/>
