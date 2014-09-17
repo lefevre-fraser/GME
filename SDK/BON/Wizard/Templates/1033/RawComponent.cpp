@@ -59,8 +59,12 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 	COMTRY {
 		_bstr_t focusname = "<nothing>";
 		IMgaTerritoryPtr terr;
-		project->CreateTerritory(NULL, &terr, NULL);
-		project->BeginTransaction(terr, TRANSACTION_GENERAL);
+		bool invokeExStartedATransaction = false;
+		if (!(project->ProjectStatus & 8))
+		{
+			terr = project->BeginTransactionInNewTerr(TRANSACTION_NON_NESTED); // could also use TRANSACTION_GENERAL
+			invokeExStartedATransaction = true;
+		}
 		try {
 			if (currentobj)
 				focusname = currentobj->Name;
@@ -68,9 +72,14 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 			Console::Out::WriteLine("Interpreter started...");
 			AfxMessageBox(_T("RAW Com Component --- Plugin!!!! Sample (project: ") + project->Name +
 						_T(", focus: ") + focusname);
-			project->CommitTransaction();
+			if (invokeExStartedATransaction)
+				project->CommitTransaction();
 			Console::Out::WriteLine(_T("Interpreter completed..."));
-		}	catch(...) { project->AbortTransaction(); throw; }
+		} catch(...) {
+			if (invokeExStartedATransaction)
+				project->AbortTransaction();
+			throw;
+		}
 	} COMCATCH(;);
 }
 
