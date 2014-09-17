@@ -219,8 +219,14 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 	COMTRY 
     {
 		CComPtr<IMgaTerritory> terr;
-		COMTHROW(project->CreateTerritory(NULL, &terr));
-		COMTHROW(project->BeginTransaction(terr));
+		long projectStatus;
+		COMTHROW(project->get_ProjectStatus(&projectStatus));
+		bool invokeExStartedATransaction = false;
+		if (!(projectStatus & 8))
+		{
+			COMTHROW(project->BeginTransactionInNewTerr(TRANSACTION_GENERAL, &terr));
+			invokeExStartedATransaction = true;
+		}
 		try 
         {
             // load java VM
@@ -260,7 +266,8 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
             //app->m_env->CallStaticVoidMethod(entryClass, entryMethod, NULL, NULL, project, currentobj, 
               //          selectedobjs, param);
 
-			COMTHROW(project->CommitTransaction());
+			if (invokeExStartedATransaction)
+				COMTHROW(project->CommitTransaction());
 		}	
 		catch(jthrowable jexc){
 			char buf[200];
@@ -296,16 +303,19 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 				AfxMessageBox("Java exception occurred at component invokation, the cause is unrecoverable.");
 			}
 
-			project->AbortTransaction(); 
+			if (invokeExStartedATransaction)
+				project->AbortTransaction();
 
 		}
 		catch(HKEY){
-			project->AbortTransaction(); 
+			if (invokeExStartedATransaction)
+				project->AbortTransaction(); 
 		}
         catch(...) 
         {
             AfxMessageBox("Internal error while executing java interpreter.");
-            project->AbortTransaction(); 
+			if (invokeExStartedATransaction)
+				project->AbortTransaction(); 
             throw;
         }
 	}
