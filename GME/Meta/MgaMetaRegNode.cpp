@@ -14,7 +14,7 @@ HRESULT CMgaMetaRegNodes::get_RegistryNode(IUnknown *me, BSTR bpath, IMgaMetaReg
 	{
 		CCoreObjectPtr self(me);
 
-		std::wstring path = bpath;
+		std::wstring path = bpath ? bpath : L"";
 
 		CComObjPtr<ICoreProject> coreproject;
 		COMTHROW( self->get_Project(PutOut(coreproject)) );
