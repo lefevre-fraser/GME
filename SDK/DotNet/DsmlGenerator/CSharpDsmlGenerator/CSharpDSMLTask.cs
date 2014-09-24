@@ -75,8 +75,7 @@ namespace CSharpDSMLGenerator
                     try
                     {
                         MgaProject project = new MgaProject();
-                        bool ro;
-                        project.Open("MGA=" + InputFile, out ro);
+                        project.OpenEx("MGA=" + InputFile, "MetaGME", null);
                         try
                         {
                             project.BeginTransactionInNewTerr(transactiontype_enum.TRANSACTION_NON_NESTED);
@@ -162,8 +161,7 @@ namespace CSharpDSMLGenerator
                 try
                 {
                     MgaProject project = new MgaProject();
-                    bool ro;
-                    project.Open("MGA=" + InputFile, out ro);
+                    project.OpenEx("MGA=" + InputFile, "MetaGME", null);
                     try
                     {
                         string rootName;
