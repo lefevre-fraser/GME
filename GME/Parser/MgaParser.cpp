@@ -24,6 +24,18 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 	CHECK_IN(here);
 	m_maintainGuids = false;
 
+	CComObjPtr<IMgaProject> p;
+	HRESULT hr = here->get_Project(PutOut(p));
+	if (FAILED(hr))
+		return hr;
+	if ((p->ProjectStatus & 1) == 0)
+	{
+		clear_GME(m_GME);
+		SetErrorInfo(L"Project is not open");
+
+		return E_MGA_ZOMBIE_NOPROJECT;
+	}
+
 	try
 	{
 		HWND hwndParent = (HWND)hwndParent_;
@@ -34,8 +46,6 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 			COMTHROW( progress->StartProgressDialog(hwndParent) );
 		}
 
-		CComObjPtr<IMgaProject> p;
-		COMTHROW( here->get_Project(PutOut(p)) );
 		ASSERT( p != NULL );
 		COMTHROW( p->get_Preferences(&project_prefs_orig) );
 		manual_relid_mode = project_prefs_orig & MGAPREF_MANUAL_RELIDS ? true : false;
@@ -180,6 +190,13 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 	CHECK_IN(p);
 	m_maintainGuids = true; //will be set to false if p is NOT empty
 
+	if ((p->ProjectStatus & 1) == 0)
+	{
+		clear_GME(m_GME);
+		SetErrorInfo(L"Project is not open");
+
+		return E_MGA_ZOMBIE_NOPROJECT;
+	}
 	try
 	{
 		HWND hwndParent = (HWND)hwndParent_;
@@ -441,8 +458,12 @@ void CMgaParser::CloseAll()
 
 	if( project != NULL )
 	{
+
 		COMTHROW(project->put_Preferences(project_prefs_orig));
-		COMTHROW(project->AbortTransaction());
+		if (project->ProjectStatus & 8)
+		{
+			COMTHROW(project->AbortTransaction());
+		}
 		COMTHROW(project->Notify(APPEVENT_XML_IMPORT_END));
 	}
 
