@@ -2,6 +2,7 @@
 #include "Console.h"
 
 #include "Gme.h"
+#include <comdef.h>
 
 namespace GMEConsole
 {
@@ -11,7 +12,7 @@ namespace GMEConsole
 	{
 		CComPtr<IMgaClient> client;	
 		CComQIPtr<IDispatch> pDispatch;
-		HRESULT s1 = project->GetClientByName(CComBSTR(L"GME.Application"), &client);
+		HRESULT s1 = project->GetClientByName(_bstr_t(L"GME.Application"), &client);
 
 		if ((SUCCEEDED(s1)) && (client != 0))
 		{
@@ -24,10 +25,12 @@ namespace GMEConsole
 	}
 	void Console::ReleaseConsole() {
 		if (gmeoleapp)
-			gmeoleapp.Release();
+		{
+			gmeoleapp.Detach()->Release();
+		}
 	}
 
-	void Console::WriteLine(const CString& message, msgtype_enum type)
+	void Console::WriteLine(const TCHAR* message, msgtype_enum type)
 	{
 		if (gmeoleapp == 0) {
 			switch (type) {
@@ -42,50 +45,49 @@ namespace GMEConsole
 			}
 		}
 		else {
-			COMTHROW(gmeoleapp->ConsoleMessage( CComBSTR(message.GetLength(),message),type));
+			COMTHROW(gmeoleapp->ConsoleMessage(_bstr_t(message), type));
 		}
 	}
 
 	void Console::Clear()
 	{
 		if (gmeoleapp != 0) {
-			CComBSTR empty(L"");
-			COMTHROW(gmeoleapp->put_ConsoleContents(empty));
+			COMTHROW(gmeoleapp->put_ConsoleContents(NULL));
 		}
 	}
 
-	void Console::SetContents(const CString& contents)
+	void Console::SetContents(const TCHAR* contents)
 	{
 		if (gmeoleapp != 0) {
-			COMTHROW(gmeoleapp->put_ConsoleContents( CComBSTR(contents.GetLength(),contents)));
+			COMTHROW(gmeoleapp->put_ConsoleContents(_bstr_t(contents)));
 		}
 	}
 
-	void Console::NavigateTo(const CString& url)
+	void Console::NavigateTo(const TCHAR* url)
 	{
 		if (gmeoleapp != 0) {
-			COMTHROW(gmeoleapp->ConsoleNavigateTo(CComBSTR(url.GetLength(), url)));
+			COMTHROW(gmeoleapp->ConsoleNavigateTo(_bstr_t(url)));
 		}
 	}
 
-	void Console::Error::WriteLine(const CString& message)
+	void Console::Error::WriteLine(const TCHAR* message)
 	{
 		Console::WriteLine(message,MSG_ERROR);
 	}
 
-	void Console::Out::WriteLine(const CString& message)
+	void Console::Out::WriteLine(const TCHAR* message)
 	{
 		Console::WriteLine(message, MSG_NORMAL);
 	}
-	void Console::Warning::WriteLine(const CString& message)
+	void Console::Warning::WriteLine(const TCHAR* message)
 	{
 		Console::WriteLine(message, MSG_WARNING);
 	}
-	void Console::Info::writeLine(const CString& message)
+	void Console::Info::writeLine(const TCHAR* message)
 	{
 		Console::WriteLine(message,MSG_INFO);
 	}
-	void Console::Info::WriteLine(const CString& message)
+	void Console::Info::WriteLine(const TCHAR* message)
 	{
 		Console::WriteLine(message,MSG_INFO);
 	}

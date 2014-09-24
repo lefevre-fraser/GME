@@ -32,17 +32,23 @@
 
 
 template<class T>
-inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
+inline void COMCHECK2(T* p, const HRESULT hr)
 {
 	if (!SUCCEEDED(hr)) {
 		const IID piid = __uuidof(T);
-		CComQIPtr<ISupportErrorInfo> supportErrorInfo = p;
+		ISupportErrorInfo* supportErrorInfo;
+		p->QueryInterface(__uuidof(ISupportErrorInfo), &supportErrorInfo);
 		if (supportErrorInfo != NULL && supportErrorInfo->InterfaceSupportsErrorInfo(piid) == S_OK) {
-			CComQIPtr<IErrorInfo> errorInfo;
+			p->Release();
+			IErrorInfo* errorInfo;
 			GetErrorInfo(0, &errorInfo);
 
 			_bstr_t bstr;
-			errorInfo->GetDescription(bstr.GetAddress());
+			if (errorInfo)
+			{
+				errorInfo->GetDescription(bstr.GetAddress());
+				errorInfo->Release();
+			}
 
 			BON::Exception exception(hr, "?");
 			exception << static_cast<const TCHAR*>(bstr);
@@ -52,11 +58,6 @@ inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
 			throw exception;
 		}
 	}
-}
-
-template<class T>
-inline void COMCHECK2(T* p, const HRESULT hr) {
-	COMCHECK2(CComPtr<T>(p), hr);
 }
 
 #define ASSERTTHROW( exc )									\

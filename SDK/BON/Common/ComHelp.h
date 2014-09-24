@@ -1,16 +1,9 @@
 #pragma once
 
-#include <afxtempl.h>
 #include <unknwn.h>
-#include <atlbase.h>
 #include <comdef.h>
 
 // --------------------------- MACROS
-
-inline void COMVERIFY(HRESULT hr)
-{
-	VERIFY(SUCCEEDED(hr));
-}
 
 inline void COMASSERT(HRESULT hr)
 {
@@ -18,6 +11,15 @@ inline void COMASSERT(HRESULT hr)
 }
 
 // --------------------------- CBstr
+
+#ifdef __AFX_H__
+#include <afxtempl.h>
+
+inline void COMVERIFY(HRESULT hr)
+{
+       VERIFY(SUCCEEDED(hr));
+}
+
 
 class CBstr
 {
@@ -67,3 +69,4 @@ private:
 	BSTR s;
 };
 
+#endif
