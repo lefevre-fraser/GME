@@ -11,7 +11,7 @@ namespace GMEConsole
 	void Console::SetupConsole(CComPtr<IMgaProject> project)
 	{
 		CComPtr<IMgaClient> client;	
-		CComQIPtr<IDispatch> pDispatch;
+		CComPtr<IDispatch> pDispatch;
 		HRESULT s1 = project->GetClientByName(_bstr_t(L"GME.Application"), &client);
 
 		if ((SUCCEEDED(s1)) && (client != 0))
@@ -19,7 +19,11 @@ namespace GMEConsole
 			HRESULT s2 = client->get_OLEServer(&pDispatch);
 			if ((SUCCEEDED(s2)) && (pDispatch != 0) && gmeoleapp == 0)
 			{
-				COMTHROW(pDispatch->QueryInterface(&gmeoleapp));
+#ifdef __AFX_H__
+				COMTHROW(pDispatch->QueryInterface(__uuidof(IGMEOLEApp), (void**)&gmeoleapp));
+#else
+				COMTHROW(pDispatch.Get()->QueryInterface(__uuidof(IGMEOLEApp), (void**)&gmeoleapp));
+#endif
 			}
 		}
 	}
