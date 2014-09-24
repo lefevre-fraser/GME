@@ -37,9 +37,9 @@ inline void COMCHECK2(T* p, const HRESULT hr)
 	if (!SUCCEEDED(hr)) {
 		const IID piid = __uuidof(T);
 		ISupportErrorInfo* supportErrorInfo;
-		p->QueryInterface(__uuidof(ISupportErrorInfo), &supportErrorInfo);
+		p->QueryInterface(__uuidof(ISupportErrorInfo), (void**)&supportErrorInfo);
 		if (supportErrorInfo != NULL && supportErrorInfo->InterfaceSupportsErrorInfo(piid) == S_OK) {
-			p->Release();
+			supportErrorInfo->Release();
 			IErrorInfo* errorInfo;
 			GetErrorInfo(0, &errorInfo);
 
@@ -54,11 +54,22 @@ inline void COMCHECK2(T* p, const HRESULT hr)
 			exception << static_cast<const TCHAR*>(bstr);
 			throw exception;
 		} else {
+			if (supportErrorInfo != NULL) {
+				supportErrorInfo->Release();
+			}
 			BON::Exception exception(hr);
 			throw exception;
-		}
+        }
 	}
 }
+
+#ifdef __AFX_H__
+template<class T>
+inline void COMCHECK2(const CComPtr<T>& p, const HRESULT hr)
+{
+	COMCHECK2(p.p, hr);
+}
+#endif
 
 #define ASSERTTHROW( exc )									\
 	{																\

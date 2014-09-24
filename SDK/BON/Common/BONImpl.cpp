@@ -958,7 +958,7 @@ namespace BON
 			if( FAILED( hr)) 
 				ASSERTTHROW( Exception( "Can't retrieve GME Application object" ) );
 			if (pClient) {
-				CComQIPtr<IDispatch> pDispatch;
+				CComPtr<IDispatch> pDispatch;
 				COMCHECK2(pClient, pClient->get_OLEServer(&pDispatch));
 				if (pDispatch) {
 					BONCOMTHROW(pDispatch.QueryInterface(m_gme.Addr()));
