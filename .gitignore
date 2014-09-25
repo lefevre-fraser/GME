@@ -416,3 +416,16 @@ Tests/LeakDiff.txt
 Tests/LeakDump1.txt
 Tests/LeakDump2.txt
 Tools/ModelMigrate/IDLComp/GMEIDLs_h.h
+GME/Annotator/x64/
+GME/Common/Release/
+GME/DotNetPIAs/x64/
+GME/MgaDecorators/x64/
+Paradigms/MetaGME/BONExtender/x64/
+Paradigms/MetaGME/MetaDecorator/x64/
+Paradigms/MetaGME/MetaInterpreter/x64/
+Paradigms/MetaGME/NamespaceConfig/x64/
+Paradigms/MetaGME/Paradigm/x64/
+SDK/Java/gme/
+Tests/GPyUnit/DsmlGeneratorTest/bin/
+Tests/GPyUnit/DsmlGeneratorTest/packages/
+Tools/AutoLayout/x64/
