@@ -171,19 +171,31 @@ namespace CSharpDSMLGenerator.Generator
 <para></para>
 </summary>";
 
-			public const string SrcConnections =
+            public const string SrcConnections =
 @"<summary>
 <para>Retrieves all connections, which have this object as a DESTINATION.</para>
 <para></para>
 </summary>";
 
-			public const string DstConnections =
+            public const string DstConnections =
 @"<summary>
 <para>Retrieves all connections, which have this object as a SOURCE.</para>
 <para></para>
 </summary>";
 
-			public const string ParentContainer =
+            public const string SrcConnectionEnd =
+@"<summary>
+<para>Contains the domain specific source end point of this connection.</para>
+<para></para>
+</summary>";
+
+            public const string DstConnectionEnd =
+@"<summary>
+<para>Contains the domain specific destination end point of this connection.</para>
+<para></para>
+</summary>";
+
+            public const string ParentContainer =
 @"<para>Represents the domain specific parent container.</para>
 <para></para>";
 		}

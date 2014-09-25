@@ -382,7 +382,7 @@ namespace CSharpDSMLGenerator.Generator
 				};
 
                 newSrcConnections.Comments.Add(
-                    new CodeCommentStatement(Configuration.Comments.SrcConnections, true));
+                    new CodeCommentStatement(Configuration.Comments.SrcConnectionEnd, true));
 
 
                 if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
@@ -424,7 +424,7 @@ namespace CSharpDSMLGenerator.Generator
 				};
 
                 newDstConnections.Comments.Add(
-                    new CodeCommentStatement(Configuration.Comments.DstConnections, true));
+                    new CodeCommentStatement(Configuration.Comments.DstConnectionEnd, true));
 
                 if (baseClassesWoObject.Any(x => x.MetaBase.MetaRef == Subject.MetaBase.MetaRef))
                 {
