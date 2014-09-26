@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GME.DSMLGenerator</id>
-    <version>1.0.14.1</version>
+    <version>1.0.14.3</version>
     <title>GME DSMLGenerator</title>
     <authors>ISIS, Vanderbilt University</authors>
     <owners>ksmyth</owners>
