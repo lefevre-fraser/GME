@@ -21,6 +21,8 @@ def id2guid(filename, output_filename):
     for element in xme.iter('connpoint'):
         if element.get('target'):
             element.attrib['target'] = id_guid_map[element.get('target')]
+        if element.get('refs'):
+            element.attrib['refs'] = " ".join([id_guid_map[id] for id in element.get('refs').split()])
     
     with open(output_filename, 'wb') as output:
         output.write('<!DOCTYPE project SYSTEM "mga2.dtd">\n')
