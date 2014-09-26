@@ -2694,9 +2694,15 @@ void CGuiConnection::Draw(HDC pDC, Gdiplus::Graphics* gdip)
 	std::vector<long> customizedEdgeIndexes;
 	if (selected && IsAutoRouted())
 		customizedEdgeIndexes = GetRelevantCustomizedEdgeIndexes();
+	int width = selected ? 3 : hovered ? 5 : 1;
+	if (selected && view->m_zoomVal < ZOOM_NO)
+	{
+		// selection was hard to see at <100% zoom. Magic numbers determined by experimentation
+		width = (int)((float)((ZOOM_NO - 25) / max(10, view->m_zoomVal) + 0.2) * width + 0.5f);
+	}
 	graphics.DrawConnection(gdip, points, customizedEdgeIndexes, grayedOut ? GME_GRAYED_OUT_COLOR : color,
 							lineType, srcStyle, dstStyle, view->m_zoomVal > ZOOM_NO, !IsAutoRouted() && selected,
-							selected ? 3 : hovered ? 5 : 1);
+							width);
 
 	if (points.GetSize() < 2) {
 		ASSERT(false);
