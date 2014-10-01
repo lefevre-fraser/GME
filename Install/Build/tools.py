@@ -3,6 +3,7 @@
 # Copyright (c) 2006 ISIS, Vanderbilt University
 #
 # Author: Peter Volgyesi (peter.volgyesi@vanderbilt.edu)
+# Kevin Smyth (ksmyth@isis.vanderbilt.edu)
 #
 """GME Build System - tools module"""
 
@@ -189,12 +190,20 @@ def query_GUID(mta_file):
     finally:
         metaproject.Close()
 
+
+def _get_wix_path():
+    import _winreg
+    for wix_ver in ('3.8', '3.7', '3.6', '3.5'):
+        try:
+            with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows Installer XML\\' + wix_ver) as wixkey:
+                return _winreg.QueryValueEx(wixkey, 'InstallRoot')[0]
+        except Exception as e:
+            pass
+        
 def test_WiX():
     "Test for WiX. Raises exception if not found."
     toolmsg("Trying to execute WiX tool candle.exe")
-    exepath = WIX_CANDLE_PRG
-    if 'WIX' in os.environ.keys():
-        exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
+    exepath = os.path.join(_get_wix_path(), WIX_CANDLE_PRG)
     system([exepath])
     
 
@@ -204,9 +213,7 @@ def _get_wixobj(file):
     return _x64_suffix(os.path.splitext(file)[0]) + ".wixobj"
 
 def _candle(file):
-    exepath = WIX_CANDLE_PRG
-    if 'WIX' in os.environ.keys():
-        exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
+    exepath = os.path.join(_get_wix_path(), WIX_CANDLE_PRG)
     cmd_line = [exepath] + WIX_CANDLE_ARG.split() + ['-dVERSIONSTR=' + prefs['version_string'], '-arch', prefs['arch'], '-out', _get_wixobj(file), file]
     system(cmd_line, os.path.dirname(file))
 
@@ -225,10 +232,16 @@ def build_WiX(wix_files):
     for file in wix_files:
         _candle(file)
     
-    exepath = WIX_LIGHT_PRG
-    if 'WIX' in os.environ.keys():
-        exepath = os.path.join(os.environ['WIX'], 'bin', exepath)
     for wxs in mm_files:
-        ext = ('.msm' if wxs.find('GME.wxs') == -1 else '.msi')
-        cmd_line = [exepath] + WIX_LIGHT_ARG.split() + ['-o', _x64_suffix(os.path.splitext(wxs)[0]) + ext] + [ _get_wixobj(file) for file in wxi_files ] + [ _get_wixobj(wxs)]
+        if wxs.find('GME.wxs') == -1:
+            exepath = os.path.join(_get_wix_path(), 'lit.exe')
+            ext = '.wixlib'
+            wixlibs = ['-bf']
+        else:
+            exepath = os.path.join(_get_wix_path(), 'light.exe')
+            ext = '.msi'
+            wixlibs = WIX_LIGHT_ARG.split() + ['GME_bin.wixlib', 'GME_SDK.wixlib', 'GME_paradigms.wixlib']
+            if prefs['arch'] == 'x64':
+                wixlibs += ['GME_bin_x64.wixlib']
+        cmd_line = [exepath] + ['-o', _x64_suffix(os.path.splitext(wxs)[0]) + ext] + [ _get_wixobj(file) for file in wxi_files ] + [ _get_wixobj(wxs)] + wixlibs
         system(cmd_line, dirname)

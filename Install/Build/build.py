@@ -359,7 +359,9 @@ def build_nuget():
         "-OutputDirectory", os.path.join(GME_ROOT, "Install")])
 
 def build_msms():
-    "Build WiX merge modules (msm files)"
+    """Build WiX libraries (wixlibs files)
+    (Still called build_msms, for historical reasons)
+    """
     
     # Prepare include file with dynamic data
     f = open(os.path.join(GME_ROOT, "Install", "GME_dyn.wxi"), 'w')
@@ -373,10 +375,15 @@ def build_msms():
     f.close()
    
     import glob
-    tools.build_WiX([]
-        + [file for file in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if file.find('GME.wxs') == -1 ]
-        + glob.glob(os.path.join(GME_ROOT, "Install", "PIA*/*.wxi"))
-        )
+    sources = [f for f in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if f.find('GME.wxs') == -1 ]
+    if prefs['arch'] == 'x64':
+        sources.remove(os.path.join(GME_ROOT, "Install", "GME_SDK.wxs"))
+        sources.remove(os.path.join(GME_ROOT, "Install", "GME_paradigms.wxs"))
+    for file_ in sources:
+        extras = []
+        if os.path.basename(file_) == 'GME_paradigms.wxs':
+            extras = glob.glob(os.path.join(GME_ROOT, "Install", "PIA*/*.wxi"))
+        tools.build_WiX([file_] + extras)
 
 def build_msi():
     "Build WiX installer (msi file)"

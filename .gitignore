@@ -19,6 +19,7 @@ ipch
 *.log
 *-emergency*.mga
 *.nupkg
+*.wixlib
 Release_PGO
 obj/
 GME/XmlBackEnd/XmlBackEnd.h

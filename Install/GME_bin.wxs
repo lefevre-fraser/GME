@@ -5,58 +5,23 @@
   <?include GME_dyn.wxi ?>
   <?include GME_inc.wxi ?>
 
-  <Module Id='GME_bin' Language='1033' Codepage='1252' Version='$(var.VERSIONSTR)'>
+  <Fragment>
 
-    <Package Id='$(var.GME_bin_Package_Id)' Keywords='GME, MIC, modeling, domain specific languages' Description='Generic Modeling Environment Installer'
-        Manufacturer='Vanderbilt University, ISIS'
-        InstallerVersion='300' Languages='1033' SummaryCodepage='1252'
-        InstallPrivileges='elevated' InstallScope='perMachine'/>
+    <ComponentGroup Id='GME_bin$(sys.BUILDARCH)'>
 
-    <Icon Id='GME.ico' SourceFile='..\GME\Gme\res\GME.ico' />
-    <!-- =========================================================== -->
-    <!-- DIRECTORY STRUCTURE -->
-    <!-- =========================================================== -->
-    <Directory Id='TARGETDIR' Name='SourceDir'>
-      <Directory Id='$(var.ProgramFilesNativeFolder)'>
-        <Directory Id='INSTALLDIR' Name='GME'>
-          <Directory Id='INSTALLDIR_DOC' Name='Doc'/>
-          <Directory Id='INSTALLDIR_BIN' Name='Bin'/>
-          <Directory Id='INSTALLDIR_INTERFACES' Name='Interfaces'/>
-          <Directory Id='INSTALLDIR_PARADIGMS' Name='Paradigms'>
-            <Directory Id='INSTALLDIR_PARADIGMS_HFSM' Name='HFSM'>
-              <Directory Id='INSTALLDIR_PARADIGMS_HFSM_ICONS' Name='icons'/>
-              <Directory Id='INSTALLDIR_PARADIGMS_HFSM_HFSMSIMULATOR' Name='HFSMSimulator'/>
-            </Directory>
-            <Directory Id='INSTALLDIR_PARADIGMS_METAGME' Name='MetaGME'/>
-            <Directory Id='INSTALLDIR_PARADIGMS_UML' Name='UML'/>
-          </Directory>
-          <Directory Id='INSTALLDIR_SDK' Name='SDK'>
-            <Directory Id='INSTALLDIR_SDK_JAVA' Name='Java' />
-            <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSOR' Name='PatternProcessor' />
-          </Directory>
-          <Directory Id='INSTALLDIR_TOOLS' Name='Tools' />
-          <Directory Id='INSTALLDIR_LIBS' Name='Lib' />
-        </Directory>
-      </Directory>
 
-      <Directory Id='ProgramMenuFolder'>
-        <Directory Id='ShortcutFolder' Name='GME'/>
-      </Directory>
-    </Directory>
-
-    <!-- =========================================================== -->
-    <!-- COMPONENTS -->
-    <!-- =========================================================== -->
-    <DirectoryRef Id='INSTALLDIR_BIN'>
-      <Component Id='GME.exe'>
-        <File Id='GME.exe' Name='GME.exe' DiskId='1' Source='..\GME\$(var.Release)\GME.exe' KeyPath='yes' Checksum='yes'>
+      <!-- =========================================================== -->
+      <!-- COMPONENTS -->
+      <!-- =========================================================== -->
+      <Component Id='GME.exe$(sys.BUILDARCH)' Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id='GME.exe$(sys.BUILDARCH)' Name='GME.exe' DiskId='1' Source='..\GME\$(var.Release)\GME.exe' KeyPath='yes' Checksum='yes'>
           <?if $(sys.BUILDARCH)=x86 ?>
-          <Shortcut Id='ApplicationStartMenuShortcut' Name='GME' Icon='GME.ico' Description='Generic Modeling Environment' Directory='ShortcutFolder' Advertise="yes" />
+          <Shortcut Id='ApplicationStartMenuShortcut$(sys.BUILDARCH)' Name='GME' Icon='GME.ico' Description='Generic Modeling Environment' Directory='ShortcutFolder' Advertise="yes" />
           <?else?>
-          <Shortcut Id='ApplicationStartMenuShortcut' Name='GME (64 bit)' Icon='GME.ico' Description='Generic Modeling Environment' Directory='ShortcutFolder' Advertise="yes" />
+          <Shortcut Id='ApplicationStartMenuShortcut$(sys.BUILDARCH)' Name='GME (64 bit)' Icon='GME.ico' Description='Generic Modeling Environment' Directory='ShortcutFolder' Advertise="yes" />
           <?endif?>
           <TypeLib Id="{0ADEEC71-D83A-11D3-B36B-005004CC8592}" Description="GME Type Library" Language="0" MajorVersion="1" MinorVersion="0">
-            <Class Id='C7DCCC2E-1642-4a40-8060-51A7B9FAE488' Context='LocalServer32' Server='GME.exe' Handler='2'>
+            <Class Id='C7DCCC2E-1642-4a40-8060-51A7B9FAE488' Context='LocalServer32' Server='GME.exe$(sys.BUILDARCH)' Handler='2'>
               <ProgId Id='GME.Application' />
             </Class>
             <Interface Id="{81191A44-B898-4143-BF8B-CA7501FEC19A}" Name="IGMEOLEApp" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
@@ -82,41 +47,37 @@
           <RegistryValue Name='Path' Type='string' Value='[INSTALLDIR]'/>
         </RegistryKey>
 
-        <ProgId Id='GME.mgafile' Description='GME project file'>
+        <ProgId Id='GME.mgafile$(sys.BUILDARCH)' Description='GME project file'>
           <Extension Id='mga' ContentType='application/x-mga'>
             <?if $(sys.BUILDARCH)=x86 ?>
-            <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
-            <Verb Id='open_x86' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+            <Verb Id='open' Command='Open with GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
+            <Verb Id='open_x86' Command='Open with GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
             <?else?>
-            <Verb Id='open_x64' Command='Open with 64bit GME' TargetFile='GME.exe' Argument='"%1"' />
+            <Verb Id='open_x64' Command='Open with 64bit GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
             <?endif?>
           </Extension>
         </ProgId>
         <ProgId Id='GME.xmefile' Description='GME XML project file'>
           <Extension Id='xme' ContentType='application/x-xme'>
             <?if $(sys.BUILDARCH)=x86 ?>
-            <Verb Id='open' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
-            <Verb Id='open_x86' Command='Open with GME' TargetFile='GME.exe' Argument='"%1"' />
+            <Verb Id='open' Command='Open with GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
+            <Verb Id='open_x86' Command='Open with GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
             <?else?>
-            <Verb Id='open_x64' Command='Open with 64bit GME' TargetFile='GME.exe' Argument='"%1"' />
+            <Verb Id='open_x64' Command='Open with 64bit GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
             <?endif?>
           </Extension>
         </ProgId>
-        <Registry Id='MGADesc' Root='HKCR' Key='GME.mgafile' Action='write' Type='string' Value='GME model file' />
-        <Registry Id='XMEDesc' Root='HKCR' Key='GME.xmefile' Action='write' Type='string' Value='GME XML model file' />
-        <Registry Id='XMEIcon' Root='HKCR' Key='GME.xmefile\DefaultIcon' Action='write' Type='string' Value='[#GME.exe],5' />
         <?if $(sys.BUILDARCH)=x86 ?>
+        <Registry Id='GME.mgafile_desc' Root='HKCR' Key='GME.mgafile' Action='write' Type='string' Value='GME model file' />
+        <Registry Id='GME.xmefile_desc' Root='HKCR' Key='GME.xmefile' Action='write' Type='string' Value='GME XML model file' />
+        <Registry Id='GME.xmefile_icon' Root='HKCR' Key='GME.xmefile\DefaultIcon' Action='write' Type='string' Value='[#GME.exe$(sys.BUILDARCH)],5' />
         <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR]" />
-        <?endif?>
         <RemoveFolder Id='RemoveShortcutFolder' On='uninstall' Directory='ShortcutFolder'/>
+        <?endif?>
       </Component>
 
-    </DirectoryRef>
-
-
-    <DirectoryRef Id='INSTALLDIR_BIN'>
-      <Component Id='Annotator.dll'>
-        <File Id="Annotator.dll" Name="Annotator.dll" KeyPath="yes" Source="..\GME\$(var.Release)\Annotator.dll">
+      <Component Id='Annotator.dll$(sys.BUILDARCH)' Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id='Annotator.dll$(sys.BUILDARCH)' KeyPath="yes" Source="..\GME\$(var.Release)\Annotator.dll">
           <TypeLib Id="{F0E585D5-1697-4698-B374-D73B0D6127D0}" Description="GME Annotator Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{D3CF55F1-D1AA-433E-982B-D2A6E22D8299}" Context="InprocServer32" Description="MGA Decorator CoClass (Annotator)" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="MGA.Decorator.Annotator.1" Description="MGA Decorator CoClass (Annotator)">
@@ -126,11 +87,10 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_TOOLS">
-      <Component Id="AutoLayout.dll">
-        <File Id="AutoLayout.dll" Name="AutoLayout.dll" KeyPath="yes" Source="..\Tools\AutoLayout\$(var.Release)\AutoLayout.dll">
+
+      <Component Id="AutoLayout.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_TOOLS$(sys.BUILDARCH)">
+        <File Id="AutoLayout.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\Tools\AutoLayout\$(var.Release)\AutoLayout.dll">
           <TypeLib Id="E0EDD212-6AEC-41AE-8F45-4A75921D16C7" Description="MGA Interpreter TypeLibrary (AutoLayout)" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{DB312634-F076-4FB2-BCA9-CEF7D239590D}" Context="InprocServer32" Description="MGA.Interpreter.AutoLayout">
               <ProgId Id="MGA.Interpreter.AutoLayout" Description="MGA.Interpreter.AutoLayout" />
@@ -153,11 +113,9 @@
 
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="Console.ocx">
-        <File Id="Console.ocx" Name="Console.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\Console.ocx">
+      <Component Id="Console.ocx$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="Console.ocx$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\Console.ocx">
           <TypeLib Id="{339FD307-717B-4698-AC13-4ACCCF5D4C91}" Description="Console ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{A9B2B82A-B753-4FB0-8F0B-3661BC307053}" Context="InprocServer32" Description="GME Console Property Page" />
             <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
@@ -173,11 +131,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="ConstraintManager.dll">
-        <File Id="ConstraintManager.dll" Name="ConstraintManager.dll" KeyPath="yes" Source="..\GME\$(var.Release)\ConstraintManager.dll">
+      <Component Id="ConstraintManager.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="ConstraintManager.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\ConstraintManager.dll">
           <TypeLib Id="{D69D91D0-4550-4A5D-848C-9BBA92693D22}" Description="ConstraintManager 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{44055854-A45B-4357-9D2C-FC66D6C0DFFA}" Context="InprocServer32" Description="ConstraintManager Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.AddOn.ConstraintManager.1" Description="ConstraintManager Class">
@@ -211,11 +167,9 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="Core.dll">
-        <File Id="Core.dll" Name="Core.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Core.dll">
+      <Component Id="Core.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="Core.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Core.dll">
           <TypeLib Id="{9E9AAACF-28B8-11D3-B36C-0060082DF884}" Description="MGA Core Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{7281C07A-3E09-11D3-B2F7-005004D38590}" Context="InprocServer32" Description="CoreBinFile Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.CoreBinFile.1" Description="CoreBinFile Class">
@@ -232,16 +186,14 @@
                 <ProgId Id="Mga.CoreProject" Description="CoreProject Class" />
               </ProgId>
             </Class>
-            <Class Id="{9FE3BB80-B596-41BA-910F-0FF9C3B4F38A}" Context="InprocServer32" Description="CoreCollectionHandler Class" ThreadingModel="both" Programmable="yes" Handler="[#Core.dll]" />
+            <Class Id="{9FE3BB80-B596-41BA-910F-0FF9C3B4F38A}" Context="InprocServer32" Description="CoreCollectionHandler Class" ThreadingModel="both" Programmable="yes" Handler="[#Core.dll$(sys.BUILDARCH)]" />
             <Interface Id="{9A228010-020B-11D2-BBB3-0040051F7117}" Name="IGMEVersionInfo" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="GMEActiveBrowser.ocx">
-        <File Id="GMEActiveBrowser.ocx" Name="GMEActiveBrowser.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\GMEActiveBrowser.ocx">
+      <Component Id="GMEActiveBrowser.ocx$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="GMEActiveBrowser.ocx$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\GMEActiveBrowser.ocx">
           <TypeLib Id="{FDA9EDB8-ED6A-468F-A3A9-E9361FEED051}" Description="GMEActiveBrowser ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{4B4C56DA-A2A0-4AE3-BC4B-B07151DE732C}" Context="InprocServer32" Description="GMEActiveBrowser Property Page" />
             <Class Id="{DD4F2DEB-D064-4844-9EE1-04673C872E7B}" Context="InprocServer32" Description="GMEActiveBrowser Control" ThreadingModel="apartment" Version="1.0" Control="yes" Insertable="yes">
@@ -250,38 +202,25 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="CrashRpt.dll">
-        <File Id="CrashRpt.dll" Name="CrashRpt.dll" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashRpt.dll" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="CrashRpt.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashRpt.dll" />
       </Component>
-    </DirectoryRef>
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="crashrpt_lang.ini$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\crashrpt_lang.ini" />
+      </Component>
+      <Component  Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="CrashSender.exe$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashSender.exe" />
+      </Component>
+      <Component Directory='INSTALLDIR$(sys.BUILDARCH)'>
+        <File Id="CrashRpt.license$(sys.BUILDARCH)" Name="CrashRpt.license" KeyPath="yes" Source="..\GME\lib\CrashRpt\License.txt" />
+      </Component>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="crashrpt_lang.ini">
-        <File Id="crashrpt_lang.ini" Name="crashrpt_lang.ini" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\crashrpt_lang.ini" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id='CSGUI.dll$(sys.BUILDARCH)' Source="..\GME\CSGUI\bin\Release\CSGUI.dll" />
       </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="CrashSender.exe">
-        <File Id="CrashSender.exe" Name="CrashSender.exe" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashSender.exe" />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="CrashRpt.license">
-        <File Id="CrashRpt.license" Name="CrashRpt.license" KeyPath="yes" Source="..\GME\lib\CrashRpt\License.txt" />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component>
-        <File Source="..\GME\CSGUI\bin\Release\CSGUI.dll" />
-      </Component>
-      <Component Id="Meta.dll">
-        <File Id="Meta.dll" Name="Meta.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Meta.dll">
+      <Component Id="Meta.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="Meta.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Meta.dll">
           <TypeLib Id="{0ADEEC71-D83A-11D3-B36B-005004D38590}" Description="MGA Meta Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{8216325A-B7C8-1AD3-ABAE-000000000000}" Context="InprocServer32" Description="MgaMetaEnumItem Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaMetaEnumItem.1" Description="MgaMetaEnumItem Class">
@@ -415,11 +354,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
-      <Component Id="MetaDecorator.dll">
-        <File Id="MetaDecorator.dll" Name="MetaDecorator.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\MetaDecorator.dll">
+      <Component Id="MetaDecorator.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_PARADIGMS_METAGME$(sys.BUILDARCH)">
+        <File Id="MetaDecorator.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\MetaDecorator.dll">
           <TypeLib Id="{315F4696-6E31-48d2-8580-FA6CBB805520}" Description="MGA MetaDecorator Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{E0062203-4CF9-424A-BF05-4F6590942015}" Context="InprocServer32" Description="MGA Decorator CoClass (MetaDecorator)" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="MGA.Decorator.MetaDecorator.1" Description="MGA Decorator CoClass (MetaDecorator)">
@@ -429,11 +366,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
-      <Component Id="MetaInterpreter.dll">
-        <File Id="MetaInterpreter.dll" Name="MetaInterpreter.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\MetaInterpreter.dll">
+      <Component Id="MetaInterpreter.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_PARADIGMS_METAGME$(sys.BUILDARCH)">
+        <File Id="MetaInterpreter.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\MetaInterpreter.dll">
           <TypeLib Id="1CB9FEAE-D8F7-48B0-A776-1541149AAF50" Description="MGA Interpreter TypeLibrary (MetaInterpreter)" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{F15CF3E9-7383-44B3-9AB8-A275283BBCA9}" Context="InprocServer32" Description="MGA.Interpreter.MetaInterpreter">
               <ProgId Id="MGA.Interpreter.MetaInterpreter" Description="MGA.Interpreter.MetaInterpreter" />
@@ -451,11 +386,9 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_PARADIGMS_UML">
-      <Component Id="UMLDecorator.dll">
-        <File Id="UMLDecorator.dll" Name="UMLDecorator.dll" KeyPath="yes" Source="..\Paradigms\UML\decorator\$(var.Release)\UMLDecorator.dll">
+      <Component Id="UMLDecorator.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_PARADIGMS_UML$(sys.BUILDARCH)">
+        <File Id="UMLDecorator.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\Paradigms\UML\decorator\$(var.Release)\UMLDecorator.dll">
           <TypeLib Id="{4696E82A-ABFD-4B36-BC6B-4248CC56FD89}" Description="UMLDecoratorLib 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{26AC9143-6F73-4E6A-B942-F641B37F87B5}" Context="InprocServer32" Description="UMLDecorator Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.UMLDecorator.1" Description="UMLDecorator Class">
@@ -465,11 +398,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="Mga.dll">
-        <File Id="Mga.dll" Name="Mga.dll" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Mga.dll">
+      <Component Id="Mga.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="Mga.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)_PGO\Mga.dll">
           <TypeLib Id="{270B4F86-B17C-11D3-9AD1-00AA00B6FE26}" Description="MGA Mga Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{1DF52E42-BCC0-4439-B3CD-75610AC372A3}" Context="InprocServer32" Description="MgaO Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.MgaO.1" Description="MgaO Class">
@@ -539,11 +470,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="MgaDecorators.dll">
-        <File Id="MgaDecorators.dll" Name="MgaDecorators.dll" KeyPath="yes" Source="..\GME\$(var.Release)\MgaDecorators.dll">
+      <Component Id="MgaDecorators.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="MgaDecorators.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\MgaDecorators.dll">
           <TypeLib Id="{F5D9A9A0-5A1C-40B8-9EEF-4890FEECC8CD}" Description="MgaDecoratorLib 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{3FA0768D-F832-4C6A-973D-5D8E3EF05FFA}" Context="InprocServer32" Description="BoxDecorator Class" ThreadingModel="apartment" Programmable="yes">
               <ProgId Id="Mga.BoxDecorator.1" Description="BoxDecorator Class">
@@ -553,11 +482,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="MgaDotNetServices.dll">
-        <File Id="MgaDotNetServices.dll" Name="MgaDotNetServices.dll" KeyPath="yes" Source="..\GME\Release\MgaDotNetServices.dll" />
+      <Component Id="MgaDotNetServices.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="MgaDotNetServices.dll$(sys.BUILDARCH)" Name="MgaDotNetServices.dll" KeyPath="yes" Source="..\GME\Release\MgaDotNetServices.dll" />
         <Class Id="{0BB0C371-6835-4F09-A156-0BD8E3DF8216}" Context="InprocServer32" Description="MGA.DotNetServices.Registrar" ThreadingModel="both" ForeignServer="mscoree.dll">
           <ProgId Id="MGA.DotNetRegistrar" Description="MGA.DotNetServices.Registrar" />
         </Class>
@@ -566,19 +493,17 @@
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="Assembly" Value="MgaDotNetServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="SupportedRuntimeVersions" Value="v4.0.30319;v2.0.50727" Type="string" Action="write" />
-        <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="CodeBase" Value="file:///[#MgaDotNetServices.dll]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32\1.0.0.0" Name="CodeBase" Value="file:///[#MgaDotNetServices.dll$(sys.BUILDARCH)]" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="Class" Value="MGA.DotNetServices.Registrar" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="Assembly" Value="MgaDotNetServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="SupportedRuntimeVersions" Value="v4.0.30319;v2.0.50727" Type="string" Action="write" />
-        <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="CodeBase" Value="file:///[#MgaDotNetServices.dll]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{0BB0C371-6835-4F09-A156-0BD8E3DF8216}\InprocServer32" Name="CodeBase" Value="file:///[#MgaDotNetServices.dll$(sys.BUILDARCH)]" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="MgaUtil.dll">
-        <File Id="MgaUtil.dll" Name="MgaUtil.dll" KeyPath="yes" Source="..\GME\$(var.Release)\MgaUtil.dll">
+      <Component Id="MgaUtil.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="MgaUtil.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\MgaUtil.dll">
           <TypeLib Id="{461F30AE-3BF0-11D4-B3F0-005004D38590}" Description="MGA Utilities Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
               <Class Id="{F1D6BB06-42EE-11D4-B3F4-005004D38590}" Context="InprocServer32" Description="MgaRegistrar Class" ThreadingModel="apartment" Programmable="yes">
@@ -632,11 +557,9 @@
         <RegistryValue Root="HKCR" Key="CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590}\Elevation" Name="Enabled" Value="1" Type="integer" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590}" Name="LocalizedString" Value="@[!MgaUtil.dll],-2072" Type="string" Action="write" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_PARADIGMS_METAGME">
-      <Component Id="NamespaceConfig.dll">
-        <File Id="NamespaceConfig.dll" Name="NamespaceConfig.dll" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\NamespaceConfig.dll">
+      <Component Id="NamespaceConfig.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_PARADIGMS_METAGME$(sys.BUILDARCH)">
+        <File Id="NamespaceConfig.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\Paradigms\MetaGME\$(var.Release)\NamespaceConfig.dll">
           <TypeLib Id="A80F5574-0EA6-44F4-8001-9B803C3E2960" Description="MGA Interpreter TypeLibrary (NamespaceConfig)" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{7A7B03E5-9132-45EA-919C-C5BEC40387B1}" Context="InprocServer32" Description="MGA.Interpreter.NamespaceConfig">
               <ProgId Id="MGA.Interpreter.NamespaceConfig" Description="MGA.Interpreter.NamespaceConfig" />
@@ -654,11 +577,9 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="ObjectInspector.ocx">
-        <File Id="ObjectInspector.ocx" Name="ObjectInspector.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\ObjectInspector.ocx">
+      <Component Id="ObjectInspector.ocx$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="ObjectInspector.ocx$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\ObjectInspector.ocx">
           <TypeLib Id="{92B54998-8E88-41A2-924F-7354CAD14565}" Description="ObjectInspector ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{0B4B5A75-BF21-4C8B-A705-E2666E1D9B15}" Context="InprocServer32" Description="ObjectInspector Property Page" />
             <Class Id="{B786F53C-297F-4DB8-8060-D45057217AEE}" Context="InprocServer32" Description="ObjectInspector Control" ThreadingModel="apartment" Version="1.0" Control="yes">
@@ -667,18 +588,14 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_DOC">
-      <Component Id="OnlineHelp">
-        <File Id="GME_Manual_and_User_Guide.chm" Name="GME Manual and User Guide.chm" KeyPath="yes" Source="..\Doc\GME Manual and User Guide\GME Manual and User Guide.chm">
+      <Component Id="OnlineHelp$(sys.BUILDARCH)" Directory="INSTALLDIR_DOC$(sys.BUILDARCH)">
+        <File Id="GME_Manual_and_User_Guide.chm$(sys.BUILDARCH)" KeyPath="yes" Source="..\Doc\GME Manual and User Guide\GME Manual and User Guide.chm">
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="PanningView.ocx">
-        <File Id="PanningView.ocx" Name="PanningView.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\PanningView.ocx">
+      <Component Id="PanningView.ocx$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="PanningView.ocx$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\PanningView.ocx">
           <TypeLib Id="{B6ED16CA-512F-48B7-B5DB-1C064821F7DB}" Description="PanningView ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{458D3476-B3FF-4545-9645-C247A7C17E36}" Context="InprocServer32" Description="PanningView Property Page" />
             <Class Id="{B0C28BAA-7E44-404C-BEAD-83735356F1D2}" Context="InprocServer32" Description="PanningView Control" ThreadingModel="apartment" Version="1.0" Control="yes">
@@ -687,11 +604,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="Parser.dll">
-        <File Id="Parser.dll" Name="Parser.dll" KeyPath="yes" Source="..\GME\$(var.Release)\Parser.dll">
+      <Component Id="Parser.dll$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="Parser.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\Parser.dll">
           <TypeLib Id="{70C41B15-E3CE-11D3-B37A-005004D38590}" Description="MGA Parser Type Library" Language="0" MajorVersion="1" MinorVersion="1">
             <AppId Description="MgaUtil" Id="{461F30AF-3BF0-11D4-B3F0-005004D38590}">
               <Class Id="{70C41B25-E3CE-11D3-B37A-005004D38590}" Context="InprocServer32" Description="MgaMetaParser Class" ThreadingModel="apartment" Programmable="yes">
@@ -719,23 +634,21 @@
           </TypeLib>
         </File>
       </Component>
-      <Component Id="edf.dtd">
-        <File Id="edf.dtd" Name="edf.dtd" Source="..\GME\Parser\edf.dtd" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="edf.dtd$(sys.BUILDARCH)" Source="..\GME\Parser\edf.dtd" />
       </Component>
-      <Component Id="mga.dtd">
-        <File Id="mga.dtd" Name="mga.dtd" Source="..\GME\Parser\mga.dtd" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="mga.dtd$(sys.BUILDARCH)" Source="..\GME\Parser\mga.dtd" />
       </Component>
-      <Component Id="mga2.dtd">
-        <File Id="mga2.dtd" Name="mga2.dtd" Source="..\GME\Parser\mga2.dtd" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="mga2.dtd$(sys.BUILDARCH)" Source="..\GME\Parser\mga2.dtd" />
       </Component>
-      <Component Id="mgaclosure.dtd">
-        <File Id="mgaclosure.dtd" Name="mgaclosure.dtd" Source="..\GME\Parser\mgaclosure.dtd" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="mgaclosure.dtd$(sys.BUILDARCH)" Source="..\GME\Parser\mgaclosure.dtd" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="PartBrowser.ocx">
-        <File Id="PartBrowser.ocx" Name="PartBrowser.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\PartBrowser.ocx">
+      <Component Id="PartBrowser.ocx$(sys.BUILDARCH)" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="PartBrowser.ocx$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.Release)\PartBrowser.ocx">
           <TypeLib Id="{EA3F7431-913A-421F-9B9C-BEB6A735285A}" Description="PartBrowser ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{8E82D238-D222-493D-8ED2-3175A5B1086C}" Context="InprocServer32" Description="PartBrowser Property Page" />
             <Class Id="{1FF57057-D598-4FC2-8F9D-708F59B9C017}" Context="InprocServer32" Description="PartBrowser Control" ThreadingModel="apartment" Version="1.0" Control="yes" Insertable="yes">
@@ -744,35 +657,31 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="ReadmeFiles">
-        <File Id="ReadmeFiles_README.txt" Name="README.txt" KeyPath="yes" Source="..\Doc\README.txt" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="ReadmeFiles_README.txt$(sys.BUILDARCH)" KeyPath="yes" Source="..\Doc\README.txt" />
       </Component>
-      <Component Id="muserdoc.txt">
-        <File Id="muserdoc.txt" Name="muserdoc.txt" Source="..\Doc\muserdoc.txt" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="muserdoc.txt$(sys.BUILDARCH)" Source="..\Doc\muserdoc.txt" />
       </Component>
-      <Component Id="License.txt">
-        <File Id="License.txt" Name="License.txt" Source="..\Doc\Legal\License.txt" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="License.txt$(sys.BUILDARCH)" Source="..\Doc\Legal\License.txt" />
       </Component>
-      <Component Id="APR_Serf_Xerces.license">
-        <File Id="APR_Serf_Xerces.license" Name="APR_Serf_Xerces.license" Source="..\Doc\Legal\APR_Serf_Xerces.license" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="APR_Serf_Xerces.license$(sys.BUILDARCH)" Source="..\Doc\Legal\APR_Serf_Xerces.license" />
       </Component>
-      <Component Id="OpenSSL.license">
-        <File Id="OpenSSL.license" Name="OpenSSL.license" Source="..\Doc\Legal\OpenSSL.license" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="OpenSSL.license$(sys.BUILDARCH)" Source="..\Doc\Legal\OpenSSL.license" />
       </Component>
-      <Component Id="Subversion.license">
-        <File Id="Subversion.license" Name="Subversion.license" Source="..\Doc\Legal\Subversion.license" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="Subversion.license$(sys.BUILDARCH)" Source="..\Doc\Legal\Subversion.license" />
       </Component>
-      <Component Id="Neon.license">
-        <File Id="Neon.license" Name="Neon.license" Source="..\Doc\Legal\Neon.license" />
+      <Component Directory="INSTALLDIR$(sys.BUILDARCH)">
+        <File Id="Neon.license$(sys.BUILDARCH)" Source="..\Doc\Legal\Neon.license" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="Search.ocx">
-        <File Id="Search.ocx" Name="Search.ocx" KeyPath="yes" Source="..\GME\$(var.Release)\Search.ocx">
+      <Component Id='Search.ocx$(sys.BUILDARCH)' Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id='Search.ocx$(sys.BUILDARCH)' KeyPath="yes" Source="..\GME\$(var.Release)\Search.ocx">
           <TypeLib Id="{E65EEDEF-18B7-4F67-BBC7-0E22D0D34C28}" Description="Search ActiveX Control module" Language="0" MajorVersion="1" MinorVersion="0" Control="yes">
             <Class Id="{F299943A-2397-45B1-8C77-A9D29F2FE58E}" Context="InprocServer32" Description="GME Search Property Page" />
             <Class Id="{E5FE98F1-B7AD-4ABE-89DB-87DDD9DB753E}" Context="InprocServer32" Description="GME Search Control" ThreadingModel="apartment" Version="1.0" Control="yes">
@@ -781,23 +690,17 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="xerces_c_3_1.dll">
-        <File Id="xerces_c_3_1.dll" Name="xerces-c_3_1.dll" KeyPath="yes" Source="..\GME\$(var.lib)\xerces-c_3_1.dll" />
+      <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
+        <File Id="xerces_c_3_1.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\$(var.lib)\xerces-c_3_1.dll" />
       </Component>
-    </DirectoryRef>
 
-    <?if $(sys.BUILDARCH)=x86 ?>
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="ssleay32.dll">
+      <?if $(sys.BUILDARCH)=x86 ?>
+      <Component Id="ssleay32.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="ssleay32.dll" Name="ssleay32.dll" KeyPath="yes" Source="..\GME\lib\ssleay32.dll" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_TOOLS">
-      <Component Id="TableEditor.dll">
+      <Component Id="TableEditor.dll" Directory="INSTALLDIR_TOOLS$(sys.BUILDARCH)">
         <File Id="TableEditor.dll" Name="TableEditor.dll" KeyPath="yes" Source="..\Tools\TableEditor\$(var.Release)\TableEditor.dll">
           <TypeLib Id="C4970E27-78C0-45E5-93DB-171F34D62C58" Description="MGA Interpreter TypeLibrary (TableEditor)" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{E91D51AD-6B6D-44BC-AE35-E7F3CB604B26}" Context="InprocServer32" Description="MGA.Interpreter.TableEditor">
@@ -819,10 +722,8 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="XmlBackEnd.dll">
+      <Component Id="XmlBackEnd.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="XmlBackEnd.dll" Name="XmlBackEnd.dll" KeyPath="yes" Source="..\GME\$(var.Release)\XmlBackEnd.dll">
           <TypeLib Id="{09107441-E750-4516-B6D0-DE6358FDBA9B}" Description="XmlBackEnd 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{F729BE0C-ACE5-470B-8F98-DAE52D6A5949}" Context="InprocServer32" Description="CoreXmlFile Class" ThreadingModel="both" Programmable="yes">
@@ -833,17 +734,13 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="GMEplink.exe">
+      <Component Id="GMEplink.exe" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="GMEplink.exe" Name="GMEplink.exe" KeyPath="yes" Source="..\Tools\GMEplink\Release\GMEplink.exe">
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id='INSTALLDIR_BIN'>
-      <Component Id='Interop_AssemblyFoldersEx'>
+      <Component Id='Interop_AssemblyFoldersEx' Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <RegistryKey Root='HKLM' Key='Software\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx'>
           <RegistryKey Key='GME.MGA.Core' >
             <RegistryValue Type='string' Value='[WindowsFolder]assembly\GAC_MSIL\GME.MGA.Core\1.0.1.0__f240a760fe751c2e'/>
@@ -887,60 +784,45 @@
           <RegistryKey Key='ISIS.GME.Common' >
             <RegistryValue Type='string' Value='[WindowsFolder]Microsoft.NET\assembly\GAC_MSIL\ISIS.GME.Common\v4.0_1.0.4.0__1321e6b92842fe54'/>
           </RegistryKey>
-          </RegistryKey>
+        </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="libapr_1.dll">
+      <Component Id="libapr_1.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="libapr_1.dll" Name="libapr-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapr-1.dll" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="libapriconv_1.dll">
+      <Component Id="libapriconv_1.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="libapriconv_1.dll" Name="libapriconv-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libapriconv-1.dll" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="libaprutil_1.dll">
+      <Component Id="libaprutil_1.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="libaprutil_1.dll" Name="libaprutil-1.dll" KeyPath="yes" Source="..\GME\lib\subv_release\libaprutil-1.dll" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="libeay32.dll">
+      <Component Id="libeay32.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="libeay32.dll" Name="libeay32.dll" KeyPath="yes" Source="..\GME\lib\libeay32.dll" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_BIN">
-      <Component Id="JAUT.dll">
+      <Component Id="JAUT.dll" Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="JAUT.dll" Name="JAUT.dll" KeyPath="yes" Source="..\SDK\java\native\Jaut\$(var.Release)\JAUT.dll">
           <TypeLib Id="{032D8DD2-C470-44C7-972E-4CF5EF9D1362}" Description="JAUT 1.0 Type Library" Language="0" MajorVersion="1" MinorVersion="0" />
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_SDK_JAVA">
-      <Component Id="JavaClasses">
+
+      <Component Id="JavaClasses" Directory="INSTALLDIR_SDK_JAVA$(sys.BUILDARCH)">
         <File Id="gme.jar" Name="gme.jar" KeyPath="yes" Source="..\SDK\java\gme.jar" />
         <RegistryKey Root='HKLM' Key='Software\GME'>
           <RegistryValue Name='JavaClassPath' Type='string' Value='[INSTALLDIR_SDK_JAVA]gme.jar'/>
           <RegistryValue Name='JavaMemory' Type='string' Value='64M'/>
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_SDK_JAVA">
-      <Component Id="JavaCompRegister.exe">
+      <Component Id="JavaCompRegister.exe" Directory="INSTALLDIR_SDK_JAVA$(sys.BUILDARCH)">
         <File Id="JavaCompRegister.exe" Name="JavaCompRegister.exe" KeyPath="yes" Source="..\SDK\java\native\JavaCompRegister\$(var.Release)\JavaCompRegister.exe" />
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_SDK_JAVA">
-      <Component Id="JavaCompRunner.dll">
+      <Component Id="JavaCompRunner.dll" Directory="INSTALLDIR_SDK_JAVA$(sys.BUILDARCH)">
         <File Id="JavaCompRunner.dll" Name="JavaCompRunner.dll" KeyPath="yes" Source="..\SDK\java\native\JavaCompRunner\$(var.Release)\JavaCompRunner.dll">
           <TypeLib Id="9E10B423-9625-40E4-8956-FC4FCADFAE40" Description="MGA Interpreter TypeLibrary (JavaCompRunner)" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{C97618C3-2574-4257-A6F9-6C3F497DCCED}" Context="InprocServer32" Description="MGA.Interpreter.JavaCompRunner">
@@ -949,10 +831,9 @@
           </TypeLib>
         </File>
       </Component>
-    </DirectoryRef>
 
-    <DirectoryRef Id="INSTALLDIR_SDK_PATTERNPROCESSOR">
-      <Component Id="PatternProcessor.dll">
+
+      <Component Id="PatternProcessor.dll" Directory="INSTALLDIR_SDK_PATTERNPROCESSOR$(sys.BUILDARCH)">
         <File Id="PatternProcessor.dll" Name="PatternProcessor.dll" KeyPath="yes" Source="..\SDK\PatternProcessor\$(var.Release)\PatternProcessor.dll">
           <TypeLib Id="52B5ADE8-5572-4D32-B389-552CA6A1D367" Description="MGA Interpreter TypeLibrary (PatternProcessor)" Language="0" MajorVersion="1" MinorVersion="0">
             <Class Id="{DF327162-DA68-4CD7-8AEB-BBECA1A65A4E}" Context="InprocServer32" Description="MGA.Interpreter.PatternProcessor">
@@ -967,9 +848,8 @@
           <RegistryValue Name='Type' Type='integer' Value='9'/>
         </RegistryKey>
       </Component>
-    </DirectoryRef>
 
-    <?endif?>
-
-  </Module>
+      <?endif?>
+    </ComponentGroup>
+  </Fragment>
 </Wix>
