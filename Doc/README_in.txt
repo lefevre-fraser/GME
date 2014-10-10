@@ -28,6 +28,11 @@ You must uninstall GME versions prior to version
 Release Notes of Release 14.10.8
 ----------------------------------
   - Binary compatibility with 11.12.2
+  - Fix bug in installer where environment variable GME_ROOT wasn't set
+
+Release Notes of Release 14.10.8
+----------------------------------
+  - Binary compatibility with 11.12.2
   - Interpreter wizard: generate interpreters that can be called from within a transaction
   - JavaCompRunner: support being called from within a transaction
   - gme.jar: expose more Mga methods

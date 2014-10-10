@@ -2,7 +2,7 @@
 
 <!---
 This file is synced manually to https://forge.isis.vanderbilt.edu/gme/
-See also https://svn.isis.vanderbilt.edu/MoBIES/UDM/trunk/UDM_Release_Howto.txt
+See also  https://svn.isis.vanderbilt.edu/GMESRC/trunk/Doc/GME_release_howto.txt
 -->
 
 GME
@@ -13,9 +13,9 @@ GME is the generic modeling environment.
 [GME overview](http://www.isis.vanderbilt.edu/Projects/gme/)
 
 Download GME  
-&nbsp; [README/changelog](http://repo.isis.vanderbilt.edu/GME/14.10.8/README.txt)  
-&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/14.10.8/GME-14.10.8.msi" id="win32_installer">GME-14.10.8.msi</a>  
-&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/14.10.8/GME_x64-14.10.8.msi" id="win64_installer">GME_x64-14.10.8.msi</a>  
+&nbsp; [README/changelog](http://repo.isis.vanderbilt.edu/GME/14.10.10/README.txt)  
+&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/14.10.10/GME-14.10.10.msi" id="win32_installer">GME-14.10.10.msi</a>  
+&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/14.10.10/GME_x64-14.10.10.msi" id="win64_installer">GME_x64-14.10.10.msi</a>  
 &nbsp; [older releases, source code, and debugging symbols](http://repo.isis.vanderbilt.edu/GME/old/)  
 
 [GME User's Manual](GME Manual and User Guide/GME Manual and User Guide.pdf)
