@@ -25,7 +25,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes of Release 14.10.8
+Release Notes of Release 14.10.10
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix bug in installer where environment variable GME_ROOT wasn't set
