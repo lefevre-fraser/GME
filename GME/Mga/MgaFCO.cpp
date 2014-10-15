@@ -926,8 +926,8 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 
 HRESULT FCO::objrwnotify() {
 	COMTRY {
-			unsigned long chmask = changemask;
-			changemask = 0;
+			unsigned long chmask = this->changemask;
+			this->changemask = 0;
 			// No other notification on deleted objects
 			if(chmask & OBJEVENT_DESTROYED) chmask = OBJEVENT_DESTROYED;
 			CMgaProject::addoncoll::iterator ai, abeg = mgaproject->alladdons.begin(), aend = mgaproject->alladdons.end();
@@ -973,7 +973,8 @@ HRESULT FCO::objrwnotify() {
 			if(chmask & OBJEVENT_CREATED) {
 				// send message to all territories that contain parent, 
 				CoreObj parent = self[ATTRID_PARENT];
-				if(parent.IsContainer()) {
+				// n.b. parent may be null if an addon deleted self and parent
+				if (parent && parent.IsContainer()) {
 					auto objforcore = ObjForCore(parent);
 					FCO &p = *objforcore;
 					
@@ -1016,6 +1017,7 @@ HRESULT FCO::objrwnotify() {
 					COMTHROW(mgaproject->popterr());  // this may release the territory!!!
 				}
 			}
+			this->temporalmask = 0; // may have been changed during notification (but we won't notify about it)
 	} COMCATCH(;)
 }
 
