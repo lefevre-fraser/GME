@@ -4412,7 +4412,8 @@ bool CGMEView::Connect(CGuiObject *src,CGuiPort *srcPort, int srcHotSide, CGuiOb
 			error += static_cast<const TCHAR*>(e.Description());
 		}
 		CGMEEventLogger::LogGMEEvent(error + _T("\r\n"));
-		AfxMessageBox(error,MB_ICONSTOP | MB_OK);
+		if (e.Error() != E_ABORT) // "Operation canceled by user"
+			AfxMessageBox(error,MB_ICONSTOP | MB_OK);
 
         Reset(true); // BGY: something similar needed, otherwise the created conenction not 
         // deleted form the gui if the committransaction failed
