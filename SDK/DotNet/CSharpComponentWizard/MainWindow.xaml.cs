@@ -18,10 +18,12 @@ namespace CSharpComponentWizard
         // DEFINES       
         public const string VS2010_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\10.0";
         public const string VS2012_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\11.0";
+        public const string VS2013_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\VisualStudio\12.0";
         public const string VS_PROJECTFOLDER_REGISTRY_KEYNAME = "VisualStudioProjectsLocation";
         public const string VS_USERPROJECTTEMPLATEPATH_REGISTRY_KEYNAME = "UserProjectTemplatesLocation";
         public const string VS_INSTALLDIR_KEYNAME = "InstallDir";
         public const string MSSDK_REGISTRY_KEYPATH = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A";
+        public const string MSSDK_REGISTRY_KEYPATH_8_1A = @"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v8.1A";
 
         public const string GUIDREGEXP = @"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$";
 
@@ -38,18 +40,34 @@ namespace CSharpComponentWizard
 
         public MainWindow()
         {
-            System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
+            System.Type type = null;
+            if (type == null)
+            {
+                type = System.Type.GetTypeFromProgID("VisualStudio.DTE.12.0");
+            }
             if (type == null)
             {
                 type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
             }
+            if (type == null)
+            {
+                type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
+            }
 
             if (type == null || Activator.CreateInstance(type, true) == null)
             {
-                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010 or 2012 Professional. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Assembly.GetExecutingAssembly().GetName().Name + " requires Visual Studio 2010, 2012, or 2013 Professional. It cannot work with Visual C# Express.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 System.Environment.Exit(11);
             }
-            RegistryKey masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+            RegistryKey masterKey = null;
+            if (masterKey == null)
+            {
+                masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2013_REGISTRY_KEYPATH);
+            }
+            if (masterKey == null)
+            {
+                masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+            }
             if (masterKey == null)
             {
                 masterKey = Registry.CurrentUser.OpenSubKey(MainWindow.VS2010_REGISTRY_KEYPATH);
@@ -735,7 +753,16 @@ namespace CSharpComponentWizard
                 string pathToOpen = "\"" + txb_TargetFolder.Text + @"\" + txb_SolutionName.Text + @"\" + txb_SolutionName.Text + ".sln\"";
 
                 string DevenvLocation = String.Empty;
-                RegistryKey masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+                RegistryKey masterKey = null;
+
+                if (masterKey == null || masterKey.GetValue(MainWindow.VS_INSTALLDIR_KEYNAME) == null)
+                {
+                    masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2013_REGISTRY_KEYPATH);
+                }
+                if (masterKey == null || masterKey.GetValue(MainWindow.VS_INSTALLDIR_KEYNAME) == null)
+                {
+                    masterKey = Registry.LocalMachine.OpenSubKey(MainWindow.VS2012_REGISTRY_KEYPATH);
+                }
 
                 // KMS: on my machine, I had HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\11.0\VC\Runtimes\x64 with VS2012 not installed (but no "InstallDir")
                 if (masterKey == null || masterKey.GetValue(MainWindow.VS_INSTALLDIR_KEYNAME) == null)

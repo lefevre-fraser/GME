@@ -71,9 +71,16 @@ namespace CSharpComponentWizard
                     SolutionGenerator.TemplateFileName = "CSharpInterpreter.zip";
                 }
 
-                // Prefer VS2012
-                System.Type type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
-
+                // Prefer latest VS
+                System.Type type = null;
+                if (type == null)
+                {
+                    type = System.Type.GetTypeFromProgID("VisualStudio.DTE.12.0");
+                }
+                if (type == null)
+                {
+                    type = System.Type.GetTypeFromProgID("VisualStudio.DTE.11.0");
+                }
                 if (type == null)
                 {
                     type = System.Type.GetTypeFromProgID("VisualStudio.DTE.10.0");
@@ -295,29 +302,35 @@ namespace CSharpComponentWizard
         public static void GenerateSignature(string outputfolder)
         {
             // Search sn.exe
-            string SNLocation;
+            string SNLocation = null;
 
             using (RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
             {
-                using (RegistryKey masterKey = localMachine.OpenSubKey(MainWindow.MSSDK_REGISTRY_KEYPATH))
+                foreach (var path in new [] {
+                    new {reg= MainWindow.MSSDK_REGISTRY_KEYPATH_8_1A, file= "bin\\NETFX 4.5.1 Tools\\sn.exe" },
+                    new {reg= MainWindow.MSSDK_REGISTRY_KEYPATH, file="bin\\sn.exe" }
+                })
                 {
-                    if (masterKey == null)
+                    using (RegistryKey masterKey = localMachine.OpenSubKey(path.reg))
                     {
-                        throw new Exception("Cannot locate sn.exe. Is Windows SDK installed?");
-                    }
-                    string installationFolder = (string)masterKey.GetValue("InstallationFolder", null);
-                    if (string.IsNullOrEmpty(installationFolder))
-                    {
-                        throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
-                    }
-                    SNLocation = Path.Combine(installationFolder, @"bin\sn.exe");
+                        if (masterKey == null)
+                        {
+                            continue;
+                        }
+                        string installationFolder = (string)masterKey.GetValue("InstallationFolder", null);
+                        string SNCandidate = Path.Combine(installationFolder, path.file);
 
-                    if (!File.Exists(SNLocation))
-                    {
-                        return; // Assembly won't be signed
-                        throw new Exception("Cannot locate sn.exe. Is Windows SDK installed?");
+                        if (File.Exists(SNCandidate))
+                        {
+                            SNLocation = SNCandidate;
+                            break;
+                        }
                     }
                 }
+            }
+            if (string.IsNullOrEmpty(SNLocation))
+            {
+                throw new Exception("Cannot locate sn.exe. Is VS2010 SDK installed?");
             }
 
             System.Diagnostics.ProcessStartInfo pinfo = new System.Diagnostics.ProcessStartInfo();
