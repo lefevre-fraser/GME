@@ -25,7 +25,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 14.10.29
 ----------------------------------
   - Binary compatibility with 11.12.2
   - CSharpComponentWizard: support for Visual Studio 2013
