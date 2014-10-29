@@ -28,11 +28,11 @@
 
 
 // This name will appear in the popup window for interpreter selection.
-#define COMPONENT_NAME "AutoLayout"
+#define COMPONENT_NAME L"AutoLayout"
 
 
 // This text will appear in the toolbar icon tooltip and in the menu.
-#define TOOLTIP_TEXT "Auto Layout PlugIn"
+#define TOOLTIP_TEXT L"Auto Layout PlugIn"
 
 // This macro determines the component type (addon vs. interpreter):
 #define GME_INTERPRETER
