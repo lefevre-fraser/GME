@@ -8,6 +8,9 @@ function OnFinish(selProj, selObj)
         else if (dte.Version == '11.0') {
             OnFinish100(selProj, selObj);
         }
+        else if (dte.Version == '12.0') {
+            OnFinish100(selProj, selObj);
+        }
 		else {
 		    OnFinish90(selProj, selObj);
 		}
@@ -86,7 +89,7 @@ function OnFinish90(selProj, selObj)
 
 function CreateCoClassUUIDExploded()
 {
-    // Altenative representation of the CoClass UUID
+    // Alternative representation of the CoClass UUID
 	var CoClassUUID = wizard.FindSymbol('COCLASS_UUID');
 	var CoClassGUID2 = wizard.FormatGuid('{' + CoClassUUID + '}', 1);
 	var exploded = CoClassGUID2.split(",");
@@ -176,10 +179,17 @@ function AddConfig100(proj, strProjectName)
     var config = proj.Object.Configurations('Debug');
     var MIDLTool = config.Tools('VCMIDLTool');
     MIDLTool.TypeLibraryName = "$(ProjectDir)%(FileName).tlb";
+    if (dte.Version == '12.0' ) {
+        // http://blogs.msdn.com/b/vcblog/archive/2013/07/08/mfc-support-for-mbcs-deprecated-in-visual-studio-2013.aspx
+        config.CharacterSet = charSetUNICODE;
+    }
     
     config = proj.Object.Configurations('Release');
     MIDLTool = config.Tools('VCMIDLTool');
     MIDLTool.TypeLibraryName = "$(ProjectDir)%(FileName).tlb";
+    if (dte.Version == '12.0' ) {
+        config.CharacterSet = charSetUNICODE;
+    }
 }
 
 function AddConfig90(proj, strProjectName)

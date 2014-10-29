@@ -11,7 +11,7 @@
 // the terms of this license. You must not remove this notice, or
 // any other, from this software.
 
-// Setup program for the GME Component Wizard for VC++ 11.0 (Visual Studio 2012)
+// Setup program for the GME Component Wizard for VC++ 12.0 (Visual Studio 2013)
 
 
 main();
@@ -76,15 +76,15 @@ function main()
 
 	try
 	{
-		var strVC11Key = "HKLM\\Software\\Microsoft\\VisualStudio\\11.0\\Setup\\VC\\ProductDir";
-		strValue = WSShell.RegRead(strVC11Key);
+		var strVC12Key = "HKLM\\Software\\Microsoft\\VisualStudio\\12.0\\Setup\\VC\\ProductDir";
+		strValue = WSShell.RegRead(strVC12Key);
 	}
 	catch(e)
 	{
 		try
 		{
-			var strVC11Key_x64 = "HKLM\\Software\\Wow6432Node\\Microsoft\\VisualStudio\\11.0\\Setup\\VC\\ProductDir";
-			strValue = WSShell.RegRead(strVC11Key_x64);
+			var strVC12Key_x64 = "HKLM\\Software\\Wow6432Node\\Microsoft\\VisualStudio\\12.0\\Setup\\VC\\ProductDir";
+			strValue = WSShell.RegRead(strVC12Key_x64);
 		}
 		catch(e)
 		{
@@ -151,9 +151,9 @@ function main()
 			{
 				var strLine = fileSrc.ReadLine();
 				if(strLine.indexOf("Wizard=VsWizard.VsWizardEngine") != -1)
-					strLine = "Wizard=VsWizard.VsWizardEngine.11.0";
+					strLine = "Wizard=VsWizard.VsWizardEngine.12.0";
 				else if(strLine.indexOf("WIZARD_VERSION") != -1)
-					strLine = "Param=\"WIZARD_VERSION = 11.0\"";
+					strLine = "Param=\"WIZARD_VERSION = 12.0\"";
 				else if(strLine.indexOf("ABSOLUTE_PATH") != -1)
 					strLine = "Param=\"ABSOLUTE_PATH = " + strSourceFolder + "\"";
 				fileDest.WriteLine(strLine);

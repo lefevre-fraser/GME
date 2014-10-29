@@ -94,11 +94,11 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	project->setAutoCommit( false);
 #endif
 	using namespace GMEConsole;
-	Console::Out::WriteLine("Interpreter started...");
+	Console::Out::WriteLine(_T("Interpreter started..."));
 	// ======================
 	// TODO: Insert application specific code here
 
-	Console::Out::WriteLine("Interpreter completed...");
+	Console::Out::WriteLine(_T("Interpreter completed..."));
 }
 
 // ====================================================

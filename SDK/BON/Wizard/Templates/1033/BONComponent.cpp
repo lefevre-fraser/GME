@@ -17,7 +17,7 @@ void CComponent::Invoke(CBuilder &builder,CBuilderObjectList &selected, long par
 void CComponent::InvokeEx(CBuilder &builder,CBuilderObject *focus, CBuilderObjectList &selected, long param) 
 {
 	using namespace GMEConsole;
-	Console::Out::WriteLine("Interpreter started...");
+	Console::Out::WriteLine(_T("Interpreter started..."));
 	AfxMessageBox(_T("GME Component --- Sample rf:") + builder.GetRootFolder()->GetName(), MB_OK | MB_ICONSTOP);
-	Console::Out::WriteLine("Interpreter completed...");
+	Console::Out::WriteLine(_T("Interpreter completed..."));
 }

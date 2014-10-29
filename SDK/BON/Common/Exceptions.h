@@ -51,7 +51,7 @@ inline void COMCHECK2(T* p, const HRESULT hr)
 			}
 
 			BON::Exception exception(hr, "?");
-			exception << static_cast<const TCHAR*>(bstr);
+			exception << static_cast<const char*>(bstr);
 			throw exception;
 		} else {
 			if (supportErrorInfo != NULL) {

@@ -69,7 +69,7 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 			if (currentobj)
 				focusname = currentobj->Name;
 			using namespace GMEConsole;
-			Console::Out::WriteLine("Interpreter started...");
+			Console::Out::WriteLine(_T("Interpreter started..."));
 			AfxMessageBox(_T("RAW Com Component --- Plugin!!!! Sample (project: ") + project->Name +
 						_T(", focus: ") + focusname);
 			if (invokeExStartedATransaction)
