@@ -2092,6 +2092,14 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 						m_strPath += data;
 					}
 				}
+			} else {
+				// VS2012 puts quotes around the dll path
+				if (m_strPath[0] == L'\"') {
+					m_strPath = m_strPath.Right(m_strPath.GetLength() - 1);
+				}
+				if (m_strPath[m_strPath.GetLength() - 1] == L'\"') {
+					m_strPath = m_strPath.Left(m_strPath.GetLength() - 1);
+				}
 			}
 		}
 		CopyTo(m_strPath, pVal);
