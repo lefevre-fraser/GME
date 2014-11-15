@@ -12,7 +12,8 @@ class ATL_NO_VTABLE CMgaMetaModel :
 	public CComCoClass<CMgaMetaModel, &__uuidof(MgaMetaModel)>,
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public IDispatchImpl<IMgaMetaModel, &__uuidof(IMgaMetaModel), &__uuidof(__MGAMetaLib)>,
-	public CMgaMetaFCO
+	public CMgaMetaFCO,
+	public ISupportErrorInfo
 {
 public:
 	IUnknown *GetUnknown() const { return (IMgaMetaModel*)this; }
@@ -25,9 +26,20 @@ BEGIN_COM_MAP(CMgaMetaModel)
 	COM_INTERFACE_ENTRY(IMgaMetaFCO)
 	COM_INTERFACE_ENTRY2(IMgaMetaBase, CMgaMetaBase)
 	COM_INTERFACE_ENTRY2(IDispatch, IMgaMetaModel)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 
 DECLARE_MGAMETAFCO()
+
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)
+	{
+		return (
+			IsEqualGUID(riid, __uuidof(IMgaMetaModel))
+			|| IsEqualGUID(riid, __uuidof(IMgaMetaFCO))
+			|| IsEqualGUID(riid, __uuidof(IMgaMetaBase))
+			|| IsEqualGUID(riid, __uuidof(IDispatch))
+			) ? S_OK : S_FALSE;
+	}
 
 public:
 	STDMETHOD(get_DefinedFCOs)(IMgaMetaFCOs **p)

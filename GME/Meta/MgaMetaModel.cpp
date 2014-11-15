@@ -25,26 +25,32 @@ STDMETHODIMP CMgaMetaModel::get_DefinedFCOByName(BSTR name, VARIANT_BOOL inscope
 			CComBstrObj n;
 			(*i).GetStringValue(ATTRID_NAME, PutOut(n));
 			
-			if( equal(n, name))//if( n == name )
-				COMRETURN( ::QueryInterface(*i, p) );
+			if (equal(n, name)) {
+				HRESULT hr = ::QueryInterface(*i, p);
+				if (FAILED(hr))
+					COMTHROW(hr);
+				return hr;
+			}
 
 			++i;
 		}
 
 		if( inscope == VARIANT_FALSE )
-			COMRETURN(E_NOTFOUND);
+			COMTHROW(E_NOTFOUND);
 
 		CComObjPtr<IMgaMetaBase> parent;
 		COMTHROW( get_DefinedIn(PutOut(parent)) );
 		ASSERT( parent != NULL );
 
 		CComObjPtr<IMgaMetaFolder> folder;
-		if( SUCCEEDED(parent.QueryInterface(folder)) )
-			COMRETURN( folder->get_DefinedFCOByName(name, inscope, p) );
+		if( SUCCEEDED(parent.QueryInterface(folder)) ) {
+			*p = folder->DefinedFCOByName[name, inscope].Detach();
+			return S_OK;
+		}
 
 		CComObjPtr<IMgaMetaModel> model;
 		COMTHROW( parent.QueryInterface(model) );
-		COMRETURN( model->get_DefinedFCOByName(name, inscope, p) );
+		*p = model->DefinedFCOByName[name, inscope].Detach();
 	}
 	COMCATCH(;)
 }
@@ -68,13 +74,17 @@ STDMETHODIMP CMgaMetaModel::get_RoleByName(BSTR name, IMgaMetaRole **p)
 			CComBstrObj n;
 			(*i).GetStringValue(ATTRID_NAME, PutOut(n));
 			
-			if( equal(n, name))//if( n == name )
-				COMRETURN( ::QueryInterface(*i, p) );
+			if (equal(n, name)) {
+				HRESULT hr = ::QueryInterface(*i, p);
+				if (FAILED(hr))
+					COMTHROW(hr);
+				return hr;
+			}
 
 			++i;
 		}
 
-		COMRETURN(E_NOTFOUND);
+		COMTHROW(E_NOTFOUND);
 	}
 	COMCATCH(;)
 }
@@ -97,13 +107,16 @@ STDMETHODIMP CMgaMetaModel::get_AspectByName(BSTR name, IMgaMetaAspect **p)
 			CComBstrObj n;
 			(*i).GetStringValue(ATTRID_NAME, PutOut(n));
 			
-			if( n == name )
-				COMRETURN( ::QueryInterface(*i, p) );
-
+			if( n == name ) {
+				HRESULT hr =::QueryInterface(*i, p);
+				if (FAILED(hr))
+					COMTHROW(hr);
+				return hr;
+			}
 			++i;
 		}
 
-		COMRETURN(E_NOTFOUND);
+		COMTHROW(E_NOTFOUND);
 	}
 	COMCATCH(;)
 }
@@ -299,13 +312,13 @@ STDMETHODIMP CMgaMetaModel::CreateRole(IMgaMetaFCO *kind, IMgaMetaRole **p)
 {
 	CHECK_OUT(p);
 
-	if( kind == NULL )
-		COMRETURN(E_POINTER);
-
 	ASSERT( metaprojectref != NULL );
 
 	COMTRY
 	{
+		if( kind == NULL )
+			COMTHROW(E_POINTER);
+
 		CCoreObjectPtr self(GetUnknown());
 		ASSERT( self != NULL );
 

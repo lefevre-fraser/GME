@@ -12,7 +12,8 @@ class ATL_NO_VTABLE CMgaMetaRole :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CMgaMetaRole, &__uuidof(MgaMetaRole)>,
 	public IDispatchImpl<IMgaMetaRole, &__uuidof(IMgaMetaRole), &__uuidof(__MGAMetaLib)>,
-	public CMgaMetaBase
+	public CMgaMetaBase,
+	public ISupportErrorInfo
 {
 public:
 	IUnknown *GetUnknown() const { return (IMgaMetaRole*)this; }
@@ -24,9 +25,19 @@ BEGIN_COM_MAP(CMgaMetaRole)
 	COM_INTERFACE_ENTRY(IMgaMetaRole)
 	COM_INTERFACE_ENTRY2(IMgaMetaBase, CMgaMetaBase)
 	COM_INTERFACE_ENTRY2(IDispatch, IMgaMetaRole)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
 
 DECLARE_MGAMETABASE()
+
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)
+	{
+		return (
+			IsEqualGUID(riid, __uuidof(IMgaMetaRole))
+			|| IsEqualGUID(riid, __uuidof(IMgaMetaBase))
+			|| IsEqualGUID(riid, __uuidof(IDispatch))
+			) ? S_OK : S_FALSE;
+	}
 
 public:
 	STDMETHOD(get_ParentModel)(IMgaMetaModel **p)
