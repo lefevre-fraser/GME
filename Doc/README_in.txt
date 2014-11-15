@@ -194,7 +194,7 @@ Release Notes of Release 12.7.27
   - Display DispayName under "Insert New Model" (if there is only one role)
   - MetaDecorator: don't try to edit names under libraries
   - DecoratorLib: allow use of #import by clients
-  - XME export: export src/dst in a predicatable order for self-connections
+  - XME export: export src/dst in a predictable order for self-connections
 
 Release Notes of Release 12.7.5
 ----------------------------------
