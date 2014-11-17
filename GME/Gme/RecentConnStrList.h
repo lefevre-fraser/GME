@@ -26,15 +26,18 @@ public:
 	{ return m_arrNames[nIndex]; }
 
 // Operations
-	void Remove(int nIndex);
-	void Add(LPCTSTR lpszConnName);
 	BOOL GetDisplayName(CString& strName, int nIndex) const;
 	void UpdateMenu(CCmdUI* pCmdUI,bool enable);
 	void ReadList();    // reads from registry or ini file
-	void WriteList();   // writes to registry or ini file
+	void AddAndWriteList(LPCTSTR lpszConnName);
 
-// Implementation
+	// Implementation
 	virtual ~CRecentConnStrList();
+
+private:
+	void Add(LPCTSTR lpszConnName);
+	void Remove(int nIndex);
+	void WriteList();   // writes to registry or ini file
 
 	std::vector<CString> m_arrNames;
 	CString m_strSectionName;   // for saving

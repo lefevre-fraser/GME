@@ -133,6 +133,13 @@ void CRecentConnStrList::UpdateMenu(CCmdUI* pCmdUI, bool enable)
 	pCmdUI->m_bEnableChanged = TRUE;    // all the added items are enabled
 }
 
+void CRecentConnStrList::AddAndWriteList(LPCTSTR lpszConnName)
+{
+	ReadList();
+	Add(lpszConnName);
+	WriteList();
+}
+
 void CRecentConnStrList::WriteList()
 {
 	ASSERT(m_arrNames.size() > 0);

@@ -496,8 +496,7 @@ void CGMEApp::EmergencySave(void)
 										   (hr == S_OK)? _T("has") : _T("might have"),
 										   embackupname);
 			AfxMessageBox(emergencySaveMsg);
-			m_RecentProjectList.Add(embackupname);
-			m_RecentProjectList.WriteList();
+			m_RecentProjectList.AddAndWriteList(embackupname);
 		}
 	}
 }
@@ -1273,8 +1272,7 @@ void CGMEApp::AfterOpenOrCreateProject(const CString &conn)
 		ChangedProjectConnStrings();
 // record connection name
 		currentConnection = conn;
-		m_RecentProjectList.Add(conn);
-		m_RecentProjectList.WriteList();
+		m_RecentProjectList.AddAndWriteList(conn);
 		if (!CGMEDoc::theInstance) {
 			CWinAppEx::OnFileNew();
 		}
@@ -1713,8 +1711,7 @@ void CGMEApp::SaveProject(const CString &conn) {
 	if ((!conn.IsEmpty()) && (currentConnection != conn)) {
 		ChangedProjectConnStrings();
 		currentConnection = conn;
-		m_RecentProjectList.Add(conn);
-		m_RecentProjectList.WriteList();
+		m_RecentProjectList.AddAndWriteList(conn);
 	}
 }	
 
