@@ -10,6 +10,7 @@ def id2guid(filename, output_filename):
         if element.get('id') and element.get('guid'):
             id_guid_map[element.get('id')] = element.get('guid')
             del element.attrib['id']
+    for element in xme.iter():
         if element.get('derivedfrom'):
             element.attrib['derivedfrom'] = id_guid_map[element.get('derivedfrom')]
     for element in xme.iter('reference'):
