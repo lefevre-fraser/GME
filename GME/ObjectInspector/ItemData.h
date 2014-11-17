@@ -42,7 +42,6 @@ public:
 	void toString();
 	bool toString(CString &)const;
 	bool Validate();
-	bool IsAsciiString();
 
 	CItemData();
 	virtual ~CItemData();
