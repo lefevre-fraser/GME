@@ -38,6 +38,12 @@ BEGIN_COM_MAP(CCoreObject)
 	COM_INTERFACE_ENTRY_FUNC_BLIND(0, &CCoreObject::AggregatedInterfaceLookup)
 END_COM_MAP()
 
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid)
+	{
+		// TODO: go through all the aggregates and look for that interface?
+		return true ? S_OK : S_FALSE;
+	}
+
 	static HRESULT WINAPI AggregatedInterfaceLookup(void *pvThis, REFIID riid, LPVOID *ppv, DWORD_PTR dw);		
 
 // ------- COM methods
