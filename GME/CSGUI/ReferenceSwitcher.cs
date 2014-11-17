@@ -237,7 +237,11 @@ namespace CSGUI
                 while( references.Count != 0 ) {
                     IMgaReference refe = references.Dequeue();
 
-                    foreach( IMgaConnPoint connPoint in refe.UsedByConns ) {
+                    foreach (IMgaConnPoint connPoint in refe.UsedByConns) {
+                        if (connPoint.References[1] != refe)
+                        {
+                            continue;
+                        }
                         IMgaFCO fco2Port;
                         if( newRefeChildren.TryGetValue( connPoint.Target.Name, out fco2Port ) ) {
                             if( fco2Port == null ) {
