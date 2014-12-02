@@ -47,6 +47,10 @@
         <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\ISIS.GME.Common.dll" KeyPath="yes" Assembly=".net"/>
         <Condition>NETFRAMEWORK40</Condition>
       </Component>
+      <Component Id="ISIS.GME.Common.dll.1.0.4.0" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR_1_0_4_0" Guid="{C627CFC3-A8D1-47EB-AFF9-D1309EE08DC6}" Permanent="yes">
+        <File Id="ISIS.GME.Common.dll.1.0.4.0" Source="..\SDK\DotNet\DsmlGenerator\ISIS.GME.Common\1.0.4.0\ISIS.GME.Common.dll" KeyPath="yes" Assembly=".net"/>
+        <Condition>NETFRAMEWORK40</Condition>
+      </Component>
       <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
         <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\MgaMeta.dll" />
       </Component>

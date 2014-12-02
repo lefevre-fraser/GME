@@ -217,7 +217,9 @@
             </Directory>
             <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSORx86' Name='PatternProcessor' />
             <Directory Id='INSTALLDIR_SDK_DOTNET' Name='DotNet'>
-              <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR' Name='CSharpDSMLGenerator'/>
+              <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR' Name='CSharpDSMLGenerator'>
+                <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR_1_0_4_0' Name='1.0.4.0'/>
+              </Directory>
             </Directory>
             <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSOR' Name='PatternProcessor' />
             <Directory Id='INSTALLDIR_SDK_SCRIPTS' Name='Scripts' />
