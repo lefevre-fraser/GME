@@ -47,7 +47,7 @@
           <RegistryValue Name='Path' Type='string' Value='[INSTALLDIR$(sys.BUILDARCH)]'/>
         </RegistryKey>
 
-        <ProgId Id='GME.mgafile$(sys.BUILDARCH)' Description='GME project file'>
+        <ProgId Id='GME.mgafile' Description='GME project file'>
           <Extension Id='mga' ContentType='application/x-mga'>
             <?if $(sys.BUILDARCH)=x86 ?>
             <Verb Id='open' Command='Open with GME' TargetFile='GME.exe$(sys.BUILDARCH)' Argument='"%1"' />
