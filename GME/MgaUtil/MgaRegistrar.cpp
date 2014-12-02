@@ -63,6 +63,56 @@ CString QueryValue(CRegKey &key, const TCHAR *name)
 
 void REVOKE_SYS2(regaccessmode_enum &mode) { *(int *)&mode &= ~RM_SYS2; }
 
+enum Tristate_t {
+	Tristate_Enabled,
+	Tristate_Disabled,
+	Tristate_Not_Specified,
+};
+
+bool Combine_Tristate(Tristate_t user, Tristate_t system, bool default_ = false) {
+	if (user != Tristate_Not_Specified) {
+		return user == Tristate_Enabled;
+	}
+	if (system != Tristate_Not_Specified) {
+		return system == Tristate_Enabled;
+	}
+	return default_;
+}
+
+Tristate_t IsAssociated_hive(const CString& progidstr, const CString& paradigmstr, HKEY hive) {
+	CRegKey acomp;
+
+	if (acomp.Open(hive, rootreg + _T("\\Components\\") + progidstr + _T("\\Associated"), KEY_READ) != ERROR_SUCCESS) {
+		return Tristate_Not_Specified;
+	}
+	ULONG count = 0;
+	DWORD res = acomp.QueryValue(paradigmstr, NULL, NULL, &count);
+	if (res != ERROR_SUCCESS) {
+		return Tristate_Not_Specified;
+	}
+	CString val;
+	if (acomp.QueryStringValue(paradigmstr, val.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+		val.ReleaseBuffer();
+		if (val == _T("Disabled")) {
+			return Tristate_Disabled;
+		}
+	}
+	return Tristate_Enabled;
+}
+
+bool IsAssociated_regaccess(const CString& progidstr, const CString& paradigmstr, regaccessmode_enum mode) {
+	if (mode & REGACCESS_BOTH) {
+		return  Combine_Tristate(
+			IsAssociated_hive(progidstr, paradigmstr, HKEY_CURRENT_USER),
+			IsAssociated_hive(progidstr, paradigmstr, HKEY_LOCAL_MACHINE));
+	} else if (mode & REGACCESS_USER) {
+		return IsAssociated_hive(progidstr, paradigmstr, HKEY_CURRENT_USER) == Tristate_Enabled;
+	} else if (mode & REGACCESS_SYSTEM) {
+		return IsAssociated_hive(progidstr, paradigmstr, HKEY_LOCAL_MACHINE) == Tristate_Enabled;
+	}
+	return false;
+}
+
 STDMETHODIMP CMgaRegistrar::get_IconPath(regaccessmode_enum mode, BSTR *path)
 {
 	CHECK_OUT(path);
@@ -1248,65 +1298,6 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 	} COMCATCH(;)
 }
 
-
-
-/*
-bool CheckHasConstraints(IMgaMetaBase *o) {
-	{
-		CComPtr<IMgaConstraints> consts;
-		long l;
-		COMTHROW(f->get_Constraints(&consts));
-		COMTHROW(consts->get_Count(&l));
-		if(l > 0) return true;
-	}
-	CComQIPtr<IMgaMetaFolder> f = o;
-	if(f) {
-		CComPtr<IMgaMetaFolders> fs;
-		COMTHROW(f->get_DefinedFolders(&fs));
-		MGACOLL_ITERATE(IMgaMetaFolder, fs) {
-			if(CheckHasConstraints(MGACOLL_ITER)) return true;
-		} MGACOLL_ITERATE_END;
-		CComPtr<IMgaMetaFCOs> fcs;
-		COMTHROW(f->get_DefinedFCOs(&fcs));
-		MGACOLL_ITERATE(IMgaMetaFCO, fcs) {
-			if(CheckHasConstraints(MGACOLL_ITER)) return true;
-		} MGACOLL_ITERATE_END;
-	}
-	else {
-		CComQIPtr<IMgaMetaModel> m = o;
-		if(m) {
-			CComPtr<IMgaMetaFCOs> fcs;
-			COMTHROW(m->get_DefinedFCOs(&fcs));
-			MGACOLL_ITERATE(IMgaMetaFCO, fcs) {
-				if(CheckHasConstraints(MGACOLL_ITER)) return true;
-			} MGACOLL_ITERATE_END;
-		}		
-	}
-}
-
-
-bool ParadigmHasConstraints(BSTR connstr) {
-	bool hasconstraints = false;
-	int openstate = 0;
-	COMTRY {
-		CComPtr<IMgaMetaProject> pp;
-		COMTHROW(pp.CoCreateInstance("Mga.MgaMetaProject"));
-		COMTHROW(pp->Open(connstr));
-		openstate = 1;
-		CComPtr<IMgaMetaFolder> f;
-		COMTHROW(pp->get_RootFolder(&f));
-	
-		hasconstraints = CheckHasConstraints(f);
-
-	} 	catch(hresult_exception &) { ; }
-	if(openstate) {
-		COMTHROW(pp->Close());
-	}
-	return hasconstraints;
-}
-*/
-
-
 STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR version, VARIANT guid, regaccessmode_enum mode)
 {
 	CString cver(version); 
@@ -1327,7 +1318,7 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 
 		CComBstrObj guid3;
 		CopyTo(guid2, guid3);
-	
+
 		if(mode & RM_USER) {
 			CRegKey mga;
 			ERRTHROW(mga.Create(HKEY_CURRENT_USER, rootreg) );
@@ -1357,7 +1348,7 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 
 			CRegKey par;
 
-			if(mode & RM_SYS) {
+			if (mode & RM_SYS) {
 				WIN32THROW( par.Create(pars, CString(name)) );
 				CString gg	= QueryValue(par, _T("GUID"));
 				CString gc	= QueryValue(par, _T("ConnStr"));
@@ -1375,13 +1366,16 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigm(BSTR name, BSTR connstr, BSTR versi
 				}
 				CRegKey parg;
 				WIN32THROW( parg.Create(par, PutInCString(guid3)) );
-	
+
 				WIN32THROW( parg.SetStringValue( _T("ConnStr"), CString(connstr)));
-			}
-			else {
+			} else {
 				LONG res = par.Open(pars, CString(name));
 				if(res != ERROR_SUCCESS && res != ERROR_FILE_NOT_FOUND) WIN32THROW(res);
 			}
+		}
+		if ((!(mode & RM_USER) || IsAssociated_hive(L"Mga.AddOn.ConstraintManager", name, HKEY_CURRENT_USER) != Tristate_Disabled) &&
+			(!(mode & RM_SYS) || IsAssociated_hive(L"Mga.AddOn.ConstraintManager", name, HKEY_LOCAL_MACHINE) != Tristate_Disabled)) {
+			Associate(CComBSTR(L"Mga.AddOn.ConstraintManager"), name, mode); // no error checking
 		}
 	}
 	COMCATCH(;)
@@ -2106,56 +2100,6 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 
 	}
 	COMCATCH(;)
-}
-
-enum Tristate_t {
-	Tristate_Enabled,
-	Tristate_Disabled,
-	Tristate_Not_Specified,
-};
-
-bool Combine_Tristate(Tristate_t user, Tristate_t system, bool default_ = false) {
-	if (user != Tristate_Not_Specified) {
-		return user == Tristate_Enabled;
-	}
-	if (system != Tristate_Not_Specified) {
-		return system == Tristate_Enabled;
-	}
-	return default_;
-}
-
-Tristate_t IsAssociated_hive(const CString& progidstr, const CString& paradigmstr, HKEY hive) {
-	CRegKey acomp;
-
-	if (acomp.Open(hive, rootreg + _T("\\Components\\") + progidstr + _T("\\Associated"), KEY_READ) != ERROR_SUCCESS) {
-		return Tristate_Not_Specified;
-	}
-	ULONG count = 0;
-	DWORD res = acomp.QueryValue(paradigmstr, NULL, NULL, &count);
-	if (res != ERROR_SUCCESS) {
-		return Tristate_Not_Specified;
-	}
-	CString val;
-	if (acomp.QueryStringValue(paradigmstr, val.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
-		val.ReleaseBuffer();
-		if (val == _T("Disabled")) {
-			return Tristate_Disabled;
-		}
-	}
-	return Tristate_Enabled;
-}
-
-bool IsAssociated_regaccess(const CString& progidstr, const CString& paradigmstr, regaccessmode_enum mode) {
-	if (mode & REGACCESS_BOTH) {
-		return  Combine_Tristate(
-				IsAssociated_hive(progidstr, paradigmstr, HKEY_CURRENT_USER),
-				IsAssociated_hive(progidstr, paradigmstr, HKEY_LOCAL_MACHINE));
-	} else if (mode & REGACCESS_USER) {
-		return IsAssociated_hive(progidstr, paradigmstr, HKEY_CURRENT_USER) == Tristate_Enabled;
-	} else if (mode & REGACCESS_SYSTEM) {
-		return IsAssociated_hive(progidstr, paradigmstr, HKEY_LOCAL_MACHINE) == Tristate_Enabled;
-	}
-	return false;
 }
 
 STDMETHODIMP CMgaRegistrar::get_AssociatedComponents(BSTR paradigm, 
