@@ -25,6 +25,15 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes of Release 14.12.4
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix regression since 14.10.8 where .mga files opened with GME (64 bit). .mga files now correctly open with GME (32 bit)
+  - Associate ConstraintManager with newly-registered paradigms (GME-446)
+  - DsmlGenerator: include ISIS.GME.Common.dll 1.0.4.0 in installer
+  - Drag-n-drop reference switch with refports: fix bug with R2->R1->M1 chain when switching R1 and R2 had refport connections
+  - Fix icon for C++ dlls compiled with VS2012+
+
 Release Notes of Release 14.10.29
 ----------------------------------
   - Binary compatibility with 11.12.2

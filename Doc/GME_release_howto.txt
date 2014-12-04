@@ -5,22 +5,23 @@ Update release notes: Doc/README_in.txt
 Update version number: Doc/index.md
 curl -s -S http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastBuild/consoleText | grep Finding\ ID
 curl -s -S http://build.isis.vanderbilt.edu/job/GME_x64/lastBuild/label=build-slave6/consoleText | grep Finding\ ID
-ssh kms1 'cd symbolstmp && python ~/bin/pdb_promote.py 0000011821 0000011822' # x2 "Finding ID"
+ssh kms1 'cd symbolstmp && python ~/bin/pdb_promote.py 0000012164 0000012165' # x2 "Finding ID"
 ssh kms1 rsync -avP symbols /media/7ce1528b-2101-4764-81e3-aed9112e3ad8/214/
 export PATH=$PATH:/c/cygwin/bin:"/c/Program Files/7-Zip/:/cygdrive/c/Program Files/7-Zip/"
-curl -o GME_x64-14.10.29.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
-curl -o GME-14.10.29.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
+curl -o GME_x64-14.12.4.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
+curl -o GME-14.12.4.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
 curl -o README.txt http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
 
-for file in http://build.isis.vanderbilt.edu/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.msm http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.msm http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.msm http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.msm; do curl -O $file; done
+#!/bin/bash
+for file in http://build.isis.vanderbilt.edu/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.wixlib; do curl -O $file; done
 
-svn cp -m 'Tag Release 14.10.29' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.10.29
-svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.10.29 GME-14.10.29_src && \
-7z.exe a GME-14.10.29_src.zip GME-14.10.29_src/
+svn cp -m 'Tag Release 14.12.4' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.12.4
+svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_14.12.4 GME-14.12.4_src && \
+7z.exe a GME-14.12.4_src.zip GME-14.12.4_src/
 
-ssh repo@repo.isis.vanderbilt.edu mkdir GME/14.10.29/ && \
-scp README.txt GME-14.10.29.msi GME_x64-14.10.29.msi GME-14.10.29_src.zip repo@repo.isis.vanderbilt.edu:GME/14.10.29/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.10.29/
+ssh repo@repo.isis.vanderbilt.edu mkdir GME/14.12.4/ && \
+scp README.txt GME-14.12.4.msi GME_x64-14.12.4.msi GME-14.12.4_src.zip repo@repo.isis.vanderbilt.edu:GME/14.12.4/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.12.4/
 
 
 # Update online documentation:
@@ -35,11 +36,12 @@ rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include
 #  c:\Python27\python.exe install_setup.py py2exe && move /y dist\install.exe .\install.exe
 
 Install GME on VM, check for missing symbols
-set _NT_SYMBOL_PATH=srv*c:\GME_14.10.29_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
+set _NT_SYMBOL_PATH=srv*c:\GME_14.12.4_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
+mkdir c:\GME_14.12.4_symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files\GME"
-"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_14.10.29_symbols.7z c:\GME_14.10.29_symbols
-copy %userprofile%\GME_14.10.29_symbols.7z \\vboxsrv\xfer
+"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_14.12.4_symbols.7z c:\GME_14.12.4_symbols
+copy %userprofile%\GME_14.12.4_symbols.7z \\vboxsrv\xfer
 
-scp Desktop/xfer/GME_14.10.29_symbols.7z repo@repo.isis.vanderbilt.edu:GME/14.10.29/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.10.29/
+scp Desktop/xfer/GME_14.12.4_symbols.7z repo@repo.isis.vanderbilt.edu:GME/14.12.4/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/14.12.4/
