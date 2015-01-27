@@ -1157,7 +1157,7 @@ BEGIN
             VALUE "FileDescription", "GME"
             VALUE "FileVersion", GME_VERSION_STR
             VALUE "InternalName", "GME"
-            VALUE "LegalCopyright", "Copyright (C) 1999-2014 ISIS, Vanderbilt University"
+            VALUE "LegalCopyright", "Copyright (C) 1999-2015 ISIS, Vanderbilt University"
             VALUE "OriginalFilename", "GME.EXE"
             VALUE "ProductName", "GME Application"
             VALUE "ProductVersion", GME_VERSION_STR
