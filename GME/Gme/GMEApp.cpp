@@ -1547,10 +1547,8 @@ void CGMEApp::OpenProject(const CString &conn) {
 					}
 				}
 				if(hr == E_MGA_COMPONENT_ERROR) {
-					_bstr_t errorInfo;
-					GetErrorInfo(errorInfo.GetAddress());
 					_bstr_t err(_T("ERROR: automatic addon components could not start up:\n"));
-					err += errorInfo;
+                    err += mgaProjectOpenError;
 					err += "\nDo you want to open the project without addons?";
 					if (AfxMessageBox(err, MB_YESNO) == IDYES) {
 						enableAutoAddOns = VARIANT_FALSE;
