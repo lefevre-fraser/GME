@@ -173,29 +173,36 @@ BOOL CAnnotationBrowserDlg::OnInitDialog()
 
 	int listIdx = 0, focusIdx = 0;
 	POSITION pos = m_annotations.GetHeadPosition();
-	while (pos) {
-		CAnnotationNode *node = m_annotations.GetNext(pos);
-		LVITEM lvItem;
-		lvItem.mask = LVIF_PARAM | LVIF_TEXT;
-		lvItem.iItem = listIdx++;
-		lvItem.iSubItem = 0;
-		lvItem.pszText = node->m_name.GetBuffer(node->m_name.GetLength());
-		lvItem.lParam = (LPARAM)node;
+	if (pos) {
+		while (pos) {
+			CAnnotationNode *node = m_annotations.GetNext(pos);
+			LVITEM lvItem;
+			lvItem.mask = LVIF_PARAM | LVIF_TEXT;
+			lvItem.iItem = listIdx++;
+			lvItem.iSubItem = 0;
+			lvItem.pszText = node->m_name.GetBuffer(node->m_name.GetLength());
+			lvItem.lParam = (LPARAM)node;
 
-		int retIdx = m_wndAnnotationList.InsertItem(&lvItem);
-		if (node->m_regNode.IsEqualObject(m_focus)) {
-			focusIdx = retIdx;
+			int retIdx = m_wndAnnotationList.InsertItem(&lvItem);
+			if (node->m_regNode->Path == m_focus->Path) {
+				focusIdx = retIdx;
+			}
+
+			lvItem.mask = LVIF_TEXT;
+			lvItem.iItem = retIdx;
+			lvItem.iSubItem = 1;
+			lvItem.pszText = node->m_text.GetBuffer(node->m_text.GetLength());
+			m_wndAnnotationList.SetItem(&lvItem);
 		}
-
-		lvItem.mask = LVIF_TEXT;
-		lvItem.iItem = retIdx;
-		lvItem.iSubItem = 1;
-		lvItem.pszText = node->m_text.GetBuffer(node->m_text.GetLength());
-		m_wndAnnotationList.SetItem(&lvItem);
+		m_wndAnnotationList.SetItemState(focusIdx, LVIS_SELECTED, LVIS_SELECTED | LVIS_FOCUSED);
+		m_wndAnnotationList.EnsureVisible(focusIdx, FALSE);
 	}
-
-	m_wndAnnotationList.SetItemState(focusIdx, LVIS_SELECTED, LVIS_SELECTED | LVIS_FOCUSED);
-	m_wndAnnotationList.EnsureVisible(focusIdx, FALSE);
+	else
+	{
+		// FIXME: should disable more things, but this gets the point across
+		GetDlgItem(IDC_EDIT_NAME)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_TEXT)->EnableWindow(FALSE);
+	}
 
 	::PostMessage(GetSafeHwnd(), WM_NEXTDLGCTL, (WPARAM)(GetDlgItem(IDC_EDIT_TEXT)->GetSafeHwnd()), TRUE);
 	/*
@@ -335,6 +342,15 @@ void CAnnotationBrowserDlg::OnItemchangedAnnotationList(NMHDR* pNMHDR, LRESULT* 
 		}
 		if ( (!(pNMListView->uNewState & LVIS_SELECTED)) && (pNMListView->uOldState & LVIS_SELECTED) ) {
 			SavePanelToNode(node);		
+		}
+		if (!(pNMListView->uNewState & LVIS_SELECTED) && !this->m_wndAnnotationList.GetFirstSelectedItemPosition()) {
+			GetDlgItem(IDC_EDIT_NAME)->EnableWindow(FALSE);
+			GetDlgItem(IDC_EDIT_TEXT)->EnableWindow(FALSE);
+		}
+		else
+		{
+			GetDlgItem(IDC_EDIT_NAME)->EnableWindow(TRUE);
+			GetDlgItem(IDC_EDIT_TEXT)->EnableWindow(TRUE);
 		}
 	}
 }
