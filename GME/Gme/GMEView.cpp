@@ -1347,7 +1347,7 @@ BOOL CGMEView::OnPreparePrinting(CPrintInfo* pInfo)
 		pInfo->m_pPD->m_pd.nMinPage = 1;      // one based page numbers
         pInfo->m_pPD->m_pd.nMaxPage = 0xffff; // how many pages is unknown
 		pInfo->m_pPD->m_pd.hInstance = AfxGetInstanceHandle();
-		pInfo->m_pPD->m_pd.lpPrintTemplateName = MAKEINTRESOURCE(PRINTDLGORD);
+		pInfo->m_pPD->m_pd.lpPrintTemplateName = MAKEINTRESOURCE(IDD_PRINT_DIALOG);
 	}
 
 	if (!CScrollZoomView::DoPreparePrinting(pInfo))

@@ -67,8 +67,6 @@
 #define IDD_SEARCH_DIALOG               188
 #define IDD_PRINTOPTIONS                196
 #define IDR_TOOLBAR_COMPONENTS          197
-#define IDD_PRINTDLGORD                 202
-#define IDD_PRNSETUPDLGORD              203
 #define ID_PANNWIN                      206
 #define IDD_NEW_MULTIUSER_PROJ_DLG      208
 #define IDD_CONSOLE_DIALOG              209

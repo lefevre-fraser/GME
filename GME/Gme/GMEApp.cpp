@@ -2945,7 +2945,7 @@ void CGMEApp::OnUniquePrintSetup()
 								PD_ENABLESETUPTEMPLATE |
 								PD_ENABLEPRINTHOOK | PD_ENABLESETUPHOOK ;
 	setup.m_pd.hInstance = AfxGetInstanceHandle();
-	setup.m_pd.lpSetupTemplateName = MAKEINTRESOURCE(PRNSETUPDLGORD);
+	setup.m_pd.lpSetupTemplateName = MAKEINTRESOURCE(IDD_PRINTSETUP_DIALOG);
 	DoPrintDialog(&setup);
 }
 
