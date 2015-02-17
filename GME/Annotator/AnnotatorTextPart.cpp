@@ -88,7 +88,7 @@ void AnnotatorTextPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 												 &myFont,
 												 (m_bActive) ? m_crText : DecoratorSDK::COLOR_GRAYED_OUT,
 												 TA_LEFT | TA_TOP,
-												 m_iMaxTextLength,
+												 -1, // annotation texts should not be cropped
 												 "",
 												 "",
 												 false);
