@@ -609,11 +609,11 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 	if ( strName.GetLength() >= 4 ) {
 		strExt = strName.Right( 4 ).MakeLower();
 	
-		if( strName.GetLength() >= 5) // in case of ".jpeg"
+		if( strName.GetLength() >= 5) // in case of ".jpeg" and ".tiff"
 			strEx2 = strName.Right(5).MakeLower();
 		
 		if ( strExt != _T(".bmp") && strExt != _T(".gif") && strExt != _T(".png")
-			&& strExt != _T(".jpg") && strExt != _T(".jpe") && strEx2 != _T(".jpeg")
+			&& strExt != _T(".jpg") && strExt != _T(".jpe") && strEx2 != _T(".jpeg") && strEx2 != _T(".tiff")
 			&& strExt != _T(".res")  && strExt != _T(".wmf") && strExt != _T(".emf"))
 			strExt = _T("");
 	}
@@ -621,7 +621,7 @@ BitmapBase* Facilities::getBitmap( const CString& strName, bool bHasTC, COLORREF
 	if( strExt.IsEmpty()) // if no extension then try the different formats
 	{
 		bool success = false;
-		static TCHAR * exts[] = { _T(".bmp"), _T(".gif"), _T(".png"), _T(".jpg"), _T(".jpe"), _T(".jpeg"), _T(".wmf"), _T(".emf") };
+		static TCHAR * exts[] = { _T(".bmp"), _T(".gif"), _T(".png"), _T(".jpg"), _T(".jpe"), _T(".jpeg"), _T(".tiff"), _T(".wmf"), _T(".emf") };
 		for( int i = 0; !success && i < 6; ++i)
 		{
 			CString strName2 = strName + exts[i];

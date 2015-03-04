@@ -42,6 +42,8 @@ public:
 	virtual CPoint	GetTextPosition				(CDC* pDC, Gdiplus::Graphics* gdip) const;
 
 	ELocation		GetLocationAdjust			(void) const { return m_eAdjust; };
+
+	virtual CString GetText() const;
 };
 
 }; // namespace DecoratorSDK

@@ -68,4 +68,8 @@ CPoint PortLabelPart::GetTextPosition(CDC* pDC, Gdiplus::Graphics* gdip) const
 	return pt;
 }
 
+CString PortLabelPart::GetText() const {
+		return m_vecText[0];
+	}
+
 }; // namespace DecoratorSDK

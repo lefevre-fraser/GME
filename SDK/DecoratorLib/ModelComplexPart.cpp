@@ -6,10 +6,12 @@
 //################################################################################################
 
 #include "StdAfx.h"
+#include "PortLabelPart.h"
 #include "ModelComplexPart.h"
 #include "DecoratorExceptions.h"
 #include <algorithm>
 
+#define MAXIMUM_ICON_SIZE_NONOVERLAPPING_WITH_PORT_LABELS 250
 
 namespace DecoratorSDK {
 
@@ -45,6 +47,11 @@ ModelComplexPart::ModelComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorE
 	m_bPortLabelInside			(true),
 	m_iLongestPortTextLength	(0)
 {
+	m_prominentAttrsCY = 0;
+	m_prominentAttrsNamesCX = 0;
+	m_prominentAttrsValuesCX = 0;
+	m_LeftPortsMaxLabelLength = 0;
+	m_RightPortsMaxLabelLength = 0;
 }
 
 ModelComplexPart::~ModelComplexPart()
@@ -140,27 +147,79 @@ void ModelComplexPart::SetActive(bool bIsActive)
 	TypeableBitmapPart::SetActive(bIsActive);
 }
 
+// [Zsolt] Do not know where to put this utility function
+template<typename IT, typename F>
+int transform_max(IT begin, IT end, F func)
+{
+	int max_ret = INT_MIN;
+	while (begin != end)
+	{
+		max_ret = max(max_ret, func(*begin));
+		++begin;
+	}
+	return max_ret;
+}
+
 CSize ModelComplexPart::GetPreferredSize(void) const
 {
 	CSize size = ResizablePart::GetPreferredSize();
 	bool hasStoredCustomSize = (size.cx * size.cy != 0);
 
 	if (!hasStoredCustomSize && m_LeftPorts.empty() && m_RightPorts.empty()) {
-		if (!m_pBitmap || m_pBitmap->getName() == createResString(IDB_MODEL)) {
+		if (!m_bmp) {
 			return CSize(WIDTH_MODEL, HEIGHT_MODEL);
 		} else {
-			return TypeableBitmapPart::GetPreferredSize();
+			return CSize(m_bmp->GetWidth(), m_bmp->GetHeight());
 		}
 	}
 
-	LOGFONT logFont;
-	getFacilities().GetFont(FONT_PORT)->gdipFont->GetLogFontT(getFacilities().getGraphics(), &logFont);
+	const_cast<ModelComplexPart*>(this)->m_prominentAttrsCY = 0;
+	const_cast<ModelComplexPart*>(this)->m_prominentAttrsNamesCX = 0;
+	const_cast<ModelComplexPart*>(this)->m_prominentAttrsValuesCX = 0;
+
+	int LeftPortsMaxLabelLength = 0;
+	int RightPortsMaxLabelLength = 0;
+	LOGFONTA logFont;
+	getFacilities().GetFont(FONT_PORT)->gdipFont->GetLogFontA(getFacilities().getGraphics(), &logFont);
+	{
+		CDC dc;
+		dc.Attach(GetDC(NULL));
+		Gdiplus::Graphics g(dc);
+		Gdiplus::Font f(dc, &logFont);
+		Gdiplus::PointF zero(0.0, 0.0);
+		Gdiplus::RectF box;
+
+		auto measure_f = [&](const PortPart* portPart) -> int {
+			CStringW porttext = static_cast<PortLabelPart* /* n.b. this lie doesn't matter */>(portPart->GetTextPart())->GetText();
+			g.MeasureString(static_cast<const wchar_t*>(porttext), min(porttext.GetLength(), m_iMaxPortTextLength == 0 ? INT_MAX : m_iMaxPortTextLength), &f, zero, &box);
+			return (int)(box.Width + 0.5f);
+		};
+		int base_port_gap = max(m_iRoundCornerRadius, GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT);
+		LeftPortsMaxLabelLength = max(-base_port_gap, transform_max(this->m_LeftPorts.begin(), m_LeftPorts.end(), measure_f)) + base_port_gap;
+		RightPortsMaxLabelLength = max(-base_port_gap, transform_max(this->m_RightPorts.begin(), m_RightPorts.end(), measure_f)) + base_port_gap;
+		LeftPortsMaxLabelLength = max(m_iRoundCornerRadius, LeftPortsMaxLabelLength);
+		RightPortsMaxLabelLength = max(m_iRoundCornerRadius, RightPortsMaxLabelLength);
+		const_cast<ModelComplexPart*>(this)->m_LeftPortsMaxLabelLength = LeftPortsMaxLabelLength;
+		const_cast<ModelComplexPart*>(this)->m_RightPortsMaxLabelLength = RightPortsMaxLabelLength;
+
+		for (auto prominentIt = prominentAttrs.begin(); prominentIt != prominentAttrs.end(); ++prominentIt)
+		{
+			Gdiplus::RectF prominentNameSize;
+			g.MeasureString(static_cast<const wchar_t*>(prominentIt->name + L": "), -1, &f, zero, &prominentNameSize);
+			Gdiplus::RectF prominentValueSize;
+			g.MeasureString(static_cast<const wchar_t*>(prominentIt->value), -1, &f, zero, &prominentValueSize);
+
+			const_cast<ModelComplexPart*>(this)->m_prominentAttrsCY += max(prominentNameSize.Height, prominentValueSize.Height);
+			const_cast<ModelComplexPart*>(this)->m_prominentAttrsNamesCX = max(m_prominentAttrsNamesCX, prominentNameSize.Width);
+			const_cast<ModelComplexPart*>(this)->m_prominentAttrsValuesCX = max(m_prominentAttrsValuesCX, prominentValueSize.Width);
+		}
+	}
+
 	long lWidth = 0;
 	if (m_bPortLabelInside) {
 		ASSERT(m_iLongestPortTextLength >= 0 && m_iLongestPortTextLength <= 1000);
 		ASSERT(m_iMaxPortTextLength >= 0 && m_iMaxPortTextLength <= 1000);
-		long lw = min(m_iMaxPortTextLength, m_iLongestPortTextLength);
-		lWidth = (24 + 5 * (lw - 3) + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
+		lWidth = LeftPortsMaxLabelLength + RightPortsMaxLabelLength + max(m_prominentAttrsSize.cx, min(TypeableBitmapPart::GetPreferredSize().cx, MAXIMUM_ICON_SIZE_NONOVERLAPPING_WITH_PORT_LABELS));
 	} else {
 		lWidth = (8 * 3 + GAP_LABEL + WIDTH_PORT + GAP_XMODELPORT) * 2 + GAP_PORTLABEL;
 	}
@@ -174,6 +233,9 @@ CSize ModelComplexPart::GetPreferredSize(void) const
 		return size;
 	}
 
+	CSize bitmapSize = TypeableBitmapPart::GetPreferredSize();
+	lWidth = max(lWidth, max(bitmapSize.cx, m_prominentAttrsSize.cx));
+	lHeight = max(lHeight, bitmapSize.cy + m_prominentAttrsSize.cy);
 	const_cast<DecoratorSDK::ModelComplexPart*>(this)->resizeLogic.SetMinimumSize(CSize(lWidth, lHeight));
 	return CSize(max((long) WIDTH_MODEL, lWidth), max((long) HEIGHT_MODEL, lHeight));
 }
@@ -270,6 +332,12 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 	preferences[PREF_TILESUNDEF]	= PreferenceVariant(getFacilities().getTileVector(TILE_PORTDEFAULT));
 
 	if (pFCO) {
+		CString strIcon;
+		getFacilities().getPreference(pFCO, PREF_ICON, strIcon);
+		if (!strIcon.IsEmpty()) {
+			preferences[PREF_ICON] = PreferenceVariant(strIcon);
+		}
+
 		PreferenceMap::iterator it = preferences.find(PREF_PORTLABELCOLOR);
 		if (it != preferences.end())
 			m_crPortText = it->second.uValue.crValue;
@@ -304,6 +372,64 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 
 	if (m_LeftPorts.empty() && m_RightPorts.empty())
 		m_pTileVector = getFacilities().getTileVector(TILE_ATOMDEFAULT);
+
+	PreferenceMap::iterator iconint = preferences.find("iconint");
+	PreferenceMap::iterator icon = preferences.find(PREF_ICON);
+	if (iconint != preferences.end())
+	{
+		m_bmp = std::unique_ptr<Gdiplus::Bitmap>(new Gdiplus::Bitmap(((HINSTANCE)&__ImageBase), (WCHAR*) MAKEINTRESOURCE(iconint->second.uValue.lValue)));
+	}
+	else if (icon != preferences.end() && TypeableBitmapPart::m_bActive)
+	{
+		if ( ! getFacilities().arePathesValid() )
+			return;
+		std::vector<CString> vecPathes = getFacilities().getPathes();
+
+		bool success = false;
+		CString& strFName = *icon->second.uValue.pstrValue;
+
+		for (unsigned int i = 0; i < vecPathes.size() ; i++ )
+		{
+			CString imageFileName = vecPathes[ i ] + strFName;
+			// The graphics file formats supported by GDI+ are BMP, GIF, JPEG, PNG, TIFF, Exif, WMF, and EMF.
+			m_bmp = std::unique_ptr<Gdiplus::Bitmap>(Gdiplus::Bitmap::FromFile(CStringW(imageFileName)));
+			if( m_bmp && m_bmp->GetLastStatus() == Gdiplus::Ok)
+			{
+				UINT widthToSet = m_bmp->GetWidth();
+				UINT heightToSet = m_bmp->GetHeight();
+				ASSERT( widthToSet > 0);	// valid sizes, otherwise AutoRouter fails
+				ASSERT( heightToSet > 0);
+				break;
+			}
+			else
+			{
+				m_bmp = nullptr;
+			}
+		}
+	}
+
+	if (preferences.find(brushColorVariableName) == preferences.end() &&
+		getFacilities().getPreference(m_spFCO, m_spMetaFCO, brushColorVariableName, m_crBrush) == false)
+	{
+		m_crBrush = RGB(0xdd, 0xdd, 0xdd);
+	}
+
+	long radius = 15;
+	// FIXME: we are ignoring the 'Round rectangle corner enabled' variable true/false
+	if (preferences.find(PREF_ROUNDCORNERRADIUS) == preferences.end())
+	{
+		if (getFacilities().getPreference(m_spFCO, m_spMetaFCO, PREF_ROUNDCORNERRADIUS, radius) == false)
+		{
+			m_iRoundCornerRadius = 15;
+		} else {
+			m_iRoundCornerRadius = (int)radius;
+			if (m_iRoundCornerRadius < 1) {
+				m_iRoundCornerRadius = 1;
+			}
+			// TODO: check if it is too big?
+		}
+	}
+	
 }
 
 void ModelComplexPart::SetSelected(bool bIsSelected)
@@ -1154,39 +1280,104 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 {
 	CSize cExtentD = pDC->GetViewportExt();
 	CSize cExtentL = pDC->GetWindowExt();
+	int prominent_x = m_bmp.get() ? 0 : m_LeftPortsMaxLabelLength;
+
 	CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
 	cRect.BottomRight() -= CPoint(1, 1);
 
-#ifndef OLD_DECORATOR_LOOKANDFEEL
-	TypeableBitmapPart::DrawBackground(pDC, gdip);
-#else
-	if (m_pBitmap->getName() != createResString(IDB_MODEL) && TypeableBitmapPart::m_bActive) {
-		TypeableBitmapPart::DrawBackground(pDC, gdip);
+	CRect location = cRect;
+	if (m_bmp && TypeableBitmapPart::m_bActive)
+	{
+		//if (m_LeftPorts.size() != 0 || m_RightPorts.size() != 0)
+		// draw this type of background only if icon is defined
+		Gdiplus::Rect rect(cRect.left, cRect.top, cRect.Width(), cRect.Height());
+		Gdiplus::LinearGradientBrush linearGradientBrush(rect,
+			Gdiplus::Color(GetRValue(m_crBrush), GetGValue(m_crBrush), GetBValue(m_crBrush)),
+			Gdiplus::Color(GetRValue(m_crGradient), GetGValue(m_crGradient), GetBValue(m_crGradient)),
+			m_iGradientDirection);
+
+		Gdiplus::SolidBrush solidBrush(Gdiplus::Color(GetRValue(m_crBrush), GetGValue(m_crBrush), GetBValue(m_crBrush)));
+		
+		Gdiplus::Brush& brush = m_bGradientFill ? (Gdiplus::Brush&)linearGradientBrush : (Gdiplus::Brush&)solidBrush;
+		
+		Gdiplus::GraphicsPath path;
+		path.AddArc(location.left, location.top, m_iRoundCornerRadius, m_iRoundCornerRadius, 180, 90);
+		path.AddArc(location.right - m_iRoundCornerRadius, location.top, m_iRoundCornerRadius, m_iRoundCornerRadius, 270, 90);
+		path.AddArc(location.right - m_iRoundCornerRadius, location.bottom - m_iRoundCornerRadius, m_iRoundCornerRadius, m_iRoundCornerRadius, 0, 90);
+		path.AddArc(location.left, location.bottom - m_iRoundCornerRadius, m_iRoundCornerRadius, m_iRoundCornerRadius, 90, 90);
+		gdip->FillPath(&brush, &path);
 	} else {
+		// use the old model style if no icon is defined
 		int iDepth = (m_bReferenced) ? 2 : ((m_iTypeInfo == 3) ? 4 : 8);
 		CRect cRect2 = cRect;
 		cRect2.InflateRect(1, 1);
 		getFacilities().DrawBox(gdip, cRect2, (!m_bActive) ? COLOR_LIGHTGRAY : (m_bOverlay) ? m_crOverlay : COLOR_GRAY,
-								iDepth, m_bRoundCornerRect, m_bRoundCornerRadius);
+							iDepth, m_bRoundCornerRect, m_bRoundCornerRadius);
 		getFacilities().DrawRect(gdip, cRect, (m_bActive) ? m_crBorder : COLOR_GRAY, 1, m_bRoundCornerRect,
-								 m_bRoundCornerRadius);
-		/* Commented out // inner border for Types, and Referenced models // Requested by Akos
-		if (m_iTypeInfo != 3 || m_bReferenced) {
-			cRect2 = cRect;
-			cRect2.DeflateRect(iDepth, iDepth);
-			getFacilities().drawRect(gdip, cRect2, (m_bActive) ? m_crBorder : COLOR_GRAY);
-		}
-		*/
+							m_bRoundCornerRadius);
 	}
-#endif
 
+	if (m_bmp.get())
+	{
+		int height = m_bmp->GetHeight();
+		int width = m_bmp->GetWidth();
 
-	cRect.BottomRight() += CPoint(1, 1);
+		int x; // Render according to m_LeftPortsMaxLabelLength if the image fits inside the rounded rectangle
+		// if not, just center it
+		int gutter = min(m_LeftPortsMaxLabelLength + m_RightPortsMaxLabelLength, cRect.Width() - width);
+		int x_margin = (int)(gutter * (double)m_LeftPortsMaxLabelLength / (m_LeftPortsMaxLabelLength + m_RightPortsMaxLabelLength));
+		int left_corner = m_iRoundCornerRadius;
+		int right_corner = cRect.Width() - m_iRoundCornerRadius;
+		if (x_margin < left_corner - 1 /*slop*/ || x_margin > right_corner - width + 1 /*slop*/)
+		{
+			// center
+			x = cRect.Width() / 2 - (int)m_bmp->GetWidth() / 2;
+		}
+		else
+		{
+			x = x_margin;
+		}
+		x += max(0, m_prominentAttrsSize.cx - (int)m_bmp->GetWidth()) / 2;
+		prominent_x = x;
+
+		Gdiplus::Rect grect((int)cRect.left + x, (int)cRect.top + (cRect.Height() - m_prominentAttrsSize.cy) / 2 - (int)m_bmp->GetHeight() / 2,
+			width, height);
+		gdip->DrawImage(m_bmp.get(), grect, 0, 0, (int)m_bmp->GetWidth(), (int)m_bmp->GetHeight(), Gdiplus::UnitPixel);
+	}
+
 	for (std::vector<PortPart*>::iterator ii = m_LeftPorts.begin(); ii != m_LeftPorts.end(); ++ii) {
 		(*ii)->Draw(pDC, gdip);
 	}
 	for (std::vector<PortPart*>::iterator ii = m_RightPorts.begin(); ii != m_RightPorts.end(); ++ii) {
 		(*ii)->Draw(pDC, gdip);
+	}
+	LOGFONTA logFont;
+	getFacilities().GetFont(FONT_PORT)->gdipFont->GetLogFontA(getFacilities().getGraphics(), &logFont);
+	HDC hdc = gdip->GetHDC();
+	Gdiplus::Font f(hdc, &logFont);
+	gdip->ReleaseHDC(hdc);
+	{
+		CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
+		cRect.BottomRight() -= CPoint(1, 1);
+		Gdiplus::PointF p;
+		p.X = (int)cRect.left + cRect.Width() / 2 - prominent_x / 2;
+		p.X = (int)cRect.left + prominent_x + m_prominentAttrsNamesCX;
+		p.X = (int)cRect.left + (cRect.Width() - m_LeftPortsMaxLabelLength - m_RightPortsMaxLabelLength) / 2 + m_LeftPortsMaxLabelLength + (m_prominentAttrsNamesCX - m_prominentAttrsValuesCX) / 2;
+		p.Y = (int)cRect.top + (cRect.Height() - m_prominentAttrsSize.cy) / 2 + (m_bmp.get() ? (int)m_bmp->GetHeight() : 0) / 2;
+		for (auto prominentIt = prominentAttrs.begin(); prominentIt != prominentAttrs.end(); ++prominentIt)
+		{
+			Gdiplus::SolidBrush blackBrush(Gdiplus::Color::Black);
+			Gdiplus::RectF prominentBox;
+			Gdiplus::StringFormat format;
+			format.SetAlignment(Gdiplus::StringAlignmentFar);
+			format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+			gdip->DrawString(static_cast<const wchar_t*>(prominentIt->name), -1, &f, p, &format, &blackBrush);
+
+			format.SetAlignment(Gdiplus::StringAlignmentNear);
+			format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+			gdip->DrawString(static_cast<const wchar_t*>(prominentIt->value), -1, &f, p, &format, &blackBrush);
+			p.Y += 11; // FIXME depends on font
+		}
 	}
 }
 

@@ -10,6 +10,7 @@
 
 
 #include "StdAfx.h"
+#include <comutil.h>
 #include "TypeableBitmapPart.h"
 #include "PortPart.h"
 
@@ -30,11 +31,28 @@ protected:
 	std::vector<PortPartData*>	m_AllPorts;
 	std::vector<PortPart*>		m_LeftPorts;
 	std::vector<PortPart*>		m_RightPorts;
+	int							m_LeftPortsMaxLabelLength;
+	int							m_RightPortsMaxLabelLength;
 	long						m_iMaxPortTextLength;
 	COLORREF					m_crPortText;
 	bool						m_bPortLabelInside;
 	long						m_iLongestPortTextLength;
 
+	std::unique_ptr<Gdiplus::Bitmap> m_bmp;
+
+	struct ProminentAttr {
+		_bstr_t name;
+		_bstr_t value;
+	};
+	std::vector<ProminentAttr> prominentAttrs;
+	int m_prominentAttrsCY;
+	int m_prominentAttrsNamesCX;
+	int m_prominentAttrsValuesCX;
+	CSize getProminentAttrsSize() const {
+		return CSize(m_prominentAttrsNamesCX + m_prominentAttrsValuesCX, m_prominentAttrsCY);
+	}
+	__declspec(property(get=getProminentAttrsSize))
+	CSize m_prominentAttrsSize;
 public:
 	ModelComplexPart(PartBase* pPart, CComPtr<IMgaCommonDecoratorEvents>& eventSink);
 	virtual ~ModelComplexPart();

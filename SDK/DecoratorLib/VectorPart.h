@@ -201,6 +201,7 @@ protected:
 	long						m_iShadowDirection;
 	COLORREF					m_crGradient;
 	long						m_iGradientDirection;
+	int							m_iRoundCornerRadius;
 
 	std::vector<VectorCommand>	m_Commands;
 
