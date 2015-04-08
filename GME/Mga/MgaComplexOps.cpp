@@ -1683,8 +1683,10 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 					}
 					case ATTRID_PERMISSIONS:
 					{
-						if( nobj[ai] & INSTANCE_FLAG) //if INSTANCE_FLAG present
-							nobj[ai] = (orig[ai]) & ~INSTANCE_FLAG;//then INSTANCE_FLAG removed;
+						nobj[ai] = nobj[ai] & ~INSTANCE_FLAG; // remove INSTANCE_FLAG
+						// do not modify LIBROOT_FLAG LIBRARY_FLAG READONLY_FLAG EXEMPT_FLAG as these are not inherited
+						//   (though LIBROOT_FLAG LIBRARY_FLAG READONLY_FLAG should be false here or CheckWrite would have failed)
+
 						break;
 					}
 					case ATTRID_RELID:

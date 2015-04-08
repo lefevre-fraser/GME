@@ -143,3 +143,50 @@ class TestInstances(unittest.TestCase):
         self.project.CommitTransaction()
 
 #GPyUnit.util.MUGenerator(globals(), TestInstances)
+
+class TestInstancesLib(unittest.TestCase):
+    project = None
+    def __init__(self, name, **kwds):
+        super(TestInstancesLib, self).__init__(name, **kwds)
+
+    def tearDown(self):
+        if self.project:
+            self.project.Close(True)
+
+    @property
+    def connstr(self):
+        return "MGA=" + _adjacent_file("tmp.mga")
+    
+    @dec_disable_early_binding
+    def test_DetachFromArcheType_InstanceIsLibObject(self):
+        lib_path = 'MGA=' + _adjacent_file("instance_lib.mga")
+        def createLibProject():
+            lib_project = DispatchEx("Mga.MgaProject")
+            lib_project.Create(lib_path, "MetaGME")
+            paradigmSheet = lib_project.RootMeta.RootFolder.DefinedFCOByName('ParadigmSheet', True)
+            lib_project.BeginTransactionInNewTerr()
+            base = lib_project.RootFolder.CreateRootObject(paradigmSheet)
+            base.Name = "PS"
+            atom = base.CreateChildObject(paradigmSheet.RoleByName('Atom'))
+            atom.Name = "Atom"
+            lib_project.CommitTransaction()
+            lib_project.Save()
+            lib_project.Close()
+        createLibProject()
+        
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        lib_obj = self.project.RootFolder.AttachLibrary(lib_path)
+        self.project.CommitTransaction()
+        self.project.BeginTransactionInNewTerr()
+        
+        ps_instance = self.project.RootFolder.DeriveRootObject(lib_obj.GetObjectByPathDisp("@PS"), True)
+        atom = ps_instance.GetObjectByPathDisp("@Atom")
+        self.assertFalse(ps_instance.IsLibObject)
+        self.assertFalse(atom.IsLibObject)
+        ps_instance.DetachFromArcheType()
+        self.assertFalse(atom.IsLibObject)
+        self.assertFalse(ps_instance.IsLibObject)
+        
+        self.project.CommitTransaction()
+        self.project.Save()
