@@ -985,8 +985,9 @@ void CMgaParser::EndValue()
 			}
 			else
 			{
-				v = val;
-				COMTHROW( v.ChangeType(VT_R8) );
+				double doubleVal;
+				_swscanf_s_l(val, L"%lg", c_locale, &doubleVal);
+				v = doubleVal;
 			}
 			}
 			break;

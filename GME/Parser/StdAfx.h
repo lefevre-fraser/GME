@@ -125,6 +125,7 @@ public:
 	}
 };
 
+extern _locale_t c_locale;
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

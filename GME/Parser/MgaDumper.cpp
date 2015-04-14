@@ -1022,7 +1022,9 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 		{
 			double d;
 			COMTHROW( attribute->get_FloatValue(&d) );
-			Format(data, _T("%.17g"), d);
+			wchar_t dblbuf[40];
+			_swprintf_s_l(dblbuf, sizeof(dblbuf) / sizeof(dblbuf[0]), L"%.17g", c_locale, d);
+			data = dblbuf;
 			break;
 		}
 

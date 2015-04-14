@@ -29,6 +29,7 @@ Release Notes
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix bug where an instance of a library object would have IsLibObject == true after DetachFromArcheType() was called on it
+  - Fix bug where floating-point numbers in xmes files were not read correctly under non-English locales (error "Type mismatch")
 
 Release Notes of Release 14.12.4
 ----------------------------------
