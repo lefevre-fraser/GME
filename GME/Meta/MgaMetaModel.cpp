@@ -84,7 +84,7 @@ STDMETHODIMP CMgaMetaModel::get_RoleByName(BSTR name, IMgaMetaRole **p)
 			++i;
 		}
 
-		COMTHROW(E_NOTFOUND);
+		throw_com_error(E_NOTFOUND, _bstr_t(L"Role name '") + name + L"' not found in model " + static_cast<CMgaMetaFCO *const>(this)->GetName());
 	}
 	COMCATCH(;)
 }
