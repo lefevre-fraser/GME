@@ -100,7 +100,7 @@
     <Property Id='ARPPRODUCTICON' Value='GME.ico' />
 
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch GME" />
-    <Property Id="WixShellExecTarget" Value="[#GME.exe]" />
+    <Property Id="WixShellExecTarget" Value="[#GME.exe$(sys.BUILDARCH)]" />
     <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
 
     <WixVariable Id="WixUILicenseRtf" Value="..\Doc\Legal\License.rtf" />

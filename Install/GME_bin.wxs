@@ -555,7 +555,7 @@
         <RegistryValue Root="HKCR" Key="AppID\MgaUtil.dll" Name="AppID" Value="{461F30AF-3BF0-11D4-B3F0-005004D38590}" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="AppID\{461F30AF-3BF0-11D4-B3F0-005004D38590}" Name="DllSurrogate" Value="" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590}\Elevation" Name="Enabled" Value="1" Type="integer" Action="write" />
-        <RegistryValue Root="HKCR" Key="CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590}" Name="LocalizedString" Value="@[!MgaUtil.dll],-2072" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{F1D6BB06-42EE-11D4-B3F4-005004D38590}" Name="LocalizedString" Value="@[#MgaUtil.dll$(sys.BUILDARCH)],-2072" Type="string" Action="write" />
       </Component>
 
       <Component Id="NamespaceConfig.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_PARADIGMS_METAGME$(sys.BUILDARCH)">
