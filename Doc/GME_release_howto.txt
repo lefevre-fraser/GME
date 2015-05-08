@@ -1,8 +1,14 @@
 HOWTO make a GME release (for GME maintainers only)
-Currently only Kevin Smyth <ksmyth@isis.vanderbilt.edu> makes GME releases
+The following people make GME releases:
+Zsolt Lattmann <lattmann@isis.vanderbilt.edu>
+Peter Volgyesi <volgy@isis.vanderbilt.edu>
+Daniel Balasubramanian <daniel@isis.vanderbilt.edu>
+
+Previous maintainer/developer Kevin Smyth <ksmyth@isis.vanderbilt.edu>
+
 
 Prerequisites:
- - cygwin (marked as bash below), 7-zip, python2.7 (make sure python is in the PATH)
+ - cygwin with ssh, scp, rsync, curl (marked as bash below), 7-zip, python2.7 (make sure python is in the PATH)
  - python markdown virtual environment (cmd)
  git clone https://github.com/pypa/virtualenv.git %USERPROFILE%\\Downloads\\virtualenv
  cd %USERPROFILE%\\Downloads
@@ -10,10 +16,10 @@ Prerequisites:
  markdown\Scripts\pip install markdown
  
  - ssh access
-    - sudo to kms1.isis.vanderbilt.edu
+    - sudo to build@kms1.isis.vanderbilt.edu
     - repo@repo.isis.vanderbilt.edu
 
-(command line)
+#(command line)
 Update release notes: Doc/README_in.txt
 Update version number: Doc/index.md
 pushd Doc
@@ -21,11 +27,18 @@ pushd Doc
 popd
 svn ci -m "GME release 15.5.8"
 
+#wait for all gme builds on http://build.isis.vanderbilt.edu/
+
+#Saving all symbols from the temporary symbol storage to the permanent symbol storage
 #!/bin/bash
 curl -s -S http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastBuild/consoleText | grep Finding\ ID
 curl -s -S http://build.isis.vanderbilt.edu/job/GME_x64/lastBuild/label=build-slave6/consoleText | grep Finding\ ID
-ssh kms1 'cd symbolstmp && python ~/bin/pdb_promote.py 0000012164 0000012165' # x2 "Finding ID"
-ssh kms1 rsync -avP symbols /media/7ce1528b-2101-4764-81e3-aed9112e3ad8/214/
+ssh build@kms1.isis.vanderbilt.edu 'cd symbolstmp && python ~/bin/pdb_promote.py 0000013601 0000013600' # x2 "Finding ID"
+ssh build@kms1.isis.vanderbilt.edu rsync -avP symbols /media/7ce1528b-2101-4764-81e3-aed9112e3ad8/214/
+
+#Downloading the build artifacts, i.e. two installers and the README file
+mkdir GME-15.5.8
+cd GME-15.5.8
 export PATH=$PATH:/c/cygwin/bin:"/c/Program Files/7-Zip/:/cygdrive/c/Program Files/7-Zip/"
 curl -o GME_x64-15.5.8.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
 curl -o GME-15.5.8.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
@@ -48,19 +61,16 @@ ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/15.5.8/
 # Update online documentation:
 #!/bin/bash
 cd Doc
-ssh kms1 sudo mount -t davfs -o uid=1000 https://forge.isis.vanderbilt.edu/gme/dav/ gmedav
-rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include=/Tutorial** --include google3a6cca9137b58176.html --include=index.html --include=markdown.css --include='*/' --include='**GME Manual and User Guide.pdf' --exclude=*  kms1:gmedav/www/
+#ssh zsolt@kms1.isis.vanderbilt.edu sudo mount -t davfs -o uid=1006 https://forge.isis.vanderbilt.edu/gme/dav/ /home/build/gmedav
+rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include=/Tutorial** --include google3a6cca9137b58176.html --include=index.html --include=markdown.css --include='*/' --include='**GME Manual and User Guide.pdf' --exclude=*  build@kms1.isis.vanderbilt.edu:/home/build/gmedav/www/
 
 
+# Make sure links are working from http://repo.isis.vanderbilt.edu/GME/old/15.5.8/
 
 
-
-
-
-
-
+## OPTIONAL STEPS
 # JIRA: make release
-# update https://svn.isis.vanderbilt.edu/isis-common/installs/install.py
+# update https://svn.isis.vanderbilt.edu/isis-common/installs.py
 #  c:\Python27\python.exe install_setup.py py2exe && move /y dist\install.exe .\install.exe
 
 Install GME on VM, check for missing symbols
