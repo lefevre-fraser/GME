@@ -25,11 +25,13 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 15.5.8
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix bug where an instance of a library object would have IsLibObject == true after DetachFromArcheType() was called on it
+  - Fix really long cropped annotations
   - Fix bug where floating-point numbers in xmes files were not read correctly under non-English locales (error "Type mismatch")
+  - Default decorator does not stretch icons.
 
 Release Notes of Release 14.12.4
 ----------------------------------
