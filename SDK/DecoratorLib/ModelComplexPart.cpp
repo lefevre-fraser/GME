@@ -333,9 +333,13 @@ void ModelComplexPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<IMga
 
 	if (pFCO) {
 		CString strIcon;
-		getFacilities().getPreference(pFCO, PREF_ICON, strIcon);
-		if (!strIcon.IsEmpty()) {
-			preferences[PREF_ICON] = PreferenceVariant(strIcon);
+		if (preferences.find(PREF_ICON) != preferences.end()) {
+			strIcon = *preferences[PREF_ICON].uValue.pstrValue;
+		} else {
+			getFacilities().getPreference(pFCO, PREF_ICON, strIcon);
+			if (!strIcon.IsEmpty()) {
+				preferences[PREF_ICON] = PreferenceVariant(strIcon);
+			}
 		}
 
 		PreferenceMap::iterator it = preferences.find(PREF_PORTLABELCOLOR);
@@ -1285,6 +1289,14 @@ void ModelComplexPart::DrawBackground(CDC* pDC, Gdiplus::Graphics* gdip)
 	CRect cRect = TypeableBitmapPart::GetBoxLocation(false);
 	cRect.BottomRight() -= CPoint(1, 1);
 
+	if (!m_spFCO) {
+		TypeableBitmapPart::DrawBackground(pDC, gdip);
+		return;
+	}
+	if (this->m_bReferenced) {
+		TypeableBitmapPart::DrawBackground(pDC, gdip);
+		return;
+	}
 	CRect location = cRect;
 	if (m_bmp && TypeableBitmapPart::m_bActive)
 	{

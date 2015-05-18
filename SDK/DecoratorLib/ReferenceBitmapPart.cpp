@@ -178,9 +178,13 @@ bool ReferenceBitmapPart::GetPorts(CComPtr<IMgaFCOs>& portFCOs) const
 
 void ReferenceBitmapPart::Draw(CDC* pDC, Gdiplus::Graphics* gdip)
 {
-	TypeableBitmapPart::Draw(pDC, gdip);
+	VectorPart::Draw(pDC, gdip);
+
+	DrawBorder(pDC, gdip);
+	DrawBackground(pDC, gdip);
 	if (m_referencedPart != NULL)
 		m_referencedPart->Draw(pDC, gdip);
+	DrawIcons(pDC, gdip);
 }
 
 void ReferenceBitmapPart::SaveState()
@@ -295,8 +299,8 @@ void ReferenceBitmapPart::InitializeEx(CComPtr<IMgaProject>& pProject, CComPtr<I
 		}
 		mapRefPrefs[PREF_VIOLATED] = PreferenceVariant(false);
 
-		pReferenced->InitializeEx(pProject, pPart, spReferenced, parentWnd, mapRefPrefs);
 		pReferenced->SetReferenced(true);
+		pReferenced->InitializeEx(pProject, pPart, spReferenced, parentWnd, mapRefPrefs);
 	} else {
 		m_lBorderWidth = 0;
 		CString strIcon;
