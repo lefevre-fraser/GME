@@ -119,7 +119,7 @@ bool CModelGrid::IsAvailableG(CPoint &pt,CSize &size)
 bool CModelGrid::IsAvailable(const CRect& rect)
 {
 	FindStartEnd(rect,0);
-	if(startx < 0 || starty < 0 || endx >= GME_MAX_GRID_DIM || endy >= GME_MAX_GRID_DIM)
+	if(startx < 0 || starty < 0 || (unsigned int)endx >= GME_MAX_GRID_DIM || (unsigned int)endy >= GME_MAX_GRID_DIM)
 		return false;
 	for(int y = starty; y <= endy; y++)
 		for(int x = startx; x <= endx; x++)
