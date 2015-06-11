@@ -73,7 +73,11 @@ rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include
 # update https://svn.isis.vanderbilt.edu/isis-common/installs.py
 #  c:\Python27\python.exe install_setup.py py2exe && move /y dist\install.exe .\install.exe
 
+
 Install GME on VM, check for missing symbols
+REM install these tools
+REM   https://www.microsoft.com/en-us/download/details.aspx?id=8279 - Windows 7 debugging tools might be installed in "c:\Program Files\Debugging Tools for Windows (x64)\symchk.exe"
+REM   7-zip http://www.7-zip.org/
 set _NT_SYMBOL_PATH=srv*c:\GME_15.5.8_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
 mkdir c:\GME_15.5.8_symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
