@@ -44,22 +44,22 @@
   <ItemGroup>
     <Reference Include="GME, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\DotNetPIAs_1.0.0.0\GME.dll</HintPath>
     </Reference>
     <Reference Include="GME.MGA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\DotNetPIAs_1.0.0.0\GME.MGA.dll</HintPath>
     </Reference>
     <Reference Include="GME.MGA.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\DotNetPIAs_1.0.0.0\GME.MGA.Core.dll</HintPath>
     </Reference>
     <Reference Include="GME.MGA.Meta, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f240a760fe751c2e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\DotNetPIAs_1.0.0.0\GME.MGA.Meta.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
