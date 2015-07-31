@@ -140,11 +140,12 @@ void CRegistryTree::OnRButtonDown(UINT nFlags, CPoint point)
 
 
 	ClientToScreen(&point);
-	popupMenu->TrackPopupMenu(IDR_CNTXMENU_REGBRW, point.x, point.y, this);
-	if (hOldItem)
-		SelectItem(hOldItem);
+    int command = popupMenu->TrackPopupMenuEx(TPM_RETURNCMD, point.x, point.y, this, NULL);
+    SendMessage(WM_COMMAND, command, 0);
+    if (command != ID_CNTX_ADDNODE /* dont interfere with editing label */ && hOldItem)
+        SelectItem(hOldItem);
 	
-	CTreeCtrl::OnRButtonDown(nFlags, point);
+	//CTreeCtrl::OnRButtonDown(nFlags, point);
 }
 
 void CRegistryTree::OnCntxAddnode() 
@@ -166,8 +167,10 @@ void CRegistryTree::OnCntxAddnode()
 	SetItemData((HTREEITEM)newNode->handle, (DWORD) newNode);
 
 	dlg->m_nodes.AddTail(newNode);
-	Expand(hItem, TVE_EXPAND);
-	UpdateWindow();
+    if (hItem)
+        VERIFY(Expand(hItem, TVE_EXPAND));
+    VERIFY(SelectItem((HTREEITEM)newNode->handle));
+    //UpdateWindow();
 
 	// Dirty trick...
 	CEdit *eLabel = EditLabel((HTREEITEM)newNode->handle);
@@ -325,5 +328,12 @@ void CRegistryTree::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			SendMessage(WM_COMMAND, ID_CNTX_REMOVETREE);
 		}
 	}
-	CTreeCtrl::OnKeyDown(nChar, nRepCnt, nFlags);
+    if (nChar == VK_F2) {
+        HTREEITEM hItem = GetSelectedItem();
+        if (hItem) {
+            m_cntxSelected = hItem;
+            SendMessage(WM_COMMAND, ID_CNTX_RENAMENODE);
+        }
+    }
+    CTreeCtrl::OnKeyDown(nChar, nRepCnt, nFlags);
 }
