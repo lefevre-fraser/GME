@@ -401,8 +401,12 @@ BOOL CRegistryBrowserDlg::PreTranslateMessage(MSG* pMsg)
 		DWORD def_id=GetDefID();
 		if (def_id!=0)
 		{
-			
-			if (pMsg->hwnd == m_wndRegistryTree.m_hWnd)
+            if (HIBYTE(GetKeyState(VK_CONTROL))) {
+                OnOK();
+                return TRUE;
+            }
+
+            if (pMsg->hwnd == m_wndRegistryTree.m_hWnd)
 			{
 				GetDlgItem(LOWORD(def_id))->SetFocus();
 				return TRUE;
