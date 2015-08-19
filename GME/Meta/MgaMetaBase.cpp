@@ -23,11 +23,13 @@ HRESULT CMgaMetaBase::PutMetaRef_(metaref_type p)
 	if( p == metaref )
 		return S_OK;
 
-	metaproject->RegisterMetaBase(p, this);
-	metaproject->UnregisterMetaBase(metaref, this);
+    COMTRY {
 
-	metaref = p;
-	return S_OK;
+        metaproject->RegisterMetaBase(p, this);
+        metaproject->UnregisterMetaBase(metaref, this);
+
+        metaref = p;
+    } COMCATCH(;)
 }
 
 void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
