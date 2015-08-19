@@ -1461,7 +1461,7 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 		CString guidact;
 
 		CComBstrObj inguidstr;
-		if(guid->vt != VT_EMPTY) {
+		if(guid->vt != VT_EMPTY && guid->vt != VT_NULL) {
 			GUID g;
 			CopyTo(*guid, g);
 			CopyTo(g, inguidstr);
