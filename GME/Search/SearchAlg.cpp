@@ -588,16 +588,18 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
                     attribute.eval=TRUE;
                 break;
 
-            case ATTVAL_INTEGER:	
+            case ATTVAL_INTEGER: {
 
-                if(! SUCCEEDED( cObj->get_IntAttrByName((CBstrIn)strAttribute, &value) ) ) attribute.eval=FALSE;
+                if (!SUCCEEDED(cObj->get_IntAttrByName((CBstrIn)strAttribute, &value))) attribute.eval = FALSE;
 
                 intActualValue = value;
 
-                intSearchValue = _ttoi(attribute.value);
-                if(attribute.CheckInteger(intActualValue,intSearchValue))
-                    attribute.eval=TRUE;
-                break;
+                const wchar_t* attributeValue = static_cast<const wchar_t*>(attribute.value);
+                wchar_t* endPtr;
+                wcstol(attributeValue, &endPtr, 10);
+                if (endPtr == attributeValue + wcslen(attributeValue) && attribute.CheckInteger(intActualValue, intSearchValue))
+                    attribute.eval = TRUE;
+            } break;
 
             case ATTVAL_DOUBLE:		
 
@@ -614,9 +616,9 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 
                 bActualValue = (vb != 0);			
                 intSearchValue = _ttoi(attribute.value);
-                if(attribute.value==_T("false") || attribute.value==_T("False") || attribute.value==_T("FALSE") || intSearchValue==0)
+                if(attribute.value==_T("false") || attribute.value==_T("False") || attribute.value==_T("FALSE"))
                     bSearchValue = false;
-                if(attribute.value==_T("true") || attribute.value==_T("True") || attribute.value==_T("TRUE") || intSearchValue==1)
+                if(attribute.value==_T("true") || attribute.value==_T("True") || attribute.value==_T("TRUE"))
                     bSearchValue = true;
 
                 if(attribute.CheckBool(bActualValue,bSearchValue))
