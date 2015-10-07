@@ -141,6 +141,15 @@ public:
 	CComPtr<IMgaMetaFolder> GetMeta() const;
 public:
 	const CString& GetName() const { return name; }
+    bool SetName(CString newname)
+    {
+        bool ret = SUCCEEDED(ciFolder->put_Name((CBstrIn)newname));
+        if (ret)
+            name = newname;
+
+        return ret;
+    }
+
 	const CString& GetKindName() const							{ return kindName; }   	// returns folder kind name
 	const CString& GetKindTitle() const							{ return kindTitle; }   // returns folder kind title (displayed name)
 	const CBuilderModelList *GetRootModels() const				{ return &rootModels; }
