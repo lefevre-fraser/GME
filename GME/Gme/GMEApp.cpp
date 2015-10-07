@@ -2052,9 +2052,23 @@ bool CGMEApp::SafeCloseProject() {
 	if(mgaProject != NULL && (proj_type_is_mga||proj_type_is_xmlbackend)) {
 		HRESULT hr = mgaProject->Save(NULL, VARIANT_FALSE);
 		if(hr != S_OK) {
-			AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
-			return false;
-		}
+			CComBSTR error;
+			if (GetErrorInfo(&error)) {
+                CString errmsg = _T("Could not save project: ");
+
+                errmsg += error;
+                if (hr == HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED)) {
+				    // FIXME: KMS: not too sure why this is ACCESS_DENIED from MoveFile instead of SHARING_VIOLATION
+                    errmsg += _T("\nCheck that no other GME has this file open");
+                }
+                AfxMessageBox(errmsg);
+                return false;
+            }
+            else {
+                AfxMessageBox(_T("ERROR: Could not save project\nCheck access permissions"));
+                return false;
+            }
+        }
 		abort_on_close = true;
 	}
 
