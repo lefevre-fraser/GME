@@ -290,7 +290,7 @@ STDMETHODIMP CViewDriver::ObjectEvent(IMgaObject *obj, unsigned long eventmask,V
 /////////////////////////////////////////////////////////////////////////////
 // CGMEView
 
-bool CGMEView::offScreenCreated = false;
+int CGMEView::offScreenCreated = 0;
 CDC * CGMEView::offScreen;
 CBitmap *CGMEView::ofsbmp;
 int CGMEView::instanceCount = 0;
@@ -697,9 +697,10 @@ CGMEView::~CGMEView()
 		// update & disable some components
 		theApp.UpdateCompList4CurrentKind( CGMEApp::m_no_model_open_string);
 
+        ::RestoreDC(*offScreen, offScreenCreated);
 		delete offScreen;
 		delete ofsbmp;
-		offScreenCreated = false;
+		offScreenCreated = 0;
 		if( CMainFrame::theInstance != NULL ) {
 			CMainFrame::theInstance->SetPartBrowserMetaModel(NULL);
 			CMainFrame::theInstance->SetPartBrowserBg(::GetSysColor(COLOR_APPWORKSPACE));
@@ -2926,7 +2927,6 @@ void CGMEView::CreateOffScreen(CDC *dc)
 {
 	if(offScreenCreated)
 		return;
-	offScreenCreated = true;
 	offScreen = new CDC;
 	BOOL success = offScreen->CreateCompatibleDC(dc);
 	ASSERT(success);
@@ -2942,7 +2942,9 @@ void CGMEView::CreateOffScreen(CDC *dc)
 	success = ofsbmp->CreateCompatibleBitmap(dc,offScreenWidth,offScreenHeight);
 	ASSERT(success);
 	// HACK: what about palettes?
-	offScreen->SelectObject(ofsbmp);
+    offScreenCreated = SaveDC(*offScreen);
+    ASSERT(offScreenCreated);
+    offScreen->SelectObject(ofsbmp);
 }
 
 void CGMEView::SetScroll()

@@ -20,7 +20,9 @@ CPartBrowserPaneFrame::CPartBrowserPaneFrame(CWnd* pParent/* = NULL*/)
 	: CDialog(CPartBrowserPaneFrame::IDD, pParent),
 	vScrollWidth (::GetSystemMetrics (SM_CXVSCROLL)),	// WinXP default style: 17
 	lineSize (20),
-	pageSize (60)
+	pageSize (60),
+    pageHeight(100), // maybe fix UNINITIALIZED READ: reading register edx PartBrowser.OCX!CPartBrowserPaneFrame::Resize [c:\users\kevin\documents\gme\gme\partbrowser\partbrowserpaneframe.cpp:57]
+    logicalHeight(100)
 {
 	//{{AFX_DATA_INIT(CPartBrowserPaneFrame)
 		// NOTE: the ClassWizard will add member initialization here

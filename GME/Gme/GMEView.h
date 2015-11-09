@@ -78,7 +78,7 @@ public:
 	static bool				inRWTransaction;
 	static bool				inEventHandler;
 	static int				instanceCount;
-	static bool				offScreenCreated;
+	static int				offScreenCreated;
 	static CDC*				offScreen;
 	static CBitmap*			ofsbmp;
 	static HCURSOR			autoconnectCursor;
