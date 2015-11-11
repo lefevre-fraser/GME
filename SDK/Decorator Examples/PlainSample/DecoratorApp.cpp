@@ -113,7 +113,7 @@ STDAPI DllUnregisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	HRESULT hr = _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+	HRESULT hr = _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, FALSE, regMap );
 	/* if ( SUCCEEDED( hr ) ) //do not use this !
     {
 		// registers object, typelib and all 
