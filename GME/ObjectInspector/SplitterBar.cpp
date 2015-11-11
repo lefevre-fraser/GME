@@ -390,9 +390,16 @@ void CSplitterBar::ChangeHelpControls(CRect ctrlRect)
 {
 
 	CWnd* pHelpTitleCtrl=GetParent()->GetDlgItem(IDC_HELP_TITLE);
-	if(pHelpTitleCtrl->GetSafeHwnd())
+	if (pHelpTitleCtrl->GetSafeHwnd())
 	{
-		#define INSP_HELP_TITLE_HEIGHT 15
+		static int yDPI = 0;
+		if (yDPI == 0) {
+			HDC dc = ::GetDC(NULL);
+			yDPI = ::GetDeviceCaps(dc, LOGPIXELSY);
+			::ReleaseDC(NULL, dc);
+		}
+
+		int INSP_HELP_TITLE_HEIGHT = 15 * yDPI / 96 /*  USER_DEFAULT_SCREEN_DPI */;
 		pHelpTitleCtrl->SetWindowPos(NULL,ctrlRect.left+1,ctrlRect.top+1,ctrlRect.Width()-2,
 													INSP_HELP_TITLE_HEIGHT,SWP_NOZORDER);
 

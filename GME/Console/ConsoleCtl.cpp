@@ -193,47 +193,6 @@ CConsoleCtrl::~CConsoleCtrl()
 		::DestroyIcon(m_hIcor);
 }
 
-// creates a 3d look and feel around a textbox, 
-// so that it resembles an edit field much likely
-CRect has3dLook(CDC* pdc, CRect rc)
-{
-	rc.bottom += 1;
-	rc.right  += 1;
-	pdc->SelectStockObject( NULL_PEN);
-
-	DWORD dw = ::GetSysColor(COLOR_3DFACE);
-	BYTE r = GetRValue(dw);
-	BYTE g = GetGValue(dw);
-	BYTE b = GetBValue(dw);
-	COLORREF col = RGB(r,g,b);
-	CBrush brush;
-	brush.CreateSolidBrush(col);
-	// background painted for the area
-	pdc->FillRect(&rc, &brush);
-
-	int decr_x = 3;                           // will deflate with this constants
-	int decr_y = (rc.Height()-20)/2;
-	rc.bottom -= decr_y;   rc.right -= decr_x;
-	rc.top    += decr_y;   rc.left  += decr_x;
-
-	pdc->SelectStockObject( WHITE_BRUSH);
-	pdc->Rectangle( rc); // the biggest rect
-	
-	pdc->SelectStockObject( GRAY_BRUSH);
-	rc.bottom -= 1; rc.right -= 1;
-	pdc->Rectangle( rc); // the 2nd biggest rect (inverse cascaded compared to the white rc)
-
-	rc.top += 1; rc.left += 1;
-	pdc->FillRect(&rc, &brush);	// cascaded compared to the white rc
-
-	pdc->SelectStockObject( BLACK_BRUSH);
-	rc.bottom -= 1; rc.right -= 1;
-	pdc->Rectangle( rc);
-
-	rc.DeflateRect( 1, 1, 1, 1);
-	return rc;
-}
-
 // centeres a rectangle inside another one, so that a 
 // square with p_bt_size side will sit in the center
 CRect centered( const CRect& p_rcIn, int p_vertic_size, int p_horiz_size, int p_bt_size)
@@ -254,10 +213,10 @@ void CConsoleCtrl::OnDraw(
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
 
-	const int vertic_size   = 26;
-	const int horiz_size    = 26;
-	const int bt_size       = 20;
-	const int prnx_size     = 19; // width of the prev/next buttons
+	const int vertic_size = 26 * GetDeviceCaps(pdc->GetSafeHdc(), LOGPIXELSY) / 96 /* USER_DEFAULT_SCREEN_DPI */;
+	const int horiz_size    = 26 * GetDeviceCaps(pdc->GetSafeHdc(), LOGPIXELSY) / 96 /* USER_DEFAULT_SCREEN_DPI */;
+	const int bt_size       = 20 * GetDeviceCaps(pdc->GetSafeHdc(), LOGPIXELSY) / 96 /* USER_DEFAULT_SCREEN_DPI */;
+	const int prnx_size     = 19 * GetDeviceCaps(pdc->GetSafeHdc(), LOGPIXELSY) / 96 /* USER_DEFAULT_SCREEN_DPI */; // width of the prev/next buttons
 
 
 	if (m_browser.GetSafeHwnd()) {
@@ -265,7 +224,8 @@ void CConsoleCtrl::OnDraw(
 		CRect rcBrwsr, rcExtra, rcExtra2;  // browser rect, extra rect
 		rcExtra2 = rcBrwsr = rcExtra = rcBounds;
 
-		rcExtra2.left -= 1; rcExtra2.bottom += 1;
+		rcExtra2.left -= 1;
+		rcExtra2.bottom += 1;
 		// light gray background for the whole region
 		DWORD dw = ::GetSysColor(COLOR_3DFACE);
 		BYTE r = GetRValue(dw);
@@ -297,7 +257,7 @@ void CConsoleCtrl::OnDraw(
 		m_cmdButton.MoveWindow( centered( rcLoad, vertic_size, horiz_size, bt_size), TRUE);
 
 		// place and show/hide 'Execute' button based on bool (anything_loaded)
-		if( anything_loaded) {
+		if (anything_loaded) {
 			rcLoad.OffsetRect( horiz_size, 0);
 			
 			m_exeButton.MoveWindow( centered( rcLoad, vertic_size, horiz_size, bt_size), TRUE);
@@ -315,7 +275,8 @@ void CConsoleCtrl::OnDraw(
 		m_clrButton.MoveWindow( centered( rcClrBtn, vertic_size, horiz_size, bt_size), TRUE);
 
 		// place 'Return'
-		rcClean.right = rcClean.left; rcClean.left -= horiz_size;
+		rcClean.right = rcClean.left;
+		rcClean.left -= horiz_size;
 
 		m_retButton.MoveWindow( centered( rcClean, vertic_size, horiz_size, bt_size), TRUE);
 
@@ -336,8 +297,11 @@ void CConsoleCtrl::OnDraw(
 		rcRemain.left = rcLoad.right;         // left side
 		rcRemain.right= rcClean.left;         // right side
 
-		rcRemain = has3dLook( pdc, rcRemain);
-
+		rcRemain.top += 2;
+		rcRemain.left += 2;
+		rcRemain.bottom -= 2;
+		rcRemain.right -= 2;
+		
 		// move input control too 
 		m_edit.MoveWindow(rcRemain, TRUE);
 	}
@@ -461,13 +425,15 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			break;
 	}
 
-	m_edit.Create((ES_AUTOHSCROLL | WS_VISIBLE | WS_CHILD), rect, this, IDD_EDIT);
+	m_edit.Create((ES_AUTOHSCROLL | WS_VISIBLE | WS_CHILD | WS_BORDER), rect, this, IDD_EDIT);
 	m_edit.LimitText(300);
 	bool ret = m_edit.Init(this);
 	if (!ret) {
 		ASSERT(false);
 		return -1;
 	}
+	m_edit.ModifyStyleEx(WS_EX_CLIENTEDGE, WS_EX_STATICEDGE);
+
 
 	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
