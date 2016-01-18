@@ -25,6 +25,14 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix GME Console for high-DPI displays
+  - BON: add CBuilderFolder::SetName
+  - Fix hotspots for quick connect mode when scrolled or zoomed
+  - Other bugfixes
+  
 Release Notes of Release 15.5.8
 ----------------------------------
   - Binary compatibility with 11.12.2
