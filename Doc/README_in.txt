@@ -31,6 +31,7 @@ Release Notes
   - Fix GME Console for high-DPI displays
   - BON: add CBuilderFolder::SetName
   - Fix hotspots for quick connect mode when scrolled or zoomed
+  - Component window: fix bug where .NET interpreters with long paths would incorrectly be listed as GAC
   - Other bugfixes
   
 Release Notes of Release 15.5.8

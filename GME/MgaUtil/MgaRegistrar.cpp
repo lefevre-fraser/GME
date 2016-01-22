@@ -1572,7 +1572,7 @@ STDMETHODIMP CMgaRegistrar::VersionFromGUID(BSTR name, VARIANT guid, BSTR *ver, 
 					TCHAR name[512];
 					DWORD namesize = sizeof(name) / sizeof(name[0]);
 					TCHAR value[512];
-					DWORD valuesize = sizeof(value) / sizeof(value[0]);
+					DWORD valuesize = sizeof(value);
 					DWORD valtype;
 
 					LONG err = RegEnumValue(par, index, name, &namesize, NULL, &valtype, (LPBYTE)value, &valuesize);
@@ -2074,14 +2074,15 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 		if(res == ERROR_SUCCESS) {
 			m_strPath = QueryValue(comp, _T("") );
 			if (m_strPath == _T("mscoree.dll")) {
-				TCHAR data[MAX_PATH];
-				ULONG num_bytes = sizeof(data) / sizeof(data[0]);
-				if (comp.QueryValue(_T("CodeBase"), 0, data, &num_bytes) == ERROR_SUCCESS) {
+				CString data;
+				ULONG count = 1024;
+				if (comp.QueryStringValue(_T("CodeBase"), data.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
 					m_strPath = data;
 					m_strPath = m_strPath.Right(m_strPath.GetLength() - 8);
 					m_strPath.Replace('/', '\\');
 				} else {
-					if (comp.QueryValue(_T("Assembly"), 0, data, &num_bytes) == ERROR_SUCCESS) {
+					count = 1024;
+					if (comp.QueryStringValue(_T("Assembly"), data.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
 						m_strPath = _T("GAC: ");
 						m_strPath += data;
 					}
