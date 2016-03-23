@@ -4,15 +4,15 @@ Zsolt Lattmann <lattmann@isis.vanderbilt.edu>
 Peter Volgyesi <volgy@isis.vanderbilt.edu>
 Daniel Balasubramanian <daniel@isis.vanderbilt.edu>
 
-Previous maintainer/developer Kevin Smyth <ksmyth@isis.vanderbilt.edu>
+Previous maintainer/developer Kevin Smyth <kevin.m.smyth@gmail.com>
 
 
 Prerequisites:
  - cygwin with ssh, scp, rsync, curl (marked as bash below), 7-zip, python2.7 (make sure python is in the PATH)
  - python markdown virtual environment (cmd)
- git clone https://github.com/pypa/virtualenv.git %USERPROFILE%\\Downloads\\virtualenv
  cd %USERPROFILE%\\Downloads
- python virtualenv\virtualenv.py markdown
+ python -m pip install virtualenv
+ python -m virtualenv markdown
  markdown\Scripts\pip install markdown
  
  - ssh access
@@ -25,7 +25,7 @@ Update version number: Doc/index.md
 pushd Doc
 %USERPROFILE%\Downloads\markdown\Scripts\python -m markdown index.md > index.html
 popd
-svn ci -m "GME release 15.5.8"
+svn ci -m "GME release 16.3.23"
 
 #wait for all gme builds on http://build.isis.vanderbilt.edu/
 
@@ -37,25 +37,25 @@ ssh build@kms1.isis.vanderbilt.edu 'cd symbolstmp && python ~/bin/pdb_promote.py
 ssh build@kms1.isis.vanderbilt.edu rsync -avP symbols /media/7ce1528b-2101-4764-81e3-aed9112e3ad8/214/
 
 #Downloading the build artifacts, i.e. two installers and the README file
-mkdir GME-15.5.8
-cd GME-15.5.8
+mkdir GME-16.3.23
+cd GME-16.3.23
 export PATH=$PATH:/c/cygwin/bin:"/c/Program Files/7-Zip/:/cygdrive/c/Program Files/7-Zip/"
-curl -o GME_x64-15.5.8.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
-curl -o GME-15.5.8.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
+curl -o GME_x64-16.3.23.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
+curl -o GME-16.3.23.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
 curl -o README.txt http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
 
 #!/bin/bash
 for file in http://build.isis.vanderbilt.edu/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.wixlib; do curl -O $file; done
 
 #!/bin/bash
-svn cp -m 'Tag Release 15.5.8' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_15.5.8
-svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_15.5.8 GME-15.5.8_src && \
-7z.exe a GME-15.5.8_src.zip GME-15.5.8_src/
+svn cp -m 'Tag Release 16.3.23' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.3.23
+svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.3.23 GME-16.3.23_src && \
+7z.exe a GME-16.3.23_src.zip GME-16.3.23_src/
 
 #!/bin/bash
-ssh repo@repo.isis.vanderbilt.edu mkdir GME/15.5.8/ && \
-scp README.txt GME-15.5.8.msi GME_x64-15.5.8.msi GME-15.5.8_src.zip repo@repo.isis.vanderbilt.edu:GME/15.5.8/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/15.5.8/
+ssh repo@repo.isis.vanderbilt.edu mkdir GME/16.3.23/ && \
+scp README.txt GME-16.3.23.msi GME_x64-16.3.23.msi GME-16.3.23_src.zip repo@repo.isis.vanderbilt.edu:GME/16.3.23/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/16.3.23/
 
 
 # Update online documentation:
@@ -65,7 +65,7 @@ cd Doc
 rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include=/Tutorial** --include google3a6cca9137b58176.html --include=index.html --include=markdown.css --include='*/' --include='**GME Manual and User Guide.pdf' --exclude=*  build@kms1.isis.vanderbilt.edu:/home/build/gmedav/www/
 
 
-# Make sure links are working from http://repo.isis.vanderbilt.edu/GME/old/15.5.8/
+# Make sure links are working from http://repo.isis.vanderbilt.edu/GME/old/16.3.23/
 
 
 ## OPTIONAL STEPS
@@ -78,12 +78,12 @@ Install GME on VM, check for missing symbols
 REM install these tools
 REM   https://www.microsoft.com/en-us/download/details.aspx?id=8279 - Windows 7 debugging tools might be installed in "c:\Program Files\Debugging Tools for Windows (x64)\symchk.exe"
 REM   7-zip http://www.7-zip.org/
-set _NT_SYMBOL_PATH=srv*c:\GME_15.5.8_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
-mkdir c:\GME_15.5.8_symbols
+set _NT_SYMBOL_PATH=srv*c:\GME_16.3.23_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
+mkdir c:\GME_16.3.23_symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files\GME"
-"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_15.5.8_symbols.7z c:\GME_15.5.8_symbols
-copy %userprofile%\GME_15.5.8_symbols.7z \\vboxsrv\xfer
+"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_16.3.23_symbols.7z c:\GME_16.3.23_symbols
+copy %userprofile%\GME_16.3.23_symbols.7z \\vboxsrv\xfer
 
-scp Desktop/xfer/GME_15.5.8_symbols.7z repo@repo.isis.vanderbilt.edu:GME/15.5.8/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/15.5.8/
+scp Desktop/xfer/GME_16.3.23_symbols.7z repo@repo.isis.vanderbilt.edu:GME/16.3.23/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/16.3.23/

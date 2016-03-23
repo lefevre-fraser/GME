@@ -25,7 +25,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 16.3.23
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix GME Console for high-DPI displays

@@ -13,9 +13,9 @@ GME is the generic modeling environment.
 [GME overview](http://www.isis.vanderbilt.edu/Projects/gme/)
 
 Download GME  
-&nbsp; [README/changelog](http://repo.isis.vanderbilt.edu/GME/15.5.8/README.txt)  
-&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/15.5.8/GME-15.5.8.msi" id="win32_installer">GME-15.5.8.msi</a>  
-&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/15.5.8/GME_x64-15.5.8.msi" id="win64_installer">GME_x64-15.5.8.msi</a>  
+&nbsp; [README/changelog](http://repo.isis.vanderbilt.edu/GME/16.3.23/README.txt)  
+&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/16.3.23/GME-16.3.23.msi" id="win32_installer">GME-16.3.23.msi</a>  
+&nbsp; <a href="http://repo.isis.vanderbilt.edu/GME/16.3.23/GME_x64-16.3.23.msi" id="win64_installer">GME_x64-16.3.23.msi</a>  
 &nbsp; [older releases, source code, and debugging symbols](http://repo.isis.vanderbilt.edu/GME/old/)  
 
 [GME User's Manual](GME Manual and User Guide/GME Manual and User Guide.pdf)
@@ -31,7 +31,7 @@ var platform = 'Unknown';
 function find_platform() {
   ua = navigator.userAgent;
 
-  if (ua.search(/Win64; x64;/i) >= 0 || ua.search(/WOW64/i) >= 0) {
+  if (ua.search(/Win64; x64/i) >= 0 || ua.search(/WOW64/i) >= 0) {
     platform = 'win64';
   } else if (ua.search(/Intel Mac OS X 10.[6789]/i) >= 0) {
     platform = 'macintel64';
