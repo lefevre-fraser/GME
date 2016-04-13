@@ -331,15 +331,17 @@ HRESULT FCO::DetachFromArcheType ()
 		SelfMark(OBJEVENT_SUBT_INST);
 
 		// Need to run this check: "inherited ref can only refer to a derived instance of the target of its base"
-		CoreObjs segs = self[ATTRID_REFERENCE + ATTRID_COLLECTION];
-		ITERATE_THROUGH(segs) {
-			CComPtr<IMgaFCO> ffco;
-			ObjForCore(ITER)->getinterface(&ffco);
-			COMTHROW(ffco->Check());
+		{
+			CoreObjs segs = self[ATTRID_REFERENCE + ATTRID_COLLECTION];
+			ITERATE_THROUGH(segs) {
+				CComPtr<IMgaFCO> ffco;
+				ObjForCore(ITER)->getinterface(&ffco);
+				COMTHROW(ffco->Check());
+			}
 		}
 
 		CComPtr<IMgaFCO> selfFco;
-		ObjForCore(ITER)->getinterface(&selfFco);
+		ObjForCore(self)->getinterface(&selfFco);
 		COMTHROW(selfFco->Check());
 
 		CoreObjMark(self[ATTRID_PARENT], OBJEVENT_LOSTCHILD);
