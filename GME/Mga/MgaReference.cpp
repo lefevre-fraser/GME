@@ -138,7 +138,8 @@ HRESULT FCO::RefRevertToBase()  {
 	COMTRY_IN_TRANSACTION { 
 		CheckWrite();
 		CoreObj base = self[ATTRID_DERIVED];
-		if(!base) COMTHROW(E_MGA_NOT_DERIVED);
+		if (!base)
+			COMTHROW(E_MGA_NOT_DERIVED);
 		std::vector<CoreObj> peer(1);
 		CoreObj rb;
 		int d;
@@ -146,8 +147,12 @@ HRESULT FCO::RefRevertToBase()  {
 		CoreObj subt = self.FollowChain(ATTRID_FCOPARENT,d);
 //  if it is external in the most original base, the target must be kept the same
 		bool isinternal = IsInternalRelation(base);
-		if(isinternal)	GetDerivedEquivalent(base[ATTRID_REFERENCE],subt,peer[0]);
-		else			peer[0] = base[ATTRID_REFERENCE];
+		if (isinternal) {
+			GetDerivedEquivalent(base[ATTRID_REFERENCE], subt, peer[0]);
+		}
+		else {
+			peer[0] = base[ATTRID_REFERENCE];
+		}
 		self[ATTRID_MASTEROBJ] = base;
 		putreftask(!isinternal).DoWithDeriveds(self, &peer);
 	} COMCATCH_IN_TRANSACTION(;);

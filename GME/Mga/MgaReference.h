@@ -46,7 +46,12 @@ class putreftask : public DeriveTreeTask {
 	bool Do(CoreObj self, std::vector<CoreObj> *peers = NULL);
 public:
 	// isext is true if the relation is sure to be external, false if not known
-	putreftask(bool isext)  { masterattr = ATTRID_MASTEROBJ; if(isext) endreserve = 1; };
+	putreftask(bool isext)  {
+		masterattr = ATTRID_MASTEROBJ;
+		if (isext) {
+			endreserve = 1;
+		}
+	};
 };
 
 #endif //__MGAREFERENCE_H_

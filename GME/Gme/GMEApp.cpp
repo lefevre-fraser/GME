@@ -2391,9 +2391,9 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Importing ")) + file_name + _T("..."), 1);
 		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
 		if (parser2 && m_pMainWnd)
-			parser2->__ParseProject2(theApp.mgaProject,_bstr_t(fullPath), (ULONGLONG)(m_pMainWnd->GetSafeHwnd()));
+			parser2->__ParseProject2(theApp.mgaProject, _bstr_t(fullPath), (ULONGLONG)(m_pMainWnd->GetSafeHwnd()));
 		else
-			COMTHROW(parser->ParseProject(theApp.mgaProject,PutInBstr(fullPath)) );
+			COMTHROW(parser->ParseProject(theApp.mgaProject, PutInBstr(fullPath)));
 		
 		// mgaproject has been filled with data, let's update title:
 		UpdateProjectName();

@@ -166,7 +166,7 @@ HRESULT FCO::get_ChildDerivedFrom(IMgaFCO *baseobj, IMgaFCO **pVal) {
 // ----------------------------------------
 
 // check if the original master of this relation is internal or external
-// does not check the internality of references whithin connections!!!!!!
+// does not check the internality of references within connections!
 bool IsInternalRelation(CoreObj src) {
 	CoreObj m;
 	while((m = src.GetMaster()) != NULL) src = m;
