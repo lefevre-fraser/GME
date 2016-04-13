@@ -6,6 +6,10 @@ import os.path
 import unittest
 from GPyUnit.util import DispatchEx
 
+def _adjacent_file(file):
+    import os.path
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+
 class TestFolderCopy(unittest.TestCase):
     def __init__(self, input_file, folder_to_copy, destination_folder, name=None, **kwds):
         super(TestFolderCopy, self).__init__('test', **kwds)
@@ -21,9 +25,6 @@ class TestFolderCopy(unittest.TestCase):
         """
         Regression test: given self.input_file, move self.folder_to_copy to self.destination_folder. Then check self.output_file against self.correct_file
         """
-        def _adjacent_file(file):
-            import os.path
-            return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
         from GPyUnit import util
         util.register_xmp(_adjacent_file('GME310ModelRefportTest.xmp'))
 
@@ -49,14 +50,28 @@ class TestFolderCopy(unittest.TestCase):
             self.fail("Reference file '%s' does not match output '%s'" % (self.correct_file, self.output_file))
         #print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)
 
+class TestDerivedRefport(unittest.TestCase):
+    def __init__(self, *kargs, **kwds):
+        super(TestDerivedRefport, self).__init__(*kargs, **kwds)
+
+    def test(self):
+        from GPyUnit import util
+        util.register_xmp(_adjacent_file("GME310ModelRefportTest.xmp"))
+
+        mga = util.parse_xme(self.connstr, _adjacent_file("DerivedRefport.xme"))
+        mga.Save()
+        mga.Close()
+
+    @property
+    def connstr(self):
+        return "MGA=" + _adjacent_file("DerivedRefport_test.mga")
+
+
 class TestRefportAPI(unittest.TestCase):
     def __init__(self, *kargs, **kwds):
         super(TestRefportAPI, self).__init__(*kargs, **kwds)
 
     def test(self):
-        def _adjacent_file(file):
-            import os.path
-            return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
         from GPyUnit import util
         util.register_xmp(_adjacent_file('GME310ModelRefportTest.xmp'))
 
@@ -84,6 +99,7 @@ def suite():
     suite = unittest.TestSuite()
     suite.addTest(TestFolderCopy(input_file="test1.mga", folder_to_copy="/Test1", destination_folder=""))
     suite.addTest(TestRefportAPI("test"))
+    suite.addTest(TestDerivedRefport("test"))
     return suite
 
 if __name__ == "__main__":

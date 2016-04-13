@@ -1639,6 +1639,16 @@ void CMgaParser::StartReference(const attributes_type &attributes)
 		CComObjPtr<IMgaReference> ref;
 		COMTHROW( fco.QueryInterface(ref) );
 
+		// Derived References may have incorrect refport connections from initial creation (DeriveRootObject)
+		if (GetByNameX(attributes, _T("derivedfrom")) != nullptr) {
+			auto connPoints = ref->UsedByConns;
+			for (int i = 1; i <= connPoints->Count; i++) {
+				auto connPoint = connPoints->GetItem(i);
+				// TODO?? if (connPoint->References->GetItem(1) == fco
+				connPoint->Remove(); // these will be set when <connpoint> is parsed
+			}
+		}
+
 		COMTHROW( ref->put_Referred(referred) );
 	}
 
