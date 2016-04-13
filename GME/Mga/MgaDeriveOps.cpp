@@ -311,7 +311,7 @@ void DeriveTreeTask::DoWithDeriveds(CoreObj self, std::vector<CoreObj> *peers) {
 
 
 // ----------------------------------------
-// Attach/detach (freshly implemented)
+// Attach/detach
 // ----------------------------------------
 HRESULT FCO::DetachFromArcheType ()
 {
@@ -329,7 +329,20 @@ HRESULT FCO::DetachFromArcheType ()
 
 		}
 		SelfMark(OBJEVENT_SUBT_INST);
-		CoreObjMark( self[ATTRID_PARENT], OBJEVENT_LOSTCHILD);
+
+		// Need to run this check: "inherited ref can only refer to a derived instance of the target of its base"
+		CoreObjs segs = self[ATTRID_REFERENCE + ATTRID_COLLECTION];
+		ITERATE_THROUGH(segs) {
+			CComPtr<IMgaFCO> ffco;
+			ObjForCore(ITER)->getinterface(&ffco);
+			COMTHROW(ffco->Check());
+		}
+
+		CComPtr<IMgaFCO> selfFco;
+		ObjForCore(ITER)->getinterface(&selfFco);
+		COMTHROW(selfFco->Check());
+
+		CoreObjMark(self[ATTRID_PARENT], OBJEVENT_LOSTCHILD);
 	} COMCATCH_IN_TRANSACTION(;);
 
 	return S_OK;

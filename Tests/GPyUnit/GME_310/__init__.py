@@ -5,6 +5,7 @@ import sys
 import os.path
 import unittest
 from GPyUnit.util import DispatchEx
+from GPyUnit.util import dec_disable_early_binding
 
 def _adjacent_file(file):
     import os.path
@@ -51,6 +52,7 @@ class TestFolderCopy(unittest.TestCase):
         #print "Reference file '%s' matches output '%s'" % (self.correct_file, self.output_file)
 
 class TestDerivedRefport(unittest.TestCase):
+    input_filename = "DerivedRefport.xme"
     def __init__(self, *kargs, **kwds):
         super(TestDerivedRefport, self).__init__(*kargs, **kwds)
 
@@ -58,13 +60,41 @@ class TestDerivedRefport(unittest.TestCase):
         from GPyUnit import util
         util.register_xmp(_adjacent_file("GME310ModelRefportTest.xmp"))
 
-        mga = util.parse_xme(self.connstr, _adjacent_file("DerivedRefport.xme"))
+        mga = util.parse_xme(self.connstr, _adjacent_file(self.input_filename))
         mga.Save()
         mga.Close()
 
     @property
     def connstr(self):
         return "MGA=" + _adjacent_file("DerivedRefport_test.mga")
+
+
+class TestDerivedRefport2(unittest.TestCase):
+    input_filename = "DerivedRefport.xme"
+    def __init__(self, *kargs, **kwds):
+        super(TestDerivedRefport2, self).__init__(*kargs, **kwds)
+
+    @dec_disable_early_binding
+    def test(self):
+        from GPyUnit import util
+        util.register_xmp(_adjacent_file("GME310ModelRefportTest.xmp"))
+
+        mga = util.parse_xme(self.connstr, _adjacent_file(self.input_filename))
+        mga.BeginTransactionInNewTerr()
+        referredDerived = mga.ObjectByPath("/@KindFolder/@ReferredDerived")
+        try:
+            # this is illegal because a derived reference will point to a non-derived target
+            referredDerived.DetachFromArcheType()
+        except util.com_error as e:
+            self.assertIn('Invalid reference target', str(e))
+
+        mga.CommitTransaction()
+        mga.Save()
+        mga.Close()
+
+    @property
+    def connstr(self):
+        return "MGA=" + _adjacent_file("DerivedRefport_test2.mga")
 
 
 class TestRefportAPI(unittest.TestCase):

@@ -3,6 +3,7 @@ from __future__ import with_statement
 import os
 import sys
 import unittest
+import platform
 
 _opts = type("Options", (object,), {
     'Dispatch_x64': False,
@@ -188,3 +189,8 @@ def get_MetaGME_user_reg_data():
         project.Close(True)
         return ("MetaGME", meta_gme_connstr, None, meta_gme_guid, 1)
 
+if platform.system() != 'Java':
+    from pythoncom import com_error
+else:
+    import org.isis.jaut.InvokeException
+    com_error = org.isis.jaut.InvokeException

@@ -1,6 +1,6 @@
 import unittest
 import os
-from GPyUnit.util import DispatchEx
+from GPyUnit.util import DispatchEx, com_error
 
 class TestParser(unittest.TestCase):
     def test_ParseMetaGME(self):
@@ -12,15 +12,8 @@ class TestParser(unittest.TestCase):
 
         mga.Create("MGA=tmp.mga", paradigm)
         terr = mga.BeginTransactionInNewTerr()
-        import platform
-        if platform.system() != 'Java':
-            from pythoncom import com_error
-            exc_type = com_error
-        else:
-            import org.isis.jaut.InvokeException
-            exc_type = org.isis.jaut.InvokeException
         # GME-371: this would crash
-        self.assertRaises(exc_type, xme.ParseProject, mga, inputfile)
+        self.assertRaises(com_error, xme.ParseProject, mga, inputfile)
         return
         mga.CommitTransaction()
         terr.Destroy()
