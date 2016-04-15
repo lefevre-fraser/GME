@@ -45,7 +45,6 @@ void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 
 #ifdef _ATL_DEBUG_INTERFACES
 	IUnknown* pUnk = ((ATL::_QIThunk *)(ibase.p))->m_pUnk;
-	pUnk = ((ATL::_QIThunk *)(pUnk))->m_pUnk; // this is needed if Core has _ATL_DEBUG_INTERFACES
 	CMgaMetaBase *base = (CMgaMetaBase *)(IMgaMetaBase*)(pUnk);
 #else
 	CMgaMetaBase *base = static_cast<CMgaMetaBase*>((IMgaMetaBase*)ibase);

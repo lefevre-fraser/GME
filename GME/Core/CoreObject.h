@@ -184,13 +184,10 @@ inline CComPtr<IUnknown> CastToUnknown_Object(CCoreObject *p)
 	return pUnk;
 }
 
-inline CCoreObject *CastToObject(IUnknown *p) {
-	// Is p a thunk?
-	// dynamic_cast can't work, since ATL::_QIThunk has no superclass (not even IUnknown)
-	//  solution: compare virtual function tables
-	ATL::_QIThunk dummy((IUnknown*)(void*)1, L"dummy", IID_IUnknown, 0, false);
+bool IsQIThunk(IUnknown *p);
 
-	if (*((int**)(void*)p) == *((int**)(void*)&dummy))
+inline CCoreObject *CastToObject(IUnknown *p) {
+	if (IsQIThunk(p))
 		return (CCoreObject*)(ICoreObject*)((ATL::_QIThunk *)(p))->m_pUnk;
 	else
 		return (CCoreObject*)(ICoreObject*)p;

@@ -382,3 +382,14 @@ HRESULT check_location_compatibility(ICoreAttribute *newobj, ICoreAttribute *old
 	}
 	COMCATCH(;)
 }
+
+#ifdef _ATL_DEBUG_INTERFACES
+bool IsQIThunk(IUnknown *p) {
+	// Is p a thunk?
+	// dynamic_cast can't work, since ATL::_QIThunk has no superclass (not even IUnknown)
+	//  solution: compare virtual function tables
+	ATL::_QIThunk dummy((IUnknown*)(void*)1, L"dummy", IID_IUnknown, 0, false);
+
+	return *((int**)(void*)p) == *((int**)(void*)&dummy);
+}
+#endif

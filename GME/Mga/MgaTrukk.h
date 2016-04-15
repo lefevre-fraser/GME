@@ -117,15 +117,37 @@ typedef CComBSTR CComBSTRNoAt;
 
 struct coreobj_hashfunc : public stdext::hash_compare<CoreObj> 
 {
-	size_t operator()(const CoreObj &ob) const	
+#ifndef _ATL_DEBUG_INTERFACES
+	size_t operator()(const CoreObj &ob) const
 	{
 		return (size_t)ob.p;
 	}
-	bool operator()(const CoreObj &oba,const CoreObj &obb) const
-	{	
+	bool operator()(const CoreObj &oba, const CoreObj &obb) const
+	{
 		// must be < logic, [ implemented based on COM_EQUAL's invokation ]
-		return static_cast<IUnknown*>( const_cast<CoreObj&>( oba)) < static_cast<IUnknown*>( const_cast<CoreObj&>( obb));
+		return static_cast<IUnknown*>(const_cast<CoreObj&>(oba)) < static_cast<IUnknown*>(const_cast<CoreObj&>(obb));
 	}
+#else
+	size_t operator()(const CoreObj &ob) const
+	{
+		return (size_t)(IUnknown*)getUnknown(ob);
+	}
+	bool operator()(const CoreObj &oba, const CoreObj &obb) const
+	{
+		// must be < logic, [ implemented based on COM_EQUAL's invokation ]
+		return static_cast<IUnknown*>(getUnknown(oba)) < static_cast<IUnknown*>(getUnknown(obb));
+	}
+
+	IUnknownPtr getUnknown(const CoreObj &ob) const {
+		auto obj = const_cast<CoreObj&>(ob);
+		if (obj == nullptr) {
+			return nullptr;
+		}
+		IUnknownPtr pUnk;
+		obj->QueryInterface(&pUnk);
+		return pUnk;
+	}
+#endif
 };
 
 typedef stdext::hash_map<CoreObj, CoreObj, coreobj_hashfunc> coreobjpairhash;

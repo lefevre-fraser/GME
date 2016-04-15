@@ -422,9 +422,9 @@ void RefreshManager::collectFreshConnection( const CoreObj& p_coreConn
 	CComQIPtr<IMgaConnection> conn( fco);
 
 	CComPtr<IMgaFCO> b_fco, d_fco;
-	c = ObjForCore( p_base);
+	c = static_cast<FCO *>(ObjForCore( p_base));
 	if( c) c->getinterface( &b_fco);
-	c = ObjForCore( p_derd);
+	c = static_cast<FCO *>(ObjForCore( p_derd));
 	if( c) c->getinterface( &d_fco);
 	CComQIPtr<IMgaModel> b_model( b_fco), d_model( d_fco);
 	if( conn && b_model && d_model)

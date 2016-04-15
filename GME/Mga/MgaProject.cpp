@@ -155,6 +155,8 @@ void CMgaProject::OpenParadigm(BSTR s, VARIANT *pGUID) {
 	}
 	ASSERT(connstr);
 	COMTHROW(metapr.CoCreateInstance(OLESTR("Mga.MgaMetaProject")));
+	// #ifdef _ATL_DEBUG_INTERFACES
+	// COMTHROW(metapr.CoCreateInstance(OLESTR("Mga.MgaMetaProject"), NULL, CLSCTX_LOCAL_SERVER));
 	HRESULT hr = metapr->Open(connstr);
 	if (FAILED(hr))
 	{
@@ -1938,9 +1940,12 @@ STDMETHODIMP CMgaProject::CheckFolderCollection(IMgaFolders *coll) {
 #include <set>
 #include "../core/CoreUtilities.h"
 
-bool std::less<metaobjidpair_type>::operator ()(const metaobjidpair_type &a,const metaobjidpair_type &b) const {
-	if(a.metaid == b.metaid) return a.objid < b.objid;
-	return a.metaid < b.metaid;
+bool
+#if _MSC_VER >= 1700
+constexpr
+#endif
+std::less<metaobjidpair_type>::operator ()(const metaobjidpair_type &a,const metaobjidpair_type &b) const {
+	return (a.metaid == b.metaid) ? a.objid < b.objid : a.metaid < b.metaid;
 }
 
 void ClearLocks(ICoreStorage * storage, std::set<metaobjidpair_type> &mset, short mi, long oi, bool clear) {

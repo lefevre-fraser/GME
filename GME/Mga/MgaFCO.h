@@ -634,6 +634,8 @@ public:
 
 
 #ifdef _ATL_DEBUG_INTERFACES
+bool IsQIThunk(IUnknown *p);
+
 inline FCOPtr ObjForCore(ICoreObject *s) {
 #else
 inline FCO *ObjForCore(ICoreObject *s) {
@@ -642,6 +644,8 @@ inline FCO *ObjForCore(ICoreObject *s) {
 		if(!p) COMTHROW(E_MGA_MODULE_INCOMPATIBILITY);
 #ifdef _ATL_DEBUG_INTERFACES
 		IUnknown* pUnk = ((ATL::_QIThunk *)(p.p))->m_pUnk;
+		while (IsQIThunk(pUnk))
+			pUnk = ((ATL::_QIThunk *)(pUnk))->m_pUnk;
 		return (FCO*)((ATL::CComContainedObject<FCO>*)pUnk);
 #else
 		return (FCO *)(p.p);
