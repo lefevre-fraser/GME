@@ -569,7 +569,7 @@ BSTR CConsoleCtrl::GetContents()
 		}
     }
 
-	return contents;
+	return contents.Detach();
 }
 
 void CConsoleCtrl::SetContents(LPCTSTR lpszNewValue) 
