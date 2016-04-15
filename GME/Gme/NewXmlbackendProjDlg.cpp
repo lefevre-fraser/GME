@@ -139,6 +139,7 @@ void CNewXmlbackendProjDlg::OnOK()
 	if( m_sourceControlType == 0 && 
 	    (m_svnUrl.Left( 6) != _T("svn://") 
 	    && m_svnUrl.Left(10) != _T("svn+ssh://")
+	    && m_svnUrl.Left(7) != _T("file://")
 	    && m_svnUrl.Left(7) != _T("http://")
 	    && m_svnUrl.Left(8) != _T("https://")))
 	{
