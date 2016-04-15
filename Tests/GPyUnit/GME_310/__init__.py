@@ -87,6 +87,8 @@ class TestDerivedRefport2(unittest.TestCase):
             referredDerived.DetachFromArcheType()
         except util.com_error as e:
             self.assertIn('Invalid reference target', str(e))
+        else:
+            self.fail('Detach must fail')
 
         mga.CommitTransaction()
         mga.Save()
