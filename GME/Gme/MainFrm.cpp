@@ -166,7 +166,14 @@ CMainFrame::CMainFrame()
 	theInstance = this;	
 	m_autosaveTimerID = NULL;
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2005);
+#ifdef new
+#pragma push_macro("new")
+#undef new
 	new ((void*)&m_wndClientArea) CGMEMDIClientAreaWnd();
+#pragma pop_macro("new")
+#else
+	new ((void*)&m_wndClientArea) CGMEMDIClientAreaWnd();
+#endif
 }
 
 CMainFrame::~CMainFrame()
