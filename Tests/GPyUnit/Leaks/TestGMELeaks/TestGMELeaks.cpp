@@ -46,6 +46,20 @@ int main(int argc, char** argv)
 			project->OpenEx(_bstr_t("MGA=") + _bstr_t(gme_root) + L"\\Paradigms\\MetaGME\\MetaGME-model.mga", _bstr_t("MetaGME"), _variant_t());
 			project->BeginTransactionInNewTerr(TRANSACTION_GENERAL);
 			project->CommitTransaction();
+
+			project->BeginTransactionInNewTerr(TRANSACTION_GENERAL);
+			auto aspects = project->ObjectByPath[L"/@Aspects"];
+			IMgaFCOPtr aspectsFco = aspects;
+			auto copy = aspectsFco->ParentFolder->CopyFCODisp(aspectsFco);
+			copy->DestroyObject();
+
+			project->CommitTransaction();
+			project->Undo();
+			project->Redo();
+			project->Undo();
+			project->FlushUndoQueue();
+
+
 			project->Close(VARIANT_TRUE);
 		}
 		catch (_com_error& e)
@@ -61,10 +75,11 @@ int main(int argc, char** argv)
 		}
 	}
 
-	CoFreeUnusedLibraries();
-	CoUninitialize();
 	wprintf(L"%S finished\n", argv[0]);
 	while (fgetc(stdin) != '\n')
 		;
+
+	CoFreeUnusedLibraries();
+	CoUninitialize();
 	return 0;
 }

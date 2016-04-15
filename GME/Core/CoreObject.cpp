@@ -314,7 +314,7 @@ STDMETHODIMP CCoreObject::Delete()
 			++i;
 		}
 
-		COMTHROW( lock->put_Value(PutInVariant(locking_type(LOCKING_NONE))) );
+		COMTHROW( lock->put_Value(PutInVariant(locking_type(PUT_DELETE_DONE_LOCK))) );
 	}
 	COMCATCH(;)
 }

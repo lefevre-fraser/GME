@@ -1,5 +1,6 @@
 import unittest
 import os
+import re
 
 def _adjacent_file(file):
     import os.path
@@ -17,13 +18,15 @@ class TestLeaks(unittest.TestCase):
                 print stdout
                 print stderr
                 raise subprocess.CalledProcessError(sub.returncode, args[0])
-        check_output_if_failed([r'c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe', 
+        check_output_if_failed([r'c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe',
             _adjacent_file(r'Leaks\TestGMELeaks\TestGMELeaks.vcxproj'), '/p:Configuration=Release'])
         check_output_if_failed([r'\Program Files (x86)\Debugging Tools for Windows (x86)\gflags.exe'] +
             '-i TestGMELeaks.exe +ust'.split())
         umdh = r"c:\Program Files (x86)\Debugging Tools for Windows (x86)\umdh.exe"
-        
+
         os.environ['OANOCACHE'] = '1'
+        os.environ['_NT_SYMBOL_PATH'] = r'c:\Windows\symbols\dll;srv*c:\symbols*https://msdl.microsoft.com/download/symbols'
+
         leak_sub = subprocess.Popen([_adjacent_file(r'Leaks\TestGMELeaks\Release\TestGMELeaks.exe')], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print leak_sub.stdout.readline()
         check_output_if_failed([umdh] + '-pn:TestGMELeaks.exe -f:LeakDump1.txt'.split())
@@ -37,9 +40,12 @@ class TestLeaks(unittest.TestCase):
 
         leak_sub.wait()
         self.assertEqual(0, leak_sub.returncode)
-        
+
         lines = open('LeakDiff.txt', 'rb').readlines()
-        self.assertTrue([line for line in lines[-3:] if line.find('Total decrease ==')], lines[-3:])
-        
+        # Total decrease ==      0 requested +      0 overhead =      0
+        self.assertTrue([line for line in lines[-3:] if line.find('Total decrease ==') != -1], lines[-3:])
+
+        # self.assertEqual([], [line for line in lines if re.search('(MSVCR\\d+!malloc\\+|MSVCR\\d+!operator new)', line)])
+
 if __name__ == "__main__":
         unittest.main()

@@ -319,12 +319,16 @@ STDMETHODIMP CCoreLockAttribute::put_Value(VARIANT p)
 			Unload();
 			return S_OK;
 		}
+		locking_type oldVal = 0;
+		if (locking == PUT_DELETE_DONE_LOCK) {
+			locking = LOCKING_NONE;
+			oldVal = LOCKING_EXCLUSIVE;
+		}
 
 		if( !(LOCKING_NONE <= locking && locking <= LOCKING_EXCLUSIVE) )
 			HR_THROW(E_INVALIDARG);
 
-		// FIXME: 0 is not right, does it matter?
-		RegisterLockTry(0, locking );
+		RegisterLockTry(oldVal, locking);
 	}
 	COMCATCH(;)
 }

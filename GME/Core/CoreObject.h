@@ -8,6 +8,8 @@
 #include <list>
 //#include <slist>
 
+const locking_type PUT_DELETE_DONE_LOCK = 55;
+
 class CCoreProject;
 class CCoreAttribute;
 class CCoreLockAttribute;
