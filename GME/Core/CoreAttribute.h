@@ -106,27 +106,48 @@ public:
 
 // ------- Status
 
-#define COREATTRIBUTE_DIRTY				0x0001
-#define COREATTRIBUTE_LOCKGROUP_LOADED	0x0002
-#define COREATTRIBUTE_COLL_UPTODATE		0x0004
-#define COREATTRIBUTE_LOCK_CLOSED		0x0008
+enum COREATTRIBUTE_LOCK_STATUS {
+	COREATTRIBUTE_DIRTY = 0x0001,
+	COREATTRIBUTE_LOCKGROUP_LOADED = 0x0002,
+	COREATTRIBUTE_COLL_UPTODATE = 0x0004,
+	COREATTRIBUTE_LOCK_CLOSED = 0x0008
+};
 
 public:
-	void SetStatusFlag(status_type flags) NOTHROW { status |= flags; }
-	void ResetStatusFlag(status_type flags) NOTHROW { status &= ~flags; }
+	void SetStatusFlag(status_type flags) NOTHROW {
+		status |= flags;
+	}
+	void ResetStatusFlag(status_type flags) NOTHROW {
+		status &= ~flags;
+	}
 
-	void ChangeStatusFlag(status_type flag, bool set) NOTHROW { if(set) status |= flag; else status &= ~flag; }
-	bool GetStatusFlag(status_type flag) const NOTHROW { return (status & flag) != 0; }
+	void ChangeStatusFlag(status_type flag, bool set) NOTHROW {
+		if(set)
+			status |= flag;
+		else
+			status &= ~flag;
+	}
+	bool GetStatusFlag(status_type flag) const NOTHROW { 
+		return (status & flag) != 0; 
+	}
 
 public:
 	bool InTransaction() const NOTHROW;
 	bool InWriteTransaction() const NOTHROW;
 	bool IsZombie() const NOTHROW;
 
-	bool IsDirty() const NOTHROW { return GetStatusFlag(COREATTRIBUTE_DIRTY); }
-	void SetDirty() NOTHROW { SetStatusFlag(COREATTRIBUTE_DIRTY); }
-	void ResetDirty() NOTHROW { ResetStatusFlag(COREATTRIBUTE_DIRTY); }
-	void ChangeDirty(bool dirty) { ChangeStatusFlag(COREATTRIBUTE_DIRTY, dirty); }
+	bool IsDirty() const NOTHROW { 
+		return GetStatusFlag(COREATTRIBUTE_DIRTY);
+	}
+	void SetDirty() NOTHROW { 
+		SetStatusFlag(COREATTRIBUTE_DIRTY); 
+	}
+	void ResetDirty() NOTHROW { 
+		ResetStatusFlag(COREATTRIBUTE_DIRTY);
+	}
+	void ChangeDirty(bool dirty) { 
+		ChangeStatusFlag(COREATTRIBUTE_DIRTY, dirty); 
+	}
 
 // ------- FinalTrItem
 

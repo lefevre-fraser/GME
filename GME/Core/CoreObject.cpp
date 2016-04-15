@@ -522,7 +522,7 @@ void CCoreObject::SetZombie()
 	while( i != e )
 	{
 		if ((*i)->GetAttrID() == ATTRID_LOCK)
-			ASSERT(!((CCoreLockAttribute*)*i)->GetStatusFlag(COREATTRIBUTE_LOCKGROUP_LOADED));
+			ASSERT(!((CCoreLockAttribute*)*i)->GetStatusFlag(CCoreAttribute::COREATTRIBUTE_LOCKGROUP_LOADED));
 
 		(*i)->Release();
 		i++;
