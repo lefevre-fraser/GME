@@ -631,6 +631,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Show Port in Parent",         ID_CNTX_SHOWPORTINPARENT
         MENUITEM "Locate Port in Browser",      ID_CNTX_LOCATEPORTINBROWSER
+        MENUITEM "Delete",                      ID_PORTCNTX_DELETE
     END
 END
 

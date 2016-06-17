@@ -389,6 +389,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_CONNCNTX_JUMP_SRC, OnConnCntxRevfollow)
 	ON_COMMAND(ID_PORTCNTX_FOLLOWCONNECTION, OnPortCntxFollowConnection)
 	ON_COMMAND(ID_PORTCNTX_REVERSECONNECTION, OnPortCntxRevfollowConnection)
+	ON_COMMAND(ID_PORTCNTX_DELETE, OnCntxPortDelete)
 	ON_COMMAND(ID_CNTX_FOLLOWCONNECTION, OnCntxFollowConnection)
 	ON_COMMAND(ID_CNTX_REVERSECONNECTION, OnCntxRevfollowConnection)
 	ON_COMMAND(ID_CNTX_SHOWPORTINPARENT, OnCntxPortShowInParent)
@@ -8356,6 +8357,27 @@ void CGMEView::OnPortCntxFollowConnection() // 'Follow Connection' context comma
 		contextSelection = 0;
 		contextPort = 0;
 	}
+}
+
+void CGMEView::OnCntxPortDelete()
+{
+	try {
+		if (contextPort) {
+			CGMEEventLogger::LogGMEEvent(_T("OnCntxPortDelete  ") + contextPort->GetName() + _T(" ") + contextPort->GetID() + _T("\r\n"));
+			BeginTransaction();
+			COMTHROW(contextPort->mgaFco->__DestroyObject());
+			CommitTransaction();
+		}
+	}
+	catch (const _com_error& e) {
+		_bstr_t errorMessage = _bstr_t(L"Cannot delete port: ") + e.Description();
+		AbortTransaction(e.Error());
+		if (!CGMEConsole::theInstance)
+			AfxMessageBox(errorMessage);
+		else
+			CGMEConsole::theInstance->Message(static_cast<const TCHAR *>(errorMessage), MSG_ERROR);
+	}
+
 }
 
 void CGMEView::OnPortCntxRevfollowConnection() // 'Follow Reverse Connection' context command of a port

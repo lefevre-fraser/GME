@@ -520,7 +520,7 @@
 #define ID_FILE_INTERPRET49             33259
 #define ID_CONNCNTX_REVERSE             33270
 #define ID_VIEW_SHOWCONNECTEDPORTSONLY  33271
-
+#define ID_PORTCNTX_DELETE              33272
 #define IDW_TOOLBAR_MAIN                0xE820
 #define IDW_TOOLBAR_WINS                0xE821
 #define IDW_TOOLBAR_COMPONENT           0xE822
@@ -538,7 +538,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        232
-#define _APS_NEXT_COMMAND_VALUE         33272
+#define _APS_NEXT_COMMAND_VALUE         33273
 #define _APS_NEXT_CONTROL_VALUE         1139
 #define _APS_NEXT_SYMED_VALUE           119
 #endif

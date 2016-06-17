@@ -593,6 +593,7 @@ protected:
 	afx_msg void OnCntxDstarSet();
 	afx_msg void OnPortCntxFollowConnection();
 	afx_msg void OnPortCntxRevfollowConnection();
+	afx_msg void OnCntxPortDelete();
 	afx_msg void OnCntxFollowConnection();
 	afx_msg void OnCntxRevfollowConnection();
 	afx_msg void OnCntxPortShowInParent();
