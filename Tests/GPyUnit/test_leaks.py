@@ -25,7 +25,7 @@ class TestLeaks(unittest.TestCase):
         umdh = r"c:\Program Files (x86)\Debugging Tools for Windows (x86)\umdh.exe"
 
         os.environ['OANOCACHE'] = '1'
-        os.environ['_NT_SYMBOL_PATH'] = r'c:\Windows\symbols\dll;srv*c:\symbols*https://msdl.microsoft.com/download/symbols'
+        os.environ['_NT_SYMBOL_PATH'] = r'c:\Windows\symbols\dll;srv*{}\SymbolCache*https://msdl.microsoft.com/download/symbols'.format(os.environ['TEMP'])
 
         leak_sub = subprocess.Popen([_adjacent_file(r'Leaks\TestGMELeaks\Release\TestGMELeaks.exe')], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print leak_sub.stdout.readline()
