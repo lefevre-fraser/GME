@@ -221,6 +221,8 @@ def compile_meta():
 def compile_JBON():
     "Compile Java component support (JBON)"
     if prefs['arch'] == 'x64': return
+    tools.system(r"reg add HKLM\Software\GME /t REG_SZ /v JavaClassPath /d".split() +
+        [os.path.join(GME_ROOT, "SDK", "Java", "gme.jar"), "/reg:32", "/f"])
     sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln")
     tools.build_VS( sln_file, "Release" )
 
