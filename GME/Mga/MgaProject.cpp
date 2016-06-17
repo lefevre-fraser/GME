@@ -253,8 +253,10 @@ STDMETHODIMP CMgaProject::CreateEx(BSTR projectname, BSTR paradigmname, VARIANT 
 	COMCATCH(
 		opened = CLOSED;
 		guidstat = CLEAN;
-		if (dataproject)
+		if (dataproject) {
 			dataproject->CloseProject(VARIANT_TRUE);
+			dataproject->DeleteProject(projectname);
+		}
 		if (metapr)
 			metapr->Close();
 		metapr = 0;

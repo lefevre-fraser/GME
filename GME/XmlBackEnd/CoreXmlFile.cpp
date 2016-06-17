@@ -1755,6 +1755,8 @@ STDMETHODIMP CCoreXmlFile::CloseProject( VARIANT_BOOL abort)
 		if( m_sourceControl != SC_NONE )
 		checkInAll();*/
 
+		// FIXME Delete if Creat was no successful?
+
 		// purge my protect list
 		m_protectList.onLoad();
 
@@ -1768,8 +1770,23 @@ STDMETHODIMP CCoreXmlFile::CloseProject( VARIANT_BOOL abort)
 }
 
 STDMETHODIMP CCoreXmlFile::DeleteProject()
-{ 
-	return E_NOTIMPL;
+{
+	TCHAR dir[MAX_PATH + 1];
+	_tcscpy(dir, m_folderPath.c_str());
+	dir[m_folderPath.length()] = L'\0';
+
+	SHFILEOPSTRUCT file_op = {
+        NULL,
+        FO_DELETE,
+        dir,
+        "",
+        FOF_NOCONFIRMATION |
+        FOF_NOERRORUI |
+        FOF_SILENT,
+        false,
+        0,
+        "" };
+	return SHFileOperation(&file_op) ? E_FAIL : S_OK;
 }
 
 STDMETHODIMP CCoreXmlFile::BeginTransaction()
