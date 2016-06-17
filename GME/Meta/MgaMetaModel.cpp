@@ -36,7 +36,7 @@ STDMETHODIMP CMgaMetaModel::get_DefinedFCOByName(BSTR name, VARIANT_BOOL inscope
 		}
 
 		if( inscope == VARIANT_FALSE )
-			COMTHROW(E_NOTFOUND);
+			COMRETURN(E_NOTFOUND);
 
 		CComObjPtr<IMgaMetaBase> parent;
 		COMTHROW( get_DefinedIn(PutOut(parent)) );
