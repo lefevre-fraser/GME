@@ -24,14 +24,138 @@
 
 class CComponentObj;
 
+struct IDispatchTearOff : public IDispatch /* final */
+{
+	long refcount;
+	IUnknown* parent;
+	IDispatch* disp;
+
+	IDispatchTearOff(IDispatch* disp, IUnknown* parent) {
+		this->disp = disp;
+		this->parent = parent;
+		parent->AddRef();
+		refcount = 1;
+	}
+
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void **ppvObject) {
+		if (riid == __uuidof(IDispatch)) {
+			this->AddRef();
+			*ppvObject = static_cast<IDispatch*>(this);
+			return S_OK;
+		}
+		return this->parent->QueryInterface(riid, ppvObject);
+	}
+
+	ULONG STDMETHODCALLTYPE AddRef() {
+		return ++this->refcount;
+	}
+
+	ULONG STDMETHODCALLTYPE Release() {
+		long refcount = --(this->refcount);
+		if (refcount == 0) {
+			this->disp->Release();
+			this->parent->Release();
+			this->disp = NULL;
+			this->parent = NULL;
+			delete this;
+		}
+		return refcount;
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE GetTypeInfoCount(
+		/* [out] */ __RPC__out UINT *pctinfo) {
+		return disp->GetTypeInfoCount(pctinfo);
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE GetTypeInfo(
+		/* [in] */ UINT iTInfo,
+		/* [in] */ LCID lcid,
+		/* [out] */ __RPC__deref_out_opt ITypeInfo **ppTInfo) {
+		return disp->GetTypeInfo(iTInfo, lcid, ppTInfo);
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE GetIDsOfNames(
+		/* [in] */ __RPC__in REFIID riid,
+		/* [size_is][in] */ __RPC__in_ecount_full(cNames) LPOLESTR *rgszNames,
+		/* [range][in] */ __RPC__in_range(0, 16384) UINT cNames,
+		/* [in] */ LCID lcid,
+		/* [size_is][out] */ __RPC__out_ecount_full(cNames) DISPID *rgDispId) {
+		return disp->GetIDsOfNames(riid, rgszNames, cNames, lcid, rgDispId);
+	}
+
+	virtual /* [local] */ HRESULT STDMETHODCALLTYPE Invoke(
+		/* [annotation][in] */
+		_In_  DISPID dispIdMember,
+		/* [annotation][in] */
+		_In_  REFIID riid,
+		/* [annotation][in] */
+		_In_  LCID lcid,
+		/* [annotation][in] */
+		_In_  WORD wFlags,
+		/* [annotation][out][in] */
+		_In_  DISPPARAMS *pDispParams,
+		/* [annotation][out] */
+		_Out_opt_  VARIANT *pVarResult,
+		/* [annotation][out] */
+		_Out_opt_  EXCEPINFO *pExcepInfo,
+		/* [annotation][out] */
+		_Out_opt_  UINT *puArgErr) {
+		return disp->Invoke(dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
+	}
+
+
+};
+
+
+struct __declspec(uuid("270b4f86-b17c-11d3-9ad1-00aa00b6fe26")) /* LIBID */ ___MGALib;
+
+static HRESULT WINAPI GetIDispatchComponentEx(IMgaComponentEx* this_, REFIID riid, LPVOID* ppv) {
+    // If your interface is defined in this project
+    // option 1:
+    // wchar_t typelibPath[MAX_PATH];
+    // GetModuleFileNameW(HINST_THISCOMPONENT, thisModuleFileName, sizeof(thisModuleFileName) / sizeof(thisModuleFileName[0]));
+    // option 2:
+    // HRESULT hr = QueryPathOfRegTypeLib(LIBID_MgaComponentLib, 1, 0, 0, typelibPath.GetAddress());
+    _bstr_t typelibPath;
+    HRESULT hr = QueryPathOfRegTypeLib(__uuidof(___MGALib), 1, 0, 0, typelibPath.GetAddress());
+    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
+
+    ITypeLibPtr typeLib;
+    hr = LoadTypeLib(static_cast<const wchar_t*>(typelibPath), &typeLib);
+    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
+
+    ITypeInfoPtr typeInfo;
+    hr = typeLib->GetTypeInfoOfGuid(__uuidof(IMgaComponentEx), &typeInfo);
+    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
+
+    IUnknownPtr pUnk;
+    hr = CreateStdDispatch(NULL, this_, typeInfo, &pUnk);
+    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
+
+    IDispatchPtr pDispatch;
+    hr = pUnk->QueryInterface(__uuidof(IDispatch), (void**)&pDispatch);
+    ASSERT(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
+    // n.b. cannot return pDispatch directly, as pDispatch->QI(IID_IComponentEx) will not work
+    *ppv = new IDispatchTearOff(pDispatch.Detach(), this_);
+    return S_OK;
+}
+
 #ifdef GME_ADDON
 
 #ifndef RAWCOMPONENT_H
-// BY PAKA BEGIN
 #ifndef BON2Component_h
 #error GME AddOn-s must be built with the RAW Component interface or BON2 Component Interface
 #endif // BON2Component_h
-// BY PAKA END
 #endif // RAWCOMPONENT_H
 
 class CEventSink : public CCmdTarget {
@@ -99,6 +223,22 @@ public:
 	public:
 	virtual void OnFinalRelease();
 	//}}AFX_VIRTUAL
+
+	virtual LPUNKNOWN GetInterfaceHook(const void* riid)
+	{
+		if (*((const IID*)riid) == __uuidof(IDispatch))
+		{
+			CComPtr<IMgaComponentEx> pComp;
+			IID iidIMgaComponentEx = __uuidof(IMgaComponentEx);
+			HRESULT hr = __super::ExternalQueryInterface(&iidIMgaComponentEx, (void**)&pComp.p);
+			CComPtr<IUnknown> ret;
+			if (SUCCEEDED(GetIDispatchComponentEx(pComp, *((const IID*)riid), (void**)&ret.p)))
+			{
+				return ret.Detach();
+			}
+		}
+		return NULL;
+	}
 
 // Implementation
 protected:
