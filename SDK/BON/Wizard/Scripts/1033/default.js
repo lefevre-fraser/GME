@@ -2,17 +2,11 @@ function OnFinish(selProj, selObj)
 {
     try
     {
-        if (dte.Version == '10.0') {
-		    OnFinish100(selProj, selObj);
-        }
-        else if (dte.Version == '11.0') {
-            OnFinish100(selProj, selObj);
-        }
-        else if (dte.Version == '12.0') {
-            OnFinish100(selProj, selObj);
+        if (dte.Version == '9.0') {
+		    OnFinish90(selProj, selObj);
         }
 		else {
-		    OnFinish90(selProj, selObj);
+		    OnFinish100(selProj, selObj);
 		}
     }
     catch(e)
@@ -179,7 +173,7 @@ function AddConfig100(proj, strProjectName)
     var config = proj.Object.Configurations('Debug');
     var MIDLTool = config.Tools('VCMIDLTool');
     MIDLTool.TypeLibraryName = "$(ProjectDir)%(FileName).tlb";
-    if (dte.Version == '12.0' ) {
+    if (dte.Version >= 12 ) {
         // http://blogs.msdn.com/b/vcblog/archive/2013/07/08/mfc-support-for-mbcs-deprecated-in-visual-studio-2013.aspx
         config.CharacterSet = charSetUNICODE;
     }
@@ -187,7 +181,7 @@ function AddConfig100(proj, strProjectName)
     config = proj.Object.Configurations('Release');
     MIDLTool = config.Tools('VCMIDLTool');
     MIDLTool.TypeLibraryName = "$(ProjectDir)%(FileName).tlb";
-    if (dte.Version == '12.0' ) {
+    if (dte.Version >= 12 ) {
         config.CharacterSet = charSetUNICODE;
     }
 }
@@ -419,7 +413,7 @@ function AddCommonFilesToCustomProj(proj, InfFile)
 				var strFile = '$(GME_ROOT)\\SDK\\BON\\Common\\' + strTpl;
 				vcfile = proj.Object.AddFile(strFile);
 				
-				if (dte.Version != '10.0' ) {
+				if (dte.Version > 9 ) {
 
 				    // This is needed to remove the '.' from the beginning of the relative path (added by default)
 				    vcfile = '$(GME_ROOT)\\SDK\\BON\\Common\\' + strTpl;
