@@ -143,7 +143,9 @@ STDAPI DllRegisterServer(void)
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	if (!CUACUtils::isElevated()) {
+#if _MSC_VER < 1900 // VS 2015 outputs a good error message, which makes this unnecessary
 		AfxMessageBox(_T("Component registration requires elevated rights on Windows Vista or later."), MB_ICONSTOP | MB_OK);
+#endif
 		return SELFREG_E_CLASS;
 	}
 

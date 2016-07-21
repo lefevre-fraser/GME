@@ -10,11 +10,14 @@
 #include <GMECOM.h>
 #include <Console.h>
 #include "ComponentConfig.h"
-#ifndef __INTELLISENSE__
-#import "progid:Mga.MgaMetaFolder" no_implementation auto_search no_namespace no_search_namespace
-#import "progid:Mga.MgaFolders" no_implementation auto_search no_namespace no_search_namespace
-#import "progid:Mga.MgaMetaFolder" implementation_only auto_search no_namespace no_search_namespace
-#import "progid:Mga.MgaFolders" implementation_only auto_search no_namespace no_search_namespace
+#if _MSC_VER >= 1900 || !defined(__INTELLISENSE__)
+// #import Meta, Mga, GME libs
+#import "libid:0adeec71-d83a-11d3-b36b-005004d38590" no_implementation auto_search no_namespace no_search_namespace
+#import "libid:270b4f86-b17c-11d3-9ad1-00aa00b6fe26" no_implementation auto_search no_namespace no_search_namespace
+#import "libid:0adeec71-d83a-11d3-b36b-005004d38590" implementation_only auto_search no_namespace no_search_namespace
+#import "libid:270b4f86-b17c-11d3-9ad1-00aa00b6fe26" implementation_only auto_search no_namespace no_search_namespace
+// #import "libid:0ADEEC71-D83A-11D3-B36B-005004CC8592" no_implementation auto_search no_namespace no_search_namespace
+// #import "libid:0ADEEC71-D83A-11D3-B36B-005004CC8592" implementation_only auto_search no_namespace no_search_namespace
 #else
 // IntelliSense has a known issue with the above lines.
 //  http://connect.microsoft.com/VisualStudio/feedback/details/533526/vc-2010-intellisense-import-directive-using-libid-does-not-work

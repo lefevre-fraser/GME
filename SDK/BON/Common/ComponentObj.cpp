@@ -57,7 +57,9 @@
 extern const char* g_COCLASS_PROGIDA = COCLASS_PROGID;
 extern const wchar_t* g_COCLASS_PROGIDW = _OLESTR(COCLASS_PROGID);
 #ifdef UNICODE
-extern const TCHAR* g_COMPONENT_NAME = COMPONENT_NAME;
+// using L"" allows COMPONENT_NAME to be a L"" or "" string in Visual Studio 2015
+// for older versions, define COMPONENT_NAME as L"..."
+extern const TCHAR* g_COMPONENT_NAME = L"" COMPONENT_NAME;
 #else
 extern const char* g_COMPONENT_NAMEA = COMPONENT_NAME;
 extern const wchar_t* g_COMPONENT_NAMEW = _OLESTR(COMPONENT_NAME);
