@@ -25,6 +25,17 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+
+Release Notes of Release 16.7.22
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Support Visual Studio 2015 in interpreter wizard
+  - Add "Delete Port" option to right-click menu
+  - Prevent DetachFromArchetype for targets of derived references
+  - Fix bug with importing XME when a derived Reference refers to a different FCO than its base
+  - Fix memory leak when deleting objects
+  - Add IDispatch COM interface to interpreters
+
 Release Notes of Release 16.3.23
 ----------------------------------
   - Binary compatibility with 11.12.2

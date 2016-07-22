@@ -16,7 +16,6 @@ Prerequisites:
  markdown\Scripts\pip install markdown
  
  - ssh access
-    - sudo to build@kms1.isis.vanderbilt.edu
     - repo@repo.isis.vanderbilt.edu
 
 #(command line)
@@ -25,48 +24,48 @@ Update version number: Doc/index.md
 pushd Doc
 %USERPROFILE%\Downloads\markdown\Scripts\python -m markdown index.md > index.html
 popd
-svn ci -m "GME release 16.3.23"
+svn ci -m "GME release 16.7.22"
 
 #wait for all gme builds on http://build.isis.vanderbilt.edu/
 
-#Saving all symbols from the temporary symbol storage to the permanent symbol storage
-#!/bin/bash
-ID=$(curl -s -S http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastBuild/consoleText | grep Finding\ ID | sed 's/.*Finding ID.....//; s/'$'\r'//)
-ID_x64=$(curl -s -S http://build.isis.vanderbilt.edu/job/GME_x64/label=build-slave6/lastBuild/consoleText | grep Finding\ ID | sed 's/.*Finding ID.....//; s/'$'\r'//)
-echo $ID $ID_x64
-ssh build@kms1.isis.vanderbilt.edu 'cd symbolstmp && python ~/bin/pdb_promote.py '"$ID1 $ID2"
-ssh build@kms1.isis.vanderbilt.edu rsync -avP symbols /media/7ce1528b-2101-4764-81e3-aed9112e3ad8/214/
-
-#Downloading the build artifacts, i.e. two installers and the README file
-mkdir GME-16.3.23
-cd GME-16.3.23
+# Downloading the build artifacts, i.e. two installers and the README file
+# bash:
+mkdir GME-16.7.22
+cd GME-16.7.22
 export PATH=$PATH:/c/cygwin/bin:"/c/Program Files/7-Zip/:/cygdrive/c/Program Files/7-Zip/"
-curl -o GME_x64-16.3.23.msi http://build.isis.vanderbilt.edu/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
-curl -o GME-16.3.23.msi http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
-curl -o README.txt http://build.isis.vanderbilt.edu/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
+ build=https://user:password@build.isis.vanderbilt.edu
+ build=http://build.isis.vanderbilt.edu
+curl -o GME_x64-16.7.22.msi $build/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
+curl -o GME-16.7.22.msi $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
+curl -o README.txt $build/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
+
+# Saving all symbols
+curl -o pdbs_x86.7z $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/pdbs.7z
+curl -o pdbs_x64.7z $build/job/GME_x64/label=build-slave6/lastSuccessfulBuild/artifact/trunk/pdbs.7z
 
 #!/bin/bash
-for file in http://build.isis.vanderbilt.edu/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.wixlib http://build.isis.vanderbilt.edu/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.wixlib; do curl -O $file; done
+for file in $build/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.wixlib $build/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.wixlib $build/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.wixlib $build/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.wixlib; do curl -O $file; done
 
 #!/bin/bash
-svn cp -m 'Tag Release 16.3.23' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.3.23
-svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.3.23 GME-16.3.23_src && \
-7z.exe a GME-16.3.23_src.zip GME-16.3.23_src/
+svn cp -m 'Tag Release 16.7.22' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.7.22
+svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.7.22 GME-16.7.22_src && \
+7z.exe a GME-16.7.22_src.zip GME-16.7.22_src/
 
 #!/bin/bash
-ssh repo@repo.isis.vanderbilt.edu mkdir GME/16.3.23/ && \
-scp README.txt GME-16.3.23.msi GME_x64-16.3.23.msi GME-16.3.23_src.zip repo@repo.isis.vanderbilt.edu:GME/16.3.23/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/16.3.23/
+ssh repo@repo.isis.vanderbilt.edu mkdir GME/16.7.22/ && \
+scp README.txt GME-16.7.22.msi GME_x64-16.7.22.msi GME-16.7.22_src.zip repo@repo.isis.vanderbilt.edu:GME/16.7.22/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/16.7.22/
 
 
 # Update online documentation:
 #!/bin/bash
-cd GME-16.3.23_src/Doc
+cd GME-16.7.22_src/Doc
+# need a replacement for the old method: 
 #ssh zsolt@kms1.isis.vanderbilt.edu sudo mount -t davfs -o uid=1006 https://forge.isis.vanderbilt.edu/gme/dav/ /home/build/gmedav
-rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include=/Tutorial** --include google3a6cca9137b58176.html --include=index.html --include=markdown.css --include='*/' --include='**GME Manual and User Guide.pdf' --exclude=*  build@kms1.isis.vanderbilt.edu:/home/build/gmedav/www/
+# rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include=/Tutorial** --include google3a6cca9137b58176.html --include=index.html --include=markdown.css --include='*/' --include='**GME Manual and User Guide.pdf' --exclude=*  build@kms1.isis.vanderbilt.edu:/home/build/gmedav/www/
 
 
-# Make sure links are working from http://repo.isis.vanderbilt.edu/GME/old/16.3.23/
+# Make sure links are working from http://repo.isis.vanderbilt.edu/GME/old/16.7.22/
 
 
 ## OPTIONAL STEPS
@@ -79,28 +78,39 @@ Install GME on VM, check for missing symbols
 REM install these tools
 REM   https://www.microsoft.com/en-us/download/details.aspx?id=8279 - Windows 7 debugging tools might be installed in "c:\Program Files\Debugging Tools for Windows (x64)\symchk.exe"
 REM   7-zip http://www.7-zip.org/
-set _NT_SYMBOL_PATH=srv*c:\GME_16.3.23_symbols*http://symbols.isis.vanderbilt.edu/;srv*c:\symbols*http://msdl.microsoft.com/download/symbols
-mkdir c:\GME_16.3.23_symbols
+set PATH=%PATH%;C:\Program Files\7-Zip
+7z x -y -opdbs/x86 pdbs_x86.7z || exit /b !ERRORLEVEL!
+7z x -y -opdbs/x64 pdbs_x64.7z || exit /b !ERRORLEVEL!
+mkdir pdbs_organized
+"c:\Program Files (x86)\Debugging Tools for Windows (x86)\symstore.exe" add /r /f pdbs /s pdbs_organized /t GME || exit /b !ERRORLEVEL!
+set _NT_SYMBOL_PATH=srv*%CD%\GME-16.7.22_symbols*%CD%\pdbs_organized
+mkdir c:\GME_16.7.22_symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files\GME"
-"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_16.3.23_symbols.7z c:\GME_16.3.23_symbols
-copy %userprofile%\GME_16.3.23_symbols.7z \\vboxsrv\xfer
+"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_16.7.22_symbols.7z GME_16.7.22_symbols
+copy %userprofile%\GME_16.7.22_symbols.7z \\vboxsrv\xfer
 
-scp Desktop/xfer/GME_16.3.23_symbols.7z repo@repo.isis.vanderbilt.edu:GME/16.3.23/ && \
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/16.3.23/
+scp Desktop/xfer/GME_16.7.22_symbols.7z repo@repo.isis.vanderbilt.edu:GME/16.7.22/ && \
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/16.7.22/
 
 
 Method 2: extract files from msi
 SetLocal EnableDelayedExpansion
-cd %userprofile%\Downloads
-set MSI=GME_x64-16.3.23.msi
-set BASENAME=GME-16.3.23
-set REPO_DIR=GME/16.3.23/
-curl -sS -O http://repo.isis.vanderbilt.edu/%REPO_DIR%%MSI || exit /b !ERRORLEVEL!
-set _NT_SYMBOL_PATH=srv*%userprofile%\Downloads\%BASENAME%_symbols*http://symbols.isis.vanderbilt.edu/
+rem cd %userprofile%\Downloads
+set MSI=GME_x64-16.7.22.msi
+set BASENAME=GME-16.7.22
+set REPO_DIR=GME/16.7.22/
+rem curl -sS -O http://repo.isis.vanderbilt.edu/%REPO_DIR%%MSI || exit /b !ERRORLEVEL!
+set PATH=%PATH%;C:\Program Files\7-Zip
+7z x -y -opdbs/x86 pdbs_x86.7z || exit /b !ERRORLEVEL!
+7z x -y -opdbs/x64 pdbs_x64.7z || exit /b !ERRORLEVEL!
+mkdir pdbs_organized
+"c:\Program Files (x86)\Debugging Tools for Windows (x86)\symstore.exe" add /r /f pdbs /s pdbs_organized /t GME || exit /b !ERRORLEVEL!
+
+set _NT_SYMBOL_PATH=srv*%CD%\%BASENAME%_symbols*%CD%\pdbs_organized
 "C:\Program Files\7-Zip\7z.exe" x %MSI% -o%BASENAME% || exit /b !ERRORLEVEL!
 del %BASENAME%\fil* %BASENAME%\F_CENTRAL*
-"c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "%userprofile%\Downloads\%BASENAME%"
+"c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "%CD%\%BASENAME%"
 pause Verify results and Press enter to continue
 "C:\Program Files\7-Zip\7z.exe" a %BASENAME%_symbols.7z %BASENAME%_symbols || exit /b !ERRORLEVEL!
 @rem "C:\Program Files\7-Zip\7z.exe" l %BASENAME%_symbols.7z
