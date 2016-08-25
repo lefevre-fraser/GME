@@ -32,7 +32,6 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_isopen = true;
 		flag_back = false;
 		flag_create = false;
-		flag_meta = false;
 		break;
 	case SaveDialog:
 		title = _T("Save");
@@ -41,7 +40,6 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_isopen = false;
 		flag_back = false;
 		flag_create = false;
-		flag_meta = false;
 		break;
 	case SaveAsDialog:
 		title = _T("Save As");
@@ -50,7 +48,6 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_isopen = false;
 		flag_back = false;
 		flag_create = false;
-		flag_meta = false;
 		break;
 	case NewDialog:
 		title = _T("New Project");
@@ -59,7 +56,6 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_isopen = true;
 		flag_back = true;
 		flag_create = true;
-		flag_meta = false;
 		break;
 	case ImportDialog:
 		title = _T("Import to new project");
@@ -68,7 +64,6 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_isopen = true;
 		flag_back = false;
 		flag_create = true;
-		flag_meta = false;
 		break;
 	case ClearLocksDialog:
 		title = _T("Select project");
@@ -77,7 +72,6 @@ CMgaOpenDlg::CMgaOpenDlg(DialogTypes dType, CWnd* pParent /*=NULL*/)
 		flag_isopen = true;
 		flag_back = false;
 		flag_create = false;
-		flag_meta = false;
 		break;
 	}
 
@@ -327,17 +321,6 @@ BOOL CMgaOpenDlg::OnInitDialog()
 #if defined(_M_X64)
 	GetDlgItem(IDC_RADIO4)->EnableWindow(false);
 #endif
-
-	if( flag_meta )
-	{
-		GetDlgItem(IDC_MGAOPEN_BMP)->ShowWindow(SW_HIDE);
-		GetDlgItem(IDC_METAOPEN_BMP)->ShowWindow(SW_SHOW);
-	}
-	else
-	{
-		GetDlgItem(IDC_MGAOPEN_BMP)->ShowWindow(SW_SHOW);
-		GetDlgItem(IDC_METAOPEN_BMP)->ShowWindow(SW_HIDE);
-	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE

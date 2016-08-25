@@ -46,7 +46,6 @@
 #define IDD_MGAOPEN                     151
 #define IDR_GMEVIEW                     153
 #define IDB_MGAOPEN                     155
-#define IDB_METAOPEN                    156
 #define IDB_REFTONULL                   159
 #define IDB_ATOMDEFAULT                 160
 #define IDB_SETDEFAULT                  161

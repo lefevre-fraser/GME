@@ -83,8 +83,7 @@ IDR_TOOLBAR_MAIN        BITMAP                  "res\\ToolbarMain.bmp"
 IDR_TOOLBAR_MODE        BITMAP                  "res\\ToolbarMode.bmp"
 IDR_TOOLBAR_WINS        BITMAP                  "res\\ToolbarWins.bmp"
 IDR_TOOLBAR_MODELING    BITMAP                  "res\\ToolbarModeling.bmp"
-IDB_METAOPEN            BITMAP                  "res\\mgaopen.bmp"
-IDB_MGAOPEN             BITMAP                  "res\\metaopen.bmp"
+IDB_MGAOPEN             BITMAP                  "res\\mgaopen.bmp"
 IDB_BITMAP_LOGO         BITMAP                  "res\\bitmap_l.bmp"
 IDB_SPLASH              BITMAP                  "Splsh16.bmp"
 IDB_ABOUT               BITMAP                  "aboutpic.bmp"
@@ -777,7 +776,6 @@ BEGIN
     PUSHBUTTON      "< &Back",IDC_BACK,7,52,46,14,WS_DISABLED
     CONTROL         "Open project file",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,58,18,102,10
     CONTROL         "Open multi-user project",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,58,32,102,10
-    CONTROL         156,IDC_METAOPEN_BMP,"Static",SS_BITMAP,19,8,43,39
     CONTROL         155,IDC_MGAOPEN_BMP,"Static",SS_BITMAP,7,8,43,39
 END
 

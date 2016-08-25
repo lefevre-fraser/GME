@@ -60,7 +60,6 @@ protected:
 	BOOL flag_isopen;
 	bool flag_back;
 	bool flag_create;
-	bool flag_meta;
 	CString title;
 	CString filemsg;
     CString xmlfilemsg;
