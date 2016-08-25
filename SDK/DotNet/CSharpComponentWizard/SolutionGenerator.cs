@@ -33,10 +33,10 @@ namespace CSharpComponentWizard
     public static class SolutionGenerator
     {
         public const string ENTRYPOINTCODE_REPLACESTRING = "$GET_ROOTFOLDER_CODE$";
-        
+
         public static MainWindow mw;
         public static Dictionary<int, string> AddonEvents;
-        
+
         public static CompType SelectedType = CompType.Interpreter;
         public static ComponentInterface SelectedInterface = ComponentInterface.Dependent;
         public static Registration SelectedRegistration = Registration.Systemwide;
@@ -53,7 +53,7 @@ namespace CSharpComponentWizard
         public static string ProjectTemplateLocation;
         public static string TemplateFileName;
 
-      
+
         public static string GenerateSolution()
         {
             DTE2 dte;
@@ -73,6 +73,10 @@ namespace CSharpComponentWizard
 
                 // Prefer latest VS
                 System.Type type = null;
+                if (type == null)
+                {
+                    type = System.Type.GetTypeFromProgID("VisualStudio.DTE.14.0");
+                }
                 if (type == null)
                 {
                     type = System.Type.GetTypeFromProgID("VisualStudio.DTE.12.0");
@@ -154,7 +158,7 @@ namespace CSharpComponentWizard
                 // Set EventMask
                 StringBuilder eventmask = new StringBuilder();
                 bool firsttime = true;
-             
+
                 for (int i = 0; i <= 24; ++i)
                 {
                     if (SolutionGenerator.AddonEventSelection[i])
@@ -296,7 +300,7 @@ namespace CSharpComponentWizard
                 FileWriteStream = new StreamWriter(Path.Combine(outputfolder, "" + SolutionName + ".csproj"));
                 FileWriteStream.Write(ContentString);
                 FileWriteStream.Close();
-            }           
+            }
         }
 
         public static void GenerateSignature(string outputfolder)
@@ -304,12 +308,14 @@ namespace CSharpComponentWizard
             // Search sn.exe
             string SNLocation = null;
 
-            using (RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-            {
-                foreach (var path in new [] {
-                    new {reg= MainWindow.MSSDK_REGISTRY_KEYPATH_8_1A, file= "bin\\NETFX 4.5.1 Tools\\sn.exe" },
-                    new {reg= MainWindow.MSSDK_REGISTRY_KEYPATH, file="bin\\sn.exe" }
+            foreach (var path in new[] {
+                    new {reg= @"SOFTWARE\Microsoft\Microsoft SDKs\NETFXSDK\4.6.1\WinSDK-NetFx40Tools", file="bin\\sn.exe", view= RegistryView.Registry32 },
+                    new {reg= @"SOFTWARE\Microsoft\Microsoft SDKs\NETFXSDK\4.6\WinSDK-NetFx40Tools", file="bin\\sn.exe", view= RegistryView.Registry32 },
+                    new {reg= MainWindow.MSSDK_REGISTRY_KEYPATH_8_1A, file= "bin\\NETFX 4.5.1 Tools\\sn.exe", view= RegistryView.Registry64 },
+                    new {reg= MainWindow.MSSDK_REGISTRY_KEYPATH, file="bin\\sn.exe", view= RegistryView.Registry64 }
                 })
+            {
+                using (RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, path.view))
                 {
                     using (RegistryKey masterKey = localMachine.OpenSubKey(path.reg))
                     {
@@ -353,8 +359,8 @@ namespace CSharpComponentWizard
                 {
                     throw new Exception("Error occured during the domain specific interface generation.");
                 }
-            } 
-            catch(Exception)
+            }
+            catch (Exception)
             {
                 object[] args = new object[1];
                 args[0] = GeneratorFacade.Errors;
@@ -364,7 +370,7 @@ namespace CSharpComponentWizard
                 }
                 throw;
             }
-                    
+
             // Add files to the projectfile
             string AddString = String.Empty;
             foreach (string s in GeneratorFacade.generatedFiles)
@@ -393,12 +399,12 @@ namespace CSharpComponentWizard
                 MessageBox.Show("Error occured: Cannot find the previously generated VS projectfile in the specified folder with the specified solutionname.");
                 throw;
             }
-            
+
         }
 
         public static string AddEntryPointCode(string ContentString)
         {
-            if(SolutionGenerator.SelectedInterface == ComponentInterface.Dependent)
+            if (SolutionGenerator.SelectedInterface == ComponentInterface.Dependent)
             {
                 string getrootfolder_domain_specific = @"RootFolder rf = new RootFolder(project.RootFolder);";
                 getrootfolder_domain_specific += Environment.NewLine + "\t\t\t";
@@ -417,6 +423,6 @@ namespace CSharpComponentWizard
 
             return ContentString;
         }
-    
+
     }
 }
