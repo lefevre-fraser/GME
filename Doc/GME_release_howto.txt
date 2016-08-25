@@ -40,13 +40,14 @@ curl -o GME-16.7.22.msi $build/job/GME/label=build-slave9/lastSuccessfulBuild/ar
 curl -o README.txt $build/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
 
 # Saving all symbols
-curl -o pdbs_x86.7z $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/pdbs.7z
+curl -o pdbs_x86.7z $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/pdbs.7z && \
 curl -o pdbs_x64.7z $build/job/GME_x64/label=build-slave6/lastSuccessfulBuild/artifact/trunk/pdbs.7z
 
 #!/bin/bash
 for file in $build/job/GME_x64/lastSuccessfulBuild/label=build-slave6/artifact/trunk/Install/GME_bin_x64.wixlib $build/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_bin.wixlib $build/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_paradigms.wixlib $build/job/GME/lastSuccessfulBuild/label=build-slave9/artifact/trunk/Install/GME_SDK.wixlib; do curl -O $file; done
 
 #!/bin/bash
+export PATH="$PATH":'C:\Program Files (x86)\Subversion\bin'
 svn cp -m 'Tag Release 16.7.22' https://svn.isis.vanderbilt.edu/GMESRC/trunk https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.7.22
 svn export https://svn.isis.vanderbilt.edu/GMESRC/tags/Release_16.7.22 GME-16.7.22_src && \
 7z.exe a GME-16.7.22_src.zip GME-16.7.22_src/
@@ -63,7 +64,7 @@ cd GME-16.7.22_src/Doc
 # need a replacement for the old method: 
 #ssh zsolt@kms1.isis.vanderbilt.edu sudo mount -t davfs -o uid=1006 https://forge.isis.vanderbilt.edu/gme/dav/ /home/build/gmedav
 # rsync --chmod=ugo+xr,u+w,o-w --perms --delete --delete-excluded -avP . --include=/Tutorial** --include google3a6cca9137b58176.html --include=index.html --include=markdown.css --include='*/' --include='**GME Manual and User Guide.pdf' --exclude=*  build@kms1.isis.vanderbilt.edu:/home/build/gmedav/www/
-
+%userprofile%\Downloads\markdown\scripts\python %userprofile%\Downloads\markdown\upload.py
 
 # Make sure links are working from http://repo.isis.vanderbilt.edu/GME/old/16.7.22/
 
@@ -115,5 +116,5 @@ pause Verify results and Press enter to continue
 "C:\Program Files\7-Zip\7z.exe" a %BASENAME%_symbols.7z %BASENAME%_symbols || exit /b !ERRORLEVEL!
 @rem "C:\Program Files\7-Zip\7z.exe" l %BASENAME%_symbols.7z
 
-scp %BASENAME%_symbols.7z repo@repo.isis.vanderbilt.edu:%REPO_DIR%
-ssh repo@repo.isis.vanderbilt.edu chmod -R a+r %REPO_DIR%
+scp %BASENAME%_symbols.7z repo@repo.isis.vanderbilt.edu:%REPO_DIR% || exit /b !ERRORLEVEL!
+ssh repo@repo.isis.vanderbilt.edu chmod -R a+r %REPO_DIR% || exit /b !ERRORLEVEL!
