@@ -393,6 +393,9 @@
     <None Include="..\..\Install\GME_SDK.wxs" />
     <None Include="..\..\Install\GME_paradigms.wxs" />
     <None Include="..\..\Install\GME_inc.wxi" />
+    <None Include="res\XME.ico">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnnotatorEventSink.h">
@@ -629,6 +632,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GME.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="res\AboutBox.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
