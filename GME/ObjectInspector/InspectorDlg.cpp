@@ -413,6 +413,17 @@ LRESULT CInspectorDlg::OnItemChanged(WPARAM wParam, LPARAM lParam)
 	{
 		OnItemChangedAttribute(wParam);
 	}
+	else if (lParam == INSP_PROP_PANEL)
+	{
+		CListItem ListItem;
+		m_inspectorLists[INSP_PROP_PANEL]->GetItem(wParam, ListItem);
+
+		CObjectInspectorCtrl* pParent = (CObjectInspectorCtrl*)GetParent();
+
+		if (ListItem.strName == L"Type") {
+			pParent->DetachFromArchetype(ListItem);
+		}
+	}
 	return TRUE;
 }
 

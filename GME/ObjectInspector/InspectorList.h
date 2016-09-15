@@ -97,6 +97,7 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnListContextResetToDefault();
+	afx_msg void OnListContextCopy();
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

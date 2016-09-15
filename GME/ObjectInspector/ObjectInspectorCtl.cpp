@@ -867,9 +867,8 @@ void CObjectInspectorCtrl::RemoveZombies()
 	}
 }
 
-
-
-void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
+template<typename F>
+void CObjectInspectorCtrl::WriteToMga(CListItem ListItem, F f)
 {
 	CComPtr<IMgaMetaProject> ccpMetaProject;
 	try
@@ -880,43 +879,67 @@ void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
 
 		ASSERT(!bInTransaction);
 
-		if(!bInTransaction)
+		if (!bInTransaction)
 		{
-			COMTHROW(m_project->BeginTransaction(m_territory,TRANSACTION_GENERAL));
-		}	
-
-		// Writing change to MGA
-		if (m_FCOList.IsEmpty()) {
-			m_Attribute.WriteItemToMga(ListItem,m_project);
-		}
-		else {
-			m_Attribute.WriteItemToMga(ListItem,m_FCOList);
+			COMTHROW(m_project->BeginTransaction(m_territory, TRANSACTION_GENERAL));
 		}
 
-		if(!bInTransaction)
+		f();
+
+		if (!bInTransaction)
 		{
 			HRESULT hResult = m_project->CommitTransaction();
-			if  ( FAILED(hResult) ) {
-				if ( hResult == E_MGA_CONSTRAINT_VIOLATION )
-					COMTHROW( m_project->AbortTransaction() );
-				else 
-					COMTHROW( hResult );
+			if (FAILED(hResult)) {
+				if (hResult == E_MGA_CONSTRAINT_VIOLATION)
+					COMTHROW(m_project->AbortTransaction());
+				else
+					COMTHROW(hResult);
 			}
-		}		
+		}
 	}
 	catch (hresult_exception e)
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox(_T("Object Inspector could not write attribute data due to an unexpected error. We apologize for the inconvenience."),_T("Object inspector"),MB_ICONERROR);
+		if (e.hr == E_MGA_LIBOBJECT)
+			CWnd::MessageBox(_T("Library objects cannot be modified."), _T("GME"), MB_ICONERROR);
+		else
+			CWnd::MessageBox(_T("Object Inspector could not write attribute data due to an unexpected error. We apologize for the inconvenience."), _T("Object inspector"), MB_ICONERROR);
 	}
 	catch (_com_error& e)
 	{
 		ASSERT(0);
 		m_project->AbortTransaction();
-		CWnd::MessageBox(CString(L"Object Inspector could not write attribute data: ") + static_cast<const wchar_t*>(e.Description()), L"Object inspector",MB_ICONERROR);
+		CWnd::MessageBox(CString(L"Object Inspector could not write attribute data: ") + static_cast<const wchar_t*>(e.Description()), L"Object inspector", MB_ICONERROR);
 	}
 
+}
+
+
+void CObjectInspectorCtrl::DetachFromArchetype(CListItem ListItem)
+{
+	auto write = [&]() {
+		if (m_FCOList.IsEmpty()) {
+		}
+		else {
+			MgaFCOPtr ptr = m_FCOList.GetHead();
+			ptr->DetachFromArcheType();
+		}
+	};
+	WriteToMga(ListItem, write);
+}
+
+void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
+{
+	auto write = [&]() {
+		if (m_FCOList.IsEmpty()) {
+			m_Attribute.WriteItemToMga(ListItem, m_project);
+		}
+		else {
+			m_Attribute.WriteItemToMga(ListItem, m_FCOList);
+		}
+	};
+	WriteToMga(ListItem, write);
 }
 
 void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIsForKind)

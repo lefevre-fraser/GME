@@ -114,11 +114,16 @@ public:
 		STDMETHOD(ObjectEvent(IMgaObject * obj, unsigned long eventmask, VARIANT v));
 	END_INTERFACE_PART(EventSink)
 
+private:
+	template<typename F>
+	void WriteToMga(CListItem ListItem, F f);
+
 // Dispatch and event IDs
 public:
 	void WriteNameToMga( const CString& strName);
 	void UndoRedo( bool undo = true);
-	
+
+	void DetachFromArchetype(CListItem ListItem);
 	void WriteAttributeItemToMga(CListItem ListItem);
 	void WritePreferenceItemToMga(CListItem ListItem,bool bIsForKind);
 	void RefreshReferencePanel();

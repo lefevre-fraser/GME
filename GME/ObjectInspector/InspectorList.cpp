@@ -53,6 +53,7 @@ BEGIN_MESSAGE_MAP(CInspectorList, CListBox)
 	ON_BN_CLICKED(IDC_EDITOR_BUTTON, OnEditorClicked)
 	ON_MESSAGE(MSG_EDIT_END_OK, OnEditEndOK)
 	ON_COMMAND(ID_LISTCONTEXT_RESETTODEFAULT, OnListContextResetToDefault)
+	ON_COMMAND(ID_LISTCONTEXT_COPY, OnListContextCopy)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1154,32 +1155,73 @@ void CInspectorList::GetItem(int nIndex, CListItem &ListItem)
 
 void CInspectorList::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	bool bIsCustom = false;
+	CWnd* pParent = GetParent();
+	CInspectorDlg* pInspectorDlg = (CInspectorDlg*)pParent->GetParent();
 
-	int nSelCount=GetSelCount();
+	int nSelCount = GetSelCount();
+	// if nothing selected, select item that was clicked
+	if (nSelCount == 0) {
+		BOOL outside;
+		auto clickedIndex = ItemFromPoint(point, outside);
+		if (!outside) {
+			SetSel(clickedIndex);
+			nSelCount = GetSelCount();
+		}
+	}
 
-	CArray<int,int> SelItemArr;
+	CArray<int, int> SelItemArr;
 	SelItemArr.SetSize(nSelCount);
 
-	CListBox::GetSelItems(nSelCount,SelItemArr.GetData());
+	CListBox::GetSelItems(nSelCount, SelItemArr.GetData());
 
-	for(int i=0;i<=SelItemArr.GetUpperBound();i++)
+	bool bIsCustom = false;
+
+	for (int i = 0; i <= SelItemArr.GetUpperBound(); i++)
 	{
-		int nCurr=SelItemArr.GetAt(i);
+		int nCurr = SelItemArr.GetAt(i);
 
-		CListItem& ListItem=m_ListItemArray.ElementAt(nCurr);
+		CListItem& ListItem = m_ListItemArray.ElementAt(nCurr);
 		if (!ListItem.bIsDefault) {
 			bIsCustom = true;
 			break;
 		}
 	}
 
-	if (bIsCustom) {
+	if (this == pInspectorDlg->m_inspectorLists[0] || this == pInspectorDlg->m_inspectorLists[1]) {
+
 		CMenu menu;
 		menu.LoadMenu(IDR_LISTCNTX_MENU);
+		if (!bIsCustom) {
+			menu.GetSubMenu(0)->EnableMenuItem(ID_LISTCONTEXT_RESETTODEFAULT, MF_GRAYED);
+		}
+		if (nSelCount == 1 && m_ListItemArray.ElementAt(SelItemArr.GetAt(0)).Value.dataType == ITEMDATA_STRING) {
+		}
+		else {
+			menu.GetSubMenu(0)->EnableMenuItem(ID_LISTCONTEXT_COPY, MF_GRAYED);
+		}
 		ClientToScreen(&point);
 		menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
-														point.x, point.y, this);
+			point.x, point.y, this);
+	}
+	else if (this == pInspectorDlg->m_inspectorLists[2]) {
+		if (nSelCount == 1) {
+			CListItem& listItem = m_ListItemArray.ElementAt(SelItemArr.GetAt(0));
+			if (listItem.strName == L"Type") {
+				CMenu menu;
+				menu.CreatePopupMenu();
+				menu.AppendMenuW(MF_STRING, ID_LISTCONTEXT_RESETTODEFAULT, L"Detach from Archetype");
+
+				const wchar_t* archetype = L" (Archetype)";
+				auto value = listItem.Value.stringVal.GetAt(0);
+				if (value.GetLength() >= wcslen(archetype) && wcscmp(archetype, value.Right(wcslen(archetype))) == 0) {
+					menu.EnableMenuItem(ID_LISTCONTEXT_RESETTODEFAULT, MF_GRAYED);
+				}
+
+				ClientToScreen(&point);
+				menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+			}
+		}
+
 	}
 
 	CListBox::OnRButtonDown(nFlags, point);
@@ -1188,5 +1230,49 @@ void CInspectorList::OnRButtonDown(UINT nFlags, CPoint point)
 void CInspectorList::OnListContextResetToDefault()
 {
 	SetDefault();
+	Invalidate();
+}
+
+void SetClipboardText(const CString& szData)
+{
+	HGLOBAL h;
+	LPTSTR arr;
+
+	h = GlobalAlloc(GMEM_MOVEABLE, (szData.GetLength() + 1) * sizeof(TCHAR));
+	arr = (LPTSTR)GlobalLock(h);
+	_tcscpy_s((TCHAR*)arr, szData.GetLength() + 1, static_cast<const wchar_t*>(szData));
+	GlobalUnlock(h);
+
+	::OpenClipboard(NULL);
+	EmptyClipboard();
+	SetClipboardData(CF_UNICODETEXT, h);
+	CloseClipboard();
+}
+
+void CInspectorList::OnListContextCopy()
+{
+	int nSelCount = GetSelCount();
+
+	CArray<int, int> SelItemArr;
+	SelItemArr.SetSize(nSelCount);
+
+	CListBox::GetSelItems(nSelCount, SelItemArr.GetData());
+
+	for (int i = 0; i <= SelItemArr.GetUpperBound(); i++)
+	{
+		int nCurr = SelItemArr.GetAt(i);
+
+		CListItem& ListItem = m_ListItemArray.ElementAt(nCurr);
+		if (ListItem.Value.dataType == ITEMDATA_STRING) {
+			// FIXME: is this O(n**2)?
+			CString concatenated;
+			for (int j = 0; j <= ListItem.Value.stringVal.GetUpperBound(); j++) {
+				concatenated += ListItem.Value.stringVal.GetAt(j) + "\r\n";
+			}
+			concatenated = concatenated.Left(concatenated.GetLength() - 2);
+			SetClipboardText(concatenated);
+
+		}
+	}
 	Invalidate();
 }

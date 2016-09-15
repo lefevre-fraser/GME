@@ -86,7 +86,7 @@ protected:
 	bool m_bIsPanelVisible[INSP_PANEL_NUM];
 
 
-	
+	friend class CInspectorList;
 };
 
 //{{AFX_INSERT_LOCATION}}
