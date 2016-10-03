@@ -51,7 +51,7 @@ public:
 	int FindTextInItems(CString &strText, HTREEITEM hStartAtItem,
 					CStringArrayEx &strResults, CArray<HTREEITEM,HTREEITEM>& hResults);
 	BOOL CreateDragImageEx(CPoint ptDragPoint);
-	//////////////////////////////////
+	BOOL CTreeCtrlEx::DeleteItem(HTREEITEM hItem);
 
 protected:
 	void SelectMultiple( HTREEITEM hClickedItem, UINT nFlags, CPoint point );

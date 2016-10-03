@@ -1220,3 +1220,11 @@ void CTreeCtrlEx::ScrollUp()
 	}
 			 
 }
+
+BOOL CTreeCtrlEx::DeleteItem(HTREEITEM hItem) {
+	auto ret = CTreeCtrl::DeleteItem(hItem);
+
+	m_hFirstSelectedItem = GetSelectedItem();
+
+	return ret;
+}

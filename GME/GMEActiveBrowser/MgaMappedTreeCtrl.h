@@ -64,7 +64,7 @@ public:
 
 	virtual BOOL DeleteItem(HTREEITEM hItem) {
 		m_MgaMap.RemoveTreeItem(hItem);
-		return CTreeCtrl::DeleteItem(hItem);
+		return CTreeCtrlEx::DeleteItem(hItem);
 	}
 
 	virtual void CleanUp() {
