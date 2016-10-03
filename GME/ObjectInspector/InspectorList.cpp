@@ -1158,17 +1158,20 @@ void CInspectorList::OnRButtonDown(UINT nFlags, CPoint point)
 	CWnd* pParent = GetParent();
 	CInspectorDlg* pInspectorDlg = (CInspectorDlg*)pParent->GetParent();
 
-	int nSelCount = GetSelCount();
-	// if nothing selected, select item that was clicked
-	if (nSelCount == 0) {
-		BOOL outside;
-		auto clickedIndex = ItemFromPoint(point, outside);
-		if (!outside) {
+	// if clicked item is not selected, select only it
+	BOOL outside;
+	auto clickedIndex = ItemFromPoint(point, outside);
+	if (!outside) {
+		if (GetSel(clickedIndex) <= 0) {
+			for (int i = 0; i < GetCount(); i++)
+			{
+				SetSel(i, FALSE);
+			}
 			SetSel(clickedIndex);
-			nSelCount = GetSelCount();
 		}
 	}
 
+	int nSelCount = GetSelCount();
 	CArray<int, int> SelItemArr;
 	SelItemArr.SetSize(nSelCount);
 
