@@ -1958,9 +1958,12 @@ STDMETHODIMP CMgaRegistrar::UnregisterComponent(BSTR progid, regaccessmode_enum 
 			}
 
 			if((mode & RM_USER) || (type2 & COMPONENTTYPE_SYSREGREF) != 0 ) {
-				if (!res) res = comps.RecurseDeleteKey(PutInCString(progid));
-				if (res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
-				ERRTHROW(res);
+				if (!res)
+					res = comps.RecurseDeleteKey(PutInCString(progid));
+				if (res == ERROR_FILE_NOT_FOUND)
+					res = ERROR_SUCCESS;
+				if (res != ERROR_SUCCESS)
+					WIN32THROW(res);
 			}
 		}
 		if(mode & (RM_SYS | RM_TEST)) {
@@ -1970,8 +1973,10 @@ STDMETHODIMP CMgaRegistrar::UnregisterComponent(BSTR progid, regaccessmode_enum 
 				if(mode & RM_SYS) res = comps.RecurseDeleteKey(PutInCString(progid));
 				if(mode & RM_TEST) res = comps.Open(comps, PutInCString(progid));
 			}
-			if(res == ERROR_FILE_NOT_FOUND) res = ERROR_SUCCESS;
-			ERRTHROW(res);
+			if(res == ERROR_FILE_NOT_FOUND)
+				res = ERROR_SUCCESS;
+			if (res != ERROR_SUCCESS)
+				WIN32THROW(res);
 		}
 	}
 	COMCATCH(;)
