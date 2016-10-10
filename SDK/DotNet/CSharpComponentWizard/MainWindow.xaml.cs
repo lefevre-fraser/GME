@@ -9,7 +9,8 @@ using System.ComponentModel;
 using System.Windows.Media;
 using System.Reflection;
 using System.Linq;
-
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace CSharpComponentWizard
 {
@@ -40,8 +41,14 @@ namespace CSharpComponentWizard
         public delegate void ErrorOccuredDelegate(string error);
         public ErrorOccuredDelegate erroroccureddel;
 
+        [DllImport("ole32.dll")]
+        static extern int CoRegisterMessageFilter(IMessageFilter lpMessageFilter, out IMessageFilter lplpMessageFilter);
+
         public MainWindow()
         {
+            IMessageFilter oldFilter;
+            CoRegisterMessageFilter(new RetryMessageFilter(), out oldFilter);
+
             System.Type type = null;
             RegistryKey masterKey = null;
             if (type == null)
@@ -133,7 +140,7 @@ namespace CSharpComponentWizard
             else
             {
                 // this registry value is missing if the user never started devenv.exe
-                this.txb_TargetFolder.Text = masterKey.GetValue(MainWindow.VS_PROJECTFOLDER_REGISTRY_KEYNAME, 
+                this.txb_TargetFolder.Text = masterKey.GetValue(MainWindow.VS_PROJECTFOLDER_REGISTRY_KEYNAME,
                     Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)).ToString();
                 masterKey.Close();
             }
@@ -802,4 +809,62 @@ namespace CSharpComponentWizard
             this.errorWindow.Close();
         }
     }
+
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct tagINTERFACEINFO
+    {
+        [MarshalAs(UnmanagedType.IUnknown)]
+        public object pUnk;
+
+        [ComAliasName("ObjIdl.GUID")]
+        public Guid iid;
+
+        public ushort wMethod;
+    }
+
+    [Guid("00000016-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [ComImport]
+    public interface IMessageFilter
+    {
+        [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
+        uint HandleInComingCall([In] uint dwCallType, [In] IntPtr htaskCaller, [In] uint dwTickCount, [In] ref tagINTERFACEINFO lpInterfaceInfo);
+
+        [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
+        uint RetryRejectedCall([In] IntPtr htaskCallee, [In] uint dwTickCount, [In] uint dwRejectType);
+
+        [MethodImpl(MethodImplOptions.PreserveSig | MethodImplOptions.InternalCall)]
+        uint MessagePending([In] IntPtr htaskCallee, [In] uint dwTickCount, [In] uint dwPendingType);
+    }
+
+
+    public class RetryMessageFilter : IMessageFilter
+    {
+        readonly uint SERVERCALL_ISHANDLED = 0;
+        readonly uint PENDINGMSG_WAITDEFPROCESS = 2;
+        readonly uint SERVERCALL_RETRYLATER = 2;
+
+        public uint HandleInComingCall([In] uint dwCallType, [In] IntPtr htaskCaller, [In] uint dwTickCount, [In] ref tagINTERFACEINFO lpInterfaceInfo)
+        {
+            return SERVERCALL_ISHANDLED;
+        }
+
+        public uint MessagePending([In] IntPtr htaskCallee, [In] uint dwTickCount, [In] uint dwPendingType)
+        {
+            return PENDINGMSG_WAITDEFPROCESS;
+        }
+
+        public uint RetryRejectedCall([In] IntPtr htaskCallee, [In] uint dwTickCount, [In] uint dwRejectType)
+        {
+            if (dwRejectType == SERVERCALL_RETRYLATER)
+            {
+                // Retry the thread call immediately if return >=0 &
+                // <100.
+                return 99;
+            }
+            // Too busy; cancel call.
+            return unchecked((uint)-1);
+        }
+    }
+
 }
