@@ -1250,7 +1250,12 @@ STDMETHODIMP CMgaProject::EnableAutoAddOns(VARIANT_BOOL bEnable) {
 			if(autoaddons) StartAutoAddOns();
 			else StopAutoAddOns();
 		}
-	} COMCATCH(;)
+	} COMCATCH(
+		// We've already called SetErrorInfo, don't call it again
+		if (e.hr == E_MGA_COMPONENT_ERROR) {
+			return e.hr;
+		}
+	)
 }
 
 
@@ -1298,7 +1303,7 @@ void CMgaProject::StartAutoAddOns() {
 		if (errs) {
 			SetErrorInfo(_bstr_t(L"Could not create AddOn: ") + static_cast<const wchar_t*>(errs));
 			COMTHROW(E_MGA_COMPONENT_ERROR); // change error type
-		}		
+		}
 	}
 //	SetAutomatic();
 	
