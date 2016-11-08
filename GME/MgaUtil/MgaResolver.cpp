@@ -7,6 +7,8 @@
 #include "AlterNmspDlg.h"
 #include "CommonError.h"
 
+#include <algorithm>
+
 /////////////////////////////////////////////////////////////////////////////
 
 CString helper_ObjTypeStr(objtype_enum objtype) {
@@ -1354,72 +1356,51 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 
 		COMTHROW(metaFco.QueryInterface(&metaModel));
 
-		COMTHROW(metaModel->LegalConnectionRoles(bstr,&roles));
+		COMTHROW(metaModel->LegalConnectionRoles(bstr, &roles));
 
 		// now get valid roles for input aspect (if any)
 
 		CDialogList cdl(_T("Select Connection Role Type"), CDialogList::CHKTEXT_STICKY);
-		CList<int, int> valid_role_map;
-		CComPtr<IMgaMetaRole> immr_ix;
 
-		long role_count = 0;
+		struct role_info {
+			IMgaMetaRolePtr role;
+			CString roleName;
+		};
+		std::vector<struct role_info> valid_roles;
 
-		COMTHROW( roles->get_Count(&role_count) );
+		long role_count = roles->Count;
 
-		for (int z = 1; z <= role_count; z++) {
+		for (int i = 1; i <= role_count; i++) {
 
-			immr_ix = NULL;
-			COMTHROW( roles->get_Item(z, &immr_ix) );
-			ASSERT(immr_ix != NULL);
+			auto metaRole = roles->Item[i];
+			ASSERT(metaRole != NULL);
+			CString role_name = CString(static_cast<const TCHAR*>(metaRole->Name));
 
 			if (aspect == NULL) {
 
-				CComBSTR role_name;
+				role_info info = { metaRole, role_name };
 
-				COMTHROW( immr_ix->get_Name(&role_name ) );
-
-				cdl.m_sz_prelist.AddTail(CString(role_name)); 
-
-				valid_role_map.AddTail(z);
-				
+				valid_roles.push_back(info);
 			} else {
 
 				CComPtr<IMgaMetaParts> parts;
-				COMTHROW( immr_ix->get_Parts(&parts) );
+				COMTHROW( metaRole->get_Parts(&parts) );
 				ASSERT(parts!=NULL);
-
-				CComPtr<IMgaMetaPart> part_ix;
 
 				MGACOLL_ITERATE(IMgaMetaPart,parts) {
 
-					part_ix = MGACOLL_ITER;
+					CComPtr<IMgaMetaPart>& part_ix = MGACOLL_ITER;
 					ASSERT(part_ix != NULL);
 
-					VARIANT_BOOL vb_primary;
+					if (part_ix->IsPrimary != VARIANT_FALSE && part_ix->ParentAspect == aspect) {
 
-					COMTHROW(part_ix->get_IsPrimary(&vb_primary) );
+						role_info info = { metaRole, role_name };
 
-					if (vb_primary != VARIANT_FALSE) {
-					
-					
-						CComPtr<IMgaMetaAspect> part_aspect;
+						valid_roles.push_back(info);
 
-						COMTHROW( part_ix->get_ParentAspect(&part_aspect) );
-
-						if (part_aspect == aspect) {
-
-							CComBSTR role_name;
-
-							COMTHROW( immr_ix->get_Name(&role_name ) );
-
-							cdl.m_sz_prelist.AddTail(CString(role_name)); 
-
-							valid_role_map.AddTail(z);
-
-							break;
-						}
-
+						break;
 					}
+
 				}
 				MGACOLL_ITERATE_END;
 
@@ -1427,13 +1408,20 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 
 		} // iterate over roles
 
-		int valid_role_count = valid_role_map.GetCount();
+
+		std::sort(valid_roles.begin(), valid_roles.end(), [](const struct role_info& info1, const struct role_info& info2) {
+			return wcscmp(info1.roleName, info2.roleName);
+		});
+		std::for_each(valid_roles.begin(), valid_roles.end(), [&cdl](const struct role_info& info) {
+			cdl.m_sz_prelist.AddTail(info.roleName);
+		});
+
+
+		int valid_role_count = valid_roles.size();
 
 		if (valid_role_count == 1) {
-
-			COMTHROW( roles->get_Item(valid_role_map.GetHead(), p) );
+			*p = valid_roles[0].role.Detach();
 			return S_OK;
-
 		}
 
 		// before popping up the dialog, see if it is in the knowledge map
@@ -1442,7 +1430,8 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 				return S_OK;
 			}
 			else {		// if sticky is disabled, remove it from the map
-				(*p)->Release(); *p = NULL;
+				(*p)->Release();
+				*p = NULL;
 				map_put_RoleByPathStr(bstr, metaModel,OBJTYPE_CONNECTION,*p);
 			}
 		}
@@ -1465,13 +1454,10 @@ STDMETHODIMP CMgaResolver::get_ConnRoleByMeta(IMgaModel *parent,
 			} else {
 
 				// get the entry in the list
-
-				immr_ix = NULL;
-				COMTHROW( roles->get_Item(
-					valid_role_map.GetAt(valid_role_map.FindIndex(cdl.mn_selection_index)), p) );
+				*p = valid_roles[cdl.mn_selection_index].role.Detach();
 
 				if(cdl.mb_check_once == TRUE) {
-					map_put_RoleByPathStr(bstr, metaModel,OBJTYPE_CONNECTION,*p);
+					map_put_RoleByPathStr(bstr, metaModel, OBJTYPE_CONNECTION, *p);
 				}
 				return S_OK;
 
