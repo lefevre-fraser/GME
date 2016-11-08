@@ -10983,25 +10983,23 @@ void CGMEView::OnHistoryForw()
 void CGMEView::OnKeyConnect()
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnKeyConnect in ")+path+name+_T("\r\n"));
-	if( lastObject) {
-		CGuiObject *obj = lastObject;
-		if(obj) {
-			CGuiPort *port = lastPort;
-			if(connSrc == 0) {
-				connSrc = obj;
-				connSrcPort = port;
-				connSrcHotSide = GME_CENTER;
-				tmpConnectMode = true;
-				SetCursor(autoconnect2Cursor);
-			}
-			else {
-				Connect(connSrc,connSrcPort,connSrcHotSide,obj,port, GME_CENTER, ::GetKeyState(VK_SHIFT) < 0);
-				ClearConnSpecs();
-				tmpConnectMode = false;
-				SetCursor(editCursor);
-			}
-			ShowCursor(TRUE);
+	if (lastObject) {
+		CGuiPort *port = lastPort;
+		if(connSrc == 0) {
+			connSrc = lastObject;
+			connSrcPort = port;
+			connSrcHotSide = GME_CENTER;
+			tmpConnectMode = true;
+			SetCursor(autoconnect2Cursor);
+			Invalidate();
 		}
+		else {
+			Connect(connSrc, connSrcPort, connSrcHotSide, lastObject, port, GME_CENTER, ::GetKeyState(VK_SHIFT) < 0);
+			ClearConnSpecs();
+			tmpConnectMode = false;
+			SetCursor(editCursor);
+		}
+		ShowCursor(TRUE);
 	}
 }
 
