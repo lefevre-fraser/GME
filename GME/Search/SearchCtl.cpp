@@ -380,23 +380,28 @@ void CSearchCtrl::OnMgaGlobalEvent(globalevent_enum event)
 	if(event==GLOBALEVENT_COMMIT_TRANSACTION)
 	{
 		m_searchDlg.RemoveZombies();
+		RemoveZombies<IMgaObject, IMgaObjects>(m_MgaObjs);
 	}
 	else if(event==GLOBALEVENT_NOTIFICATION_READY)
 	{
 		m_searchDlg.RemoveZombies();
+		RemoveZombies<IMgaObject, IMgaObjects>(m_MgaObjs);
 	}
 
 	else if(event==GLOBALEVENT_ABORT_TRANSACTION)
 	{
 		m_searchDlg.RemoveAll();
+		RemoveZombies<IMgaObject, IMgaObjects>(m_MgaObjs);
 	}
 	else if(event==GLOBALEVENT_UNDO)
 	{
 		m_searchDlg.RemoveZombies();
+		RemoveZombies<IMgaObject, IMgaObjects>(m_MgaObjs);
 	}
 	else if(event==GLOBALEVENT_REDO)
 	{		
 		m_searchDlg.RemoveZombies();
+		RemoveZombies<IMgaObject, IMgaObjects>(m_MgaObjs);
 	}
 	m_inEventTransactionMode = false;
 }

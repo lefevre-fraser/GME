@@ -213,31 +213,13 @@ void CSearchDlg::RemoveAll()
 // Must remove results belong to zombie objects
 void CSearchDlg::RemoveZombies()
 {
-    bool zombieFound = false;
 	if (results == NULL)
 		return;
 
     CSearchCtrl *TheCtrl = GetCtrl();
     TheCtrl->BeginTransaction();
 
-    long position = 1; //IMgaFCOs is 1-based
-    MGACOLL_ITERATE(IMgaFCO,results)
-    {
-        long oStatus;
-        COMTHROW(MGACOLL_ITER->get_Status(&oStatus));
-        if(oStatus != OBJECT_EXISTS)
-        {
-            COMTHROW(results->Remove(position));
-            //removing the zombie causes the next item to have the same position
-            //that the zombie just had, so don't advance the position counter
-            zombieFound = true;
-        }
-        else
-        {
-            position++;
-        }
-
-    }MGACOLL_ITERATE_END;
+	bool zombieFound = ::RemoveZombies<IMgaFCO, IMgaFCOs>(results);
 
     if(zombieFound) //only redraw if we had to remove a zombie
     {

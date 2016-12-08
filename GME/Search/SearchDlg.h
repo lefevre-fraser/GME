@@ -15,6 +15,34 @@ class CSearchCtrl;
 // SearchDlg.h : header file
 //
 
+template<typename FCO, typename FCOs>
+bool RemoveZombies(CComPtr<FCOs>& results) {
+	if (results == nullptr)
+	{
+		return false;
+	}
+	bool zombieFound = false;
+	long position = 1; //IMgaFCOs is 1-based
+	MGACOLL_ITERATE(FCO, results)
+	{
+		long oStatus;
+		COMTHROW(MGACOLL_ITER->get_Status(&oStatus));
+		if (oStatus != OBJECT_EXISTS)
+		{
+			COMTHROW(results->Remove(position));
+			//removing the zombie causes the next item to have the same position
+			//that the zombie just had, so don't advance the position counter
+			zombieFound = true;
+		}
+		else
+		{
+			position++;
+		}
+
+	}MGACOLL_ITERATE_END;
+	return zombieFound;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CSearchDlg dialog
 
