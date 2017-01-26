@@ -26,19 +26,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""afxres.h""\r\n"
     "#include ""GMEVersion.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
@@ -684,7 +684,7 @@ BEGIN
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
     VK_ESCAPE,      ID_CANCEL_EDIT_CNTR,    VIRTKEY, NOINVERT
 END
@@ -1156,7 +1156,7 @@ BEGIN
             VALUE "FileDescription", "GME"
             VALUE "FileVersion", GME_VERSION_STR
             VALUE "InternalName", "GME"
-            VALUE "LegalCopyright", "Copyright (C) 1999-2016 ISIS, Vanderbilt University"
+            VALUE "LegalCopyright", "Copyright (C) 1999-2017 ISIS, Vanderbilt University"
             VALUE "OriginalFilename", "GME.EXE"
             VALUE "ProductName", "GME Application"
             VALUE "ProductVersion", GME_VERSION_STR
@@ -1370,41 +1370,41 @@ END
 IDD_BROWSER_DIALOG DLGINIT
 BEGIN
     IDC_GMEACTIVEBROWSERCTRL1, 0x376, 20, 0
-0x0000, 0x0000, 0x0000, 0x0001, 0x242c, 0x0000, 0x08e3, 0x0000, 0x0000, 
-0x0000, 
+0x0000, 0x0000, 0x0000, 0x0001, 0x242c, 0x0000, 0x08e3, 0x0000, 0x0000,
+0x0000,
     0
 END
 
 IDD_OBJECT_INSPECTOR_DIALOG DLGINIT
 BEGIN
     IDC_OBJECT_INSPECTOR_CTRL, 0x376, 20, 0
-0x0000, 0x0000, 0x0000, 0x0001, 0x14ac, 0x0000, 0x2113, 0x0000, 0x0000, 
-0x0000, 
+0x0000, 0x0000, 0x0000, 0x0001, 0x14ac, 0x0000, 0x2113, 0x0000, 0x0000,
+0x0000,
     0
 END
 
 IDD_SEARCH_DIALOG DLGINIT
 BEGIN
     IDC_SEARCHCTRL, 0x376, 20, 0
-0x0000, 0x0000, 0x0000, 0x0001, 0x2584, 0x0000, 0x27b0, 0x0000, 0x0000, 
-0x0000, 
+0x0000, 0x0000, 0x0000, 0x0001, 0x2584, 0x0000, 0x27b0, 0x0000, 0x0000,
+0x0000,
     0
 END
 
 IDD_CONSOLE_DIALOG DLGINIT
 BEGIN
     IDC_CONSOLE_CTRL, 0x376, 20, 0
-0x0000, 0x0000, 0x0000, 0x0001, 0x3acf, 0x0000, 0x085f, 0x0000, 0x0000, 
-0x0000, 
+0x0000, 0x0000, 0x0000, 0x0001, 0x3acf, 0x0000, 0x085f, 0x0000, 0x0000,
+0x0000,
     0
 END
 
 IDD_NEW_MULTIUSER_PROJ_DLG DLGINIT
 BEGIN
     IDC_COMBO_SPLITALG, 0x403, 5, 0
-0x3034, 0x3639, "\000" 
+0x3034, 0x3639, "\000"
     IDC_COMBO_SPLITALG, 0x403, 4, 0
-0x3532, 0x0036, 
+0x3532, 0x0036,
     0
 END
 
@@ -1443,7 +1443,7 @@ BEGIN
     ID_INDICATOR_ZOOM       "100%"
     ID_INDICATOR_PARADIGM   "-"
     ID_INDICATOR_TIME       "Time"
-    CG_ID_VIEW_MODELPROPERTIESBAR 
+    CG_ID_VIEW_MODELPROPERTIESBAR
                             "Show or hide ModelPropertiesBar\nToggle ModelPropertiesBar"
 END
 
@@ -1497,9 +1497,9 @@ END
 STRINGTABLE
 BEGIN
     ID_TOOLS_EXTERNAL_TOOLS "<User defined tools>\n<User defined tools>"
-    ID_WINDOW_NEWHORIZONTALTABGROUP 
+    ID_WINDOW_NEWHORIZONTALTABGROUP
                             "New Horizontal Tab Group\nNew Horizontal Tab Group"
-    ID_WINDOW_NEWVERTICALTABGROUP 
+    ID_WINDOW_NEWVERTICALTABGROUP
                             "New Vertical Tab Group\nNew Vertical Tab Group"
 END
 
@@ -1648,7 +1648,7 @@ BEGIN
     ID_EDIT_SHOWBASETYPE    "Show bastype mdoel of current model\nShow Basetype"
     ID_EDIT_SHOWTYPE        "Show type model of current model\nShow Type"
     ID_EDIT_PROJECTPROPERTIES "View Project Properties\nProject Properties"
-    ID_FILE_REGISTERINTERPRETER 
+    ID_FILE_REGISTERINTERPRETER
                             "Register an interpreter for the current paradigm"
     ID_FILE_SETTINGS        "View and change GME settings"
     ID_EDIT_CLEARUNDO       "Clear all undo and redo information."
@@ -1671,11 +1671,11 @@ STRINGTABLE
 BEGIN
     ID_EDIT_COPYCLOSURE     "Copy a closure of the selected objects to the Clipboard"
     ID_EDIT_COPYSMART       "Copies references/sets/connections to the Clipboard so that it can be reproduced upon Paste"
-    ID_VIEW_REFRESH_SOURCECONTROL 
+    ID_VIEW_REFRESH_SOURCECONTROL
                             "Refreshes checked out status for models and folders\nRefreshes checked out status for models and folders"
     ID_CNTX_CHECK           "Check selected or current model"
     ID_CNTX_LOCATE          "Locate in Object Browser"
-    ID_EDIT_PASTESPECIAL_ASCLOSURE 
+    ID_EDIT_PASTESPECIAL_ASCLOSURE
                             "Pastes copyclosured/smartcopied data without checking constraints"
 END
 
@@ -1718,7 +1718,7 @@ BEGIN
     ID_BUTTON33033          "Close All But Active Model\nClose All But Active Model"
     ID_BUTTON33035          "Cycle Aspects\nCycle Aspects"
     ID_BUTTON33037          "Cycle Aspects For All Open Models\nCycle Aspects For All Open Models"
-    ID_MULTIUSER_ACTIVEUSERS 
+    ID_MULTIUSER_ACTIVEUSERS
                             "Displays status of users working on this project\nDisplays status of users working on this project"
 END
 
@@ -1727,7 +1727,7 @@ BEGIN
     ID_MULTIUSER_SHOWOWNER  "Displays user who controls the active model\nDisplays user who controls the active model"
     ID_BUTTON33044          "Next Window\nNext Window"
     ID_VIEW_CLEARCONSOLE    "Clears Console Contents\nClears Console Contents"
-    ID_CNTX_FOLLOWCONNECTION 
+    ID_CNTX_FOLLOWCONNECTION
                             "Jump to the destination of an outgoing connection"
     ID_CNTX_REVERSECONNECTION "Jump to the source of an incoming connection"
     ID_JUMPALONGCONN        "Jump to the destination of an outgoing connection\nJump Along Outgoing Connection"
@@ -1759,7 +1759,7 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_VIEW_SHOWCONNECTEDPORTSONLY 
+    ID_VIEW_SHOWCONNECTEDPORTSONLY
                             "Show connected ports only\nConnected ports"
 END
 

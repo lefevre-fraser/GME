@@ -1,5 +1,5 @@
               Generic Modeling Environment
-       Copyright © 2000-2016 Vanderbilt University
+       Copyright © 2000-2017 Vanderbilt University
 
 
 ************************************************
@@ -44,7 +44,7 @@ Release Notes of Release 16.3.23
   - Fix hotspots for quick connect mode when scrolled or zoomed
   - Component window: fix bug where .NET interpreters with long paths would incorrectly be listed as GAC
   - Other bugfixes
-  
+
 Release Notes of Release 15.5.8
 ----------------------------------
   - Binary compatibility with 11.12.2
@@ -149,7 +149,7 @@ Release Notes of Release 13.8.28
   - CSharpComponentWizard: support Visual Studio 2012
   - Disable reg-free activation for CCoreCollectionHandler (GME-418)
   - Fixed a memory leak in opening MgaMetaProjects
-  
+
 Release Notes of Release 13.7.10
 ----------------------------------
   - Binary compatibility with 11.12.2
@@ -276,7 +276,7 @@ Release Notes of Release r12.3.13
   - Fix display of non-default empty value in Object Inspector
   - Fix the IErrorInfo when there's an Mga error under TRANSACTION_NON_NESTED
   - Implement Equals and GetHashCode in CSharpDsmlGenerator base class
-  - Don't return E_MGA_NOT_DERIVABLE when trying to make an instance of something whose children has an instance 
+  - Don't return E_MGA_NOT_DERIVABLE when trying to make an instance of something whose children has an instance
   - Open drag-n-dropped .html files in console
 
 Release Notes of Release r12.2.7
@@ -385,36 +385,36 @@ Release Notes of Release r10.10.10
   - This is a service release for r10.8.18
     Hence, it is binary compatible with that.
   - Fixing ObjectInspector bug ("could not write..." error messages)
-  - Upgrade to Subversion-1.6.13/OpenSSL-0.9.8o 
+  - Upgrade to Subversion-1.6.13/OpenSSL-0.9.8o
     compiled with VS2010. Remove GPL neon lib.
-  - Fixing several memory leaks in apr/svn 
+  - Fixing several memory leaks in apr/svn
   - Fixing GME-280: dont throw exceptions beyond the COM boundary
-  - Remove internal XmlBackend SVN COM interfaces. 
+  - Remove internal XmlBackend SVN COM interfaces.
     Remove Multi User>Subversion... dialog
   - Remove SVN by CMD access method from MU backend
   - Remove ClearCase and SourceSafe support from MU backend
-   
-  
+
+
 
 Release Notes of Release r10.8.18
 ---------------------------------
   - Fixing GME-281: Crash while closing XML progress dialog
-  - Fixing race conditions in the threading logic in the 
+  - Fixing race conditions in the threading logic in the
     multiuser backend
   - Fixing SAFEARRAY ownerhip and allocation strategy in the
     multiuser backend
   - Fixing multiuser progress window messages (speed locking)
   - Adding support for registering .NET components
-  - Fixing GME-292: fix crash when a decorator editing operation 
+  - Fixing GME-292: fix crash when a decorator editing operation
     causes a constraint violation
-  
+
 
 Release Notes of Release r10.6.29
 ---------------------------------
 	- Fixing GME-287: unhandled exceptions in CCoreXmlFile:ProjectOpen.
 	- Fixing GME-285: Multiuser project open silently fails
 	- Inform user which automatic addons failed to start
-	- Multiuser backend crash fix: comp. operator for 
+	- Multiuser backend crash fix: comp. operator for
 	  std::set did not handle NULL values properly.
 
 Release Notes of Release r10.6.24
@@ -433,16 +433,16 @@ Release Notes of Release r10.6.23
 
 Release Notes of Release r10.6.4
 --------------------------------
-	- Rolled back breaking COM interface changes.  
+	- Rolled back breaking COM interface changes.
 	  Hence, it is binary compatible with r9.8.28 and later.
 	- New multiuser progress dialog (GME-271)
-	  
+
 Release Notes of Release r10.6.1
 --------------------------------
-  - This release contains minor changes to the COM interface definitions. 
+  - This release contains minor changes to the COM interface definitions.
 	  Please, re-compile existing interpreters, add-ons, decorators
   - Fixing GME-270: GUI random crashes with multiuser projects
-  - OBJEVENT_PRE_DESTROYED event is introduced in the MGA layer for 
+  - OBJEVENT_PRE_DESTROYED event is introduced in the MGA layer for
     easier handling of to be deleted objects
   - New crash reporting facility (using CrashRpt)
   - Fix crash with reference ports when the referee is deleted before the refport
@@ -483,7 +483,7 @@ Release Notes of Release r10.1.19
   - This is a service release for r9.8.28
     Hence, it is binary compatible with that.
   - Fixed bugs: GME-217, GME-225, GME-227, GME-240, GME-241, GME-242
-  - Addditional checks in the GUI for non-ASCII characters 
+  - Addditional checks in the GUI for non-ASCII characters
     (we do not support them)
 
 Release Notes of Release r10.1.11
@@ -501,12 +501,12 @@ Release Notes of Release r10.1.4
     Hence, it is binary compatible with that.
   - Bugfix: crashes related to automatic unloading of
     the Constraint Manager
-    
+
 Release Notes of Release r9.12.29
 ---------------------------------
   - This is a service release for r9.8.28
     Hence, it is binary compatible with that.
-  - Bugfix: random crashes while editing labels, crash (exception) 
+  - Bugfix: random crashes while editing labels, crash (exception)
     handling
 
 Release Notes of Release r9.12.21
@@ -521,13 +521,13 @@ Release Notes of Release r9.12.15
   - This is a service release for r9.8.28
     Hence, it is binary compatible with that.
   - It fixes a bug which prevented the Constraint Manager
-    to be disabled  
-  
+    to be disabled
+
 Release Notes of Release r9.11.12
 ---------------------------------
   - This is a service release for r9.8.28 with minor bugfixes
     Hence, it is binary compatible with that.
-    
+
 Release Notes of Release r9.8.28
 -------------------------------
   - Fixed: decorator in-place edit bug
@@ -535,12 +535,12 @@ Release Notes of Release r9.8.28
 
 Release Notes of Release r9.8.19
 -------------------------------
-  - GUI uses the DisplayedName property if role name and 
+  - GUI uses the DisplayedName property if role name and
     kind name matches
   - The GME installer automatically uninstalls previous GME
     instances
   - Removed ModelMigrate tool
-    
+
 Release Notes of Release r9.8.7
 -------------------------------
   - User manual update
@@ -550,7 +550,7 @@ Release Notes of Release r9.7.1
   - Autorouter and decorator bug fixes.
   - Visual Studio Component wizard is (back)ported for
     supporting VS2005.
-  
+
 Release Notes of Release r9.6.16
 --------------------------------
   - Multiuser backend speed improvements (object
@@ -575,7 +575,7 @@ Release Notes of Release r9.5.20
 
 Release Notes of Release r9.5.8
 --------------------------------
-  - Subversion client library is updated to 1.6.1 (NOTE: 
+  - Subversion client library is updated to 1.6.1 (NOTE:
     working directory format is compatible with 1.6.x clients
     only)
   - Improved performance with multiuser/subversion locking
@@ -610,13 +610,13 @@ Release Notes of Release r9.1.12
 --------------------------------
   - Subversion backend library is updated to 1.5.5
   - New WiX-based installer (instead of the previous InstallShield-based)
-  - xml backend crashes when creating new projects are fixed 
+  - xml backend crashes when creating new projects are fixed
 
 
 Release Notes of Release r8.12.22
 --------------------------------
   - This is an internal release, release notes are not finalized
-  - The GME application and all plugins are ported to the Visual Studio 2008 
+  - The GME application and all plugins are ported to the Visual Studio 2008
     environment
   - STLport is not used anymore
   - redesigned decorator interface
@@ -627,25 +627,25 @@ Release Notes of Release r8.12.22
     Studio (this time only VS2008 is supported, the Express Edition is not)
   - the application GUI got a facelift (new MFC classes, more Vista-like look
     and feel)
-  - Vista UAC is supported when the GUI/interpreters need access to protected 
+  - Vista UAC is supported when the GUI/interpreters need access to protected
     resources (mostly to the registry)
 
 
 Release Notes of Release r7.6.29
 --------------------------------
-  
+
   - Resolved bugs GME-155, GME-157: data corrupted/lost
     after trying to save the project using an invalid file path.
 
   - Updated UML paradigm: sync with the UDM/GReAT tools
-  
+
 
 Release Notes of Release r7.3.26
 --------------------------------
 
   - MetaMAid add-on: sets FCOs abstract and fixes potential
     errors in specifying inheritance
-  
+
   - Improved (optimized) library code: if the same library
     is included indirectly through multiple other libraries,
     GME now merges them into a single copy.
@@ -668,18 +668,18 @@ Release Notes of Release r7.3.26
 
 Model View:
 ===================================
-Ctrl + 1..8 : switch between modes 
-Ctrl + Z, Ctrl + U : Undo/Redo 
-Ctrl + F : Search 
-Enter: show selected models (down in hier.) or follow selected references 
-Backspace: show parent model (up in hier.) 
-Ctrl + B : jump to browser (just as Locate command does) 
+Ctrl + 1..8 : switch between modes
+Ctrl + Z, Ctrl + U : Undo/Redo
+Ctrl + F : Search
+Enter: show selected models (down in hier.) or follow selected references
+Backspace: show parent model (up in hier.)
+Ctrl + B : jump to browser (just as Locate command does)
 Ctrl + I : jump to attribute panel
 Z or Alt + Left : back
 X or Alt + Right: forward
 TAB: cycle aspect for active model
 `  : cycle aspect for all open models (according to the active model's
-next aspect) 
+next aspect)
 C  : autoconnect element under the cursor (if mouse over object notification enabled)
 Ctrl + F6: next window
 Numpad +  : zoom in by 5%
@@ -690,23 +690,23 @@ Browser:
 ==================================
 Enter : show fco for Models: it shows a model's internals
 Shift + Enter: show fco in parent: shows every fco (models too) in its parent
-TAB: jump to search combo box 
-Ctrl + TAB: cycling through Aggregate, Inheritance, Meta Pages 
-F2: rename active element 
+TAB: jump to search combo box
+Ctrl + TAB: cycling through Aggregate, Inheritance, Meta Pages
+F2: rename active element
 Ctrl + I : jump to attribute panel
-Ctrl + Z, Ctrl + U : Undo/Redo 
-Ctrl + F : Search 
+Ctrl + Z, Ctrl + U : Undo/Redo
+Ctrl + F : Search
 
 Attribute Panel:
 ===================
 TAB: cycle through elements/pages
 Ctrl + B: jump to Browser
 
-Drag & Drop for Files 
+Drag & Drop for Files
 ==========================
-1.Paradigm file (.mta, .xmp): gets registered (only if no project is open) 
-2.mga: project file is opened 
-3.xme: project file is imported 
+1.Paradigm file (.mta, .xmp): gets registered (only if no project is open)
+2.mga: project file is opened
+3.xme: project file is imported
 
 
 
@@ -715,92 +715,92 @@ Release Notes of Release r6.11.9
 ---------------------------------
 
   - Library feature reimplementation (from scratch)
-  
-  - Namespace support in Meta and MGA libraries, in the meta interpreter 
+
+  - Namespace support in Meta and MGA libraries, in the meta interpreter
     for paradigm composition
-    
+
   - Namespace Config tool added to the distribution
-  
+
   - New connection end types in the GUI
-  
+
   - GME Merge tool added to the distribution
-  
+
 
 Release Notes of Release r6.5.8
 ---------------------------------
   - Search improvements: resizebale dialog, highlights found objects in the
     browser
-  
+
   - Bugfix: inconsitent titlebar texts
-  
-  - Bugfix: always enter into rename mode upon new object creation in the 
+
+  - Bugfix: always enter into rename mode upon new object creation in the
     browser
-    
+
   - Bugfix: All children (not just models) of folders are shown in the browser
 
     by double clicking it.
-    
-  - Bugfix: copying sets is fixed (cases where not all members are selected 
+
+  - Bugfix: copying sets is fixed (cases where not all members are selected
     with the set).
 
 Release Notes of Release r6.3.14
 ---------------------------------
-  - Dispatch compatible method signatures introduced in IDL files 
-  
-  - BON1 improvements: folder can contain other fcos than models 
-  
-  - BON2 default evenlisteners react to all events (bugfix) according 
-    to documentation 
-  
-  - Console timestamping feature 
-  
-  - Parser gives better location info upon errors, exceptions 
-  
+  - Dispatch compatible method signatures introduced in IDL files
+
+  - BON1 improvements: folder can contain other fcos than models
+
+  - BON2 default evenlisteners react to all events (bugfix) according
+    to documentation
+
+  - Console timestamping feature
+
+  - Parser gives better location info upon errors, exceptions
+
   - Toolbars are now floatable/dockable
-  
-  - Component icons (on toolbar) are programmable 
+
+  - Component icons (on toolbar) are programmable
     (enable/disable based on the active model)
-    
-  - Paradigm files (.xmp , .mta) if dropped on the GME window 
+
+  - Paradigm files (.xmp , .mta) if dropped on the GME window
     (while no project is opened ) will be registered (in user registry)
-    
+
   - Non-sticky connection modes added to main toolbar
-  
+
   - Fix for IGMEOLEApp's usage through Dispatch
-  
-  - 'View in parent' command (shortcut: Shift + Enter, or Shift + DblClick) 
-    introduced in ActiveBrowser to select and focus an element in its parent 
+
+  - 'View in parent' command (shortcut: Shift + Enter, or Shift + DblClick)
+    introduced in ActiveBrowser to select and focus an element in its parent
     (in the editing area)
-  
-  - Fixed copying of secondary derived references pointing to also 
+
+  - Fixed copying of secondary derived references pointing to also
     secondary derived objects
-    
-  - ReadOnly/ReadWrite permission flag can be applied to object hierarchies 
-    (accessible through the Access menu in the Browser) 
-    
+
+  - ReadOnly/ReadWrite permission flag can be applied to object hierarchies
+    (accessible through the Access menu in the Browser)
+
   - ModelMigrate: new rules: Atom2Model, Model2Atom, Paradigm change
-  
+
   - ModelMigrate: new feature: automatically generate separate scripts per rules
-  
+
   - BonExtender: ordering of class declararation fixed
-  
-  - MetaInterpreter improvement: displayed name may contain special characters, 
+
+  - MetaInterpreter improvement: displayed name may contain special characters,
     it will be escaped
-  
+
   - Bond style connection end added to METAGME paradigm
-  
-  - Content-type attribute added to MetaGME paradigm. Mime type or extension 
-    (identified by the leading dot) can be specified there. Appropriate editor 
-    will be invoked as if the user would have initiated Open or Edit action on 
+
+  - Content-type attribute added to MetaGME paradigm. Mime type or extension
+    (identified by the leading dot) can be specified there. Appropriate editor
+    will be invoked as if the user would have initiated Open or Edit action on
     such a file from Windows Explorer.
-    
-  - If GMEEditor value is defined in Mime/Database/Content Type/<mimetype>, 
+
+  - If GMEEditor value is defined in Mime/Database/Content Type/<mimetype>,
     GME will prefer this editor upon editing an attribute with that content type
-    
+
   - Java BON bugfixes (contributed by Alex Goos)
-  
+
   - Dispatch support for native OLE drag'n'drop
-  
+
   - Updated Python component framework (PyGME) (VaNTH/CAPE project contrib.)
     http:
 
@@ -809,12 +809,12 @@ Release Notes of Release r5.11.18
 ---------------------------------
 
   - Model migration tool added to the distribution. (ModelMigrate.exe)
-  
+
 Release Notes of Release r5.9.11
 ---------------------------------
  - Updated STLport C++ library resulting performance enhancements.
 
- - GME is now developed and compiled with Microsoft Visual Studio.NET 2003. 
+ - GME is now developed and compiled with Microsoft Visual Studio.NET 2003.
 
  - Reliability improvements in Constraint Manager and in Expression Checker
 
@@ -845,15 +845,15 @@ Release Notes of Release r4.11.10
 ---------------------------------
 
  - Metamodelling constraints are added and reviewed
- 
+
  - XML backend supporting multiuser access added (see: muserdoc.txt)
- 
+
  - Introduced copy closure feature
- 
+
  - Java BON bug fixes
- 
+
  - GME now uses STLport only (in the core layers and in interpreters)
- 
+
  - OrderedSet datatype is introduced in the Constraint Manager
 
 Release Notes of Release r4.8.25
@@ -862,7 +862,7 @@ Release Notes of Release r4.8.25
  - MetaInterpreter: Name selector dialog box for choosing the preferred name in case of equivalent objects.
 
  - UTF-8 encoding introduced for GME exported projects.
- 
+
  - Folders may be moved, copied in GME projects.
 
  - Selective Closure functionality added.
@@ -876,25 +876,25 @@ Release Notes of Release r4.8.25
  - Metainterpreter: In case of equivalent fcos the attribute values are merged (like isAbstract, inRootFolder, ...)
 
  - Console window added to the GUI (accessible from GUI Automation and BON2)
- 
+
  - Dual interfaces added to the GUI Automation along with C++ wrappers in BON2
- 
+
  - AutoRouter & Model Grid take care of labels (default turned off in preferences)
- 
+
  - MGA generates and maintaines GUIDs for projects
- 
+
  - Introduced version and metaversion project properties (MGA, XML, BON2)
- 
+
  - Enhanced project properties dialog
- 
+
  - Attribute Browser displays read-write project properties when RootFolder is selected
- 
+
  - MetaGME: got rid of ParadigmSheet attributes (project properties are used instead)
- 
+
  - MgaMetaParser does not generate checksum as GUID, if one is found in the paradigm file
- 
+
  - Custom versioning for projects and paradigms is introduced (eg.: version column in paradigm dialogs)
- 
+
  - The old MetaInterpreter became deprecated, hence removed from the installation
 
 Release Notes of Release r4.5.18
@@ -906,15 +906,15 @@ Release Notes of Release r4.5.18
 
 - A new Panning Window assists the user to navigate in huge models
 
-- The XML parser components of GME are now using Xerces 2.4.0. 
+- The XML parser components of GME are now using Xerces 2.4.0.
   The redistributed Xerces dll is changed. If you are using
   xerces in your project(s), please upgrade to the same version
-  
-- The Table Editor now has export/import to/from Excel. 
+
+- The Table Editor now has export/import to/from Excel.
   As it has always been with the table editor, only the name
   and attributes of an FCO should be edited.
-  
-  
+
+
 Bug fixes since r4.3.17:
 
 - Fixed: Attribute panel deterministically made wrong assignments (#GME-52)
@@ -948,35 +948,35 @@ Release Notes of Release r4.3.17
 
 - External text editor support for multiline attributes
 
-- Periodic autosave feature added (configurable through 
+- Periodic autosave feature added (configurable through
   the GME settings dialog)
-  
+
 - Enhanced printing and print preview
 
 - Enhanced logging (under the <USER PROFILE>/Application Data/GME folder)
 
 - Several MetaInterpreter and BonExtender enhancements
 
-- Application specific notifications can be sent through the MGA layer. 
+- Application specific notifications can be sent through the MGA layer.
   The XML parser does signal the beginning and the completion of the import process
-  
+
 
 
 Bug fixes since r4.3.2:
 
-- Copy & paste between different instances of GME now 
+- Copy & paste between different instances of GME now
   properly handles references, subtypes and sets (BUG #20)
-  
+
 - Paste to text editors (eg: notepad) does work again (BUG #15)
 
 - BON2 is compatibile with Visual C 7.1 (BUG #23)
-  
+
 - Major BON2 object factory problems are solved (BUG #16)
 
 Release Notes of Release r4.2.3
 --------------------------------
-This release contains the following significant improvements 
-over the previous public version: 
+This release contains the following significant improvements
+over the previous public version:
 
 - New and redesigned  Builder Object Network (BON2)
 
@@ -987,7 +987,7 @@ for BON2 and a metainterpreter framework
 
 Bug fixes since r4.1.8:
 
-- Redirecting references with draging selfconnected objects 
+- Redirecting references with draging selfconnected objects
 problem is fixed
 
 - Libraries in the meta environment are now supported by the
@@ -1055,7 +1055,7 @@ Bug fixes:
 Release Notes of Release r3.10.13
 ---------------------------------
 
-- New Table Editor plug-in is introduced: to use it, open 
+- New Table Editor plug-in is introduced: to use it, open
 File/Register Components, select the GME Table Editor, and press
 Toggle. Afterwards, it can be launched from the component toolbar
 or the File menu/run Plugins command.
@@ -1105,24 +1105,24 @@ Bug fixes:
 
 Release Notes of Release r3.4.29
 --------------------------------
-This is a bugfix release. Copy operations which contain connections 
+This is a bugfix release. Copy operations which contain connections
 are no longer crashing the GME application. Other small fixes:
-- GME does not update the system registry now, so users without 
+- GME does not update the system registry now, so users without
 administrative privileges will not encounter warning messages
 - Decorkit COM macros are updated
-- Small visualization problems (type/instance) are fixed in the 
+- Small visualization problems (type/instance) are fixed in the
 standard decorator
 
 Release Notes of GME 3
 --------------------------------
-This release contains lot of improvements and changes over the 
-previous versions. Therefore it is even more important to read 
+This release contains lot of improvements and changes over the
+previous versions. Therefore it is even more important to read
 carefully the first section (about the upgrade process).
 
 - We have a new OCL Constraint Manager with lot of nice features and
  comprehensive documentation (as part of the User Manual)
- 
-- GME3 uses the Windows Installer (2.0) interface which provides a 
+
+- GME3 uses the Windows Installer (2.0) interface which provides a
 standard mechanism to redistribute system DLLs.
 
 - We got rid of the "2000" prefix everywhere. If you cannot open/import
@@ -1141,15 +1141,15 @@ paradigm which is compatible with MetaGME2000.
 
 Minor fixes/enhancements:
 
-- GUI improvements (new icons, consistent style) 
+- GUI improvements (new icons, consistent style)
 
 - XML based (inter-process) clipboard support in the Browser
 
 - Library handling problems in the MGA
 
-- Single click, or multiple selections in the Browser now 
+- Single click, or multiple selections in the Browser now
   update the contents of the Attribute Panel.
-  
+
 - Context menus are enabled in GME connection modes
 
 - Hotkeys are assigned to switch between GME modes (CTRL+1 - CTRL+6)
@@ -1158,13 +1158,13 @@ Release Notes of Release r11.21.1 follow.
 
 - Interpreter invocation from the Browser
 
-- Connection hotspot feature is now controllable 
+- Connection hotspot feature is now controllable
   (and is disabled for inheritance icons in the meta environment)
-  
-- The installer now removes old paradigms and components 
+
+- The installer now removes old paradigms and components
   from the windows registry. Please, re-register your paradigms
   from the .xmp files and recompile your interpreters
-  
+
 - Libraries can be renamed in the browser
 
 - Interpreters based on BON can be compiled using Visual Studio.Net
@@ -1183,8 +1183,8 @@ The Attribute Browser is now implemented as a standalone
 ActiveX component. It provides a unified interface for
 attributes, preferences and properties.
 
-In our previous service release a new component has been added. 
-It is a plug-in, i.e a paradigm independent component. 
+In our previous service release a new component has been added.
+It is a plug-in, i.e a paradigm independent component.
 It provides comprehensive searching capability.
 
 
@@ -1202,7 +1202,7 @@ projects that use it. This feature required file format
 modifications. GME will automatically convert binary
 files to the new format (saving the original with the .orig
 extension), but it is a relatively slow process. However,
-subsequent accesses to the file are as fast as before. 
+subsequent accesses to the file are as fast as before.
 
 - ODBC backend. In addition to the MS Repository and binary
 file backends, now ODBC is also supported.
@@ -1277,7 +1277,7 @@ The only requirement is that decorators have to implement a COM interface that
 GME uses when it needs to display the objects. The new UML class diagram
 paradigm sample comes with its own decorator that displays classnames,
 stereotypes and attributes inside the class icon and resizes it accordingly.
-The GME metamodeling paradigm has a similar decorator as well. A 
+The GME metamodeling paradigm has a similar decorator as well. A
 decorator shell is also provided with this release to help you write
 your own decorators. Note that connection visualization has not changed
 and is not customizable.
@@ -1298,7 +1298,7 @@ tested. Whenever a data file is loaded, the activated add-ons are also
 loaded automatically. Add-ons listen to events; the event set listened to
 is specified through the component configurator GUI (ComponentConfig.exe) .
 For efficiency reasons, Addons cannot  be Builder Object Network components.
-Plug-ins are noew accessible throufg a separate command in the File menu. 
+Plug-ins are noew accessible throufg a separate command in the File menu.
 
 - OCL syntax checker add-on for the metamodeling environment. As a sample
 add-on, the metamodeling environment now comes with this nice helper
@@ -1325,7 +1325,7 @@ built against the very same interace as the GME executing them, although
 only a warning is displayed when starting incompatible components. There
 is no way to change the interface versions of compiled binaries. The only
 possible way to update the inteface version number is to recompile the
-components against the up-to-date interface files. 
+components against the up-to-date interface files.
 
 - Type inheritance refinements. The previous restriction, that only root
 models can be derived from or instantiated, has been relaxed. Now a
@@ -1341,7 +1341,7 @@ operations are not allowed. Note that the paste special commands only
 work if the source of the clipboard data is the same project open in the
 same GME instance.
 
-- Instant connections through context menus. In the regular edit mode 
+- Instant connections through context menus. In the regular edit mode
 connections can now be made by the Connect command in the context menu.
 Selecting this command changes the cursor to the connect cursor. A connection
 will be made to the object that is left clicked next. (Or by selecting the
@@ -1363,7 +1363,7 @@ warning is message displayed reminding users to upgrade the component code
 to fully comply with the new BON.
 
 - Tutorials. Two short, simple tutorials have been prepared on metamodeling
-and metamodel composition. 
+and metamodel composition.
 
 - A sample UML class diagram drawing paradigm. To illustrate the user-defined
 drawing capabilities of this version, we are including this simple
@@ -1427,12 +1427,12 @@ TokenEx
 
 TreeCtrlEx
   Copyright (c) 1997-2001 Bendik Engebretsen <bendik@techsoft.no>
-  
+
 Regexp
   Copyright (c) 1986 by University of Toronto. (Henry Spencer)
-  
+
 ColourPicker, ColourPopup
-  Copyright (c) 1998  Chris Maunder <chrismaunder@codeguru.com> and 
+  Copyright (c) 1998  Chris Maunder <chrismaunder@codeguru.com> and
   	Alexander Bischofberger <bischofb@informatik.tu-muenchen.de>
 
 MFC Grid Control - inplace editing class (CInPlaceEdit)
@@ -1440,7 +1440,7 @@ MFC Grid Control - inplace editing class (CInPlaceEdit)
 
 zlib
   Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
-  
+
 CrashRpt
   Copyright (c) 2003, Michael Carruth
 
@@ -1448,53 +1448,53 @@ Subversion
   Copyright (c) 2000-2009 CollabNet.
 
 APR (Apache Portable Runtime)
-  Copyright (c) 1999-2004 The Apache Software Foundation. 
-    
+  Copyright (c) 1999-2004 The Apache Software Foundation.
+
 OpenSSL
   Copyright (c) 1998-2008 The OpenSSL Project.
-  
+
 Serf
   Copyright 2002-2004 Justin Erenkrantz and Greg Stein
 
 neon HTTP/WebDAV client library
-  Copyright (c)  2001-2008 Joe Orton     
-  
-  
+  Copyright (c)  2001-2008 Joe Orton
+
+
 *****************************************************
 Appendix A. The Apache Software License, Version 1.1
 *****************************************************
-  
-  Copyright (c) 1999-2004 The Apache Software Foundation.  All rights 
+
+  Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
   reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
-  
+
   1. Redistributions of source code must retain the above copyright
-     notice, this list of conditions and the following disclaimer. 
-  
+     notice, this list of conditions and the following disclaimer.
+
   2. Redistributions in binary form must reproduce the above copyright
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-  
+
   3. The end-user documentation included with the redistribution,
-     if any, must include the following acknowledgment:  
+     if any, must include the following acknowledgment:
         "This product includes software developed by the
          Apache Software Foundation (http:
      Alternately, this acknowledgment may appear in the software itself,
      if and wherever such third-party acknowledgments normally appear.
-  
+
   4. The names "Xalan" and "Apache Software Foundation" must
      not be used to endorse or promote products derived from this
-     software without prior written permission. For written 
+     software without prior written permission. For written
      permission, please contact apache@apache.org.
-  
+
   5. Products derived from this software may not be called "Apache",
      nor may "Apache" appear in their name, without prior written
      permission of the Apache Software Foundation.
-  
+
   THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -1508,7 +1508,7 @@ Appendix A. The Apache Software License, Version 1.1
   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
   SUCH DAMAGE.
   ====================================================================
-  
+
   This software consists of voluntary contributions made by many
   individuals on behalf of the Apache Software Foundation and was
   originally based on software copyright (c) 1999, International

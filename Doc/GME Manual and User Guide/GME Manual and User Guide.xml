@@ -18,7 +18,7 @@
     </affiliation>
 
     <copyright>
-      <year>2000-2016</year>
+      <year>2000-2017</year>
 
       <holder>Vanderbilt University</holder>
     </copyright>
@@ -30,7 +30,7 @@
     <releaseinfo><ulink
     url="http://www.isis.vanderbilt.edu">http://www.isis.vanderbilt.edu</ulink></releaseinfo>
   </articleinfo>
-  
+
   <section>
     <title>Introduction</title>
 
@@ -2397,7 +2397,7 @@
       on the user's machine and it's up to the user to send it to the developers.
       It can be found "%OSDir%\Documents and Settings\%UserName%\Application Data\GME\"
       folder on Windows XP or
-      "%OSDir%\Users\%UserName%\AppData\Roaming\GME\" folder on Windows Vista or Windows 7. 
+      "%OSDir%\Users\%UserName%\AppData\Roaming\GME\" folder on Windows Vista or Windows 7.
       Please open the folder and attach the file to the e-mail to the mentioned
       e-mail address (see next paragraph or the crashdump dialog).</para>
 
@@ -2795,13 +2795,13 @@
       invoking an interpreter on the currently opened model (if any).</para>
 
       <para><blockquote>
-          <programlisting format="linespecific"># hiding the ActiveBrowser window 
-gme.panels[0].Visible = 0 
- 
-# check the constraints 
-gme.CheckAllConstraints() 
- 
-# invoking an interpreter 
+          <programlisting format="linespecific"># hiding the ActiveBrowser window
+gme.panels[0].Visible = 0
+
+# check the constraints
+gme.CheckAllConstraints()
+
+# invoking an interpreter
 gme.RunComponent('Mga.Interpreter.ComponentC') </programlisting>
         </blockquote></para>
 
@@ -2813,13 +2813,13 @@ gme.RunComponent('Mga.Interpreter.ComponentC') </programlisting>
       MGA project transactions must be used.</para>
 
       <para><blockquote>
-          <programlisting format="linespecific">gme.OpenProject('MGA=f:\\sf-sample.mga') 
-terr = project.CreateTerritory( None, None, None) 
-project.BeginTransaction( terr ) 
-mf = project.RootFolder.ChildObject(‘MainFolder’) 
-mf.Name = ‘main_folder’ 
-mf.ChildFCO(‘MainCompound’).Name = ‘main_compound’ 
-project.CommitTransaction() 
+          <programlisting format="linespecific">gme.OpenProject('MGA=f:\\sf-sample.mga')
+terr = project.CreateTerritory( None, None, None)
+project.BeginTransaction( terr )
+mf = project.RootFolder.ChildObject(‘MainFolder’)
+mf.Name = ‘main_folder’
+mf.ChildFCO(‘MainCompound’).Name = ‘main_compound’
+project.CommitTransaction()
 gme.CloseProject( 1 ) </programlisting>
         </blockquote></para>
 
@@ -2853,13 +2853,13 @@ gme.CloseProject( 1 ) </programlisting>
       or <code>IMgaFCO</code> pointers as incoming parameters, the latter
       method names being suffixed with “FCO”. The code sample below shows
       duplicating (clone) of objects: <blockquote>
-          <programlisting format="linespecific"># clones object (if any) named “InSignal”, renames the clone to “ClonedInSignal” and returns it 
-clonedInSignalPtr = it.Duplicate( “InSignal”, “ClonedInSignal”)  
- 
-# cloning clonedInSignal object 4 times, with different names 
-for i in range(5): it.DuplicateFCO( clonedInSignalPtr, “twiceClonedInSignal” + str(i)) 
- 
-# cloning “twiceClonedInSignal2” object, using the it.Child() method 
+          <programlisting format="linespecific"># clones object (if any) named “InSignal”, renames the clone to “ClonedInSignal” and returns it
+clonedInSignalPtr = it.Duplicate( “InSignal”, “ClonedInSignal”)
+
+# cloning clonedInSignal object 4 times, with different names
+for i in range(5): it.DuplicateFCO( clonedInSignalPtr, “twiceClonedInSignal” + str(i))
+
+# cloning “twiceClonedInSignal2” object, using the it.Child() method
 it.DuplicateFCO( it.Child( “twiceClonedInSignal2”), “thriceClonedInSignal”) </programlisting>
         </blockquote></para>
 
@@ -6477,24 +6477,24 @@ MGA.Decorator.MetaDecorator showattributes=false, showabstract=true</programlist
         high-level C++ component interface. The entry point of the component
         is defined in the Component.h in the appropriate subdirectory of the
         components directory. Here is the file at the start of the component
-        writing process: <programlisting format="linespecific">#ifndef GME_INTERPRETER_H 
-#define GME_INTERPRETER_H 
- 
-#include "Builder.h" 
- 
-#define NEW_BON_INVOKE 
-//#define DEPRECATED_BON_INVOKE_IMPLEMENTED 
- 
-class CComponent { 
-public: 
-  CComponent() : focusfolder(NULL) { ; }  
- CBuilderFolder *focusfolder; 
- CBuilderFolderList selectedfolders; 
-  void InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
-   CBuilderObjectList &amp;selected, long param); 
-//  void Invoke(CBuilder &amp;builder, CBuilderObjectList &amp;selected, long param); 
-}; 
- 
+        writing process: <programlisting format="linespecific">#ifndef GME_INTERPRETER_H
+#define GME_INTERPRETER_H
+
+#include "Builder.h"
+
+#define NEW_BON_INVOKE
+//#define DEPRECATED_BON_INVOKE_IMPLEMENTED
+
+class CComponent {
+public:
+  CComponent() : focusfolder(NULL) { ; }
+ CBuilderFolder *focusfolder;
+ CBuilderFolderList selectedfolders;
+  void InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
+   CBuilderObjectList &amp;selected, long param);
+//  void Invoke(CBuilder &amp;builder, CBuilderObjectList &amp;selected, long param);
+};
+
 #endif // whole file </programlisting></para>
 
         <para>Before GME version 1.2 this used to be simpler, but not as
@@ -6578,13 +6578,13 @@ public:
         <para>Plug-Ins are paradigm-independent components. The example Noname
         plug-in displays a message. The implementation is in the
         <filename>component.cpp</filename> file shown below: <programlisting
-        format="linespecific">#include "stdafx.h" 
-#include "Component.h" 
- 
-void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
-   CBuilderObjectList &amp;selected, long param) 
-{ 
- AfxMessageBox("Plug-In Sample"); 
+        format="linespecific">#include "stdafx.h"
+#include "Component.h"
+
+void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
+   CBuilderObjectList &amp;selected, long param)
+{
+ AfxMessageBox("Plug-In Sample");
 } </programlisting></para>
 
         <para>The <filename moreinfo="none">component.h</filename> and
@@ -6615,23 +6615,23 @@ void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
         builder object network. It provides access to the model folders and
         supplies the name of the current project. The public interface of the
         <code>CBuilder</code> class is shown below. <programlisting
-        format="linespecific">class CBuilder : public CObject { 
-public: 
-  CBuilderFolder *GetRootFolder() const; 
-  const CBuilderFolderList *GetFolders() const; 
-  CBuilderFolder *GetFolder(CString &amp;name) const; 
-  CString GetProjectName() const; 
+        format="linespecific">class CBuilder : public CObject {
+public:
+  CBuilderFolder *GetRootFolder() const;
+  const CBuilderFolderList *GetFolders() const;
+  CBuilderFolder *GetFolder(CString &amp;name) const;
+  CString GetProjectName() const;
 }; </programlisting></para>
 
         <para>The <code>CBuilderFolder</code> class provides access to the
         root models of the given folder. It can also be used to create new
-        root models. <programlisting format="linespecific">class CBuilderFolder : public CObject { 
-public: 
-  const CString&amp; GetName() const; 
-  const CBuilderModelList *GetRootModels() const; 
-  const CBuilderFolderList *GetSubFolders() const 
-  CBuilderModel *GetRootModel(CString &amp;name) const; 
-  CBuilderModel *CreateNewModel(CString kindName); 
+        root models. <programlisting format="linespecific">class CBuilderFolder : public CObject {
+public:
+  const CString&amp; GetName() const;
+  const CBuilderModelList *GetRootModels() const;
+  const CBuilderFolderList *GetSubFolders() const
+  CBuilderModel *GetRootModel(CString &amp;name) const;
+  CBuilderModel *CreateNewModel(CString kindName);
 }; </programlisting></para>
 
         <para>The <code>CBuilderObject</code> is the base class for several
@@ -6676,52 +6676,52 @@ public:
         class does override this function. It enumerates all of its children
         and calls their <code>Traverse</code> method.</para>
 
-        <programlisting format="linespecific"> class CBuilderObject : public CObject { 
-  const CString&amp; GetName(); 
-  const bool SetName(CString newname); 
- 
+        <programlisting format="linespecific"> class CBuilderObject : public CObject {
+  const CString&amp; GetName();
+  const bool SetName(CString newname);
+
  void GetNamePath(CString &amp;namePath) const
-  const CString&amp; GetKindName() const; 
-  const CString&amp; GetPartName() const; 
-       
- const CBuilderModel *GetParent() const; 
-  CBuilderFolder* GetFolder() const; 
- 
- bool GetLocation(CString &amp;aspectName,CRect &amp;loc); 
- bool SetLocation(CString aspectName,CPoint loc); 
- void DisplayError(CString &amp;msg) const; 
- void DisplayError(char *msg) const; 
- void DisplayWarning(CString &amp;msg) const; 
- void DisplayWarning(char *msg) const; 
- bool GetAttribute(CString &amp;name,CString &amp;val) const; 
- bool GetAttribute(char *name,CString &amp;val) const; 
- bool GetAttribute(CString &amp;name,int &amp;val) const; 
- bool GetAttribute(char *name,int &amp;val) const; 
- bool GetAttribute(CString &amp;name,bool &amp;val) const; 
- bool GetAttribute(char *name,bool &amp;val) const; 
- bool SetAttribute(CString &amp;name, CString &amp;val); 
- bool SetAttribute(CString &amp;name, int val); 
- bool SetAttribute(CString &amp;name, bool val); 
- void GetStrAttributeNames(CStringList &amp;list) const; 
- void GetIntAttributeNames(CStringList &amp;list) const; 
- void GetBoolAttributeNames(CStringList &amp;list) const; 
- void GetReferencedBy(CBuilderObjectList &amp;list) const; 
+  const CString&amp; GetKindName() const;
+  const CString&amp; GetPartName() const;
+
+ const CBuilderModel *GetParent() const;
+  CBuilderFolder* GetFolder() const;
+
+ bool GetLocation(CString &amp;aspectName,CRect &amp;loc);
+ bool SetLocation(CString aspectName,CPoint loc);
+ void DisplayError(CString &amp;msg) const;
+ void DisplayError(char *msg) const;
+ void DisplayWarning(CString &amp;msg) const;
+ void DisplayWarning(char *msg) const;
+ bool GetAttribute(CString &amp;name,CString &amp;val) const;
+ bool GetAttribute(char *name,CString &amp;val) const;
+ bool GetAttribute(CString &amp;name,int &amp;val) const;
+ bool GetAttribute(char *name,int &amp;val) const;
+ bool GetAttribute(CString &amp;name,bool &amp;val) const;
+ bool GetAttribute(char *name,bool &amp;val) const;
+ bool SetAttribute(CString &amp;name, CString &amp;val);
+ bool SetAttribute(CString &amp;name, int val);
+ bool SetAttribute(CString &amp;name, bool val);
+ void GetStrAttributeNames(CStringList &amp;list) const;
+ void GetIntAttributeNames(CStringList &amp;list) const;
+ void GetBoolAttributeNames(CStringList &amp;list) const;
+ void GetReferencedBy(CBuilderObjectList &amp;list) const;
  const CBuilderConnectionList *GetInConnections(CString &amp;name) const;
- const CBuilderConnectionList *GetInConnections(char *name) const;  
- const CBuilderConnectionList *GetOutConnections(CString name)const; 
+ const CBuilderConnectionList *GetInConnections(char *name) const;
+ const CBuilderConnectionList *GetOutConnections(CString name)const;
  const CBuilderConnectionList *GetOutConnections(char *name) const;
- 
-  bool GetInConnectedObjects(const CString &amp;name, CBuilderObjectList &amp;list); 
-  bool GetInConnectedObjects(const char *name, CBuilderObjectList &amp;list); 
-  bool GetOutConnectedObjects(const CString &amp;name, BuilderObjectList &amp;list); 
-  bool GetOutConnectedObjects(const char *name, CBuilderObjectList &amp;list); 
- 
-  bool GetDirectInConnections(CString &amp;name, CBuilderObjectList &amp;list); 
-  bool GetDirectInConnections(char *name, CBuilderObjectList &amp;list); 
-  bool GetDirectOutConnections(CString &amp;name, CBuilderObjectList &amp;list); 
-  bool GetDirectOutConnections(char *name, CBuilderObjectList &amp;list); 
- 
-  virtual void TraverseChildren(void *pointer = 0); 
+
+  bool GetInConnectedObjects(const CString &amp;name, CBuilderObjectList &amp;list);
+  bool GetInConnectedObjects(const char *name, CBuilderObjectList &amp;list);
+  bool GetOutConnectedObjects(const CString &amp;name, BuilderObjectList &amp;list);
+  bool GetOutConnectedObjects(const char *name, CBuilderObjectList &amp;list);
+
+  bool GetDirectInConnections(CString &amp;name, CBuilderObjectList &amp;list);
+  bool GetDirectInConnections(char *name, CBuilderObjectList &amp;list);
+  bool GetDirectOutConnections(CString &amp;name, CBuilderObjectList &amp;list);
+  bool GetDirectOutConnections(char *name, CBuilderObjectList &amp;list);
+
+  virtual void TraverseChildren(void *pointer = 0);
 };</programlisting>
 
         <para>The <code>CBuilderModel</code> class is the most important class
@@ -6752,43 +6752,43 @@ public:
         <para>The <code>TraverseModels</code> function is similar to the
         <code>TraverseChildren</code> but it only traverses models.</para>
 
-        <programlisting format="linespecific">class CBuilderModel : public CBuilderObject { 
-public: 
-  const CBuilderObjectList *GetChildren() const; 
-  const CBuilderModelList *GetModels() const;           
-  const CBuilderModelList *GetModels(CString partName) const; 
-  const CBuilderAtomList *GetAtoms(CString partName) const; 
-  const CBuilderModelReferenceList *GetModelReferences( CString refPartName) const; 
-  const CBuilderAtomReferenceList *GetAtomReferences( CString refPartName ) const;  
-  const CBuilderConnectionList *GetConnections(CString name) const; 
-  const CBuilderSetList *GetSets(CString name) const;   
- 
-  void GetAspectNames(CStringList &amp;list); 
-  
-  CBuilderModel *CreateNewModel(CString partName); 
-  CBuilderAtom  *CreateNewAtom(CString partName); 
-  CBuilderModelReference *CreateNewModelReference(CString refPartName, CBuilderObject* refTo); 
-  CBuilderAtomReference *CreateNewAtomReference(CString refPartName, CBuilderObject* refTo); 
-  CBuilderSet *CreateNewSet(CString partName); 
-  CBuilderConnection *CreateNewConnection(CString connName, CBuilderObject *src, CBuilderObject *dst); 
- 
-  virtual void TraverseModels(void *pointer = 0); 
-  virtual void TraverseChildren(void *pointer = 0); 
+        <programlisting format="linespecific">class CBuilderModel : public CBuilderObject {
+public:
+  const CBuilderObjectList *GetChildren() const;
+  const CBuilderModelList *GetModels() const;
+  const CBuilderModelList *GetModels(CString partName) const;
+  const CBuilderAtomList *GetAtoms(CString partName) const;
+  const CBuilderModelReferenceList *GetModelReferences( CString refPartName) const;
+  const CBuilderAtomReferenceList *GetAtomReferences( CString refPartName ) const;
+  const CBuilderConnectionList *GetConnections(CString name) const;
+  const CBuilderSetList *GetSets(CString name) const;
+
+  void GetAspectNames(CStringList &amp;list);
+
+  CBuilderModel *CreateNewModel(CString partName);
+  CBuilderAtom  *CreateNewAtom(CString partName);
+  CBuilderModelReference *CreateNewModelReference(CString refPartName, CBuilderObject* refTo);
+  CBuilderAtomReference *CreateNewAtomReference(CString refPartName, CBuilderObject* refTo);
+  CBuilderSet *CreateNewSet(CString partName);
+  CBuilderConnection *CreateNewConnection(CString connName, CBuilderObject *src, CBuilderObject *dst);
+
+  virtual void TraverseModels(void *pointer = 0);
+  virtual void TraverseChildren(void *pointer = 0);
 }; </programlisting>
 
         <para>The <code>CBuilderAtom</code> class does not provide any new
         public methods.</para>
 
-        <programlisting format="linespecific">class CBuilderAtom : public CBuilderObject { 
-public: 
+        <programlisting format="linespecific">class CBuilderAtom : public CBuilderObject {
+public:
 }; </programlisting>
 
         <para>The <code>CBuilderAtomReference</code> class provides the
         <code>GetReferred</code> function that returns the atom (or atom
         reference) referred to by the given reference.</para>
 
-        <programlisting format="linespecific">class CBuilderAtomReference : public CBuilderObject { 
-  const CBuilderObject *GetReferred() const; 
+        <programlisting format="linespecific">class CBuilderAtomReference : public CBuilderObject {
+  const CBuilderObject *GetReferred() const;
 }; </programlisting>
 
         <para>Even though the GME deals with ports of models (since models
@@ -6802,10 +6802,10 @@ public:
         atom that corresponds to the port of the model that the model
         reference port represents.</para>
 
-        <programlisting format="linespecific">class CBuilderReferencePort : public CBuilderObject { 
-public: 
-  const CBuilderModelReference *GetOwner() const; 
- const CBuilderAtom *GetAtom() const;       
+        <programlisting format="linespecific">class CBuilderReferencePort : public CBuilderObject {
+public:
+  const CBuilderModelReference *GetOwner() const;
+ const CBuilderAtom *GetAtom() const;
 }; </programlisting>
 
         <para>The <code>CBuilderModelReference</code> class provides the
@@ -6814,9 +6814,9 @@ public:
         <code>GetRefereePorts</code> return the list of
         <code>CBuilderReferencePorts</code>.</para>
 
-        <programlisting format="linespecific">class CBuilderModelReference : public CBuilderObject { 
-  const CBuilderReferencePortList &amp;GetRefereePorts() const; 
-  const CBuilderObject *GetReferred() const; 
+        <programlisting format="linespecific">class CBuilderModelReference : public CBuilderObject {
+  const CBuilderReferencePortList &amp;GetRefereePorts() const;
+  const CBuilderObject *GetReferred() const;
 }; </programlisting>
 
         <para>A <code>CBuilderConnection</code> instance describes a relation
@@ -6829,23 +6829,23 @@ public:
         a reference port, its owner must be a child of the owner of the
         connection.</para>
 
-        <programlisting format="linespecific">class CBuilderConnection : public CBuilderObject { 
-public: 
- CBuilderModel *GetOwner() const; 
- CBuilderObject *GetSource() const;         
- CBuilderObject *GetDestination() const; 
+        <programlisting format="linespecific">class CBuilderConnection : public CBuilderObject {
+public:
+ CBuilderModel *GetOwner() const;
+ CBuilderObject *GetSource() const;
+ CBuilderObject *GetDestination() const;
 }; </programlisting>
 
         <para>The <code>CBuilderSet</code> class member function provide
         straightforward access to the different components of sets.</para>
 
-        <programlisting format="linespecific">class CBuilderSet : public CBuilderObject { 
-public: 
-  const CBuilderModel *GetOwner() const;    
-  const CBuilderObjectList *GetMembers() const; 
- 
- bool AddMember(CBuilderObject *part); 
- bool RemoveMember(CBuilderObject *part); 
+        <programlisting format="linespecific">class CBuilderSet : public CBuilderObject {
+public:
+  const CBuilderModel *GetOwner() const;
+  const CBuilderObjectList *GetMembers() const;
+
+ bool AddMember(CBuilderObject *part);
+ bool RemoveMember(CBuilderObject *part);
 }; </programlisting>
       </section>
 
@@ -6858,32 +6858,32 @@ public:
         <filename moreinfo="none">component.cpp</filename> file is shown
         below.</para>
 
-        <programlisting format="linespecific">#include "stdafx.h" 
-#include "Component.h" 
- 
-void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
-   CBuilderObjectList &amp;selected, long param) 
-{ 
-  const CBuilderFolderList *folds = builder.GetFolders(); 
-  POSITION fPos = folds-&gt;GetHeadPosition(); 
- while(fPos) { 
-  CBuilderFolder *fold = folds-&gt;GetNext(fPos); 
-    const CBuilderModelList *roots = fold-&gt;GetRootModels(); 
-  POSITION rootPos = roots-&gt;GetHeadPosition(); 
-  while(rootPos) 
-   ScanModels(roots-&gt;GetNext(rootPos),fold-&gt;GetName()); 
- } 
-} 
- 
-void CComponent::ScanModels(CBuilderModel *model, CString fName) 
-{ 
-  AfxMessageBox(model-&gt;GetName() + " model found in the " + 
-        fName + " folder"); 
- 
-  const CBuilderModelList *models = model-&gt;GetModels(); 
-  POSITION pos = models-&gt;GetHeadPosition(); 
- while(pos) 
-  ScanModels(models-&gt;GetNext(pos),fName); 
+        <programlisting format="linespecific">#include "stdafx.h"
+#include "Component.h"
+
+void CComponent:: InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
+   CBuilderObjectList &amp;selected, long param)
+{
+  const CBuilderFolderList *folds = builder.GetFolders();
+  POSITION fPos = folds-&gt;GetHeadPosition();
+ while(fPos) {
+  CBuilderFolder *fold = folds-&gt;GetNext(fPos);
+    const CBuilderModelList *roots = fold-&gt;GetRootModels();
+  POSITION rootPos = roots-&gt;GetHeadPosition();
+  while(rootPos)
+   ScanModels(roots-&gt;GetNext(rootPos),fold-&gt;GetName());
+ }
+}
+
+void CComponent::ScanModels(CBuilderModel *model, CString fName)
+{
+  AfxMessageBox(model-&gt;GetName() + " model found in the " +
+        fName + " folder");
+
+  const CBuilderModelList *models = model-&gt;GetModels();
+  POSITION pos = models-&gt;GetHeadPosition();
+ while(pos)
+  ScanModels(models-&gt;GetNext(pos),fName);
 } </programlisting>
       </section>
 
@@ -6903,18 +6903,18 @@ void CComponent::ScanModels(CBuilderModel *model, CString fName)
         for models, atoms, model- and atom references, connections and sets.
         The following list describes their generic form.</para>
 
-        <programlisting format="linespecific">DECLARE_CUSTOMMODEL(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMMODELREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMATOM(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMATOMREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMCONNECTION(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMSET(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
- 
-IMPLEMENT_CUSTOMMODEL(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) 
-IMPLEMENT_CUSTOMMODELREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) 
-IMPLEMENT_CUSTOMATOM(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) 
-IMPLEMENT_CUSTOMATOMREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) 
-IMPLEMENT_CUSTOMCONNECTION(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) 
+        <programlisting format="linespecific">DECLARE_CUSTOMMODEL(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMMODELREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMATOM(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMATOMREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMCONNECTION(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMSET(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+
+IMPLEMENT_CUSTOMMODEL(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;)
+IMPLEMENT_CUSTOMMODELREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;)
+IMPLEMENT_CUSTOMATOM(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;)
+IMPLEMENT_CUSTOMATOMREF(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;)
+IMPLEMENT_CUSTOMCONNECTION(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;)
 IMPLEMENT_CUSTOMSET(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) </programlisting>
 
         <para>Here, the &lt;CLASS&gt; is the name of the new class, while the
@@ -6928,33 +6928,33 @@ IMPLEMENT_CUSTOMSET(&lt;CLASS&gt;,&lt;BASE CLASS&gt;,&lt;NAMES&gt;) </programlis
         <para>For example, if we have a "Compound" model in our paradigm, we
         can create a builder class for it the following way.</para>
 
-        <programlisting format="linespecific">// Component.h 
- 
-class CCompoundBuilder : public CBuilderModel 
-{ 
- DECLARE_CUSTOMMODEL(CCompoundBuilder, CBuilderModel) 
-public: 
- virtual void Initialize(); 
- virtual ~CCompoundBuilder(); 
- 
-// more declarations 
-}; 
- 
-// Component.cpp 
- 
-IMPLEMENT_CUSTOMMODEL(CCompoundBuilder, CBuilderModel, "Compound") 
- 
-void CCompoundBuilder::Initialize() 
-{ 
-  // code that otherwise would go into a constructor 
- 
- CBuilderModel::Initialize(); 
-} 
- 
-CCompoundBuilder::~CCompoundBuilder() 
-{ 
- // the destructor 
-} 
+        <programlisting format="linespecific">// Component.h
+
+class CCompoundBuilder : public CBuilderModel
+{
+ DECLARE_CUSTOMMODEL(CCompoundBuilder, CBuilderModel)
+public:
+ virtual void Initialize();
+ virtual ~CCompoundBuilder();
+
+// more declarations
+};
+
+// Component.cpp
+
+IMPLEMENT_CUSTOMMODEL(CCompoundBuilder, CBuilderModel, "Compound")
+
+void CCompoundBuilder::Initialize()
+{
+  // code that otherwise would go into a constructor
+
+ CBuilderModel::Initialize();
+}
+
+CCompoundBuilder::~CCompoundBuilder()
+{
+ // the destructor
+}
 // more code </programlisting>
 
         <para>The macros create a constructor and a Create function in order
@@ -6970,18 +6970,18 @@ CCompoundBuilder::~CCompoundBuilder()
         from the list below. Note that the &lt;NAMES&gt; argument is missing
         because there is no need for it.</para>
 
-        <programlisting format="linespecific">DECLARE_CUSTOMMODELBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMMODELREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMATOMBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMATOMREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMCONNECTIONBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-DECLARE_CUSTOMSETBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
- 
-IMPLEMENT_CUSTOMMODELBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-IMPLEMENT_CUSTOMMODELREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-IMPLEMENT_CUSTOMATOMBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-IMPLEMENT_CUSTOMATOMREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
-IMPLEMENT_CUSTOMCONNECTIONBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) 
+        <programlisting format="linespecific">DECLARE_CUSTOMMODELBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMMODELREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMATOMBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMATOMREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMCONNECTIONBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+DECLARE_CUSTOMSETBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+
+IMPLEMENT_CUSTOMMODELBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+IMPLEMENT_CUSTOMMODELREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+IMPLEMENT_CUSTOMATOMBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+IMPLEMENT_CUSTOMATOMREFBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
+IMPLEMENT_CUSTOMCONNECTIONBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;)
 IMPLEMENT_CUSTOMSETBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) </programlisting>
 
         <para>For casting, use the <code>BUILDER_CAST(CLASS, PTR)</code> macro
@@ -6998,66 +6998,66 @@ IMPLEMENT_CUSTOMSETBASE(&lt;CLASS&gt;,&lt;BASE CLASS&gt;) </programlisting>
         models. Again, the folder hierarchy is not considered. Here is the
         <filename moreinfo="none">Component.h</filename> file:</para>
 
-        <programlisting format="linespecific">#ifndef GME_INTERPRETER_H 
-#define GME_INTERPRETER_H 
- 
-#include "Builder.h" 
- 
-#define NEW_BON_INVOKE 
-//#define DEPRECATED_BON_INVOKE_IMPLEMENTED 
- 
-class CComponent { 
-public: 
-  CComponent() : focusfolder(NULL) { ; }  
- CBuilderFolder *focusfolder; 
- CBuilderFolderList selectedfolders; 
-  void InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
-   CBuilderObjectList &amp;selected, long param); 
-}; 
- 
-class CCompoundBuilder : public CBuilderModel 
-{ 
- DECLARE_CUSTOMMODEL(CCompoundBuilder, CBuilderModel) 
-public: 
-  void Scan(CString foldName); 
-}; 
- 
+        <programlisting format="linespecific">#ifndef GME_INTERPRETER_H
+#define GME_INTERPRETER_H
+
+#include "Builder.h"
+
+#define NEW_BON_INVOKE
+//#define DEPRECATED_BON_INVOKE_IMPLEMENTED
+
+class CComponent {
+public:
+  CComponent() : focusfolder(NULL) { ; }
+ CBuilderFolder *focusfolder;
+ CBuilderFolderList selectedfolders;
+  void InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
+   CBuilderObjectList &amp;selected, long param);
+};
+
+class CCompoundBuilder : public CBuilderModel
+{
+ DECLARE_CUSTOMMODEL(CCompoundBuilder, CBuilderModel)
+public:
+  void Scan(CString foldName);
+};
+
 #endif // whole file </programlisting>
 
         <para>The <filename moreinfo="none">component.cpp</filename> file is
         shown below.</para>
 
-        <programlisting format="linespecific">#include "stdafx.h" 
-#include "Component.h" 
- 
-void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus, 
-   CBuilderObjectList &amp;selected, long param) 
-{ 
-  const CBuilderFolderList *folds = builder.GetFolders(); 
-  POSITION foldPos = folds-&gt;GetHeadPosition(); 
- while(foldPos) { 
-  CBuilderFolder *fold = folds-&gt;GetNext(foldPos); 
-    const CBuilderModelList *roots = fold-&gt;GetRootModels(); 
-  POSITION rootPos = roots-&gt;GetHeadPosition(); 
-  while(rootPos) { 
-   CBuilderModel *root = roots-&gt;GetNext(rootPos); 
-   if(root-&gt;IsKindOf(RUNTIME_CLASS(CCompoundBuilder))) 
-    BUILDER_CAST(CCompoundBuilder,root)-&gt;Scan(fold-&gt;GetName()); 
-  } 
- } 
-} 
- 
-IMPLEMENT_CUSTOMMODEL(CCompoundBuilder, CBuilderModel, "Compound") 
- 
-void CCompoundBuilder::Scan(CString foldName) 
-{ 
-  AfxMessageBox(GetName() + " model found in " + foldName + 
-       " folder"); 
- 
-  const CBuilderModelList *models = GetModels("CompoundParts"); 
-  POSITION pos = models-&gt;GetHeadPosition(); 
- while(pos) 
-  BUILDER_CAST(CCompoundBuilder,models-&gt;GetNext(pos))-&gt;Scan(foldName); 
+        <programlisting format="linespecific">#include "stdafx.h"
+#include "Component.h"
+
+void CComponent::InvokeEx(CBuilder &amp;builder,CBuilderObject *focus,
+   CBuilderObjectList &amp;selected, long param)
+{
+  const CBuilderFolderList *folds = builder.GetFolders();
+  POSITION foldPos = folds-&gt;GetHeadPosition();
+ while(foldPos) {
+  CBuilderFolder *fold = folds-&gt;GetNext(foldPos);
+    const CBuilderModelList *roots = fold-&gt;GetRootModels();
+  POSITION rootPos = roots-&gt;GetHeadPosition();
+  while(rootPos) {
+   CBuilderModel *root = roots-&gt;GetNext(rootPos);
+   if(root-&gt;IsKindOf(RUNTIME_CLASS(CCompoundBuilder)))
+    BUILDER_CAST(CCompoundBuilder,root)-&gt;Scan(fold-&gt;GetName());
+  }
+ }
+}
+
+IMPLEMENT_CUSTOMMODEL(CCompoundBuilder, CBuilderModel, "Compound")
+
+void CCompoundBuilder::Scan(CString foldName)
+{
+  AfxMessageBox(GetName() + " model found in " + foldName +
+       " folder");
+
+  const CBuilderModelList *models = GetModels("CompoundParts");
+  POSITION pos = models-&gt;GetHeadPosition();
+ while(pos)
+  BUILDER_CAST(CCompoundBuilder,models-&gt;GetNext(pos))-&gt;Scan(foldName);
 } </programlisting>
       </section>
     </section>
@@ -7373,10 +7373,10 @@ void CCompoundBuilder::Scan(CString foldName)
         <para>BON2 wrapper classes use the operator <code>-&gt;</code> to
         access functionality, in contrast to MON wrappers which use the simple
         operator <code>.</code>. Here is an example:<programlisting
-        format="linespecific">BON::FCO fco; // Here is an fco. 
-// fco.isPort( ); // This would result a compiler error because the wrapper does not have this operation. 
-fco-&gt;isPort( ); // The operator[-&gt;] dereferences a BON::FCOImpl pointer. 
-MON::FCO metafco = fco-&gt;getFCOMeta(); // obtain the definition of the FCO. 
+        format="linespecific">BON::FCO fco; // Here is an fco.
+// fco.isPort( ); // This would result a compiler error because the wrapper does not have this operation.
+fco-&gt;isPort( ); // The operator[-&gt;] dereferences a BON::FCOImpl pointer.
+MON::FCO metafco = fco-&gt;getFCOMeta(); // obtain the definition of the FCO.
 std::string strKindName = metafco.name(); // get the name of the meta, the kindname of the object </programlisting></para>
 
         <important>
@@ -7387,10 +7387,10 @@ std::string strKindName = metafco.name(); // get the name of the meta, the kindn
           object can be determined by operator[bool] and operator[!].</para>
         </important>
 
-        <programlisting format="linespecific">BON::Project project; // Let’s assume the project is valid. 
-BON::Folder root = project-&gt;getRootFolder( ); // Get the root folder 
-if ( root ) AfxMessageBox( “RootFolder always exists!” ); 
-BON::Folder parent = root-&gt;getParentFolder(); // Get the parent of the root, which is NULL. 
+        <programlisting format="linespecific">BON::Project project; // Let’s assume the project is valid.
+BON::Folder root = project-&gt;getRootFolder( ); // Get the root folder
+if ( root ) AfxMessageBox( “RootFolder always exists!” );
+BON::Folder parent = root-&gt;getParentFolder(); // Get the parent of the root, which is NULL.
 if ( ! parent ) AfxMessageBox( “RootFolder never has parent” ); </programlisting>
 
         <para>The user can check the equality of two BON objects with the
@@ -7409,11 +7409,11 @@ if ( ! parent ) AfxMessageBox( “RootFolder never has parent” ); </programlis
         operators. If the cast succeeds, then the pointer held by the
         appropriate wrapper will be valid, otherwise it will be null. To
         understand this, let's see the following example. <programlisting
-        format="linespecific">BON:.Model child; // Let’s assume child is valid 
-BON::Object parent = child-&gt;getParent(); 
-if ( parent ) AfxMessageBox( “This is always valid” ); 
-BON::Model model = object; 
-if ( model ) AfxMessageBox( “The parent is a model” ); 
+        format="linespecific">BON:.Model child; // Let’s assume child is valid
+BON::Object parent = child-&gt;getParent();
+if ( parent ) AfxMessageBox( “This is always valid” );
+BON::Model model = object;
+if ( model ) AfxMessageBox( “The parent is a model” );
 if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </programlisting></para>
 
         <para>These facilities are implemented in the wrapper classes. For
@@ -7541,18 +7541,18 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
 
         <para>The interpreters' entry point is the <code>invokeEx()</code> of
         <code>BON::Component</code> and this is the main part. Here is a
-        descriptive example: <programlisting format="linespecific">void Component::invokeEx( Project&amp; project, FCO&amp; currentFCO, const std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam ) 
-{ 
- AfxMessageBox( “Project: “ + CString( project-&gt;getName().c_str() ) ); 
- if ( ! Model( currentFCO ) ) { 
-  AfxMessageBox( “The context of the component must be a model!” ) 
-  return; 
- } 
- CString strObjects( “Selected objects are: \r\n” ); 
- for ( std::set&lt;FCO&gt;::iterator it = setSelectedFCOs.begin() ; it != setSelectedFCOs.end() ; it++ ) { 
-  strObjects += CString( (*it)-&gt;getName().c_str() ) + “\r\n” ); 
- } 
- AfxMessageBox( strObjects ); 
+        descriptive example: <programlisting format="linespecific">void Component::invokeEx( Project&amp; project, FCO&amp; currentFCO, const std::set&lt;FCO&gt;&amp; setSelectedFCOs, long lParam )
+{
+ AfxMessageBox( “Project: “ + CString( project-&gt;getName().c_str() ) );
+ if ( ! Model( currentFCO ) ) {
+  AfxMessageBox( “The context of the component must be a model!” )
+  return;
+ }
+ CString strObjects( “Selected objects are: \r\n” );
+ for ( std::set&lt;FCO&gt;::iterator it = setSelectedFCOs.begin() ; it != setSelectedFCOs.end() ; it++ ) {
+  strObjects += CString( (*it)-&gt;getName().c_str() ) + “\r\n” );
+ }
+ AfxMessageBox( strObjects );
 } // end of invokeEx  </programlisting></para>
       </section>
 
@@ -7565,17 +7565,17 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
 
         <para>The user may handle and react to all events in
         <code>objectEventPerformed()</code> of <code>BON::Component</code>.
-        Here is an example: <programlisting format="linespecific">void Component::objectEventPerformed( Object&amp; object, unsigned long event, VARIANT v ) 
-{ 
- // v in this version of BON2 is unused, in the future it will contain  
- // appropriate event parameter(s) 
- AfxMessageBox( “The context: “ + CString( object-&gt;getName().c_str() ) ); 
- // At the same time more than one event may be performed. 
- CString strEvents( “Events: \r\n” ); 
- for ( MON::ObjectEventType eType = MON::OET_ObjectCreated ; eType != MON::OET_All ; eType++ ) { 
-  strEvents += CString( toString( eType ).c_str() ) + “\r\n”; 
- } 
- AfxMessageBox( strEvents ); 
+        Here is an example: <programlisting format="linespecific">void Component::objectEventPerformed( Object&amp; object, unsigned long event, VARIANT v )
+{
+ // v in this version of BON2 is unused, in the future it will contain
+ // appropriate event parameter(s)
+ AfxMessageBox( “The context: “ + CString( object-&gt;getName().c_str() ) );
+ // At the same time more than one event may be performed.
+ CString strEvents( “Events: \r\n” );
+ for ( MON::ObjectEventType eType = MON::OET_ObjectCreated ; eType != MON::OET_All ; eType++ ) {
+  strEvents += CString( toString( eType ).c_str() ) + “\r\n”;
+ }
+ AfxMessageBox( strEvents );
 } </programlisting></para>
 
         <para>This way of handling events is the most general. It is likely
@@ -7670,36 +7670,36 @@ if ( BON::Folder( object ) ) AfxMessageBox( “The parent is a folder” ); </pr
             </itemizedlist></para>
 
           <para>Here is our Compound implementation:<programlisting
-          format="linespecific">class CompoundImpl 
- : public BON::ModelImpl // extending the implementation class 
-{ 
-public : 
- void initialize()  
- {  
-  // cache the proper child models 
-  std::set&lt;BON::Model&gt; temp = getChildModels(); 
-  for ( std::set&lt;BON::Model&gt;::iterator it = temp.begin() ;  
-     it != temp.end() ; it++ ) { 
-   if ( (*it)-&gt;getObjectMeta().name() == “Compound” &amp;&amp; 
-    (*it)-&gt;getChildFCOs().size() &gt;= 2 ) { 
-    mySet.insert( *it ); 
-   } 
-  } 
- } 
- 
- void finalize() 
- { 
-   mySet.clear(); // important to avoid reference cycles 
- } 
- 
- std::set&lt;BON::Model&gt; getMyCompounds() 
- { 
-  return mySet; 
- } 
- 
-private : 
- std::set&lt;BON::Model&gt; mySet; 
- 
+          format="linespecific">class CompoundImpl
+ : public BON::ModelImpl // extending the implementation class
+{
+public :
+ void initialize()
+ {
+  // cache the proper child models
+  std::set&lt;BON::Model&gt; temp = getChildModels();
+  for ( std::set&lt;BON::Model&gt;::iterator it = temp.begin() ;
+     it != temp.end() ; it++ ) {
+   if ( (*it)-&gt;getObjectMeta().name() == “Compound” &amp;&amp;
+    (*it)-&gt;getChildFCOs().size() &gt;= 2 ) {
+    mySet.insert( *it );
+   }
+  }
+ }
+
+ void finalize()
+ {
+   mySet.clear(); // important to avoid reference cycles
+ }
+
+ std::set&lt;BON::Model&gt; getMyCompounds()
+ {
+  return mySet;
+ }
+
+private :
+ std::set&lt;BON::Model&gt; mySet;
+
 }; // end of class </programlisting></para>
         </section>
 
@@ -7855,12 +7855,12 @@ private :
           After that she extends the <code>AtomEx</code> with
           <code>Parameter</code>, and <code>Parameter</code> is extended with
           <code>MainParameter</code> which is assigned to a specific role.
-          <programlisting format="linespecific">DECLARE_BONEXTENSION(BON::Atom,AtomExImpl,AtomEx); 
-DECLARE_BONEXTENSION(AtomEx,ParameterImpl,Parameter); 
-DECLARE_BONEXTENSION(Parameter,MainParameterImpl,MainParameter); 
-.... 
-IMPLEMENT_BONEXTENSION(AtomEx,“BON::Atom”); 
-IMPLEMENT_BONEXTENSION(Parameter,“InputParameter OutputParameter Parameter”); 
+          <programlisting format="linespecific">DECLARE_BONEXTENSION(BON::Atom,AtomExImpl,AtomEx);
+DECLARE_BONEXTENSION(AtomEx,ParameterImpl,Parameter);
+DECLARE_BONEXTENSION(Parameter,MainParameterImpl,MainParameter);
+....
+IMPLEMENT_BONEXTENSION(AtomEx,“BON::Atom”);
+IMPLEMENT_BONEXTENSION(Parameter,“InputParameter OutputParameter Parameter”);
 IMPLEMENT_BONEXTENSION(MainParameter,“MainParameter”); </programlisting></para>
         </section>
 
@@ -7929,41 +7929,41 @@ IMPLEMENT_BONEXTENSION(MainParameter,“MainParameter”); </programlisting></pa
               </listitem>
             </itemizedlist></para>
 
-          <para>The example code:<programlisting format="linespecific">// Realization of the implementation classes 
-class ProcessingUnitImpl 
- : virtual public BON::FCOImpl 
-{ 
- // Note: BON::FCOImpl is an abstract class by default  
- ..... 
- void doSomething( ) { .... } 
-}; 
- 
-class CompoundImpl 
- : public BON::ModelImpl, public ProcessingUnitImpl 
-{ 
- ..... 
-}; 
- 
-// Declare BON extensions 
-DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, ProcessingUnitImpl, ProcessingUnit); 
-DECLARE_BONEXTENSION2( BON::Model, ProcessingUnit, CompoundImpl, Compound); 
- 
-// Implement BON wrappers (assignment if it is required) 
-IMPLEMENT_ABSTRACT_BONEXTENSION( ProcessingUnit ); 
-IMPLEMENT_BONEXTENSION( Compound, “Compound” ); 
- 
-// Using the extensions 
-void print( const BON::FCO&amp; fco ) 
-{ 
- if ( BON::Model( fco ) ) AfxMessageBox( “It is a model!” ); 
- ProcessingUnit unit = fco; 
- if ( unit ) { 
-  unit-&gt;doSomething(); 
-  if ( Compound( unit ) )  
-   AfxMessageBox( “It is a Compound!” ); 
-  else 
-   AfxMessageBox( “It is another descendant of ProcessingUnit!” ); 
- } 
+          <para>The example code:<programlisting format="linespecific">// Realization of the implementation classes
+class ProcessingUnitImpl
+ : virtual public BON::FCOImpl
+{
+ // Note: BON::FCOImpl is an abstract class by default
+ .....
+ void doSomething( ) { .... }
+};
+
+class CompoundImpl
+ : public BON::ModelImpl, public ProcessingUnitImpl
+{
+ .....
+};
+
+// Declare BON extensions
+DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, ProcessingUnitImpl, ProcessingUnit);
+DECLARE_BONEXTENSION2( BON::Model, ProcessingUnit, CompoundImpl, Compound);
+
+// Implement BON wrappers (assignment if it is required)
+IMPLEMENT_ABSTRACT_BONEXTENSION( ProcessingUnit );
+IMPLEMENT_BONEXTENSION( Compound, “Compound” );
+
+// Using the extensions
+void print( const BON::FCO&amp; fco )
+{
+ if ( BON::Model( fco ) ) AfxMessageBox( “It is a model!” );
+ ProcessingUnit unit = fco;
+ if ( unit ) {
+  unit-&gt;doSomething();
+  if ( Compound( unit ) )
+   AfxMessageBox( “It is a Compound!” );
+  else
+   AfxMessageBox( “It is another descendant of ProcessingUnit!” );
+ }
 } // end of method </programlisting></para>
         </section>
       </section>
@@ -8142,37 +8142,37 @@ void print( const BON::FCO&amp; fco )
           <para>Let's see the following examples considering the previous
           figure to understand the described issues.</para>
 
-          <programlisting format="linespecific">// the model called Model in the figure 
-BON::Model model;  
-// P2 of Model, we omit the acquiring operations 
-BON::Atom p2_model;  
-// Ref1 refers to Model 
-BON::Reference ref1 = model-&gt;getReferredBy();  
-// PortContainer of the model reference 
-BON::ReferencePortContainer rpc_ref1 = ref1-&gt;getRefPortContainer();  
-// Find the ReferencePort referring to P2 
-BON::ReferencePort p2_ref1 = rpc_ref1-&gt;getReferencePort( p2_model ) 
-.... 
-// Parent of this ReferencePort is null 
-p2_ref1-&gt;getParentPort(); 
-// Descendants of P2 of Ref1 containing P2 of Ref2, Ref3 and Ref4 
-p2_ref1-&gt;getDescendantPorts(); 
-// Children of P2 of Ref1 containing P2 of Ref2 and Ref3  
-p2_ref1-&gt;getChildPorts(); 
-// Get referred FCO (i.e. p2_model, P2 of Model) of P2 of Ref1.  
-p2_ref1-&gt;getFCO(); 
-.... 
-// Get objects connected to P2 of Model directly or indirectly (via reference  
-// ports). It includes A, A1, A2, A3 and A4. 
-p2_model-&gt;getConnEnds( “”, “”, true ); 
-// Get objects connected to P2 of Model directly without reference ports 
-// It includes only A. 
-p2_model-&gt;getConnEnds( “”, “”, false ); 
-// Get objects connected to P2 of Ref1 directly or indirectly (via descendant  
-// reference ports). It includes A1, A2, A3 and A4. A is not included. 
-p2_ref1-&gt;getConnEnds( “”, “”, true ); 
-// Get objects connected to P2 of Ref1 directly without descendant reference  
-// ports. It includes only A1. 
+          <programlisting format="linespecific">// the model called Model in the figure
+BON::Model model;
+// P2 of Model, we omit the acquiring operations
+BON::Atom p2_model;
+// Ref1 refers to Model
+BON::Reference ref1 = model-&gt;getReferredBy();
+// PortContainer of the model reference
+BON::ReferencePortContainer rpc_ref1 = ref1-&gt;getRefPortContainer();
+// Find the ReferencePort referring to P2
+BON::ReferencePort p2_ref1 = rpc_ref1-&gt;getReferencePort( p2_model )
+....
+// Parent of this ReferencePort is null
+p2_ref1-&gt;getParentPort();
+// Descendants of P2 of Ref1 containing P2 of Ref2, Ref3 and Ref4
+p2_ref1-&gt;getDescendantPorts();
+// Children of P2 of Ref1 containing P2 of Ref2 and Ref3
+p2_ref1-&gt;getChildPorts();
+// Get referred FCO (i.e. p2_model, P2 of Model) of P2 of Ref1.
+p2_ref1-&gt;getFCO();
+....
+// Get objects connected to P2 of Model directly or indirectly (via reference
+// ports). It includes A, A1, A2, A3 and A4.
+p2_model-&gt;getConnEnds( “”, “”, true );
+// Get objects connected to P2 of Model directly without reference ports
+// It includes only A.
+p2_model-&gt;getConnEnds( “”, “”, false );
+// Get objects connected to P2 of Ref1 directly or indirectly (via descendant
+// reference ports). It includes A1, A2, A3 and A4. A is not included.
+p2_ref1-&gt;getConnEnds( “”, “”, true );
+// Get objects connected to P2 of Ref1 directly without descendant reference
+// ports. It includes only A1.
 p2_ref1-&gt;getConnEnds( “”, “”, false );
 
 // Gets objects connected to P1 of Ref3 or its referencers that have the "src" role in the connection (A3, A4)
@@ -8194,8 +8194,8 @@ p1_ref3-&gt;getDirectConnEnds( meta_connection, "dst" )
           decide whether a connection end is a reference port we can do this
           in two ways.</para>
 
-          <programlisting format="linespecific"> 
-if ( BON::ReferencePort( connectionend ) ) { // do something } 
+          <programlisting format="linespecific">
+if ( BON::ReferencePort( connectionend ) ) { // do something }
 if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
         </section>
       </section>
@@ -8275,10 +8275,10 @@ if ( connectionend-&gt;isReferencePort() ) { // do something } </programlisting>
         <code>FCOExRegistryNode</code>, which can be obtained from fcos which
         are not connections, the use of the others is obvious.</para>
 
-        <para>An example:<programlisting format="linespecific">// Get the color of the portnames of the port 
-COLORREF crPort = BON::ModelRegistryNode( model-&gt;getRegistry() )-&gt;getPortNameColor(); 
-... 
-// Obtaining the position of an FCO in the Aspect ‘Aspect’ 
+        <para>An example:<programlisting format="linespecific">// Get the color of the portnames of the port
+COLORREF crPort = BON::ModelRegistryNode( model-&gt;getRegistry() )-&gt;getPortNameColor();
+...
+// Obtaining the position of an FCO in the Aspect ‘Aspect’
 BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation( “Aspect” ); </programlisting></para>
       </section>
     </section>
@@ -8370,21 +8370,21 @@ BON::Point pt = BON::FCOExRegistryNode( fco-&gt;getRegistry() )-&gt;getLocation(
 
         <para>Below are some examples generated based on the SF paradigm.
         Processing and Compound are model kinds in this paradigm.
-        <programlisting format="linespecific">namespace SF_BON { 
-DECLARE_ABSTRACT_BONEXTENSION( Model, ProcessingImpl, Processing); 
-DECLARE_BONEXTENSION( Processing, CompoundImpl, Compound); 
-class ProcessingImpl : public ModelImpl { 
-public: 
-  std::set&lt;InputSignals&gt; getInputSignals(); 
-  std::set&lt;OutputSignals&gt; getOutputSignals(); 
-  std::set&lt;Signals&gt; gets(); 
-}; 
-class CompoundImpl : public ProcessingImpl 
-{ 
-public: 
-  // kind and role getters 
-  std::set&lt;Processing&gt; getParts(); 
-}; 
+        <programlisting format="linespecific">namespace SF_BON {
+DECLARE_ABSTRACT_BONEXTENSION( Model, ProcessingImpl, Processing);
+DECLARE_BONEXTENSION( Processing, CompoundImpl, Compound);
+class ProcessingImpl : public ModelImpl {
+public:
+  std::set&lt;InputSignals&gt; getInputSignals();
+  std::set&lt;OutputSignals&gt; getOutputSignals();
+  std::set&lt;Signals&gt; gets();
+};
+class CompoundImpl : public ProcessingImpl
+{
+public:
+  // kind and role getters
+  std::set&lt;Processing&gt; getParts();
+};
 }; // end namespace </programlisting></para>
 
         <para><code>Processing</code> (with <code>Model</code> stereotype) has
@@ -8421,12 +8421,12 @@ public:
         <para>If the <code>Signal</code> atom had been non-abstract and the
         rolename empty in the meta-model the following
         <emphasis>get</emphasis> methods would have been generated:
-        <programlisting format="linespecific">class ProcessingImpl : public ModelImpl { 
-public: 
-  std::set&lt;InputSignals&gt; getInputSignals(); 
-  std::set&lt;OutputSignals&gt; getOutputSignals(); 
-  std::set&lt;Signals&gt; getSignals(); // role getter 
-  std::set&lt;Signals&gt; getSignals(int dummy); // aggregated 
+        <programlisting format="linespecific">class ProcessingImpl : public ModelImpl {
+public:
+  std::set&lt;InputSignals&gt; getInputSignals();
+  std::set&lt;OutputSignals&gt; getOutputSignals();
+  std::set&lt;Signals&gt; getSignals(); // role getter
+  std::set&lt;Signals&gt; getSignals(int dummy); // aggregated
 }; </programlisting></para>
 
         <para>Connections will have specialized source and destination
@@ -8434,15 +8434,15 @@ public:
         a reference port as its end, the return value will be simply
         <code>BON::ConnectionEnd</code>. In the case below no reference ports
         are involved, so a specialized class like Signal will be returned by
-        the get methods: <programlisting format="linespecific">class DataflowConnImpl : public ConnectionImpl 
-{ 
-public: 
-  // connectionEnd getters 
-  Signal getSrc(); 
-  Signal getDst(); 
-  ///BUP 
-  // add your own members here 
-  ///EUP 
+        the get methods: <programlisting format="linespecific">class DataflowConnImpl : public ConnectionImpl
+{
+public:
+  // connectionEnd getters
+  Signal getSrc();
+  Signal getDst();
+  ///BUP
+  // add your own members here
+  ///EUP
 }; </programlisting></para>
 
         <para>Beside this, the source and destination kinds will have two
@@ -8451,20 +8451,20 @@ public:
         the kinds connected to the object through a particular
         connection.</para>
 
-        <programlisting format="linespecific">class SignalImpl :  public AtomImpl 
-{ 
-public: 
-  // connection end getters 
-  std::multiset&lt;Signal&gt;  getDataflowConnSrcs(); 
-  std::multiset&lt;Signal&gt;  getDataflowConnDsts(); 
-  // connection link getters 
-  std::set&lt;DataflowConn&gt; getDataflowConnLinks(); 
-  std::set&lt;DataflowConn&gt; getInDataflowConnLinks(); 
-  std::set&lt;DataflowConn&gt; getOutDataflowConnLinks(); 
-  ///BUP 
-  bool isMyParentPrimitive(); 
-  std::string className() { return "Signal"; } 
-  ///EUP 
+        <programlisting format="linespecific">class SignalImpl :  public AtomImpl
+{
+public:
+  // connection end getters
+  std::multiset&lt;Signal&gt;  getDataflowConnSrcs();
+  std::multiset&lt;Signal&gt;  getDataflowConnDsts();
+  // connection link getters
+  std::set&lt;DataflowConn&gt; getDataflowConnLinks();
+  std::set&lt;DataflowConn&gt; getInDataflowConnLinks();
+  std::set&lt;DataflowConn&gt; getOutDataflowConnLinks();
+  ///BUP
+  bool isMyParentPrimitive();
+  std::string className() { return "Signal"; }
+  ///EUP
 }; </programlisting>
 
         <para>Furthermore, all FCOs which have attributes will have special
@@ -8535,10 +8535,10 @@ public:
         the nearest extended ancestor (<code>Signals</code>). There is a
         similar mechanism for connections, too.</para>
 
-        <programlisting format="linespecific">class ProcessingImpl : public BON::ModelImpl 
-{ 
-public: 
-  std::set&lt;Signal&gt; getInputSignals(); 
+        <programlisting format="linespecific">class ProcessingImpl : public BON::ModelImpl
+{
+public:
+  std::set&lt;Signal&gt; getInputSignals();
 }; </programlisting>
 
         <para>Since FCO (as a stereotype) objects are extended too, and may
@@ -10037,10 +10037,10 @@ public:
           <code>self</code> - can be renamed; in this case, <code>self</code>
           is not accessible.</para>
 
-          <programlisting format="linespecific">“context” { &lt;contextName&gt; “:” } &lt;typeName&gt; “inv” { &lt;constraintName&gt; } “:” 
-&lt;expression&gt; 
-e.g.: 
-context Person inv DontHaveDogs : …… 
+          <programlisting format="linespecific">“context” { &lt;contextName&gt; “:” } &lt;typeName&gt; “inv” { &lt;constraintName&gt; } “:”
+&lt;expression&gt;
+e.g.:
+context Person inv DontHaveDogs : ……
 context p : Person inv : ……..  </programlisting>
         </sect3>
 
@@ -10065,12 +10065,12 @@ context p : Person inv : ……..  </programlisting>
           implemented, because so far it has not been a requirement for GME
           and UDM.</para>
 
-          <programlisting format="linespecific">“context” { &lt;contextName&gt; “:” } &lt;typeName&gt; “::” &lt;featureName&gt; “(“  { 
-&lt;paramName&gt; “:” &lt;paramType&gt; ( “;” &lt;paramName&gt; “:” &lt;paramType&gt; )* } “)” { “:” 
-&lt;typeName&gt; } “pre“ { &lt;constraintName&gt; } “:” &lt;expression&gt; 
- 
-e.g.: 
-context Person::GetSalary( month : int ) : real pre ValidMonth : …… 
+          <programlisting format="linespecific">“context” { &lt;contextName&gt; “:” } &lt;typeName&gt; “::” &lt;featureName&gt; “(“  {
+&lt;paramName&gt; “:” &lt;paramType&gt; ( “;” &lt;paramName&gt; “:” &lt;paramType&gt; )* } “)” { “:”
+&lt;typeName&gt; } “pre“ { &lt;constraintName&gt; } “:” &lt;expression&gt;
+
+e.g.:
+context Person::GetSalary( month : int ) : real pre ValidMonth : ……
 context p : Person::CheckOut() pre : …….. </programlisting>
         </sect3>
 
@@ -10100,12 +10100,12 @@ context p : Person::CheckOut() pre : …….. </programlisting>
           implemented, because so far it has not been a requirement for GME
           and UDM.</para>
 
-          <programlisting format="linespecific">“context” { &lt;contextName&gt; “:” } &lt;typeName&gt; “::” &lt;featureName&gt; “(“  { 
-&lt;paramName&gt; “:” &lt;paramType&gt; ( “;” &lt;paramName&gt; “:” &lt;paramType&gt; )* } “)” { “:” 
-&lt;typeName&gt; } “post“ { &lt;constraintName&gt; } “:” &lt;expression&gt; 
- 
-e.g.: 
-context Person::GetSalary( month : int ) : real post ValidSalary : …… 
+          <programlisting format="linespecific">“context” { &lt;contextName&gt; “:” } &lt;typeName&gt; “::” &lt;featureName&gt; “(“  {
+&lt;paramName&gt; “:” &lt;paramType&gt; ( “;” &lt;paramName&gt; “:” &lt;paramType&gt; )* } “)” { “:”
+&lt;typeName&gt; } “post“ { &lt;constraintName&gt; } “:” &lt;expression&gt;
+
+e.g.:
+context Person::GetSalary( month : int ) : real post ValidSalary : ……
 context p : Person::CheckIn() post : …….. </programlisting>
         </sect3>
 
@@ -10126,10 +10126,10 @@ context p : Person::CheckIn() post : …….. </programlisting>
           attributes of the type, or roles and names of types, which can be
           accessed through navigation.</para>
 
-          <programlisting format="linespecific">“context” &lt;typeName&gt; “::” &lt;attributeName&gt; “:” &lt;typeName&gt; “defattribute“ “:” 
-&lt;expression&gt; 
- 
-e.g.: 
+          <programlisting format="linespecific">“context” &lt;typeName&gt; “::” &lt;attributeName&gt; “:” &lt;typeName&gt; “defattribute“ “:”
+&lt;expression&gt;
+
+e.g.:
 context Person::friendNames : Set defattribute : …… </programlisting>
         </sect3>
       </sect2>
@@ -10299,21 +10299,21 @@ context Person::friendNames : Set defattribute : …… </programlisting>
           <code>true</code>, assuming that there is a variable
           <code>var</code> initialized with 5.</para>
 
-          <programlisting format="linespecific">let  var = 5 in 
-….. 
-var.oclAsType( “ocl::Any” ) = var.oclAsType( “ocl::Any” )  -- 1. Standard way 
-to test identity 
-var.oclAsType( “ocl::Any” ) == var.oclAsType( “ocl::Any” )  -- 2. Redundant, 
-complex, but valid expression, same as 1. 
-var == var           -- 3. Same as 1, short and 
-compact form of 1. 
-not var != var          -- 4. Meaning of operator != 
-var != 5             -- 5. Because 5 is stored in 
-different memory space as var’s value 
-var = 5            -- 6. Equality of integers 
-not var &lt;&gt; 5            -- 7. Non-equality of 
-integers 
-5 != 5           -- 8. Two fives are in 
+          <programlisting format="linespecific">let  var = 5 in
+…..
+var.oclAsType( “ocl::Any” ) = var.oclAsType( “ocl::Any” )  -- 1. Standard way
+to test identity
+var.oclAsType( “ocl::Any” ) == var.oclAsType( “ocl::Any” )  -- 2. Redundant,
+complex, but valid expression, same as 1.
+var == var           -- 3. Same as 1, short and
+compact form of 1.
+not var != var          -- 4. Meaning of operator !=
+var != 5             -- 5. Because 5 is stored in
+different memory space as var’s value
+var = 5            -- 6. Equality of integers
+not var &lt;&gt; 5            -- 7. Non-equality of
+integers
+5 != 5           -- 8. Two fives are in
 different memory spaces. </programlisting>
 
           <para>During the evaluation of an OCL expression, none of the
@@ -10346,13 +10346,13 @@ different memory spaces. </programlisting>
           <para>Because basic primitive types are well-known, their literals
           are discussed through examples.</para>
 
-          <programlisting format="linespecific">“string”, “\r\n: &lt;CR&gt;&lt;LF&gt;”, “”       -- String literals 
-0.0, -1.0, 5.232, -234.232      -- Real literals (reals are represented 
-as 64bit long signed floating-point numbers) 
-0, -1, 5, 2131      -- Integer literals (integers are 
-represented as 64bit long signed integer numbers)  
-#enabled, #disabled, #unknown  -- Enumeration literals (enumeration values 
-begins with # character) 
+          <programlisting format="linespecific">“string”, “\r\n: &lt;CR&gt;&lt;LF&gt;”, “”       -- String literals
+0.0, -1.0, 5.232, -234.232      -- Real literals (reals are represented
+as 64bit long signed floating-point numbers)
+0, -1, 5, 2131      -- Integer literals (integers are
+represented as 64bit long signed integer numbers)
+#enabled, #disabled, #unknown  -- Enumeration literals (enumeration values
+begins with # character)
 true, false       -- Boolean literals </programlisting>
 
           <para>Compound types’ literals are a bit more complex than primitive
@@ -10370,9 +10370,9 @@ true, false       -- Boolean literals </programlisting>
           <code>ocl::Set</code>, <code>Bag</code>, <code>ocl::Bag</code>,
           <code>Sequence</code>, <code>ocl::Sequence</code>.</para>
 
-          <programlisting format="linespecific">&lt;compoundType&gt; “{“ { &lt;expression&gt; ( “,” &lt;expression&gt; )* } “}” 
- 
-e.g. 
+          <programlisting format="linespecific">&lt;compoundType&gt; “{“ { &lt;expression&gt; ( “,” &lt;expression&gt; )* } “}”
+
+e.g.
 Sequence{ 0, 1, 2, “23”, true } </programlisting>
         </sect3>
 
@@ -10395,10 +10395,10 @@ Sequence{ 0, 1, 2, “23”, true } </programlisting>
 
           <para>Let expression may have a type declaration, as well.</para>
 
-          <programlisting format="linespecific">“let” &lt;variableName&gt; { “:“ &lt;declarationType&gt; } “=” &lt;expression&gt; “in” 
-&lt;expression&gt; 
- 
-e.g. in GME 
+          <programlisting format="linespecific">“let” &lt;variableName&gt; { “:“ &lt;declarationType&gt; } “=” &lt;expression&gt; “in”
+&lt;expression&gt;
+
+e.g. in GME
 let dogs = persons.connectedFCOs( “src”, “Partners” ) in ……… </programlisting>
         </sect3>
 
@@ -10426,9 +10426,9 @@ let dogs = persons.connectedFCOs( “src”, “Partners” ) in ……… </pro
           first expression will be evaluated; otherwise, only the second will
           be evaluated.</para>
 
-          <programlisting format="linespecific">“if” &lt;condition&gt; “then” &lt;expression&gt; “else” &lt;expression&gt; “endif”  
- 
-e.g. 
+          <programlisting format="linespecific">“if” &lt;condition&gt; “then” &lt;expression&gt; “else” &lt;expression&gt; “endif”
+
+e.g.
 if mySet -&gt; isEmpty() then 0 else mySet -&gt; size endif </programlisting>
         </sect3>
 
@@ -10474,13 +10474,13 @@ if mySet -&gt; isEmpty() then 0 else mySet -&gt; size endif </programlisting>
           <para>These are true only for predefined iterators discussed in a
           later section.</para>
 
-          <programlisting format="linespecific">&lt;expression&gt; “-&gt;” &lt;iteratorName&gt; “(“ { &lt;declarator&gt; ( “,” &lt;declarator&gt; )* { 
-“:” &lt;declarationType&gt; } } “|” &lt;expression&gt; “)” 
- 
-e.g. 
-let mySet = Set { “1”, “2”, “3”, “10” } in 
-… 
-mySet -&gt; forAll( elem1, elem2 : int | elem1 &lt;&gt; elem2 ) 
+          <programlisting format="linespecific">&lt;expression&gt; “-&gt;” &lt;iteratorName&gt; “(“ { &lt;declarator&gt; ( “,” &lt;declarator&gt; )* {
+“:” &lt;declarationType&gt; } } “|” &lt;expression&gt; “)”
+
+e.g.
+let mySet = Set { “1”, “2”, “3”, “10” } in
+…
+mySet -&gt; forAll( elem1, elem2 : int | elem1 &lt;&gt; elem2 )
 mySet -&gt; one( size = 2 ) </programlisting>
 
           <para>Here we discuss only the generic iterator of OCL called
@@ -10496,21 +10496,21 @@ mySet -&gt; one( size = 2 ) </programlisting>
           <para><code>Iterate</code> is the foundation of all predefined
           iterator.</para>
 
-          <programlisting format="linespecific">&lt;expression&gt; “-&gt;” “iterate” “(“ { &lt;declarator&gt; { “:” &lt;declarationType&gt; } “;” 
-} &lt;accumulator&gt; { “:” &lt;accumulatorType&gt; } “=” &lt;expression&gt; “|” &lt;expression&gt; 
-“)” 
- 
-e.g.  
-let mySet = Set { “1”, “2”, “3”, “10” } in 
- 
--- Expressing the functionality of “exists” predefined iterator 
-mySet -&gt; exists( i | i.size = 2 ) 
-mySet -&gt; iterate( i ; accu = false | accu or i.size = 2 ) 
- 
--- Expressing the functionality of “isUnique” predefined iterator 
-mySet -&gt; isUnique( i | i ) 
-mySet -&gt; forAll( i1, i2 | i1 != i2 implies i1 &lt;&gt; i2 ) 
-mySet -&gt; iterate( i1 ; accu1 = true | accu1 and mySet -&gt; iterate( i2 ; accu2 
+          <programlisting format="linespecific">&lt;expression&gt; “-&gt;” “iterate” “(“ { &lt;declarator&gt; { “:” &lt;declarationType&gt; } “;”
+} &lt;accumulator&gt; { “:” &lt;accumulatorType&gt; } “=” &lt;expression&gt; “|” &lt;expression&gt;
+“)”
+
+e.g.
+let mySet = Set { “1”, “2”, “3”, “10” } in
+
+-- Expressing the functionality of “exists” predefined iterator
+mySet -&gt; exists( i | i.size = 2 )
+mySet -&gt; iterate( i ; accu = false | accu or i.size = 2 )
+
+-- Expressing the functionality of “isUnique” predefined iterator
+mySet -&gt; isUnique( i | i )
+mySet -&gt; forAll( i1, i2 | i1 != i2 implies i1 &lt;&gt; i2 )
+mySet -&gt; iterate( i1 ; accu1 = true | accu1 and mySet -&gt; iterate( i2 ; accu2
 = true | accu2 and ( i1 != i2 implies i1 &lt;&gt; i2 ) ) ) </programlisting>
         </sect3>
       </sect2>
@@ -10630,11 +10630,11 @@ mySet -&gt; iterate( i1 ; accu1 = true | accu1 and mySet -&gt; iterate( i2 ; acc
           <code>=&gt;</code>). They can be useful when the user wants to alter
           the process of the evaluation.</para>
 
-          <programlisting format="linespecific">&lt;expression&gt; &lt;binaryOperator&gt; &lt;expression&gt;  
-&lt;unaryOperator&gt; &lt;expression&gt; 
- 
-e.g. 
-“This forms” + “ a string” 
+          <programlisting format="linespecific">&lt;expression&gt; &lt;binaryOperator&gt; &lt;expression&gt;
+&lt;unaryOperator&gt; &lt;expression&gt;
+
+e.g.
+“This forms” + “ a string”
 not person.isRetired() </programlisting>
         </sect3>
 
@@ -10668,9 +10668,9 @@ not person.isRetired() </programlisting>
           <para>There are some predefined functions in OCL, in particularly
           for <code>ocl::Real</code> and <code>ocl::Integer</code>.</para>
 
-          <programlisting format="linespecific">&lt;functionName&gt; “(“ { &lt;expression&gt; ( “,” &lt;expression&gt; )* } “)” 
- 
-e.g. 
+          <programlisting format="linespecific">&lt;functionName&gt; “(“ { &lt;expression&gt; ( “,” &lt;expression&gt; )* } “)”
+
+e.g.
 floor( 3.14 ) </programlisting>
         </sect3>
 
@@ -10696,14 +10696,14 @@ floor( 3.14 ) </programlisting>
           if and only if the object contained by the compound object has
           them.</para>
 
-          <programlisting format="linespecific">&lt;expression&gt; ( “.“ | “-&gt;” ) &lt;attributeName&gt;  
- 
--- Assuming that there is a Set mySet which consists objects with type Person 
-(Person has an attribute, called age) 
--- The result is the same in both cases (a Bag consisting integers - age of 
-persons) 
- 
-mySet -&gt; collect( person : Person | person.name ) 
+          <programlisting format="linespecific">&lt;expression&gt; ( “.“ | “-&gt;” ) &lt;attributeName&gt;
+
+-- Assuming that there is a Set mySet which consists objects with type Person
+(Person has an attribute, called age)
+-- The result is the same in both cases (a Bag consisting integers - age of
+persons)
+
+mySet -&gt; collect( person : Person | person.name )
 mySet -&gt; name </programlisting>
 
           <para>In some circumstances, attributes of the compound object and
@@ -10735,10 +10735,10 @@ mySet -&gt; name </programlisting>
           case the member selection operator will be used to call either the
           method or the iterator.</para>
 
-          <programlisting format="linespecific">&lt;expression&gt; ( “.” | “-&gt;” ) &lt;methodName&gt; “(“ { &lt;expression&gt; ( “,” 
-&lt;expression&gt; )* } “)” 
- 
-e.g. 
+          <programlisting format="linespecific">&lt;expression&gt; ( “.” | “-&gt;” ) &lt;methodName&gt; “(“ { &lt;expression&gt; ( “,”
+&lt;expression&gt; )* } “)”
+
+e.g.
 object.isUndefined( ) </programlisting>
         </sect3>
 
@@ -10792,7 +10792,7 @@ object.isUndefined( ) </programlisting>
           may lead to errors in those implementations, because they follow the
           strict rules of OCL.</para>
 
-          <programlisting format="linespecific">&lt;expression&gt; “.” &lt;roleName&gt;  
+          <programlisting format="linespecific">&lt;expression&gt; “.” &lt;roleName&gt;
 &lt;expression&gt; “.” &lt;typeName&gt; { “[“ &lt;roleName&gt; “]” } </programlisting>
 
           <para>Here are some examples to facilitate the understanding of
@@ -10809,57 +10809,57 @@ object.isUndefined( ) </programlisting>
           <para>Regarding these parts of a paradigm, the following OCL
           expression can be written:</para>
 
-          <programlisting format="linespecific">-- Assuming that “b” is a Box, “bc” is a BoxContainment 
--- If Box had further association, which has “elements” or “container” roles, 
-then these roles could not be used because of ambiguity. 
- 
--- Cannot be used in any cases because of recursive containment. 
- b.box       
+          <programlisting format="linespecific">-- Assuming that “b” is a Box, “bc” is a BoxContainment
+-- If Box had further association, which has “elements” or “container” roles,
+then these roles could not be used because of ambiguity.
+
+-- Cannot be used in any cases because of recursive containment.
+ b.box
 -- Returns in ocl::Set( Box ). If “elements” was missing, that association-
-end would not be accessible from Box. 
- b.elements 
--- Returns in Box. If “container” was missing, that association-end would not 
-be accessible from Box. 
- b.container 
--- Cannot be used in any cases because of recursive containment. 
- b.boxContainment 
--- Returns in ocl::Set( BoxContainment ). If “container” was missing, that 
-association-class would not be accessible from Box as container. 
-  b.boxContainment[ container ] 
+end would not be accessible from Box.
+ b.elements
+-- Returns in Box. If “container” was missing, that association-end would not
+be accessible from Box.
+ b.container
+-- Cannot be used in any cases because of recursive containment.
+ b.boxContainment
+-- Returns in ocl::Set( BoxContainment ). If “container” was missing, that
+association-class would not be accessible from Box as container.
+  b.boxContainment[ container ]
 -- Returns in BoxContainment. If “elements” was missing, that association-
-class would not be accessible from Box as element. 
-  b.boxContainment[ elements ] 
--- Cannot be used in any cases because of recursive containment. 
- bc.box 
--- Returns in Box. If “elements” was missing, that association-end would not 
-be accessible from BoxContainment. 
- bc.elements 
--- Returns in Box. If “container” was missing, that association-end would not 
-be accessible from BoxContainment. 
+class would not be accessible from Box as element.
+  b.boxContainment[ elements ]
+-- Cannot be used in any cases because of recursive containment.
+ bc.box
+-- Returns in Box. If “elements” was missing, that association-end would not
+be accessible from BoxContainment.
+ bc.elements
+-- Returns in Box. If “container” was missing, that association-end would not
+be accessible from BoxContainment.
  bc.container
--- Assuming that “p” is a Person, “d” is a Dog, “hd” is a HasDog 
--- If Person, Dog, HasDog had further association, which has “owner” or 
-“dogs” roles, then these roles could not be used because of ambiguity. 
--- If these classes have further association between them, then the name of 
-the appropriate classes cannot be used as role. 
--- If role exists, then the role has to be used to navigate, otherwise the 
-name of class has to be used. 
- 
--- Returns in ocl::Set( Dog ).  
- p.dogs 
- p.dog 
--- Returns in Person. 
- d.owner 
- d.person 
--- Returns in ocl::Set( HasDog ). 
- p.hasDog 
--- Returns in HasDog. 
- d.hasDog 
--- Returns in Dog. 
- hd.dogs 
- hd.dog 
--- Returns in Person. 
- hd.owner 
+-- Assuming that “p” is a Person, “d” is a Dog, “hd” is a HasDog
+-- If Person, Dog, HasDog had further association, which has “owner” or
+“dogs” roles, then these roles could not be used because of ambiguity.
+-- If these classes have further association between them, then the name of
+the appropriate classes cannot be used as role.
+-- If role exists, then the role has to be used to navigate, otherwise the
+name of class has to be used.
+
+-- Returns in ocl::Set( Dog ).
+ p.dogs
+ p.dog
+-- Returns in Person.
+ d.owner
+ d.person
+-- Returns in ocl::Set( HasDog ).
+ p.hasDog
+-- Returns in HasDog.
+ d.hasDog
+-- Returns in Dog.
+ hd.dogs
+ hd.dog
+-- Returns in Person.
+ hd.owner
  hd.person </programlisting>
         </sect3>
 
@@ -10910,59 +10910,59 @@ name of class has to be used.
           declared last is examined first). If a feature is resolved (even if
           it is ambiguous), then resolution is stopped.</para>
 
-          <programlisting format="linespecific">-- Assuming that “Person” and “Dog” are defined by the paradigm. They have an 
-association called “HasDog” with roles “owner” and “dogs”.  
--- Both classes have an attribute called “age”. Person has an attribute 
-called “gender”. 
- 
--- First “age” is resolved as “self.age”, because there is only one implicit 
-variable called “self”. 
--- “dogs” is resolved as “self.dogs”, because there is only one implicit 
-variable called “self”. 
--- Iterator called “forAll” creates a new implicit variable. We refers to 
-that as “iter1”. These variables are not accessible in the expression 
-directly. 
--- “gender” is resolved “self.gender”, because “iter1” which is a Dog, does 
-not have any feature called “gender”. 
--- Second and third “age” is resolved as “iter1.age”, because “iter1” is 
-defined latter than “self”, i.e. the examination started with “iter1”. 
--- “owner” is resolved as if it had been written “iter1.owner” where iter1 is 
-an implicit declarator created by the iterator 
-  context Person inv : 
-  age &lt; 4 implies dogs -&gt; forAll( if gender = #male then age &lt; 1 else age &lt; 
+          <programlisting format="linespecific">-- Assuming that “Person” and “Dog” are defined by the paradigm. They have an
+association called “HasDog” with roles “owner” and “dogs”.
+-- Both classes have an attribute called “age”. Person has an attribute
+called “gender”.
+
+-- First “age” is resolved as “self.age”, because there is only one implicit
+variable called “self”.
+-- “dogs” is resolved as “self.dogs”, because there is only one implicit
+variable called “self”.
+-- Iterator called “forAll” creates a new implicit variable. We refers to
+that as “iter1”. These variables are not accessible in the expression
+directly.
+-- “gender” is resolved “self.gender”, because “iter1” which is a Dog, does
+not have any feature called “gender”.
+-- Second and third “age” is resolved as “iter1.age”, because “iter1” is
+defined latter than “self”, i.e. the examination started with “iter1”.
+-- “owner” is resolved as if it had been written “iter1.owner” where iter1 is
+an implicit declarator created by the iterator
+  context Person inv :
+  age &lt; 4 implies dogs -&gt; forAll( if gender = #male then age &lt; 1 else age &lt;
 0.5 endif ) </programlisting>
 
-          <programlisting format="linespecific">-- Assuming that “Box” is defined by the paradigm. Box has a containment with 
-roles “container” and “elements”. 
--- Box has a query method called “includes” with one argument with type Box. 
--- The example does not make sense, it demonstrates the resolution only. 
- 
--- First “elements” is resolved as “self.elements”, because there is only one 
-implicit variable called “self”. 
--- Iterator called “collect” creates a new variable. We refers to that as 
-“iter1”. These variables are not accessible in the expression directly. 
--- Second “elements” is resolved as “iter1.elements”, because “iter1” 
-precedes “self” during the resolution, and it is a Box. 
--- Type of “boxes” will be ocl::Bag( ocl::Set( Box ) ). 
--- In the third line “boxes” and “self” are not subject of resolution because 
-they are known variables. 
--- Iterator called “forAll” creates a new implicit variable. We refers to 
-that as “iter1”. Former “iter1” exists in the context of “collect” only. 
--- First “includes” resolved as “iter1.includes( ocl::Any )”, because type of 
-“iter1” is ocl::Set( Box ), and ocl::Set has a method called “includes”. 
--- Iterator called “exists” creates a new implicit variable. We refers to 
-that as “iter1”. Former “iter1” exists in the context of “forAll” only. 
--- “one” is resolved as “iter1.one( ocl::Boolean ), because type of “iter1” 
-is ocl::Set( Box ), and ocl::Set has an iterator called “one”. 
--- The resolved iterator called “one” creates a new implicit variable. We 
-refers to that as “iter2”. 
--- Second “includes” resolved as “iter2.includes( Box )”, because “iter2” 
-precedes “iter1” and the type of “iter2” is Box. 
--- “size” is resolved as “iter1.size”, because the type of “iter2” (Box) does 
-not have any feature called “size”, but “iter1”. 
-  context Box inv : 
-  let boxes = self.elements -&gt; collect( iter1.elements ) in 
-  boxes -&gt; forAll( not includes( self ) ) and boxes -&gt; exists( one( 
+          <programlisting format="linespecific">-- Assuming that “Box” is defined by the paradigm. Box has a containment with
+roles “container” and “elements”.
+-- Box has a query method called “includes” with one argument with type Box.
+-- The example does not make sense, it demonstrates the resolution only.
+
+-- First “elements” is resolved as “self.elements”, because there is only one
+implicit variable called “self”.
+-- Iterator called “collect” creates a new variable. We refers to that as
+“iter1”. These variables are not accessible in the expression directly.
+-- Second “elements” is resolved as “iter1.elements”, because “iter1”
+precedes “self” during the resolution, and it is a Box.
+-- Type of “boxes” will be ocl::Bag( ocl::Set( Box ) ).
+-- In the third line “boxes” and “self” are not subject of resolution because
+they are known variables.
+-- Iterator called “forAll” creates a new implicit variable. We refers to
+that as “iter1”. Former “iter1” exists in the context of “collect” only.
+-- First “includes” resolved as “iter1.includes( ocl::Any )”, because type of
+“iter1” is ocl::Set( Box ), and ocl::Set has a method called “includes”.
+-- Iterator called “exists” creates a new implicit variable. We refers to
+that as “iter1”. Former “iter1” exists in the context of “forAll” only.
+-- “one” is resolved as “iter1.one( ocl::Boolean ), because type of “iter1”
+is ocl::Set( Box ), and ocl::Set has an iterator called “one”.
+-- The resolved iterator called “one” creates a new implicit variable. We
+refers to that as “iter2”.
+-- Second “includes” resolved as “iter2.includes( Box )”, because “iter2”
+precedes “iter1” and the type of “iter2” is Box.
+-- “size” is resolved as “iter1.size”, because the type of “iter2” (Box) does
+not have any feature called “size”, but “iter1”.
+  context Box inv :
+  let boxes = self.elements -&gt; collect( iter1.elements ) in
+  boxes -&gt; forAll( not includes( self ) ) and boxes -&gt; exists( one(
 includes( self ) or size = 0 ) ) </programlisting>
         </sect3>
 
@@ -11216,7 +11216,7 @@ includes( self ) or size = 0 ) ) </programlisting>
         <sect3>
           <title>Operators</title>
 
-          <para><programlisting format="linespecific">operator[ == ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ == ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean
 operator[ = ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean </programlisting>Returns
           <code>true</code> if <code>any1</code> is the same as
           <code>any2</code>. This equality means identity. <code>any1</code>
@@ -11225,7 +11225,7 @@ operator[ = ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean </programlisti
           <code>false</code>; if both of them are <code>undefined</code>, the
           result is <code>true</code>.</para>
 
-          <para><programlisting format="linespecific">operator[ != ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ != ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean
 operator[ &lt;&gt; ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean </programlisting>Returns
           <code>true</code> if <code>any1</code> is not the same as
           <code>any2</code>. This equality means identity. <code>any1</code>
@@ -11394,7 +11394,7 @@ operator[ &lt;&gt; ]( any1 : ocl::Any , any2 : ocl::Any ) : ocl::Boolean </progr
           <code>true</code> if <code>enum1</code> is the same value as
           <code>enum2</code>.</para>
 
-          <para><programlisting format="linespecific">operator[ &lt;&gt; ]( enum1 : ocl::Enumeration , enum2 : ocl::Enumeration ) : 
+          <para><programlisting format="linespecific">operator[ &lt;&gt; ]( enum1 : ocl::Enumeration , enum2 : ocl::Enumeration ) :
 ocl::Boolean </programlisting>Returns <code>true</code> if <code>enum1</code>
           is not the same value as <code>enum2</code>.</para>
         </sect3>
@@ -11424,7 +11424,7 @@ ocl::Boolean </programlisting>Returns <code>true</code> if <code>enum1</code>
           <code>true</code> if <code>bool1</code> does not equal to
           <code>bool2</code>.</para>
 
-          <para><programlisting format="linespecific">operator[ and ]( bool1 : ocl::Boolean , enum2 : ocl::Boolean ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ and ]( bool1 : ocl::Boolean , enum2 : ocl::Boolean ) : ocl::Boolean
 operator[ &amp;&amp; ]( bool1 : ocl::Boolean , bool2 : ocl::Boolean ) : ocl::Boolean </programlisting>Returns
           true if <code>bool1</code> and <code>bool2</code> are
           <code>true</code>. Returns <code>undefined</code> if
@@ -11433,7 +11433,7 @@ operator[ &amp;&amp; ]( bool1 : ocl::Boolean , bool2 : ocl::Boolean ) : ocl::Boo
           <code>bool1</code> is <code>false</code> or <code>undefined</code>,
           <code>bool2</code> will not be evaluated.</para>
 
-          <para><programlisting format="linespecific">operator[ or ]( bool1 : ocl::Boolean , enum2 : ocl::Boolean ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ or ]( bool1 : ocl::Boolean , enum2 : ocl::Boolean ) : ocl::Boolean
 operator[ || ]( bool1 : ocl::Boolean , bool2 : ocl::Boolean ) : ocl::Boolean </programlisting>Returns
           <code>true</code> if <code>bool1</code> or <code>bool2</code> are
           true. Returns <code>undefined</code> if <code>bool1</code> and
@@ -11441,7 +11441,7 @@ operator[ || ]( bool1 : ocl::Boolean , bool2 : ocl::Boolean ) : ocl::Boolean </p
           ||</code> is a short-circuit operator. If <code>bool1</code> is
           <code>true</code>, <code>bool2</code> will not be evaluated.</para>
 
-          <para><programlisting format="linespecific">operator[ implies ]( bool1 : ocl::Boolean , enum2 : ocl::Boolean ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ implies ]( bool1 : ocl::Boolean , enum2 : ocl::Boolean ) : ocl::Boolean
 operator[ =&gt; ]( bool1 : ocl::Boolean , bool2 : ocl::Boolean ) : ocl::Boolean </programlisting>Returns
           <code>true</code> if <code>bool1</code> is <code>false</code> or if
           both operands are <code>true</code>. Returns <code>undefined</code>
@@ -11836,7 +11836,7 @@ operator[ =&gt; ]( bool1 : ocl::Boolean , bool2 : ocl::Boolean ) : ocl::Boolean 
           <code>set1</code> contains at least one element that
           <code>set2</code> does not.</para>
 
-          <para><programlisting format="linespecific">operator[ + ]( set1 : ocl::Set , set2 : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">operator[ + ]( set1 : ocl::Set , set2 : ocl::Set ) : ocl::Set
 operator[ + ]( set : ocl::Set , bag : ocl::Bag ) : ocl::Bag </programlisting>Returns
           the union of <code>set1</code> and <code>set2</code>, or
           <code>set</code> and <code>bag</code>.</para>
@@ -11845,7 +11845,7 @@ operator[ + ]( set : ocl::Set , bag : ocl::Bag ) : ocl::Bag </programlisting>Ret
           a <code>set</code>, which contains all elements that are contained
           in <code>set</code> but not in <code>collection</code>.</para>
 
-          <para><programlisting format="linespecific">operator[ * ]( set1 : ocl::Set , set2 : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">operator[ * ]( set1 : ocl::Set , set2 : ocl::Set ) : ocl::Set
 operator[ * ]( set : ocl::Set , bag : ocl::Bag ) : ocl::Set </programlisting>Returns
           the intersection of <code>set1</code> and <code>set2</code>, or
           <code>set</code> and <code>bag</code>.</para>
@@ -11858,7 +11858,7 @@ operator[ * ]( set : ocl::Set , bag : ocl::Bag ) : ocl::Set </programlisting>Ret
         <sect3>
           <title>Methods</title>
 
-          <para><programlisting format="linespecific">ocl::Set::union( set : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">ocl::Set::union( set : ocl::Set ) : ocl::Set
 ocl::Set::union( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns the
           union of the <code>set</code> and <code>set</code> or
           <code>bag</code>.</para>
@@ -11867,7 +11867,7 @@ ocl::Set::union( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns the
           a <code>set</code> which contains all elements that are contained in
           set but not in <code>collection</code>.</para>
 
-          <para><programlisting format="linespecific">ocl::Set::intersection( set : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">ocl::Set::intersection( set : ocl::Set ) : ocl::Set
 ocl::Set::intersection( bag : ocl::Bag ) : ocl::Set </programlisting>Returns
           the intersection of the <code>set</code> and <code>set</code> or
           <code>bag</code>.</para>
@@ -11914,12 +11914,12 @@ ocl::Set::intersection( bag : ocl::Bag ) : ocl::Set </programlisting>Returns
           <code>bag2</code> does not contain all elements of <code>bag1</code>
           with the same counts.</para>
 
-          <para><programlisting format="linespecific">operator[ + ]( bag : ocl::Bag , set : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">operator[ + ]( bag : ocl::Bag , set : ocl::Set ) : ocl::Set
 operator[ + ]( bag1 : ocl::Bag , bag2 : ocl::Bag ) : ocl::Bag </programlisting>Returns
           the union of <code>bag</code> and <code>set</code>, or
           <code>bag1</code> and <code>bag2</code>.</para>
 
-          <para><programlisting format="linespecific">operator[ * ]( bag : ocl::Bag , set : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">operator[ * ]( bag : ocl::Bag , set : ocl::Set ) : ocl::Set
 operator[ * ]( bag1 : ocl::Bag , bag2 : ocl::Bag ) : ocl::Bag </programlisting>Returns
           the intersection of <code>bag</code> and <code>set</code>, or
           <code>bag1</code> and <code>bag2</code>.</para>
@@ -11928,11 +11928,11 @@ operator[ * ]( bag1 : ocl::Bag , bag2 : ocl::Bag ) : ocl::Bag </programlisting>R
         <sect3>
           <title>Methods</title>
 
-          <para><programlisting format="linespecific">ocl::Bag::union( set : ocl::Set ) : ocl::Bag 
+          <para><programlisting format="linespecific">ocl::Bag::union( set : ocl::Set ) : ocl::Bag
 ocl::Bag::union( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns the
           union of the bag and <code>set</code> or <code>bag</code>.</para>
 
-          <para><programlisting format="linespecific">ocl::Bag::intersection( set : ocl::Set ) : ocl::Set 
+          <para><programlisting format="linespecific">ocl::Bag::intersection( set : ocl::Set ) : ocl::Set
 ocl::Bag::intersection( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns
           the intersection of the bag and <code>set</code> or
           <code>bag</code>.</para>
@@ -12181,7 +12181,7 @@ ocl::Bag::intersection( bag : ocl::Bag ) : ocl::Bag </programlisting>Returns
           a <code>set</code> which contains all fcos which are root objects of
           the folder.</para>
 
-          <para><programlisting format="linespecific">gme::Folder::models( { kind : ocl::String } ) : ocl::Set( gme::Model ) (D) 
+          <para><programlisting format="linespecific">gme::Folder::models( { kind : ocl::String } ) : ocl::Set( gme::Model ) (D)
 gme::Folder::models( { kind : ocl::Type } ) : ocl::Set( gme::Model ) </programlisting>Returns
           a <code>set</code> which contains all models contained by the folder
           or by any child folder or model that the folder contains
@@ -12192,7 +12192,7 @@ gme::Folder::models( { kind : ocl::Type } ) : ocl::Set( gme::Model ) </programli
           <code>gme::Model</code>, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::Folder::atoms(  { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D) 
+          <para><programlisting format="linespecific">gme::Folder::atoms(  { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D)
 gme::Folder::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom ) </programlisting>Returns
           a <code>set</code> which contains all atoms contained by the folder,
           or by any child folder or model that the folder contains
@@ -12239,11 +12239,11 @@ gme::Folder::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom ) </programlist
           method has the same functionality as
           <code>gme::FCO::roleName</code>.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::connected( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D) 
-gme::FCO::connectedFCOs( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D) 
-gme::FCO::connectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::FCO ) 
-gme::FCO::connectedFCOs( kind : ocl::Type ) : ocl::Set( gme::FCO ) 
-gme::FCO::bagConnectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Bag( gme::FCO ) 
+          <para><programlisting format="linespecific">gme::FCO::connected( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D)
+gme::FCO::connectedFCOs( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D)
+gme::FCO::connectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::FCO )
+gme::FCO::connectedFCOs( kind : ocl::Type ) : ocl::Set( gme::FCO )
+gme::FCO::bagConnectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Bag( gme::FCO )
 gme::FCO::bagConnectedFCOs( kind : ocl::Type ) : ocl::Bag( gme::FCO ) </programlisting>Returns
           a <code>set</code> or a <code>bag</code> which contains all fcos
           that are associated with the fco. If role is specified, then it
@@ -12255,11 +12255,11 @@ gme::FCO::bagConnectedFCOs( kind : ocl::Type ) : ocl::Bag( gme::FCO ) </programl
           <code>gme::Connection</code>, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::connectedAs( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D) 
-gme::FCO::reverseConnectedFCOs( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D) 
-gme::FCO::reverseConnectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::FCO ) 
-gme::FCO::reverseConnectedFCOs( kind : ocl::Type ) : ocl::Set( gme::FCO ) 
-gme::FCO::bagReverseConnectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Bag( gme::FCO ) 
+          <para><programlisting format="linespecific">gme::FCO::connectedAs( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D)
+gme::FCO::reverseConnectedFCOs( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::FCO ) (D)
+gme::FCO::reverseConnectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::FCO )
+gme::FCO::reverseConnectedFCOs( kind : ocl::Type ) : ocl::Set( gme::FCO )
+gme::FCO::bagReverseConnectedFCOs( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Bag( gme::FCO )
 gme::FCO::bagReverseConnectedFCOs( kind : ocl::Type ) : ocl::Bag( gme::FCO ) </programlisting>Returns
           a <code>set</code> or a <code>bag</code> which contains all fcos
           that are associated with this fco. If <code>role</code> is
@@ -12271,8 +12271,8 @@ gme::FCO::bagReverseConnectedFCOs( kind : ocl::Type ) : ocl::Bag( gme::FCO ) </p
           gme::Connection, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::attachingConnPoints ( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::ConnectionPoint ) (D) 
-gme::FCO::attachingConnPoints ( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::ConnectionPoint ) 
+          <para><programlisting format="linespecific">gme::FCO::attachingConnPoints ( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::ConnectionPoint ) (D)
+gme::FCO::attachingConnPoints ( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::ConnectionPoint )
 gme::FCO::attachingConnPoints ( kind : ocl::Type ) : ocl::Set( gme::ConnectionPoint ) </programlisting>Returns
           a <code>set</code> which contains all connection points (association
           ends) of the fco. If <code>role</code> is specified, then the role
@@ -12284,8 +12284,8 @@ gme::FCO::attachingConnPoints ( kind : ocl::Type ) : ocl::Set( gme::ConnectionPo
           <code>gme::Connection</code>, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::attachingConnections ( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::Connection ) (D) 
-gme::FCO::attachingConnections ( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::Connection ) 
+          <para><programlisting format="linespecific">gme::FCO::attachingConnections ( { role : ocl::String {, kind : ocl::String } } ) : ocl::Set( gme::Connection ) (D)
+gme::FCO::attachingConnections ( { role : ocl::String {, kind : ocl::Type } } ) : ocl::Set( gme::Connection )
 gme::FCO::attachingConnections ( kind : ocl::Type ) : ocl::Set( gme::Connection ) </programlisting>Returns
           a <code>set</code> which contains all connections (instances of
           association class) that is a link of the fco. If <code>role</code>
@@ -12298,8 +12298,8 @@ gme::FCO::attachingConnections ( kind : ocl::Type ) : ocl::Set( gme::Connection 
           <code>gme::Connection</code>, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::isConnectedTo ( fco : gme::FCO {, role : ocl::String {, kind : ocl::String } } ) : ocl::Boolean (D) 
-gme::FCO::isConnectedTo ( fco : gme::FCO {, role : ocl::String {, kind : ocl::Type } } ) : ocl::Boolean 
+          <para><programlisting format="linespecific">gme::FCO::isConnectedTo ( fco : gme::FCO {, role : ocl::String {, kind : ocl::String } } ) : ocl::Boolean (D)
+gme::FCO::isConnectedTo ( fco : gme::FCO {, role : ocl::String {, kind : ocl::Type } } ) : ocl::Boolean
 gme::FCO::isConnectedTo ( fco : gme::FCO, kind : ocl::Type ) : ocl::Boolean </programlisting>Returns
           <code>true</code> if <code>fco</code> is connected to the fco. If
           <code>role</code> is specified, then the role of fco has to match
@@ -12336,7 +12336,7 @@ gme::FCO::isConnectedTo ( fco : gme::FCO, kind : ocl::Type ) : ocl::Boolean </pr
           the closest folder which contains this fco recursively over
           models.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::referencedBy( { kind : ocl::String } ) : ocl::Set( gme::Reference ) (D) 
+          <para><programlisting format="linespecific">gme::FCO::referencedBy( { kind : ocl::String } ) : ocl::Set( gme::Reference ) (D)
 gme::FCO::referencedBy( { kind : ocl::Type } ) : ocl::Set( gme::Reference ) </programlisting>Returns
           a <code>set</code> of <code>reference</code>s which refer to this
           fco. If <code>kind</code> is specified, then only those references
@@ -12346,7 +12346,7 @@ gme::FCO::referencedBy( { kind : ocl::Type } ) : ocl::Set( gme::Reference ) </pr
           <code>gme::Reference</code>, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::FCO::memberOfSets( { kind : ocl::String } ) : ocl::Set( gme::Set ) (D) 
+          <para><programlisting format="linespecific">gme::FCO::memberOfSets( { kind : ocl::String } ) : ocl::Set( gme::Set ) (D)
 gme::FCO::memberOfSets( { kind : ocl::Type } ) : ocl::Set( gme::Set ) </programlisting>Returns
           a <code>set</code> of <code>set</code>s of GME that contains this
           fco. If <code>kind</code> is specified, then only those sets of GME
@@ -12375,7 +12375,7 @@ gme::FCO::memberOfSets( { kind : ocl::Type } ) : ocl::Set( gme::Set ) </programl
         <sect3>
           <title>Methods</title>
 
-          <para><programlisting format="linespecific">gme::Connection::connectionPoints( { role : ocl::String } ) : ocl::Set( gme::ConnectionPoint ) 
+          <para><programlisting format="linespecific">gme::Connection::connectionPoints( { role : ocl::String } ) : ocl::Set( gme::ConnectionPoint )
 gme::Connection::connectionPoint( role : ocl::String ) : gme::ConnectionPoint  </programlisting>The
           first call returns a <code>set</code> of connection points
           (association ends) of the connection. If <code>role</code> is
@@ -12401,7 +12401,7 @@ gme::Connection::connectionPoint( role : ocl::String ) : gme::ConnectionPoint  <
         <sect3>
           <title>Methods</title>
 
-          <para><programlisting format="linespecific">gme::Reference::usedByConnPoints( { kind : ocl::String } ) : ocl::Set( gme::ConnectionPoint ) (D) 
+          <para><programlisting format="linespecific">gme::Reference::usedByConnPoints( { kind : ocl::String } ) : ocl::Set( gme::ConnectionPoint ) (D)
 gme::Reference::usedByConnPoints( { kind : ocl::Type } ) : ocl::Set( gme::ConnectionPoint ) </programlisting>Returns
           a <code>set</code> of connection points (association ends) of the
           reference in which the reference participates. With kind, we can
@@ -12472,17 +12472,17 @@ gme::Reference::usedByConnPoints( { kind : ocl::Type } ) : ocl::Set( gme::Connec
         <sect3>
           <title>Methods</title>
 
-          <para><programlisting format="linespecific">gme::Model::atomParts( { role : ocl::String } ) : ocl::Set( gme::Atom )  
-gme::Model::modelParts( { role : ocl::String } ) : ocl::Set( gme::Model )  
-gme::Model::connectionParts( { role : ocl::String } ) : ocl::Set( gme::Connection ) 
-gme::Model::referenceParts( { role : ocl::String } ) : ocl::Set( gme::Reference ) 
-gme::Model::setParts( { role : ocl::String } ) : ocl::Set( gme::Set ) 
-gme::Model::parts( { role : ocl::String } ) : ocl::Set( gme::FCO ) 
-gme::Model::atomParts( kind : ocl::Type ) : ocl::Set( gme::Atom )  
-gme::Model::modelParts( kind : ocl::Type ) : ocl::Set( gme::Model )  
-gme::Model::connectionParts( kind : ocl::Type ) : ocl::Set( gme::Connection ) 
-gme::Model::referenceParts( kind : ocl::Type ) : ocl::Set( gme::Reference ) 
-gme::Model::setParts( kind : ocl::Type ) : ocl::Set( gme::Set ) 
+          <para><programlisting format="linespecific">gme::Model::atomParts( { role : ocl::String } ) : ocl::Set( gme::Atom )
+gme::Model::modelParts( { role : ocl::String } ) : ocl::Set( gme::Model )
+gme::Model::connectionParts( { role : ocl::String } ) : ocl::Set( gme::Connection )
+gme::Model::referenceParts( { role : ocl::String } ) : ocl::Set( gme::Reference )
+gme::Model::setParts( { role : ocl::String } ) : ocl::Set( gme::Set )
+gme::Model::parts( { role : ocl::String } ) : ocl::Set( gme::FCO )
+gme::Model::atomParts( kind : ocl::Type ) : ocl::Set( gme::Atom )
+gme::Model::modelParts( kind : ocl::Type ) : ocl::Set( gme::Model )
+gme::Model::connectionParts( kind : ocl::Type ) : ocl::Set( gme::Connection )
+gme::Model::referenceParts( kind : ocl::Type ) : ocl::Set( gme::Reference )
+gme::Model::setParts( kind : ocl::Type ) : ocl::Set( gme::Set )
 gme::Model::parts( kind : ocl::Type ) : ocl::Set( gme::FCO ) </programlisting>These
           methods return a <code>set</code> which contains the immediate children of the model.</para>
 
@@ -12498,9 +12498,9 @@ gme::Model::parts( kind : ocl::Type ) : ocl::Set( gme::FCO ) </programlisting>Th
           correspond to the method name, then an exception is thrown and
           <code>undefined</code> is returned.</para>
 
-          <para><programlisting format="linespecific">gme::Model::models( { kind : ocl::String } ) : ocl::Set( gme::Model ) (D) 
-gme::Model::models( { kind : ocl::Type } ) : ocl::Set( gme::Model ) 
-gme::Model::atoms( { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D) 
+          <para><programlisting format="linespecific">gme::Model::models( { kind : ocl::String } ) : ocl::Set( gme::Model ) (D)
+gme::Model::models( { kind : ocl::Type } ) : ocl::Set( gme::Model )
+gme::Model::atoms( { kind : ocl::String } ) : ocl::Set( gme::Atom ) (D)
 gme::Model::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom )  </programlisting>These
           methods have the same functionality as the parts methods have, except these methods return the set of contained objects which are
           contained recursively by the model (its immediate children and its
@@ -12528,7 +12528,7 @@ gme::Model::atoms( { kind : ocl::Type } ) : ocl::Set( gme::Atom )  </programlist
         <sect3>
           <title>Operators</title>
 
-          <para><programlisting format="linespecific">operator[ = ]( project1 : gme::Project, project2 : gme::Project ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ = ]( project1 : gme::Project, project2 : gme::Project ) : ocl::Boolean
 operator[ &lt;&gt; ]( project1 : gme::Project, project2 : gme::Project ) : ocl::Boolean </programlisting>These
           operators are defined because of consistency. But since there is
           only one instance of <code>gme::Project</code> in all projects,
@@ -12599,7 +12599,7 @@ operator[ &lt;&gt; ]( project1 : gme::Project, project2 : gme::Project ) : ocl::
         <sect3>
           <title>Operators</title>
 
-          <para><programlisting format="linespecific">operator[ = ]( cp1 : gme::ConnectionPoint, cp2 : gme:: ConnectionPoint ) : ocl::Boolean 
+          <para><programlisting format="linespecific">operator[ = ]( cp1 : gme::ConnectionPoint, cp2 : gme:: ConnectionPoint ) : ocl::Boolean
 operator[ &lt;&gt; ]( cp1 : gme:: ConnectionPoint, cp2 : gme:: ConnectionPoint ) : ocl::Boolean </programlisting>The
           first operator returns <code>true</code> if <code>cp1</code> and
           <code>cp2</code> have the same role, are attached to the same fco,
