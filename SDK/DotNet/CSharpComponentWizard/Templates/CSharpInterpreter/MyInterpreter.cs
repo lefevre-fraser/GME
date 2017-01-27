@@ -42,7 +42,7 @@ namespace MyInterpreter
         /// <param name="project">The handle of the project opened in GME, for which the interpreter was called.</param>
         public void Initialize(MgaProject project)
         {
-            // TODO: Add your initialization code here...            
+            // TODO: Add your initialization code here...
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace MyInterpreter
         /// A collection for the selected model elements. It is never null.
         /// If the interpreter is invoked by the context menu of the GME Tree Browser, then the selected items in the tree browser. Folders
         /// are never passed (they are not FCOs).
-        /// If the interpreter is invoked by clicking on the toolbar icon or the context menu of the modeling window, then the selected items 
+        /// If the interpreter is invoked by clicking on the toolbar icon or the context menu of the modeling window, then the selected items
         /// in the active GME modeling window. If nothing is selected, the collection is empty (contains zero elements).
         /// </param>
         /// <param name="startMode">Contains information about the GUI event that initiated the invocation.</param>
@@ -65,10 +65,10 @@ namespace MyInterpreter
         {
             // TODO: Add your interpreter code
             GMEConsole.Out.WriteLine("Running interpreter...");
-			
+
 			// Get RootFolder
 			$GET_ROOTFOLDER_CODE$
-            
+
             // To use the domain-specific API:
             //  Create another project with the same name as the paradigm name
             //  Copy the paradigm .mga file to the directory containing the new project
@@ -76,7 +76,7 @@ namespace MyInterpreter
             //  Add a Reference in this project to the other project
             //  Add "using [ParadigmName] = ISIS.GME.Dsml.[ParadigmName].Interfaces;" to the top of this file
             // if (currentobj != null && currentobj.Meta.Name == "KindName")
-            // [ParadigmName].[KindName] dsCurrentObj = ISIS.GME.Dsml.[ParadigmName].Classes.[KindName].Cast(currentobj);			
+            // [ParadigmName].[KindName] dsCurrentObj = ISIS.GME.Dsml.[ParadigmName].Classes.[KindName].Cast(currentobj);
         }
 
         #region IMgaComponentEx Members

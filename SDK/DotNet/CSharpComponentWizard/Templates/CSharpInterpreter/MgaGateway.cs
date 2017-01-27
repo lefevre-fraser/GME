@@ -52,7 +52,7 @@ namespace GME.CSharp
             }
             finally
             {
-                AbortTransaction();	
+                AbortTransaction();
             }
         }
         #endregion

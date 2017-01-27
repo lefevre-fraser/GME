@@ -98,7 +98,7 @@ namespace GME.CSharp
             GMEConsole console = new GMEConsole();
             try
             {
-                // Initializing console               
+                // Initializing console
                 console.gme = (IGMEOLEApp)project.GetClientByName("GME.Application").OLEServer;
             }
             catch (System.Runtime.InteropServices.COMException ex)
