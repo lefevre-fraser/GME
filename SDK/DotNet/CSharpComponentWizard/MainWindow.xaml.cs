@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace CSharpComponentWizard
 {
@@ -157,14 +158,25 @@ namespace CSharpComponentWizard
             BackgroundWorker worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.ProgressChanged += GenerationProgressChanged;
-            worker.DoWork += GenerationWork;
+            worker.DoWork += GenerationWorkWrapper;
             worker.RunWorkerCompleted += GenerationCompleted;
             worker.RunWorkerAsync();
+        }
+
+        private void GenerationWorkWrapper(object sender, DoWorkEventArgs e)
+        {
+            Thread staThread = new Thread(() => GenerationWork(sender, e));
+            staThread.SetApartmentState(ApartmentState.STA);
+            staThread.Start();
+            staThread.Join();
         }
 
         private void GenerationWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
+            IMessageFilter oldFilter;
+            int ret = CoRegisterMessageFilter(new RetryMessageFilter(), out oldFilter);
+            // Debugger.Log(10, "debug", ret.ToString());
 
             try
             {
