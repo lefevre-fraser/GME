@@ -86,7 +86,8 @@ namespace CSharpDSMLGenerator.Generator
 
 						int roleMetaRef = Configuration.DsmlModel.GetChildRoleRef(
 							Configuration.GetKindName(parent as MgaObject),
-							Configuration.GetKindName(Subject));
+							Configuration.GetKindName(Subject),
+                            role);
 
 						codeMemberField.InitExpression = new CodePrimitiveExpression(roleMetaRef);
 

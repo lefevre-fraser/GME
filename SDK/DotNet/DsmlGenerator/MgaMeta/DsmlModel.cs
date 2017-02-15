@@ -119,7 +119,30 @@ namespace MgaMeta
 			return 0;
 		}
 
-		public static paradigm GetParadigm(string filename)
+        public int GetChildRoleRef(
+            string parentKindName,
+            string childKindName,
+            string roleName)
+        {
+
+            foreach (var item in Paradigm.folder.Items.OfType<model>())
+            {
+                if (item.name == parentKindName)
+                {
+                    foreach (var r in item.role)
+                    {
+                        if (r.kind == childKindName && r.name == roleName)
+                        {
+                            return int.Parse(r.metaref);
+                        }
+                    }
+                }
+            }
+            //throw new InvalidDataException();
+            return 0;
+        }
+
+        public static paradigm GetParadigm(string filename)
 		{
 			XmlReaderSettings settings = new XmlReaderSettings()
 			{
