@@ -67,7 +67,7 @@
     <Reference Include="ISIS.GME.Dsml.BidirConnection">
       <HintPath>..\ISIS.GME.Dsml.BidirConnection.dll</HintPath>
     </Reference>
-    <Reference Include="MgaMeta, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
+    <Reference Include="MgaMeta, Version=1.0.1.0, Culture=neutral, PublicKeyToken=1321e6b92842fe54, processorArchitecture=MSIL">
       <HintPath>packages\GME.DSMLGenerator.Runtime.1.0.15.1\lib\net40\MgaMeta.dll</HintPath>
     </Reference>
     <Reference Include="System" />
