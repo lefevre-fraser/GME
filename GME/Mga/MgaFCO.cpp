@@ -191,7 +191,8 @@ HRESULT FCO::get_RelID(long *pVal) {
 HRESULT FCO::put_RelID(long newVal) {
 	COMTRY_IN_TRANSACTION {
 		CheckWrite();
-		if(newVal <= 0 || newVal >= RELIDSPACE) COMTHROW(E_MGA_ARG_RANGE);
+		if (newVal <= 0)
+			COMTHROW(E_MGA_ARG_RANGE);
 		self[ATTRID_RELID] = newVal;
 	} COMCATCH_IN_TRANSACTION(;);
 }

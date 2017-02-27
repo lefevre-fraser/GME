@@ -1207,6 +1207,8 @@ void CMgaParser::StartModel(const attributes_type &attributes)
 			else
 			{
 				COMTHROW( prev->get_ChildDerivedFrom(derivedfrom, PutOut(model)) );
+				// models cannot throw pass_exception (except for subtype inheritance), so this isn't needed
+				// fco->RelID = (~RELID_BASE_MAX &fco->RelID) | (RELID_BASE_MAX & derivedfrom->RelID);
 			}
 		}
 		else
@@ -1283,6 +1285,8 @@ void CMgaParser::StartAtom(const attributes_type &attributes)
 			else
 			{
 				COMTHROW( prev->get_ChildDerivedFrom(derivedfrom, PutOut(atom)) );
+				// models and atoms can't throw pass_exception (except for subtype inheritance), so this isn't needed
+				// fco->RelID = (~RELID_BASE_MAX &fco->RelID) | (RELID_BASE_MAX & derivedfrom->RelID);
 			}
 		}
 		else
@@ -1435,6 +1439,12 @@ void CMgaParser::StartConnection(const attributes_type &attributes)
 			else
 			{
 				COMTHROW( prev->get_ChildDerivedFrom(derivedfrom, PutOut(conn)) );
+				// If conn's parent (or primary derived ancestor) was being parsed before derivedfrom,
+				// then derivedfrom won't have had the correct RelID when Derive{Root,Child}Object was called.
+				// This can happen when parsing derivedfrom throws pass_exception.
+				// Set it now, retaining the high bits that indicate non-primary derivation.
+				// (We know derivedfrom is parsed at this point, since ResolveDerivation would throw otherwise)
+				conn->RelID = (~RELID_BASE_MAX &conn->RelID) | (RELID_BASE_MAX & derivedfrom->RelID);
 			}
 		}
 		else
@@ -1623,6 +1633,7 @@ void CMgaParser::StartReference(const attributes_type &attributes)
 			else
 			{
 				COMTHROW( prev->get_ChildDerivedFrom(derivedfrom, PutOut(fco)) );
+				fco->RelID = (~RELID_BASE_MAX &fco->RelID) | (RELID_BASE_MAX & derivedfrom->RelID);
 			}
 		}
 		else
@@ -1737,9 +1748,8 @@ void CMgaParser::StartSet(const attributes_type &attributes)
 			}
 			else
 			{
-				preparerelid(attributes);
 				COMTHROW( prev->get_ChildDerivedFrom(derivedfrom, PutOut(fco)) );
-				assignrelid(fco);
+				fco->RelID = (~RELID_BASE_MAX &fco->RelID) | (RELID_BASE_MAX & derivedfrom->RelID);
 			}
 		}
 		else
