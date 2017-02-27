@@ -25,6 +25,15 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes or Release 17.2.27
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix bug where instances or subtypes may have RelID=0x08000000
+      To fix your model: export to xme and reimport
+  - DsmlGenerator: fix bug where creating FCOs with a role may create with the wrong role
+  - CSharpComponentWizard: fix "server busy" error message
+  - CSharpComponentWizard: VS2015 support
+  - Search: fix crash when Search within Scope is selected after the selected object is deleted
 
 Release Notes of Release 16.7.22
 ----------------------------------
