@@ -25,7 +25,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes or Release 17.2.27
+Release Notes or Release 17.3.13
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix bug where instances or subtypes may have RelID=0x08000000
