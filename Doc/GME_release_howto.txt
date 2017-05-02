@@ -35,9 +35,9 @@ cd GME-17.3.13
 export PATH=$PATH:/c/cygwin/bin:"/c/Program Files/7-Zip/:/cygdrive/c/Program Files/7-Zip/"
  build=https://user:password@build.isis.vanderbilt.edu
  build=http://build.isis.vanderbilt.edu
-curl -o GME_x64-17.3.13.msi $build/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
-curl -o GME-17.3.13.msi $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
-curl -o README.txt $build/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
+curl -f -o GME_x64-17.3.13.msi $build/job/GME_x64_msi/label=build-slave6/lastSuccessfulBuild/artifact/trunk/Install/GME_x64.msi && \
+curl -f -o GME-17.3.13.msi $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/Install/GME.msi && \
+curl -f -o README.txt $build/job/GME/label=build-slave9/ws/trunk/Doc/README.txt
 
 # Saving all symbols
 curl -o pdbs_x86.7z $build/job/GME/label=build-slave9/lastSuccessfulBuild/artifact/trunk/pdbs.7z && \
@@ -88,10 +88,10 @@ set _NT_SYMBOL_PATH=srv*%CD%\GME-17.3.13_symbols*%CD%\pdbs_organized
 mkdir c:\GME_17.3.13_symbols
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files (x86)\GME"
 "c:\Program Files (x86)\Debugging Tools for Windows (x86)\symchk.exe" /r "C:\Program Files\GME"
-"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME_17.3.13_symbols.7z GME_17.3.13_symbols
-copy %userprofile%\GME_17.3.13_symbols.7z \\vboxsrv\xfer
+"c:\Program Files\7-Zip\7z.exe" a -xr!.svn %userprofile%\GME-17.3.13_symbols.7z GME-17.3.13_symbols
+copy %userprofile%\GME-17.3.13_symbols.7z \\vboxsrv\xfer
 
-scp Desktop/xfer/GME_17.3.13_symbols.7z repo@repo.isis.vanderbilt.edu:GME/17.3.13/ && \
+scp GME-17.3.13_symbols.7z repo@repo.isis.vanderbilt.edu:GME/17.3.13/ && \
 ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/17.3.13/
 
 
