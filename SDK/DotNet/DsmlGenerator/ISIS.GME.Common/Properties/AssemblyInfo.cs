@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ISIS.GME.DSML")]
+[assembly: AssemblyTitle("ISIS.GME.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ISIS, Vanderbilt University")]
@@ -23,6 +23,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("eef84a03-3f78-4ea0-a366-f2a3e8caf27e")]
 
 // also change GME_bin.wxs and build.py AssemblyFoldersEx
-// FIXME: for version 1.0.6.0, change AssemblyTitle to ISIS.GME.Common
-[assembly: AssemblyVersion("1.0.5.0")]
-[assembly: AssemblyFileVersion("1.0.5.0")]
+[assembly: AssemblyVersion("1.0.6.0")]
+[assembly: AssemblyFileVersion("1.0.6.0")]

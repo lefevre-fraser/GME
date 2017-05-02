@@ -911,6 +911,14 @@ namespace ISIS.GME.Common
             MgaReference mgaReference,
             Dictionary<int, Type> metaRefTypes)
         {
+            return CastReferred(mgaReference, metaRefTypes, "<unknown>");
+        }
+
+        public static ISIS.GME.Common.Interfaces.FCO CastReferred(
+            MgaReference mgaReference,
+            Dictionary<int, Type> metaRefTypes,
+            string kind)
+        {
             Contract.Requires(mgaReference != null);
 
             IMgaFCO referred = mgaReference.Referred;
@@ -921,7 +929,12 @@ namespace ISIS.GME.Common
             else
             {
                 ISIS.GME.Common.Interfaces.FCO result = null;
-                Type t = metaRefTypes[referred.MetaBase.MetaRef];
+                Type t;
+                if (metaRefTypes.TryGetValue(referred.MetaBase.MetaRef, out t) == false)
+                {
+                    // backwards compat dictates that this exception must be KeyNotFoundException
+                    throw new System.Collections.Generic.KeyNotFoundException(String.Format("Tried to retrieve Referred.{0}, but the referred object is \"{1}\", which does not inherit from \"{0}\"", kind, referred.MetaBase.Name));
+                }
                 result = Activator.CreateInstance(t) as ISIS.GME.Common.Interfaces.FCO;
                 (result as ISIS.GME.Common.Classes.FCO).Impl = referred as IMgaObject;
                 return result;

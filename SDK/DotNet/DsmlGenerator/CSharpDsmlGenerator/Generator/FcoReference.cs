@@ -125,7 +125,7 @@ namespace CSharpDSMLGenerator.Generator
 							sb.AppendLine();
 						}
 					}
-					sb.Append("}) as ");
+					sb.AppendFormat("}}, \"{0}\") as ", item.Name);
 					sb.Append(Configuration.GetInterfaceName(item as MgaObject));
 
 					newReferred.GetStatements.Add(

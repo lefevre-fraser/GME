@@ -10,6 +10,11 @@ namespace CSharpDSMLGenerator.Generator
 {
 	public partial class FCO
 	{
+        public static string ConvertToDOSLineEnding(string input)
+        {
+            return input.Replace("\r\n", "\n").Replace("\n", "\r\n");
+        }
+
 		void ClassCodeAttributes()
 		{
 			#region Domain Specific Attributes
@@ -112,7 +117,7 @@ namespace CSharpDSMLGenerator.Generator
 						{
 							sb.Clear();
 							sb.Append(@"<para>");
-							sb.AppendFormat("{0}", description);
+							sb.Append(ConvertToDOSLineEnding(description));
 							sb.Append(@"</para>");
 							attr.Comments.Add(
 								new CodeCommentStatement(sb.ToString(), true));
@@ -248,7 +253,7 @@ namespace CSharpDSMLGenerator.Generator
 						{
 							sb.Clear();
 							sb.Append(@"<para>");
-							sb.AppendFormat("{0}", description);
+							sb.Append(ConvertToDOSLineEnding(description));
 							sb.Append(@"</para>");
 							attr.Comments.Add(
 								new CodeCommentStatement(sb.ToString(), true));
@@ -319,7 +324,7 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								sb.Clear();
 								sb.Append(@"<para>");
-								sb.AppendFormat("{0}", description);
+								sb.Append(ConvertToDOSLineEnding(description));
 								sb.Append(@"</para>");
 								attr.Comments.Add(
 									new CodeCommentStatement(sb.ToString(), true));
@@ -386,7 +391,7 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								sb.Clear();
 								sb.Append(@"<para>");
-								sb.AppendFormat("{0}", description);
+								sb.Append(ConvertToDOSLineEnding(description));
 								sb.Append(@"</para>");
 								attr.Comments.Add(
 									new CodeCommentStatement(sb.ToString(), true));
@@ -454,7 +459,7 @@ namespace CSharpDSMLGenerator.Generator
 							{
 								sb.Clear();
 								sb.Append(@"<para>");
-								sb.AppendFormat("{0}", description);
+								sb.Append(ConvertToDOSLineEnding(description));
 								sb.Append(@"</para>");
 								attr.Comments.Add(
 									new CodeCommentStatement(sb.ToString(), true));
