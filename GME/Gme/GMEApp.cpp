@@ -2438,13 +2438,14 @@ void CGMEApp::OnFileXMLUpdate()
 		COMTHROW( mgaMetaProject->get_Name(PutOut(parname)) );
 		CComBstrObj metaconn;
 
+        CComPtr<IMgaRegistrar> reg;
+        COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
 		CComBstrObj currentguid;
+        GUID currentguid_guid;
 		{
 			CComVariant parguid;
 			COMTHROW( mgaMetaProject->get_GUID(&parguid) );
 
-			CComPtr<IMgaRegistrar> reg;
-			COMTHROW( reg.CoCreateInstance(L"Mga.MgaRegistrar") );
 			CComVariant pg2;
 
 			COMTHROW(reg->QueryParadigm(parname, PutOut(metaconn), &pg2, REGACCESS_PRIORITY));
@@ -2455,6 +2456,7 @@ void CGMEApp::OnFileXMLUpdate()
 			CopyTo(gg, parguid1);
 
 			CopyTo(pg2,gg);
+            currentguid_guid = gg;
 			CopyTo(gg, currentguid);
 
 			if(!parguid1.Compare(currentguid)) {
@@ -2512,8 +2514,12 @@ void CGMEApp::OnFileXMLUpdate()
 		else
 			COMTHROW(parser->ParseProject(mgaProject,PutInBstr(CString(xmlname))) );
 		{
-			CString buf = CString(_T("The model has been updated\nCurrent ID: "))
-				+ currentguid + L"\nThe original model has been saved to " + backupname;
+            _bstr_t version;
+			_variant_t v_guid;
+			CopyTo(currentguid_guid, &v_guid);
+            reg->VersionFromGUID(parname, v_guid, version.GetAddress(), REGACCESS_PRIORITY);
+			CString buf = CString(_T("The model has been updated.\nCurrent version: "))
+				+ (version.length() ? static_cast<const wchar_t*>(version) : currentguid) + L"\nThe original model has been saved to " + backupname;
 			AfxMessageBox(buf);
 		}
 	}
