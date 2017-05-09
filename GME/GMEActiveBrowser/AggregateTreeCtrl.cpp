@@ -483,7 +483,29 @@ void CAggregateTreeCtrl::RestoreState()
 }
 
 
+static int SortRelID(CAggregateTreeCtrl* pTreeCtrl, HTREEITEM hItem1, HTREEITEM hItem2)
+{
+	CAggregateMgaObjectProxy MgaObjectProxyItem1;
+	CAggregateMgaObjectProxy MgaObjectProxyItem2;
 
+	if (
+		pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem1, MgaObjectProxyItem1) &&
+		pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem2, MgaObjectProxyItem2))
+	{
+		CComQIPtr<IMgaObject>ccpItem1(MgaObjectProxyItem1.m_pMgaObject);
+		CComQIPtr<IMgaObject>ccpItem2(MgaObjectProxyItem2.m_pMgaObject);
+
+		if (ccpItem1 && ccpItem2)
+		{
+			// Query the RelativeID
+			long lRelID1, lRelID2;
+			COMTHROW(ccpItem1->get_RelID(&lRelID1));
+			COMTHROW(ccpItem2->get_RelID(&lRelID2));
+
+			return lRelID1 - lRelID2;
+		}
+	}
+}
 
 
 int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, LPARAM lParamSort)
@@ -504,7 +526,13 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 			{
 				CString strItem1 = pTreeCtrl->GetItemText(hItem1);
 				CString strItem2 = pTreeCtrl->GetItemText(hItem2);
-				return -_tcscmp(strItem2, strItem1);
+				int nameDiff = -_tcscmp(strItem2, strItem1);
+				if (nameDiff != 0)
+				{
+					return nameDiff;
+				}
+				return SortRelID(pTreeCtrl, hItem1, hItem2);
+
 			}break;
 		case SORT_BYTYPE:
 			{
@@ -519,7 +547,11 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 					{
 						CString strItem1 = pTreeCtrl->GetItemText(hItem1);
 						CString strItem2 = pTreeCtrl->GetItemText(hItem2);
-						return -_tcscmp(strItem2, strItem1);
+						int nameDiff = -_tcscmp(strItem2, strItem1);
+						if (nameDiff != 0) {
+							return nameDiff;
+						}
+						return SortRelID(pTreeCtrl, hItem1, hItem2);
 
 					}
 
@@ -544,40 +576,7 @@ int CAggregateTreeCtrl::ItemCompareProc(LPARAM lParamItem1, LPARAM lParamItem2, 
 
 			}break;
 		case SORT_BYCREATION:
-			{
-				
-				CAggregateMgaObjectProxy MgaObjectProxyItem1;
-				CAggregateMgaObjectProxy MgaObjectProxyItem2;
-
-				if(
-					pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem1,MgaObjectProxyItem1) &&
-					pTreeCtrl->m_MgaMap.LookupObjectProxy(hItem2,MgaObjectProxyItem2))
-				{
-					CComQIPtr<IMgaObject>ccpItem1(MgaObjectProxyItem1.m_pMgaObject);
-					CComQIPtr<IMgaObject>ccpItem2(MgaObjectProxyItem2.m_pMgaObject);
-
-					if(ccpItem1 &&ccpItem2)
-					{						
-						// Query the RelativeID
-						long lRelID1,lRelID2;
-						COMTHROW(ccpItem1->get_RelID(&lRelID1));
-						COMTHROW(ccpItem2->get_RelID(&lRelID2));																	
-						
-						return lRelID1-lRelID2;
-					}
-					else // Unsuccessful query of the objects
-					{
-						return 0;
-					}
-
-				}
-				else
-				{
-					// For dummy elements that are not in the map it does not matter
-					return 0;
-				}
-
-			}break;
+			return SortRelID(pTreeCtrl, hItem1, hItem2);
 	}
 	return 0;
 }
