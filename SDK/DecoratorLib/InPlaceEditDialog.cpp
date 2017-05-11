@@ -102,7 +102,12 @@ void CInPlaceEditDialog::SignalBackToGme(void)
 				m_Text = textToValidate;
 				m_parentPart->LabelChanged(m_Text);
 				// transaction operation begin
-				m_parentPart->ExecuteOperation(m_Text);
+				try {
+					m_parentPart->ExecuteOperation(m_Text);
+				}
+				catch (const hresult_exception&) {
+					// FIXME send crashrpt
+				}
 				// transaction operation end
 			} else {
 				m_intendedParentCWnd->MessageBox(_T("Invalid (non ASCII) string data: ") + textToValidate, _T("In-place Editor"), MB_ICONERROR);
