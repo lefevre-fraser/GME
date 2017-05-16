@@ -37,6 +37,7 @@ public:
 
 private :
     XMLFormatter* m_pFormatter;
+	XMLPlatformUtilsTerminate_RAII xercesInit;
 };
 
 

@@ -78,8 +78,6 @@ STDMETHODIMP CMgaParser::ParseFCOs2(IMgaObject *here, BSTR filename, ULONGLONG h
 		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
-			XMLPlatformUtils::Initialize();
-
 			SAXParser parser;
 			parser.setValidationScheme(SAXParser::Val_Always);
 			parser.setDocumentHandler(this);
@@ -246,8 +244,6 @@ STDMETHODIMP CMgaParser::ParseProject2(IMgaProject *p, BSTR filename, ULONGLONG 
 		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
-			XMLPlatformUtils::Initialize();
-
 			SAXParser parser;
 			parser.setValidationScheme(SAXParser::Val_Always);
 			parser.setDocumentHandler(this);
@@ -380,8 +376,6 @@ STDMETHODIMP CMgaParser::GetXMLInfo(BSTR filename, BSTR *paradigm, BSTR* parvers
 		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
-			XMLPlatformUtils::Initialize();
-
 			SAXParser parser;
 			parser.setValidationScheme(SAXParser::Val_Never);
 			parser.setDocumentHandler(this);
@@ -1884,8 +1878,6 @@ STDMETHODIMP CMgaParser::GetClipXMLInfo(BSTR filename, IMgaObject *target, VARIA
 		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
-			XMLPlatformUtils::Initialize();
-
 			SAXParser parser;
 			parser.setValidationScheme(SAXParser::Val_Never);
 			parser.setDocumentHandler(this);

@@ -71,8 +71,6 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
-			XMLPlatformUtils::Initialize();
-
 			SAXParser parser;
 			parser.setValidationScheme(SAXParser::Val_Always);
 			parser.setDocumentHandler(this);

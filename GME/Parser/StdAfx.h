@@ -97,10 +97,10 @@ static _bstr_t PutInBstr(const std::string& str)
 	return _bstr_t(str.c_str());
 }
 
-#include <xercesc/util/PlatformUtils.hpp>
 class XMLPlatformUtilsTerminate_RAII {
 public:
-	~XMLPlatformUtilsTerminate_RAII() { xercesc_3_1::XMLPlatformUtils::Terminate(); }
+	XMLPlatformUtilsTerminate_RAII();
+	~XMLPlatformUtilsTerminate_RAII();
 };
 
 template <const IID* piid1, const IID* piid2>

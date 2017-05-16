@@ -46,8 +46,6 @@ void Transcoder::init( const TCHAR * f, const TCHAR * const encodingName)
 {
 	ASSERT( !m_pFormatter);
 
-	XMLPlatformUtils::Initialize();
-	
 	m_pFormatter = new XMLFormatter
     (
         encodingName
@@ -78,8 +76,6 @@ void Transcoder::finalize()
 	m_pFormatter = 0;
 
 	close();
-
-	XMLPlatformUtils::Terminate();
 }
 
 

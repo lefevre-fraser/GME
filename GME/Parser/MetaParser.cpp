@@ -35,8 +35,6 @@ STDMETHODIMP CMgaMetaParser::Parse(BSTR filename, BSTR connection)
 		XMLPlatformUtilsTerminate_RAII term;
 		try
 		{
-			XMLPlatformUtils::Initialize();
-
 			foundconstraints = false;
 			explicitguid = false;
 			{
