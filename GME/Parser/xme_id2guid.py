@@ -2,9 +2,9 @@ import os
 import os.path
 import sys
 
-def id2guid(filename, output_filename, sort_elements=False):
+def id2guid(input, output, sort_elements=False, omit_default_attributes=False):
     from xml.etree import ElementTree
-    xme = ElementTree.parse(filename)
+    xme = ElementTree.parse(input)
     id_guid_map = {}
     for element in xme.iter():
         if element.get('id') and element.get('guid'):
@@ -25,6 +25,11 @@ def id2guid(filename, output_filename, sort_elements=False):
         if element.get('refs'):
             element.attrib['refs'] = " ".join([id_guid_map[id] for id in element.get('refs').split()])
 
+    if omit_default_attributes:
+        parent_map = dict((c, p) for p in xme.getiterator() for c in p)
+        for element in xme.findall('.//attribute[@status=\'meta\']'):
+            parent_map[element].remove(element)
+
     if sort_elements:
         def sortchildrenby(parent, attr):
             parent[:] = sorted(parent, key=lambda child: child.get(attr))
@@ -33,19 +38,28 @@ def id2guid(filename, output_filename, sort_elements=False):
             sortchildrenby(element, 'name')
             sortchildrenby(element, 'guid')
 
-    with open(output_filename, 'wb') as output:
-        output.write('<!DOCTYPE project SYSTEM "mga2.dtd">\n')
-        xme.write(output)
+    output.write('<!DOCTYPE project SYSTEM "mga2.dtd">\n')
+    xme.write(output)
 
 if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Convert GME id-style .xme (mga.dtd) to GUID-style .xme (mga2.dtd).')
     parser.add_argument('--sort', action='store_true')
+    parser.add_argument('--omit-default-attributes', action='store_true')
     parser.add_argument('input-xme-file')
     # parser.add_argument('--output-file')
 
     args = parser.parse_args()
     input = vars(args)['input-xme-file']
-    output = os.path.splitext(input)[0] + "_guids.xme"
-    id2guid(input, output, sort_elements=args.sort)
+    options = {
+        "sort_elements": args.sort,
+        "omit_default_attributes": 'omit-default-attributes' in vars(args)
+    }
+    if input != '-':
+        output_filename = os.path.splitext(input)[0] + "_guids.xme"
+        with open(output_filename, 'wb') as output:
+            id2guid(input, output, **options)
+    else:
+        id2guid(sys.stdin, sys.stdout, **options)
+
