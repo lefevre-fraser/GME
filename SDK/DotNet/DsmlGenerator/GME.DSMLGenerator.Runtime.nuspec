@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GME.DSMLGenerator.Runtime</id>
-    <version>1.0.16.1</version>
+    <version>1.0.17.1</version>
     <title>GME DSMLGenerator Runtime</title>
     <authors>ISIS, Vanderbilt University</authors>
     <owners>ksmyth</owners>
@@ -11,8 +11,8 @@
     <iconUrl>http://repo.isis.vanderbilt.edu/GME/GME.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Libraries required to use the generated domain-specific API</description>
-    <releaseNotes>Initial release</releaseNotes>
-    <copyright>Copyright 2013 ISIS, Vanderbilt University</copyright>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017 ISIS, Vanderbilt University</copyright>
     <tags>GME</tags>
     <dependencies>
       <dependency id="GME.PIAs" version="1.0.1.0" />

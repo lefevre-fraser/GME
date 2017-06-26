@@ -10,6 +10,11 @@ namespace ISIS.GME.Common.Interfaces
 	/// </summary>
 	public interface FCO : Base
 	{
+		ISIS.GME.Common.Interfaces.FCO ArcheType
+		{
+			get;
+		}
+
 		bool IsInstance
 		{
 			get;
@@ -29,5 +34,15 @@ namespace ISIS.GME.Common.Interfaces
 		{
 			get;
 		}
-	}
+
+		IEnumerable<ISIS.GME.Common.Interfaces.Connection> AllSrcConnections
+		{
+			get;
+		}
+
+		IEnumerable<ISIS.GME.Common.Interfaces.Connection> AllDstConnections
+		{
+			get;
+		}
+    }
 }

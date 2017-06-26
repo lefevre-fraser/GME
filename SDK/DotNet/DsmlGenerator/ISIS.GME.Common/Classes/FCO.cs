@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GME.MGA;
+using ISIS.GME.Common.Interfaces;
 
 namespace ISIS.GME.Common.Classes
 {
@@ -14,7 +15,7 @@ namespace ISIS.GME.Common.Classes
 		/// <summary>
 		/// Note: If you write domain specific code, do NOT use this.
 		/// </summary>
-		public virtual ISIS.GME.Common.Interfaces.FCO ArcheType
+		public ISIS.GME.Common.Interfaces.FCO ArcheType
 		{
 			get
 			{
@@ -75,41 +76,41 @@ namespace ISIS.GME.Common.Classes
 			get { return Utils.ReferencedBy<Classes.Reference>(Impl as IMgaFCO); }
 		}
 
-		///// <summary>
-		///// This property must be implemented in the derived class.
-		///// </summary>
-		//public virtual IEnumerable<ISIS.GME.Common.Interfaces.FCO> InstanceCollection
-		//{
-		//  get
-		//  {
-		//    throw new NotSupportedException(
-		//      "This property must be implemented in the derived class.");
-		//  }
-		//}
+        ///// <summary>
+        ///// This property must be implemented in the derived class.
+        ///// </summary>
+        //public virtual IEnumerable<ISIS.GME.Common.Interfaces.FCO> InstanceCollection
+        //{
+        //  get
+        //  {
+        //    throw new NotSupportedException(
+        //      "This property must be implemented in the derived class.");
+        //  }
+        //}
 
-		///// <summary>
-		///// This property must be implemented in the derived class.
-		///// </summary>
-		//public virtual IEnumerable<ISIS.GME.Common.Interfaces.FCO> DerivedCollection
-		//{
-		//  get
-		//  {
-		//    throw new NotSupportedException(
-		//      "This property must be implemented in the derived class.");
-		//  }
-		//}
+        ///// <summary>
+        ///// This property must be implemented in the derived class.
+        ///// </summary>
+        //public virtual IEnumerable<ISIS.GME.Common.Interfaces.FCO> DerivedCollection
+        //{
+        //  get
+        //  {
+        //    throw new NotSupportedException(
+        //      "This property must be implemented in the derived class.");
+        //  }
+        //}
 
-		///// <summary>
-		///// This property must be implemented in the derived class.
-		///// </summary>
-		//public virtual IEnumerable<ISIS.GME.Common.Interfaces.FCO> SubtypeCollection
-		//{
-		//  get
-		//  {
-		//    throw new NotSupportedException(
-		//      "This property must be implemented in the derived class.");
-		//  }
-		//}
+        ///// <summary>
+        ///// This property must be implemented in the derived class.
+        ///// </summary>
+        //public virtual IEnumerable<ISIS.GME.Common.Interfaces.FCO> SubtypeCollection
+        //{
+        //  get
+        //  {
+        //    throw new NotSupportedException(
+        //      "This property must be implemented in the derived class.");
+        //  }
+        //}
 
-	}
+    }
 }
