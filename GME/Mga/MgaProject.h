@@ -305,11 +305,14 @@ public:
 		COMTRY {
 			CMgaProject::clientcoll::iterator i = mgaproject->allclients.begin(), 
 											  end = mgaproject->allclients.end();
-			for(;i != end; ++i) {
-				if(*i == this) {
-					mgaproject->allclients.erase(i);
+			while (i != end) {
+				if (*i == this) {
+					i = mgaproject->allclients.erase(i);
 					active = false;
 					return S_OK;
+				}
+				else {
+					i++;
 				}
 			}
 		    ASSERT(("Client was not found among project clients",false));	

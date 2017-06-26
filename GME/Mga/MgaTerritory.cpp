@@ -87,13 +87,16 @@ STDMETHODIMP CMgaTerritory::Destroy() {
 		// this from allterrs, or MgaProject::~MgaProject will crash (as allterrs does not count references)
 		HRESULT hr = Flush();
 		CMgaProject::tercoll::iterator i = mgaproject->allterrs.begin(), end = mgaproject->allterrs.end();
-		for(;i != end; ++i) {
-			if(*i == this) {
-				mgaproject->allterrs.erase(i);
+		while (i != end) {
+			if (*i == this) {
+				i = mgaproject->allterrs.erase(i);
 				coreterr = NULL;   // release CoreTerritory object
 				handler = NULL;	// release sink
 				rwhandler = NULL;	// release sink
 				COMRETURN(hr);
+			}
+			else {
+				i++;
 			}
 			
 		}
@@ -137,12 +140,16 @@ STDMETHODIMP CMgaAddOn::Destroy() {
 		MARKSIG('8'); 
 		if(!handler) COMTHROW(E_MGA_TARGET_DESTROYED);
 		CMgaProject::addoncoll::iterator i = mgaproject->alladdons.begin(), end = mgaproject->alladdons.end();
-		for(;i != end; ++i) {
-			if(*i == this) {
-				mgaproject->alladdons.erase(i);
-				if(mgaproject->alladdons.empty()) mgaproject->reserveterr = NULL;   // release 
+		while (i != end) {
+			if (*i == this) {
+				i = mgaproject->alladdons.erase(i);
+				if (mgaproject->alladdons.empty())
+					mgaproject->reserveterr = NULL;   // release 
 				handler = NULL;	// release sink
 				return S_OK;
+			}
+			else {
+				i++;
 			}
 			
 		}

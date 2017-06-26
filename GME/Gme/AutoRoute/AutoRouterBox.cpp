@@ -121,9 +121,9 @@ void CAutoRouterBox::DeletePort(CAutoRouterPort* port)
 
 	(*iter)->SetOwner(NULL);
 
-	ports.erase(iter);
-
 	delete *iter;
+
+	ports.erase(iter);
 
 	atomic = false;
 }
