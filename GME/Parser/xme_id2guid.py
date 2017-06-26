@@ -38,6 +38,9 @@ def id2guid(input, output, sort_elements=False, omit_default_attributes=False):
             sortchildrenby(element, 'name')
             sortchildrenby(element, 'guid')
 
+    # remove all regnode data (useful for diffs):
+    # for element in xme.iter('regnode'):
+    #    element[:] = []
     output.write('<!DOCTYPE project SYSTEM "mga2.dtd">\n')
     xme.write(output)
 
