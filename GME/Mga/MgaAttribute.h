@@ -27,7 +27,7 @@ class ATL_NO_VTABLE CMgaAttribute :
 	public ISupportErrorInfoImpl<&__uuidof(IMgaAttribute)>
 {
 public:
-	CMgaAttribute()	: prevptr(NULL), next(NULL), load_status(ATTSTATUS_INVALID) {	}
+	CMgaAttribute()	: next(NULL), load_status(ATTSTATUS_INVALID) {	}
 
 DECLARE_PROTECT_FINAL_CONSTRUCT()
 
@@ -76,13 +76,8 @@ public:
 
 	STDMETHOD(Clear)();
 
-	typedef CMgaAttribute *hashobp;
-	hashobp *prevptr, next;
-	~CMgaAttribute() {						// remove object from hash
-		if (next)
-			next->prevptr = prevptr;
-		if (prevptr)
-			*prevptr = next;
+	CComPtr<CMgaAttribute> next;
+	~CMgaAttribute() {
 	}
 	void Initialize(metaref_type mr, FCO *o, CMgaProject *p);   // Throws!!!
 	metaref_type mref;
@@ -111,31 +106,30 @@ public:
 
 
 class attrpool {
-	CMgaAttribute::hashobp pool[APOOL_HASHSIZE];
+	CComPtr<CMgaAttribute> pool[APOOL_HASHSIZE];
 public:
 	attrpool() { 
-		int i; 
-		for(i = 0; i < APOOL_HASHSIZE;i++) pool[i] = NULL;
 	}
 
 	~attrpool() {
+		// clear should be called before destructor
 		int i; 
-		for(i = 0; i < APOOL_HASHSIZE;i++) ASSERT(pool[i] == NULL);
+		for (i = 0; i < APOOL_HASHSIZE; i++)
+			ASSERT(pool[i] == NULL);
 	}
 
 	// Throws (allocates)!!!!
 	CComPtr<IMgaAttribute> getpoolobj(metaref_type mref, FCO *o, CMgaProject *pr) {
-		CMgaAttribute::hashobp &k = pool[apool_hash(mref)], *kk;
-		for(kk = &k; *kk != NULL; kk = &((*kk)->next)) {
+		CComPtr<CMgaAttribute> &k = pool[apool_hash(mref)];
+		CMgaAttribute **kk;
+		for (kk = &k; *kk != NULL; kk = &((*kk)->next)) {
 			if((*kk)->mref == mref) {
 				return (*kk);
 			}
 		}
 		CComPtr<CMgaAttribute> s;
 		CreateComObject(s);
-		s->prevptr = &k;				// Insert to the front
 		s->next = k;
-		if(k) k->prevptr = &(s->next);
 		k = s;
 
 		s->Initialize(mref, o, pr);  
@@ -147,13 +141,13 @@ public:
 	{
 		for (size_t mref = 0; mref < sizeof(pool) / sizeof(pool[0]); mref++)
 		{
-			CMgaAttribute::hashobp *kk;
-			for (kk = &pool[mref]; *kk != NULL; kk = &(*kk)->next)
+			CComPtr<CMgaAttribute> next;
+			for (next = pool[mref]; next != NULL; )
 			{
-				if ((*(*kk)->prevptr)->next)
-					(*(*kk)->prevptr)->next = NULL;
-				(*kk)->load_status = ATTSTATUS_INVALID;
-				(*kk)->prevptr = NULL;
+				CComPtr<CMgaAttribute> removed = next;
+				next = removed->next;
+				removed->load_status = ATTSTATUS_INVALID;
+				removed->next = NULL;
 			}
 			pool[mref] = NULL;
 		}
@@ -293,8 +287,7 @@ public:
 	CMgaPart();
 	~CMgaPart();
 	void Initialize(metaref_type mr, ::FCO *o, CMgaProject *p);
-	typedef CMgaPart *hashobp;
-	hashobp *prevptr, next;
+	CComPtr<CMgaPart> next;
 	metaref_type mref;
 
 	long load_status;
@@ -320,31 +313,41 @@ public:
 
 
 class partpool {
-	CMgaPart::hashobp pool[PPOOL_HASHSIZE];
+	CComPtr<CMgaPart> pool[PPOOL_HASHSIZE];
 public:
 	partpool() { 
-		int i; 
-		for(i = 0; i < PPOOL_HASHSIZE;i++) pool[i] = NULL;
 	}
 
 	~partpool() {
+		for (size_t mref = 0; mref < sizeof(pool) / sizeof(pool[0]); mref++)
+		{
+			CComPtr<CMgaPart> next;
+			for (next = pool[mref]; next != NULL; )
+			{
+				CComPtr<CMgaPart> removed = next;
+				next = removed->next;
+				removed->load_status = ATTSTATUS_INVALID;
+				removed->next = NULL;
+			}
+			pool[mref] = NULL;
+		}
 		int i; 
-		for(i = 0; i < PPOOL_HASHSIZE;i++) ASSERT(pool[i] == NULL);
+		for (i = 0; i < PPOOL_HASHSIZE; i++)
+			ASSERT(pool[i] == NULL);
 	}
 
 	// Throws (allocates)!!!!
 	CComPtr<IMgaPart> getpoolobj(metaref_type mref, FCO *o, CMgaProject *pr) {
-		CMgaPart::hashobp &k = pool[ppool_hash(mref)], *kk;
-		for(kk = &k; *kk != NULL; kk = &((*kk)->next)) {
+		CComPtr<CMgaPart> &k = pool[ppool_hash(mref)];
+		CMgaPart **kk;
+		for (kk = &k; *kk != NULL; kk = &((*kk)->next)) {
 			if((*kk)->mref == mref) {
 				return (*kk);
 			}
 		}
 		CComPtr<CMgaPart > s;
 		CreateComObject(s);
-		s->prevptr = &k;				// Insert to the front
 		s->next = k;
-		if(k) k->prevptr = &(s->next);
 		k = s;
 
 		s->Initialize(mref, o, pr);  
