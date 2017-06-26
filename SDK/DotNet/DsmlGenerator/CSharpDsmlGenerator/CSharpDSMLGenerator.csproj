@@ -144,7 +144,7 @@
   <ItemGroup>
     <None Include="app.manifest" />
     <None Include="AssemblySignature.snk" />
-    <None Include="GME.DSMLGenerator.nuspec">
+    <None Include="..\GME.DSMLGenerator.nuspec">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
