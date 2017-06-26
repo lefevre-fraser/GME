@@ -9295,15 +9295,11 @@ void CGMEView::OnEditSync()
 {
 	CGMEEventLogger::LogGMEEvent(_T("CGMEView::OnEditSync in ")+path+name+_T("\r\n"));
 	CAspectSyncDlg dlg;
-	VARIANT_BOOL isInstance = VARIANT_TRUE;
-	BeginTransaction();
-	HRESULT hr = currentModel->get_IsInstance(&isInstance);
-	AbortTransaction(E_FAIL);
-	ASSERT(SUCCEEDED(hr));
-	if (isInstance != VARIANT_FALSE) {
+	if (IsInstance()) {
 		AfxMessageBox(L"Cannot synchronize aspects for instances", MB_ICONEXCLAMATION);
 		return;
 	}
+
 	dlg.m_srcAspect = currentAspect;
 	POSITION apos = guiMeta->aspects.GetHeadPosition();
 	while (apos) {
