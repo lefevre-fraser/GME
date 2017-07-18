@@ -25,7 +25,16 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes or Release 17.3.13
+Release Notes of Release 17.7.18
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Add setup14.js for Visual Studio 2015 interpreter wizard
+  - Fix possible crash when using C#
+  - Fix multi-threaded XME parsing
+  - MetaDecorator: don't allow editing of attributes in libraries
+  - TreeBrowser: sort by RelID for FCOs with the same name
+
+Release Notes of Release 17.3.13
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix bug where instances or subtypes may have RelID=0x08000000
