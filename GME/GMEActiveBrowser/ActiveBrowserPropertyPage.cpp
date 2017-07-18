@@ -52,7 +52,8 @@ CAggregatePropertyPage::CAggregatePropertyPage() : CPropertyPage(CAggregatePrope
 	m_ComboEditCtrl			(&m_ComboSearchCtrl),
 	m_ComboSearchCtrl		(&m_TreeAggregate),
 	m_bProjectOpen			(FALSE),
-	m_SearchButtonCtrlBitmap(NULL)
+	m_SearchButtonCtrlBitmap(NULL),
+	m_parent(NULL)
 {
 	//{{AFX_DATA_INIT(CAggregatePropertyPage)
 	//}}AFX_DATA_INIT
@@ -1582,20 +1583,20 @@ void CAggregatePropertyPage::AttachLibrary()
 					if (pMgaContext) {
 						constrMgr = pMgaContext->FindConstraintManager();
 						if (constrMgr)
-							COMTHROW(constrMgr->Enable(false));
+							COMTHROW(constrMgr->Enable(VARIANT_FALSE));
 						if (pMgaContext->m_ccpProject)
 							COMTHROW(pMgaContext->m_ccpProject->Notify(APPEVENT_LIB_ATTACH_BEGIN));
 					}
 
 					pMgaContext->BeginTransaction(TRANSACTION_NON_NESTED);
 
-					COMTHROW(ccpFolder->AttachLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, NULL));
+					COMTHROW(ccpFolder->AttachLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized ? VARIANT_TRUE : VARIANT_FALSE, NULL));
 					pMgaContext->CommitTransaction();
 					
 					// toggle back Constraint Manager (done only after commit, so that it will not catch the events happened in the transaction)
 					if (pMgaContext) {
 						if (constrMgr)
-							COMTHROW(constrMgr->Enable(true));
+							COMTHROW(constrMgr->Enable(VARIANT_TRUE));
 						if(pMgaContext->m_ccpProject)
 							COMTHROW(pMgaContext->m_ccpProject->Notify(APPEVENT_LIB_ATTACH_END));
 					}
@@ -1669,9 +1670,9 @@ void CAggregatePropertyPage::RefreshLibrary()
 					
 				long errs;
 				if (dlg.relativePath != "") {
-					COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.relativePath), dlg.m_bOptimized, &errs) );
+					COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.relativePath), dlg.m_bOptimized ? VARIANT_TRUE : VARIANT_FALSE, &errs) );
 				} else {
-					COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized, &errs) );
+					COMTHROW(ccpFolder->RefreshLibraryV3( CComBSTR( dlg.m_strConnString), dlg.m_bOptimized ? VARIANT_TRUE : VARIANT_FALSE, &errs) );
 				}
 				ccpFolder.Release();
 				pMgaContext->CommitTransaction();

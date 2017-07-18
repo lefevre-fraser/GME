@@ -217,6 +217,9 @@ void CGmeDlg::fillScripEngineList()
 //    memcpy(&ourCatID, &CATID_ActiveScriptParse, sizeof(ourCatID));
 
 	hResult = pCatInformation.CoCreateInstance(CLSID_StdComponentCategoriesMgr);
+	if (FAILED(hResult)) {
+		return;
+	}
 
     hResult = pCatInformation->EnumClassesOfCategories(
         1, &ourCatID, ((ULONG) -1), NULL, &pEnumGUID);

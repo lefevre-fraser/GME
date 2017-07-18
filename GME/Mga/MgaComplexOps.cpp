@@ -1415,7 +1415,7 @@ HRESULT FCO::MoveFCOs(IMgaFCOs *movelist, IMgaMetaRoles *rlist,IMgaFCOs **objs) 
 						COMTHROW(get_Meta(&mf));
 						CComQIPtr<IMgaMetaModel> parentmeta = mf;
 						if(!parentmeta) COMTHROW(E_MGA_META_INCOMPATIBILITY);
-						cur[ATTRID_ROLEMETA];
+						cur[ATTRID_ROLEMETA]; // FIXME what is this for
 						metaref_type t;
 						t = (nobjs[i])[ATTRID_ROLEMETA];
 						if(!t) COMTHROW(E_MGA_NO_ROLE);

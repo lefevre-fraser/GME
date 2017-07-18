@@ -67,7 +67,7 @@ void CGMEPanningWindow::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndle
 
 void CGMEPanningWindow::OnSize(UINT nType, int cx, int cy)
 {
-	cx = cy = 100;
+	// cx = cy = 100;
 	CDockablePane::OnSize(nType, cx, cy);
 
 	CRect rc;

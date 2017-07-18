@@ -270,7 +270,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			CString strVal(bstr);
-			if (_stscanf(strVal,_T("%ld"),&m_iGradientDirection) != 1) {
+			if (_stscanf(strVal,_T("%d"),&m_iGradientDirection) != 1) {
 				m_iGradientDirection = defGradientDirection;
 			}
 		}
@@ -308,7 +308,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			CString strVal(bstr);
-			if (_stscanf(strVal,_T("%ld"),&m_iShadowDepth) != 1) {
+			if (_stscanf(strVal,_T("%d"),&m_iShadowDepth) != 1) {
 				m_iShadowDepth = defShadowDepth;
 			}
 		}
@@ -327,7 +327,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			CString strVal(bstr);
-			if (_stscanf(strVal,_T("%ld"),&m_iShadowDirection) != 1) {
+			if (_stscanf(strVal,_T("%d"),&m_iShadowDirection) != 1) {
 				m_iShadowDirection = defShadowDirection;
 			}
 		}
@@ -365,7 +365,7 @@ void CAnnotationNode::Read(CAnnotationBrowserDlg *dlg)
 		if (lfNode != NULL) {
 			COMTHROW(lfNode->get_Value(&bstr));
 			CString strVal(bstr);
-			if (_stscanf(strVal,_T("%ld"),&m_iRoundCornerRadius) != 1) {
+			if (_stscanf(strVal,_T("%d"),&m_iRoundCornerRadius) != 1) {
 				m_iRoundCornerRadius = defRoundCornerRadius;
 			}
 		}

@@ -1512,9 +1512,10 @@ STDMETHODIMP CMgaRegistrar::QueryParadigm(BSTR parname, BSTR *connstr, VARIANT *
 		{
 			CString error;
 			if (inguidstr)
-				error.Format(L"Paradigm '%s' with GUID '%s' is not registered.", pname, inguidstr);
+				error.Format(L"Paradigm '%s' with GUID '%s' is not registered.", static_cast<const wchar_t*>(pname),
+					static_cast<const wchar_t*>(inguidstr));
 			else
-				error.Format(L"Paradigm '%s' is not registered.", pname);
+				error.Format(L"Paradigm '%s' is not registered.", static_cast<const wchar_t*>(pname));
 			SetErrorInfo(error);
 			return E_NOTFOUND;
 		}

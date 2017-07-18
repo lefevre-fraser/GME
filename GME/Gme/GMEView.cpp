@@ -1338,21 +1338,18 @@ BOOL CGMEView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// change the PrintDialog to a customized one
 	CGmePrintDialog *gpd = new CGmePrintDialog(this, guiMeta, FALSE);
-	if (gpd  &&  pInfo->m_pPD)
+	if (pInfo->m_pPD)
 		delete pInfo->m_pPD;
-	if (gpd)
-	{
-		pInfo->m_pPD = gpd;
-		pInfo->m_pPD->m_pd.Flags =	PD_ALLPAGES |  // actually the current aspect
-									PD_ENABLEPRINTTEMPLATE | PD_NONETWORKBUTTON  | 
-									PD_USEDEVMODECOPIES | PD_USEDEVMODECOPIESANDCOLLATE |
-									PD_ENABLEPRINTHOOK | PD_ENABLESETUPHOOK |
-									PD_RETURNDC ;
-		pInfo->m_pPD->m_pd.nMinPage = 1;      // one based page numbers
-        pInfo->m_pPD->m_pd.nMaxPage = 0xffff; // how many pages is unknown
-		pInfo->m_pPD->m_pd.hInstance = AfxGetInstanceHandle();
-		pInfo->m_pPD->m_pd.lpPrintTemplateName = MAKEINTRESOURCE(IDD_PRINT_DIALOG);
-	}
+	pInfo->m_pPD = gpd;
+	pInfo->m_pPD->m_pd.Flags =	PD_ALLPAGES |  // actually the current aspect
+								PD_ENABLEPRINTTEMPLATE | PD_NONETWORKBUTTON  | 
+								PD_USEDEVMODECOPIES | PD_USEDEVMODECOPIESANDCOLLATE |
+								PD_ENABLEPRINTHOOK | PD_ENABLESETUPHOOK |
+								PD_RETURNDC ;
+	pInfo->m_pPD->m_pd.nMinPage = 1;      // one based page numbers
+    pInfo->m_pPD->m_pd.nMaxPage = 0xffff; // how many pages is unknown
+	pInfo->m_pPD->m_pd.hInstance = AfxGetInstanceHandle();
+	pInfo->m_pPD->m_pd.lpPrintTemplateName = MAKEINTRESOURCE(IDD_PRINT_DIALOG);
 
 	if (!CScrollZoomView::DoPreparePrinting(pInfo))
 		return FALSE;
@@ -3623,9 +3620,9 @@ bool CGMEView::DoPasteItem(COleDataObject* pDataObject,bool drag,bool move,bool 
 		}
 		else if( CGMEDataSource::IsXMLDataAvailable(pDataObject) )
 		{
-			if( closure && theApp.mgaConstMgr) theApp.mgaConstMgr->Enable( false); // if closure is inserted disable the constraint manager ...
+			if( closure && theApp.mgaConstMgr) theApp.mgaConstMgr->Enable(VARIANT_FALSE); // if closure is inserted disable the constraint manager ...
 			ok = CGMEDataSource::ParseXMLData(pDataObject, currentModel, merge);
-			if( closure && theApp.mgaConstMgr) theApp.mgaConstMgr->Enable( true); // ... and enable it after done
+			if( closure && theApp.mgaConstMgr) theApp.mgaConstMgr->Enable(VARIANT_TRUE); // ... and enable it after done
 		}
 		else
 			AfxThrowNotSupportedException();
@@ -9273,7 +9270,7 @@ bool CGMEView::ShowAnnotationBrowser(CComPtr<IMgaFCO> fco, CComPtr<IMgaRegNode> 
 		HRESULT hr = launcher->AnnotationBrowser(fco, focus);
 		if (hr == E_MGA_MUST_ABORT) {	// JIRA GME-236 special ret code, indicating that the dialog was cancelled
 			throw hresult_exception(S_OK);
-		} if (FAILED(hr)) {
+		} else if (FAILED(hr)) {
 			ASSERT((_T("COMTHROW: Throwing HRESULT exception. Press IGNORE"), false));
 			throw hresult_exception(hr);
 		} else {

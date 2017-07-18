@@ -213,7 +213,6 @@ void GMEViewOverlay::OnTimer(UINT_PTR nIDEvent)
 	blend.BlendOp = AC_SRC_OVER;
 	blend.BlendFlags = 0;
 	blend.SourceConstantAlpha = opacities[m_opacity];
-	blend.AlphaFormat = 0;
 	blend.AlphaFormat = AC_SRC_ALPHA;
  
 	VERIFY(UpdateLayeredWindow(NULL, NULL, NULL, NULL, NULL, 0, &blend, ULW_ALPHA));

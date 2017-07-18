@@ -271,7 +271,6 @@ CCoreLockAttribute::CCoreLockAttribute()
 	others_lockval = 0;
 	read_count = 0;
 	write_count = 0;
-	others_lockval = 0;
 }
 
 #ifdef _DEBUG

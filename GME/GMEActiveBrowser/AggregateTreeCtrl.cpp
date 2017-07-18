@@ -505,6 +505,7 @@ static int SortRelID(CAggregateTreeCtrl* pTreeCtrl, HTREEITEM hItem1, HTREEITEM 
 			return lRelID1 - lRelID2;
 		}
 	}
+	return 0;
 }
 
 
@@ -1149,10 +1150,10 @@ BOOL CAggregateTreeCtrl::DoDropWithoutChecking(eDragOperation doDragOp, COleData
 	if (pMgaContext)
 		constrMgr = pMgaContext->FindConstraintManager();
 	if (constrMgr)
-		COMTHROW(constrMgr->Enable(false));
+		COMTHROW(constrMgr->Enable(VARIANT_FALSE));
 	BOOL res = DoDrop( doDragOp, pDataObject, point);
 	if (constrMgr) {
-		COMTHROW(constrMgr->Enable(true));
+		COMTHROW(constrMgr->Enable(VARIANT_TRUE));
 //		constrMgr.Release();
 	}
 

@@ -901,6 +901,8 @@ void CMainFrame::SetGMEViewMetaModel(CGuiMetaModel* meta)
 #if defined(ACTIVEXGMEVIEW)
 			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
 			pView->SetMetaModel(meta);
+#else
+			break;
 #endif
 		}
 	}
@@ -915,6 +917,8 @@ void CMainFrame::ChangeGMEViewAspect(int ind)
 #if defined(ACTIVEXGMEVIEW)
 			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
 			pView->ChangeAspect(ind);
+#else
+			break;
 #endif
 		}
 	}
@@ -929,6 +933,8 @@ void CMainFrame::CycleGMEViewAspect()
 #if defined(ACTIVEXGMEVIEW)
 			CGMEChildFrame* pView = (CGMEChildFrame*) pDocument->GetNextView(pos);
 			pView->CycleAspect();
+#else
+			break;
 #endif
 		}
 	}

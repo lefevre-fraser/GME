@@ -596,7 +596,7 @@ bool CSearch::CheckAttributes(IMgaFCO *obj,bool first)
 
                 const wchar_t* attributeValue = static_cast<const wchar_t*>(attribute.value);
                 wchar_t* endPtr;
-                wcstol(attributeValue, &endPtr, 10);
+                intSearchValue = wcstol(attributeValue, &endPtr, 10);
                 if (endPtr == attributeValue + wcslen(attributeValue) && attribute.CheckInteger(intActualValue, intSearchValue))
                     attribute.eval = TRUE;
             } break;

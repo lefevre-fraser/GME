@@ -14,8 +14,8 @@ void CMgaFilter::init() {
 		for(OLECHAR *p = wcstok(level, L" "); p; p = wcstok(NULL,L" ")) {
 			int low, high, highincr = 0;
 			OLECHAR c;
-			switch(swscanf(p,L"%u%c%u", &low, &c, &high)) {
-			case 0: if(swscanf(p,L"-%u", &high) != 1) COMTHROW(E_MGA_FILTERFORMAT);
+			switch(swscanf(p,L"%d%c%d", &low, &c, &high)) {
+			case 0: if(swscanf(p,L"-%d", &high) != 1) COMTHROW(E_MGA_FILTERFORMAT);
 					low = 0;
 					break;
 			case 1: high=low;

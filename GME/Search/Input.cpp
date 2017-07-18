@@ -81,7 +81,7 @@ void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKin
    
 
     //check if nothing is present in the second
-    if(strAttributeSecond.Trim()==_T("") && strKindSecond.Trim()==_T("")&& strRoleSecond.Trim()==_T("") && strAttributeSecond.Trim()==_T(""))
+    if(strNameSecond.Trim()==_T("") && strKindSecond.Trim()==_T("")&& strRoleSecond.Trim()==_T("") && strAttributeSecond.Trim()==_T(""))
     {
         m_bDoSecond=FALSE;
     }

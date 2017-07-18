@@ -79,11 +79,11 @@ CGuiAspect::CGuiAspect(CGuiMetaAspect* meta, CGuiObject* p, int ind, int pind, C
 CGuiAspect::~CGuiAspect()
 {
 	if (newDecorator) {
-		COMTHROW(newDecorator->Destroy());
+		newDecorator->Destroy();
 		newDecorator.Release();
 		newDecorator = NULL;
 	} else {
-		COMTHROW(decorator->Destroy());
+		decorator->Destroy();
 	}
 	decorator.Release();
 	decorator = NULL;
@@ -1351,7 +1351,7 @@ CSize CGuiObject::GetNativeSize(int aspect)
 		return CSize(sizex, sizey);
 	}
 	catch (hresult_exception &) {
-		return false;
+		return CSize(0, 0);
 	}
 	//return true;// unreachable code
 }
@@ -2656,7 +2656,7 @@ void CGuiConnection::Resolve()
 				} else if (dst_err) {
 					GiveConnectionEndErroMessage(_T("Destination endpoint error"), _T("dst"), srcPort);
 				}
-			} else
+			} else // FIXME?
 
 			if (visible[parentAspect]) {
 				if( !srcPort->outConns.Find( this)) // WAS: outConns.AddTail(this); and as a result as aspects have cycled the collection got bigger and bigger
@@ -3053,7 +3053,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 							if (isPartFixed2) {
 								connectionMoveMethod = HorizontalEdgeMove;
 								isPartFixed2 = false;
-							}
+							} // FIXME else ?
 							isPartFixed2 = AdjustCoordLimits(points, i + 1, i >= numEdges - 2, true, nextPos,
 															 nextPt.x, last.x, xMinLimit, xMaxLimit);
 							if (checkPointOnEdge)
@@ -3072,7 +3072,7 @@ int CGuiConnection::GetEdgeIndex(const CPoint& point, CPoint& startPoint, CPoint
 							if (isPartFixed2) {
 								connectionMoveMethod = VerticalEdgeMove;
 								isPartFixed2 = false;
-							}
+							} // FIXME else?
 							isPartFixed2 = AdjustCoordLimits(points, i + 1, i >= numEdges - 2, false, nextPos,
 															 nextPt.y, last.y, yMinLimit, yMaxLimit);
 							if (checkPointOnEdge)

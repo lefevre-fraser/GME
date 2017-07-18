@@ -65,8 +65,6 @@ protected:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-	const CConsoleCtl *m_control;
-
 	// Generated message map functions
 	//{{AFX_MSG(CHtmlCtrl)
 	afx_msg void OnDestroy();

@@ -433,7 +433,7 @@ void  FCO::initialname() {
 						if (n.Length() == len)
 							f = 1;
 						else {
-							swscanf(n+len,L"-%d", &f);
+							swscanf(n+len,L"-%u", &f);
 							f++;
 							if(f > NEWNAME_MAXNUM) COMTHROW(E_MGA_GEN_OUT_OF_SPACE);
 						}

@@ -293,7 +293,7 @@ void CGMEOLEApp::ImportProject(LPCTSTR connstr)
 		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
 		ASSERT( parser != NULL );
 
-		if(theApp.mgaConstMgr) COMTHROW(theApp.mgaConstMgr->Enable(false));
+		if(theApp.mgaConstMgr) COMTHROW(theApp.mgaConstMgr->Enable(VARIANT_FALSE));
 
 		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
 		if (parser2 && theApp.m_pMainWnd)
@@ -305,7 +305,7 @@ void CGMEOLEApp::ImportProject(LPCTSTR connstr)
 	catch (hresult_exception &){
 
 	}
-	if (theApp.mgaConstMgr) COMTHROW(theApp.mgaConstMgr->Enable(true));
+	if (theApp.mgaConstMgr) COMTHROW(theApp.mgaConstMgr->Enable(VARIANT_TRUE));
 }
 
 void CGMEOLEApp::ConstraintsDialog() 

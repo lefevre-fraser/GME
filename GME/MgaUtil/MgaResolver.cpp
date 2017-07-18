@@ -2230,6 +2230,7 @@ bool CMgaResolver::map_put_RoleByPathStr(BSTR path, IMgaMetaBase *parent, objtyp
 				delete map_find;
 				map_RoleByPathStr.RemoveAt(pos);
 			}
+			delete map_key;
 			return true;
 		}
 		map_RoleByPathStr.GetNext(pos);

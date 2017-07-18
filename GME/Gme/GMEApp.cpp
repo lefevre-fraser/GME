@@ -2385,7 +2385,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 		//UpdateProjectName(); // moved below
 
 		CWaitCursor wait;
-		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
+		if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(VARIANT_FALSE));
 
 		CString file_name = fullPath;
 		if( CMainFrame::theInstance) CMainFrame::theInstance->m_console.Message( CString( _T("Importing ")) + file_name + _T("..."), 1);
@@ -2408,7 +2408,7 @@ void CGMEApp::Importxml(CString fullPath, CString fname, CString ftitle)
 			AfxMessageBox(fullPath + _T(" was successfully imported."));
 
 	if (mgaConstMgr)
-		COMTHROW(mgaConstMgr->Enable(true));
+		COMTHROW(mgaConstMgr->Enable(VARIANT_TRUE));
 	HRESULT hr = mgaProject->Notify(GLOBALEVENT_OPEN_PROJECT_FINISHED);
 	ASSERT(SUCCEEDED(hr));
 }
@@ -2507,7 +2507,7 @@ void CGMEApp::OnFileXMLUpdate()
 		CComPtr<IMgaParser> parser;
 		COMTHROW( parser.CoCreateInstance(L"Mga.MgaParser") );
 		ASSERT( parser != NULL );
-	    if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(false));
+	    if(mgaConstMgr) COMTHROW(mgaConstMgr->Enable(VARIANT_FALSE));
 		IMgaParser2Ptr parser2 = (IMgaParser*)parser;
 		if (parser2 && m_pMainWnd)
 			COMTHROW(parser2->ParseProject2(mgaProject,PutInBstr(CString(xmlname)), (ULONGLONG)(m_pMainWnd->GetSafeHwnd())));
@@ -2540,7 +2540,7 @@ void CGMEApp::OnFileXMLUpdate()
 		}
 	}
 
-    if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(true));
+    if (mgaConstMgr) COMTHROW(mgaConstMgr->Enable(VARIANT_TRUE));
 }
 
 
