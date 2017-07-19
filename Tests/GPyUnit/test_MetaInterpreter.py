@@ -31,6 +31,28 @@ class TestMetaInterpreter(unittest.TestCase):
             self.assertEqual(atomattrs, list(atomattributes.split()))
         finally:
             metaproj.Close()
+
+    def test_attrpool_clear(self):
+        mga = GPyUnit.util.parse_xme(self.connstr)
+        # mga = DispatchEx("Mga.Mgaproject")
+        # mga.Open(self.connstr)
+        try:
+            mga.Save()
+
+            mga.BeginTransactionInNewTerr()
+            try:
+                obj = mga.RootFolder.GetObjectByPathDisp("/@Stereotypes/@AtomProxy")
+                attrs = list(obj.Attributes)
+                # print [a.Meta.MetaRef for a in attrs]
+                # add obj to CMgaProject.changedobjs
+                obj.SetStrAttrByNameDisp("Decorator", "asdf")
+            finally:
+                # abort calls changedobjs.front()->apool.clear()
+                # Before 6/26/2017: Under appverif with Heaps (full): "Win32 exception occurred releasing IUnknown at 0x503dcfc8"
+                mga.AbortTransaction()
+            del(attrs)
+        finally:
+            mga.Close()
     
     def _rm_old_files(self):
         for file in ("MetaGME.xmp", "MetaGME.mta", "MetaGME.xmp.log"):
