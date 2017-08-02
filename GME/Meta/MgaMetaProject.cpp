@@ -447,8 +447,12 @@ void CMgaMetaProject::RegisterMetaBase(metaref_type metaref, IMgaMetaBase *obj)
 {
 	ASSERT( obj != NULL );
 
-	if( metaobj_lookup.find(metaref) != metaobj_lookup.end() )
-		HR_THROW(E_METAREF);
+	if (metaobj_lookup.find(metaref) != metaobj_lookup.end())
+	{
+		wchar_t buf[256];
+		swprintf_s(buf, L"Invalid duplicate metaref '%ld'", metaref);
+		throw_com_error(E_METAREF, buf);
+	}
 
 	if( metaref > max_metaref )
 		max_metaref = metaref;

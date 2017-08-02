@@ -107,14 +107,18 @@ public:
 
 	template<class INTERFACE, class FUNC_INTERFACE>
 	void Attr(attributes_iterator i, const TCHAR *name, INTERFACE p,
-	HRESULT (__stdcall FUNC_INTERFACE::*func)(long))
+		HRESULT (__stdcall FUNC_INTERFACE::*func)(long))
 	{
 		if( i->first == name )
 		{
 			FUNC_INTERFACE *q = p;
 			ASSERT( q != NULL );
 
-			COMTHROW( (q->*func)(toLong(i->second)) );
+			HRESULT hr = (q->*func)(toLong(i->second));
+			if (FAILED(hr))
+			{
+				throw_last_com_error(hr);
+			}
 		}
 	}
 
