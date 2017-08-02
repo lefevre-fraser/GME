@@ -193,7 +193,7 @@ def query_GUID(mta_file):
 
 def _get_wix_path():
     import _winreg
-    for wix_ver in ('3.8', '3.7', '3.6', '3.5'):
+    for wix_ver in ('3.11', '3.10', '3.9', '3.8', '3.7', '3.6', '3.5'):
         try:
             with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows Installer XML\\' + wix_ver) as wixkey:
                 return _winreg.QueryValueEx(wixkey, 'InstallRoot')[0]
