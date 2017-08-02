@@ -733,6 +733,8 @@ void CInspectorList::UpdateItems(CArray<CListItem,CListItem&> &ListItemArray)
 	}
 	if (m_InPlaceManager.m_ArrowButton.m_hWnd)
 		m_InPlaceManager.m_ArrowButton.ShowWindow(SW_HIDE);
+	if (m_InPlaceManager.m_EditorButton.GetSafeHwnd())
+		m_InPlaceManager.m_EditorButton.ShowWindow(SW_HIDE);
 
 	Invalidate();
 }
