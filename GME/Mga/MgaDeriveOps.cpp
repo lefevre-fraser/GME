@@ -317,6 +317,11 @@ HRESULT FCO::DetachFromArcheType ()
 {
 	COMTRY_IN_TRANSACTION {
 		CheckWrite();
+		VARIANT_BOOL prim_deriv;
+		COMTHROW(this->get_IsPrimaryDerived(&prim_deriv));
+		if (prim_deriv == VARIANT_FALSE) {
+			COMTHROW(E_MGA_INVALID_ARG);
+		}
 		CoreObj d = self[ATTRID_DERIVED], d2;
 		if(d) { // if self is really derived from something (d)
 			while((d2 = d[ATTRID_DERIVED]) != NULL) 
