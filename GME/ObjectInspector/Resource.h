@@ -50,6 +50,7 @@
 #define IDC_STATIC_BKG                  243
 #define ID_LISTCONTEXT_RESETTODEFAULT   32768
 #define ID_LISTCONTEXT_COPY   32769
+#define ID_OPENREFERED   32770
 
 // Next default values for new objects
 // 

@@ -868,7 +868,7 @@ void CObjectInspectorCtrl::RemoveZombies()
 }
 
 template<typename F>
-void CObjectInspectorCtrl::WriteToMga(CListItem ListItem, F f)
+void CObjectInspectorCtrl::WriteToMga(F f)
 {
 	CComPtr<IMgaMetaProject> ccpMetaProject;
 	try
@@ -926,7 +926,7 @@ void CObjectInspectorCtrl::DetachFromArchetype(CListItem ListItem)
 			ptr->DetachFromArcheType();
 		}
 	};
-	WriteToMga(ListItem, write);
+	WriteToMga(write);
 }
 
 void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
@@ -939,7 +939,29 @@ void CObjectInspectorCtrl::WriteAttributeItemToMga(CListItem ListItem)
 			m_Attribute.WriteItemToMga(ListItem, m_FCOList);
 		}
 	};
-	WriteToMga(ListItem, write);
+	WriteToMga(write);
+}
+
+void CObjectInspectorCtrl::OpenRefered()
+{
+	IMgaFCOPtr referred;
+	if (m_FCOList.IsEmpty()) {
+	}
+	else {
+		MgaFCOPtr ptr = m_FCOList.GetHead();
+		CComQIPtr<IMgaReference> ref = ptr;
+		if (ref) {
+			WriteToMga([&]() {
+				referred = ref->Referred;
+			});
+		}
+	}
+	if (referred) {
+		auto gme = get_GME(referred->Project);
+		if (gme) {
+			gme->ShowFCO(referred, VARIANT_FALSE);
+		}
+	}
 }
 
 void CObjectInspectorCtrl::WritePreferenceItemToMga(CListItem ListItem, bool bIsForKind)

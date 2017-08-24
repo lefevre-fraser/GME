@@ -69,6 +69,7 @@ protected:
 	afx_msg LRESULT OnNameEditEndCancel(WPARAM wParam, LPARAM lParam);
 
 	afx_msg LRESULT OnItemChanged(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnOpenRefered(WPARAM wParam, LPARAM lParam);
 	void OnItemChangedPreference(int nItem);
 	void OnItemChangedAttribute(int nItem);
 

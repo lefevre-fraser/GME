@@ -56,6 +56,7 @@ typedef enum { INSP_ATTR_PANEL=0, INSP_PREF_PANEL, INSP_PROP_PANEL, INSP_PANEL_N
 
 // Inspector List Messages
 #define LBN_ON_ITEM_CHANGED	 WM_APP + 1022
+#define LBN_ON_OPEN_REFERED	 WM_APP + 1025
 
 
 // NameEdit Messages

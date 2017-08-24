@@ -54,6 +54,7 @@ BEGIN_MESSAGE_MAP(CInspectorList, CListBox)
 	ON_MESSAGE(MSG_EDIT_END_OK, OnEditEndOK)
 	ON_COMMAND(ID_LISTCONTEXT_RESETTODEFAULT, OnListContextResetToDefault)
 	ON_COMMAND(ID_LISTCONTEXT_COPY, OnListContextCopy)
+	ON_COMMAND(ID_OPENREFERED, OnOpenRefered)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1219,7 +1220,22 @@ void CInspectorList::OnRButtonDown(UINT nFlags, CPoint point)
 				const wchar_t* archetype = L" (Archetype)";
 				auto value = listItem.Value.stringVal.GetAt(0);
 				if (value.GetLength() >= wcslen(archetype) && wcscmp(archetype, value.Right(wcslen(archetype))) == 0) {
+					// FIXME: should disable for non-primary derived
 					menu.EnableMenuItem(ID_LISTCONTEXT_RESETTODEFAULT, MF_GRAYED);
+				}
+
+				ClientToScreen(&point);
+				menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+			}
+			else if (listItem.strName == L"References") {
+				CMenu menu;
+				menu.CreatePopupMenu();
+				menu.AppendMenuW(MF_STRING, ID_OPENREFERED, L"Open refered");
+
+				const wchar_t* objectID = L"ObjectID=";
+				auto& value = listItem.Value.stringVal.GetAt(0);
+				if (value.Find(objectID) == -1) {
+					menu.EnableMenuItem(ID_OPENREFERED, MF_GRAYED);
 				}
 
 				ClientToScreen(&point);
@@ -1236,6 +1252,11 @@ void CInspectorList::OnListContextResetToDefault()
 {
 	SetDefault();
 	Invalidate();
+}
+
+void CInspectorList::OnOpenRefered()
+{
+	GetParent()->GetParent()->SendMessage(LBN_ON_OPEN_REFERED, 0, 0);
 }
 
 void SetClipboardText(const CString& szData)

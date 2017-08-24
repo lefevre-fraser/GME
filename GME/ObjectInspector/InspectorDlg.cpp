@@ -81,6 +81,7 @@ BEGIN_MESSAGE_MAP(CInspectorDlg, CDialog)
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_INSPECTOR_SHEET, OnSelchangeInspectorSheet)
 	ON_MESSAGE(LBN_ON_ITEM_CHANGED, OnItemChanged)
+	ON_MESSAGE(LBN_ON_OPEN_REFERED, OnOpenRefered)
 	ON_MESSAGE(MSG_NAME_EDIT_END_OK, OnNameEditEndOK)
 	ON_MESSAGE(MSG_NAME_EDIT_END_CANCEL, OnNameEditEndCancel)
 	ON_EN_KILLFOCUS(IDC_EDIT_NAME, OnKillfocusEditName)
@@ -424,6 +425,17 @@ LRESULT CInspectorDlg::OnItemChanged(WPARAM wParam, LPARAM lParam)
 			pParent->DetachFromArchetype(ListItem);
 		}
 	}
+	return TRUE;
+}
+
+LRESULT CInspectorDlg::OnOpenRefered(WPARAM wParam, LPARAM lParam)
+{
+	CListItem ListItem;
+	m_inspectorLists[INSP_PROP_PANEL]->GetItem(wParam, ListItem);
+
+	CObjectInspectorCtrl* pParent = (CObjectInspectorCtrl*)GetParent();
+
+	pParent->OpenRefered();
 	return TRUE;
 }
 

@@ -31,8 +31,6 @@ typedef CList< CAdapt< MgaFolderPtr >, CAdapt< MgaFolderPtr > & > CMgaFolderPtrL
 #include "Property.h"
 
 
-
-
 class CObjectInspectorCtrl : public COleControl
 {
 	DECLARE_DYNCREATE(CObjectInspectorCtrl)
@@ -116,7 +114,7 @@ public:
 
 private:
 	template<typename F>
-	void WriteToMga(CListItem ListItem, F f);
+	void WriteToMga(F f);
 
 // Dispatch and event IDs
 public:
@@ -129,6 +127,7 @@ public:
 	void RefreshReferencePanel();
 	void RefreshAttributePanel();
 	void RefreshPropertyPanel();
+	void OpenRefered();
 
 	CAttribute m_Attribute;
 	CPreference m_Preference;
@@ -153,7 +152,27 @@ private:
 	void RefreshName();
 	CMgaObjectEventList m_MgaObjectEventList;
 	void PropagateMgaMessages();
-};
+
+	static CComPtr<IGMEOLEApp> get_GME(IMgaProjectPtr& p_mgaproject)
+	{
+		CComPtr<IGMEOLEApp> gme;
+		if (p_mgaproject) {
+			CComBSTR bstrName("GME.Application");
+			CComPtr<IMgaClient> pClient;
+			HRESULT hr = p_mgaproject->GetClientByName(bstrName, &pClient);
+			if (SUCCEEDED(hr) && pClient) {
+				CComPtr<IDispatch> pDispatch;
+				hr = pClient->get_OLEServer(&pDispatch);
+				if (SUCCEEDED(hr) && pDispatch) {
+					hr = pDispatch.QueryInterface(&gme);
+					if (FAILED(hr)) {
+						gme = NULL;
+					}
+				}
+			}
+		}
+		return gme;
+	}};
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
