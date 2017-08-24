@@ -121,6 +121,8 @@ private:
 
 	int m_ItemHeight;
 	int m_ComboboxLineHeight;
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
 /////////////////////////////////////////////////////////////////////////////

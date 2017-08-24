@@ -85,6 +85,8 @@ private:
 	CRect	GetWindowSizeFromResource(void) const;
 	void	MoveControl(int nID, int offsetX, int offsetY, int deltaWidth, int deltaHeight,
 						bool defer = false, HDWP* pdwp = NULL);
+public:
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 };
 
 //{{AFX_INSERT_LOCATION}}

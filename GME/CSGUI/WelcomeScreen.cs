@@ -60,7 +60,7 @@ namespace CSGUI
             {
                 string recent = recent_;
                 LinkLabel recentLink = new System.Windows.Forms.LinkLabel();
-                recentLink.Text = recent;
+                recentLink.Text = recent.Substring("MGA=".Length);
                 recentLink.Location = new Point(7, y);
                 recentLink.AutoSize = false;
                 recentLink.AutoEllipsis = true;

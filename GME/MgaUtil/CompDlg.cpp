@@ -66,6 +66,7 @@ BEGIN_MESSAGE_MAP(CCompDlg, CDialog)
 	ON_BN_CLICKED(IDC_RADIOUSER, &CCompDlg::OnBnClickedRadiouser)
 	ON_BN_CLICKED(IDC_RADIOBOTH, &CCompDlg::OnBnClickedRadioboth)
 	ON_NOTIFY(HDN_ITEMCLICK, 0, OnAllCompsHeader)
+	ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 
 
@@ -119,19 +120,19 @@ BOOL CCompDlg::OnInitDialog()
 		lvc.mask = LVCF_WIDTH | LVCF_TEXT;
 
 		lvc.pszText = _T("Name");
-		lvc.cx = 150;
+		lvc.cx = (int)(150.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);;
 		VERIFYTHROW( m_list.InsertColumn(0, &lvc) != -1 );
 
 		lvc.pszText = _T("Type");
-		lvc.cx = 80;
+		lvc.cx = (int)(80.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
 		VERIFYTHROW( m_list.InsertColumn(1, &lvc) != -1 );
 
 		lvc.pszText = _T("ProgID");
-		lvc.cx = 200;
+		lvc.cx = (int)(200.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
 		lvc.pszText = _T("Path");
-		lvc.cx = 300;
+		lvc.cx = (int)(300.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
 		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
 
 		iconlist.Create(IDB_BITMAP1,16,0,15);
@@ -792,4 +793,11 @@ void CCompDlg::MoveControl(int nID, int offsetX, int offsetY, int deltaWidth, in
 									 SWP_NOZORDER);
 		}
 	}
+}
+
+
+void CCompDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+	lpMMI->ptMinTrackSize.x = 800;
+	lpMMI->ptMinTrackSize.y = 380;
 }

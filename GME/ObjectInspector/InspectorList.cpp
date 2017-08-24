@@ -56,6 +56,7 @@ BEGIN_MESSAGE_MAP(CInspectorList, CListBox)
 	ON_COMMAND(ID_LISTCONTEXT_COPY, OnListContextCopy)
 	ON_COMMAND(ID_OPENREFERED, OnOpenRefered)
 	//}}AFX_MSG_MAP
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1301,4 +1302,14 @@ void CInspectorList::OnListContextCopy()
 		}
 	}
 	Invalidate();
+}
+
+
+int CInspectorList::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CListBox::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	m_Settings.m_nDivider = INSP_DIVIDER_POSITION * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96;
+	return 0;
 }

@@ -59,9 +59,11 @@
             // 
             // grpRecents
             // 
+            this.grpRecents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpRecents.Location = new System.Drawing.Point(170, 12);
             this.grpRecents.Name = "grpRecents";
-            this.grpRecents.Size = new System.Drawing.Size(690, 306);
+            this.grpRecents.Size = new System.Drawing.Size(919, 306);
             this.grpRecents.TabIndex = 2;
             this.grpRecents.TabStop = false;
             this.grpRecents.Text = "Recent Projects";
