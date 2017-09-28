@@ -825,6 +825,7 @@ void CAggregatePropertyPage::CloseProject()
 
 		m_ComboSearchCtrl.ResetContent();
 		m_ComboSearchCtrl.EnableWindow(FALSE);
+        m_TreeAggregate.m_highlightedObjects.clear();
 		AfxGetApp()->LoadStandardCursor(IDC_ARROW);
 
 	
