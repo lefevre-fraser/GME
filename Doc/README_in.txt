@@ -25,6 +25,13 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes of Release 17.9.28
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Reject DetachFromArchetype for non-primary derived
+  - Some fixes for high-DPI displays
+  - Fix memory leak
+
 Release Notes of Release 17.7.18
 ----------------------------------
   - Binary compatibility with 11.12.2
