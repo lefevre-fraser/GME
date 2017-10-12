@@ -1253,18 +1253,21 @@ STDMETHODIMP CMgaRegistrar::RegisterParadigmFromData(BSTR connstr, BSTR *newname
 					conn1.Empty();
 					if(QueryParadigm(name, PutOut(conn1), &prevguid, REGACCESS_USER) == S_OK &&
 						conn1 == CComBSTR(conn)) {  // if it was correctly registered in user
-						usermove = true;;
+						usermove = true;
 					}
 
 					if(!MoveFileEx(FILEPART(conn), FILEPART(connrecent), MOVEFILE_REPLACE_EXISTING)) {
+						// n.b. can't do this because clients expect ParadigmName.mta
+						// conn = conn.Left(conn.GetLength() - 4) + _T("-") + CTime::GetCurrentTime().Format("%Y%m%d_%H%M%S") + _T(".mta");
 						COMTHROW(E_FILEOPEN);
 					}
- 
-					if(sysmove) {
-						COMTHROW( RegisterParadigm( name, PutInBstr(connrecent), prevversion, prevguid, REGACCESS_SYSTEM) );
-					}
-					if(usermove) {
-						COMTHROW( RegisterParadigm( name, PutInBstr(connrecent), prevversion, prevguid, REGACCESS_USER) );
+					else {
+						if (sysmove) {
+							COMTHROW(RegisterParadigm(name, PutInBstr(connrecent), prevversion, prevguid, REGACCESS_SYSTEM));
+						}
+						if (usermove) {
+							COMTHROW(RegisterParadigm(name, PutInBstr(connrecent), prevversion, prevguid, REGACCESS_USER));
+						}
 					}
 				}
 			  } catch(hresult_exception(&e)) {
