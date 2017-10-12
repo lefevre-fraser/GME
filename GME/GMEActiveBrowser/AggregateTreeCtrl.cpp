@@ -498,6 +498,14 @@ static int SortRelID(CAggregateTreeCtrl* pTreeCtrl, HTREEITEM hItem1, HTREEITEM 
 		if (ccpItem1 && ccpItem2)
 		{
 			// Query the RelativeID
+			long status1 = OBJECT_DELETED;
+			long status2 = OBJECT_DELETED;
+			ccpItem1->get_Status(&status1);
+			ccpItem2->get_Status(&status2);
+			if (status1 != OBJECT_EXISTS || status2 != OBJECT_EXISTS)
+			{
+				return status1 - status2;
+			}
 			long lRelID1, lRelID2;
 			COMTHROW(ccpItem1->get_RelID(&lRelID1));
 			COMTHROW(ccpItem2->get_RelID(&lRelID2));
