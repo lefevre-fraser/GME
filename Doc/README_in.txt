@@ -25,6 +25,12 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes of Release 17.10.13
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix bug where deleting mutliple objects in the tree browser didn't work
+  - Some fixes for high-DPI displays
+
 Release Notes of Release 17.9.28
 ----------------------------------
   - Binary compatibility with 11.12.2
