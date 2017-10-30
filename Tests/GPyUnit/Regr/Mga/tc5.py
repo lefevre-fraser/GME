@@ -21,11 +21,11 @@ class TestCase5( unittest.TestCase ):
 	"""
 
 	def setUp( self ):		## hook method
-		pass
-		
+		self.project = None
+
 	def tearDown( self ):		## hook method
-		self.project.Close( 0 )
-		pass
+		if self.project:
+			self.project.Close( 0 )
 
 
 	"""
