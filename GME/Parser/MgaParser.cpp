@@ -1477,14 +1477,14 @@ void CMgaParser::StartConnPoint(const attributes_type &attributes)
 	const std::tstring *s = GetByNameX(attributes, _T("refs"));
 	if( s != NULL )
 	{
-		int pos = s->find_first_not_of(' ', 0);
-		ASSERT( pos >= 0 );
-		while( pos < (int) s->length() )
+		size_t pos = s->find_first_not_of(' ', 0);
+		ASSERT(pos != -1);
+		while (pos < s->length())
 		{
-			int pos2 = s->find_first_of(' ', pos);
-			if( pos2 < 0 )
+			size_t pos2 = s->find_first_of(' ', pos);
+			if (pos2 == -1)
 				pos2 = s->length();
-			ASSERT( pos2 > pos );
+			ASSERT(pos2 > pos);
 
 			CComObjPtr<IMgaFCO> ref;
 			LookupByID(std::tstring(*s, pos, pos2-pos), ref);
@@ -1676,14 +1676,14 @@ void CMgaParser::StartSet(const attributes_type &attributes)
 	const std::tstring *s = GetByNameX(attributes, _T("members"));
 	if( s != NULL )
 	{
-		int pos = s->find_first_not_of(' ', 0);
-		ASSERT( pos >= 0 );
-		while( pos < (int) s->length() )
+		size_t pos = s->find_first_not_of(' ', 0);
+		ASSERT(pos != -1);
+		while (pos < s->length())
 		{
-			int pos2 = s->find_first_of(' ', pos);
-			if( pos2 < 0 )
+			size_t pos2 = s->find_first_of(' ', pos);
+			if (pos2 == -1)
 				pos2 = s->length();
-			ASSERT( pos2 > pos );
+			ASSERT(pos2 > pos);
 
 			CComObjPtr<IMgaFCO> member;
 			LookupByID(std::tstring(*s, pos, pos2-pos), member);
