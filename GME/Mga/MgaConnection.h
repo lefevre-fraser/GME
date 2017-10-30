@@ -21,8 +21,11 @@ class ATL_NO_VTABLE CMgaConnection :
 public:
 	static HRESULT WINAPI simpletest(void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw) {
 				FCO *f = reinterpret_cast<CMgaConnection*>(pv)->innFCO;
-				if(!f->simpleconn()) return E_NOINTERFACE; // this breaks COM rules
-				IUnknown* pUnk = (IUnknown*)((int)pv+dw);
+				if(!f->simpleconn()) {
+					*ppv = NULL;
+					return E_NOINTERFACE; // this breaks COM rules
+				}
+				IUnknown* pUnk = (IUnknown*)((char*)pv+dw);
 				pUnk->AddRef();
 				*ppv = pUnk;
 				return S_OK;
