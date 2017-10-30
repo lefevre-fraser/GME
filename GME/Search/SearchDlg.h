@@ -259,7 +259,7 @@ public:
 		while (pos)
 		{
 			int nItem = m_lstResults.GetNextSelectedItem(pos);
-			long lParam = m_lstResults.GetItemData(nItem);
+			DWORD_PTR lParam = m_lstResults.GetItemData(nItem);
 			CComPtr<IMgaFCO> selected;
 			COMTHROW(results->get_Item(lParam + 1, &selected));
 			f(selected);

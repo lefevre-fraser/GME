@@ -79,7 +79,7 @@ inline bstr_const_iterator end(BSTR p) { return reinterpret_cast<wchar_t*>(p) ? 
 inline void CopyTo(bstr_const_iterator i, bstr_const_iterator e, CComBstrObj &b)
 {
 	ASSERT( i <= e );
-	BSTR tmpb = SysAllocStringLen(i, e - i);
+	BSTR tmpb = SysAllocStringLen(i, (UINT)(e - i));
 	if (tmpb == NULL)
 		COMTHROW(E_OUTOFMEMORY);
 

@@ -23,7 +23,7 @@ public:
 	CComPtr<IMgaDecorator>						decorator;
 	CComPtr<IMgaElementDecorator>				newDecorator;
 
-	PartWithDecorator operator=(PartWithDecorator&& that)
+	PartWithDecorator& operator=(PartWithDecorator&& that)
 	{
 		if (this != &that)
 		{

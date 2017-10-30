@@ -601,7 +601,7 @@ void CSearchDlg::itemClicked()
             TheCtrl->BeginTransaction();
 
             int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
-            long lParam = m_lstResults.GetItemData(selected-1);
+            DWORD_PTR lParam = m_lstResults.GetItemData(selected - 1);
             CComPtr<IMgaFCO> selectedFCO;
             // selected might be 0 because GetSelectionMark might have returned -1
             if( selected >= 1 && selected <= count)
@@ -655,7 +655,7 @@ void CSearchDlg::itemDblClicked()
 
             int selected = m_lstResults.GetSelectionMark() + 1; //IMgaFCOs 1 based, GetSelectionMark 0 based
             //LVITEM lvItem;
-            long lParam = m_lstResults.GetItemData(selected-1);
+            DWORD_PTR lParam = m_lstResults.GetItemData(selected-1);
            // m_lstResults.GetItem(&lvItem);
             CComPtr<IMgaFCO> selectedFCO;
             // selected might be 0 because GeSelectionMark might have returned -1

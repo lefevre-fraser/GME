@@ -532,9 +532,9 @@ void CInspectorList::OnEditorClicked()
 
 bool CInspectorList::InsertItem(CListItem ListItem, int nIndex)
 {
-	int nUpperBound=m_ListItemArray.GetUpperBound();
+	INT_PTR nUpperBound=m_ListItemArray.GetUpperBound();
 
-	if(nIndex>nUpperBound)
+	if (nIndex > nUpperBound)
 	{
 		return AddItem(ListItem);
 	}
@@ -620,7 +620,7 @@ void CInspectorList::GetSelItems(CArray<int,int>&IndexArray,CArray<CListItem,CLi
 bool CInspectorList::AddItem(CListItem ListItem)
 {
 
-	int nUpperBound=m_ListItemArray.GetUpperBound();
+	INT_PTR nUpperBound=m_ListItemArray.GetUpperBound();
 
 	if(!m_bCategories||nUpperBound==-1)
 	{
@@ -680,7 +680,7 @@ bool CInspectorList::AddItem(CListItem ListItem)
 
 void CInspectorList::UpdateItems(CArray<CListItem,CListItem&> &ListItemArray)
 {
-	int nUpperBound=ListItemArray.GetUpperBound();
+	INT_PTR nUpperBound=ListItemArray.GetUpperBound();
 	int nIndex=0;
 
 	for(int i=0;i<=m_ListItemArray.GetUpperBound();i++)
@@ -719,7 +719,7 @@ void CInspectorList::UpdateItems(CArray<CListItem,CListItem&> &ListItemArray)
 		}
 	}
 
-	int nLastElement=m_ListItemArray.GetUpperBound();
+	INT_PTR nLastElement=m_ListItemArray.GetUpperBound();
 	if(nLastElement>=0)
 	{
 		const CListItem& LastListItem=m_ListItemArray.ElementAt(nLastElement);

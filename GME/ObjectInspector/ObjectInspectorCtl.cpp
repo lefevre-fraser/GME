@@ -538,7 +538,7 @@ void CObjectInspectorCtrl::IgnoreNextEvents(void)
 void CObjectInspectorCtrl::RefreshReferencePanel()
 {
 
-	int nCount=m_FCOList.GetCount();
+	INT_PTR nCount=m_FCOList.GetCount();
 
 	if(!m_FolderList.IsEmpty())
 	{		
@@ -569,7 +569,7 @@ void CObjectInspectorCtrl::RefreshReferencePanel()
 
 void CObjectInspectorCtrl::RefreshAttributePanel()
 {
-	int nCount=m_FCOList.GetCount();
+	INT_PTR nCount = m_FCOList.GetCount();
 
 	CArray<CListItem,CListItem&> ListItemArray;
 	
@@ -614,7 +614,7 @@ void CObjectInspectorCtrl::RefreshAttributePanel()
 
 void CObjectInspectorCtrl::RefreshPropertyPanel()
 {
-	int nCount=m_FCOList.GetCount()+m_FolderList.GetCount();
+	INT_PTR nCount = m_FCOList.GetCount() + m_FolderList.GetCount();
 
 	
 	if(nCount==0)
@@ -1082,7 +1082,7 @@ void CObjectInspectorCtrl::RefreshName()
 
 	}
 
-	int nCount=m_FolderList.GetCount()+m_FCOList.GetCount();
+	INT_PTR nCount = m_FolderList.GetCount() + m_FCOList.GetCount();
 	m_inspectorDlg.SetName(strName,(nCount>1),!(nCount<1));
 	
 }

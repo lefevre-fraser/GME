@@ -284,7 +284,7 @@ void CSyntacticSemanticDialog::OnClickConstraintsColumn( NMHDR* pNMHDR, LRESULT*
 
 	void CSyntacticSemanticDialog::DisplayErrorItem()
 	{
-		int iCPos = m_lstConstraints.GetItemData( m_iSelected );
+		INT_PTR iCPos = m_lstConstraints.GetItemData( m_iSelected );
 		int iFunctions = m_vecConstraintFunctions.size();
 		m_lstErrors.SetItemState( m_iSelectedError, LVIS_SELECTED, LVIS_SELECTED );
 

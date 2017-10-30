@@ -403,7 +403,7 @@ bool CItemData::toString(CString& strString)const
 			if(cLineNum>1) // Multiline
 			{			
 				strString.Empty();
-				int nUpperBound=stringVal.GetUpperBound();
+				INT_PTR nUpperBound=stringVal.GetUpperBound();
 				for(int i=0;i<=nUpperBound;i++)
 				{
 					strString+=stringVal[i];

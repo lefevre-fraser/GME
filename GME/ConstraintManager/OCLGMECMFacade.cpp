@@ -748,7 +748,7 @@ namespace OclGmeCM
 				dlgErrors.EnableAbort();
 			}
 
-			int iResult = dlgErrors.DoModal();
+			INT_PTR iResult = dlgErrors.DoModal();
 			m_bViolationDlgExpanded = dlgErrors.IsExpanded();
 			if (punk)
 				dlgErrors.GetGotoPunk(punk);

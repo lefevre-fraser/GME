@@ -64,8 +64,8 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 
 				DisplayMultilineEdit(rectInPlace, ListItem.bIsReadOnly);
 				CString strText; // zolmol modification
-				int uLim = ListItem.Value.stringVal.GetUpperBound(); // if empty uLim == -1
-				for(int i=0;i<=uLim;i++)
+				INT_PTR uLim = ListItem.Value.stringVal.GetUpperBound(); // if empty uLim == -1
+				for(INT_PTR i = 0; i <= uLim; i++)
 				{
 					strText+=ListItem.Value.stringVal[i];
 					if( i != uLim)

@@ -38,15 +38,15 @@ int CStringArrayEx::InsertAtOrder(CString &strElement)
 	TRACE(strElement);
 	TRACE(" ");
 
-	int nMaxElement=CStringArray::GetUpperBound();
+	INT_PTR nMaxElement=CStringArray::GetUpperBound();
 
-	for(int i=0;i<=nMaxElement;i++)
+	for(INT_PTR i = 0; i <= nMaxElement; i++)
 	{
-		bIsGreater=((strElement > CStringArray::ElementAt(i))?true:false);
-		if(false==bIsGreater) // Change
+		bIsGreater = strElement > CStringArray::ElementAt(i);
+		if(false == bIsGreater) // Change
 		{
 			CStringArray::InsertAt(i,strElement);
-			return i;
+			return (int)i;
 		}
 
 	}
