@@ -12,15 +12,19 @@ _opts = type("Options", (object,), {
 
 def DispatchEx(progid):
     import win32com.client
+    import platform
 
     CLSCTX_ALL = 23
+    CLSCTX_INPROC_SERVER = 1
     CLSCTX_LOCAL_SERVER = 4
     CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000
     CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000
     if _opts.Dispatch_x64:
-        return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER | CLSCTX_ACTIVATE_64_BIT_SERVER)
+        if '64bit' not in platform.architecture() or progid == "GME.Application":
+            return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER | CLSCTX_ACTIVATE_64_BIT_SERVER)
+        else:
+            return win32com.client.DispatchEx(progid, clsctx=CLSCTX_INPROC_SERVER)
     else:
-        import platform
         # FIXME: does this work with 64bit Jython?
         if platform.system() != 'Java' and '64bit' in platform.architecture():
             return win32com.client.DispatchEx(progid, clsctx=CLSCTX_LOCAL_SERVER | CLSCTX_ACTIVATE_32_BIT_SERVER)
