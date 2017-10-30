@@ -1003,7 +1003,7 @@ void CInspectorList::OnSize(UINT nType, int cx, int cy)
 
 }
 
-bool CInspectorList::FindByKey(DWORD dwKey,CListItem& FoundListItem )
+bool CInspectorList::FindByKey(void* dwKey,CListItem& FoundListItem )
 {
 	for(int i=0;i<=m_ListItemArray.GetUpperBound();i++)
 	{
@@ -1034,7 +1034,7 @@ bool CInspectorList::FindByKey(DWORD dwKey,CListItem& FoundListItem )
 }
 
 
-bool CInspectorList::FindByKey(DWORD dwKey,DWORD dwUserData, CListItem& FoundListItem )
+bool CInspectorList::FindByKey(void* dwKey,DWORD dwUserData, CListItem& FoundListItem )
 {
 	for(int i=0;i<=m_ListItemArray.GetUpperBound();i++)
 	{
@@ -1065,7 +1065,7 @@ bool CInspectorList::FindByKey(DWORD dwKey,DWORD dwUserData, CListItem& FoundLis
 }
 
 
-void CInspectorList::DeleteByKey(DWORD dwKey, DWORD dwUserData)
+void CInspectorList::DeleteByKey(void* dwKey, DWORD dwUserData)
 {
 	for(int i=0;i<=m_ListItemArray.GetUpperBound();i++)
 	{
@@ -1101,7 +1101,7 @@ void CInspectorList::DeleteByKey(DWORD dwKey, DWORD dwUserData)
 }
 
 
-void CInspectorList::DeleteByKey(DWORD dwKey)
+void CInspectorList::DeleteByKey(void* dwKey)
 {
 
 	for(int i=0;i<=m_ListItemArray.GetUpperBound();i++)

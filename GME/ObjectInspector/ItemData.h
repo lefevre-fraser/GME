@@ -121,7 +121,7 @@ public:
 	bool bIsDifferentValue;
 
 	// User data
-	DWORD dwKeyValue;
+	void* dwKeyValue;
 	DWORD dwUserData;
 
 	CListItem();

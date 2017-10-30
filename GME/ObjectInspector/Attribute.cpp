@@ -122,8 +122,7 @@ void CAttribute::CreateList(const CMgaFCOPtrList& MgaFCOPtrList,CArray<CListItem
 			POSITION posCurrent=m_MetaAttributePtrList.AddTail(ADAPT_META_ATTRIBUTE(ccpMetaAttribute));
 			CListItem ListItem;
 
-			ASSERT(sizeof(POSITION)==sizeof(DWORD)); // Unusual conversion - let us check it
-			if(CreateListItem(ListItem,ccvtFirstValue,bIsDirty,bIsDefault,DWORD(posCurrent)))
+			if(CreateListItem(ListItem,ccvtFirstValue,bIsDirty,bIsDefault,posCurrent))
 			{
 				ListItemArray.Add(ListItem);
 			}
@@ -148,7 +147,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 		CListItem ListItem;
 
 		ListItem.strName = _T("Author");
-		ListItem.dwKeyValue = PROJECT_AUTHOR;
+		ListItem.dwKeyValue = (void*)(size_t)PROJECT_AUTHOR;
 		ListItem.bIsDefault = false;
 		ListItem.bIsDifferentValue = false;
 		ListItem.strToolTip = project_attribute_tooltips[PROJECT_AUTHOR];
@@ -167,7 +166,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 		CListItem ListItem;
 
 		ListItem.strName = _T("Version");
-		ListItem.dwKeyValue = PROJECT_VERSION;
+		ListItem.dwKeyValue = (void*)(size_t)PROJECT_VERSION;
 		ListItem.bIsDefault = false;
 		ListItem.bIsDifferentValue = false;
 		ListItem.strToolTip = project_attribute_tooltips[PROJECT_VERSION];
@@ -186,7 +185,7 @@ void CAttribute::CreateList(CComPtr<IMgaProject> ccpProject, CArray<CListItem,CL
 		CListItem ListItem;
 
 		ListItem.strName = _T("Comment");
-		ListItem.dwKeyValue = PROJECT_COMMENT;
+		ListItem.dwKeyValue = (void*)(size_t)PROJECT_COMMENT;
 		ListItem.bIsDefault = false;
 		ListItem.bIsDifferentValue = false;
 		ListItem.strToolTip = project_attribute_tooltips[PROJECT_COMMENT];
@@ -263,7 +262,7 @@ bool CAttribute::isViewable( const CComPtr<IMgaFCO>& fco, const CComPtr<IMgaMeta
 	*/
 }
 
-bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValue, bool bIsDirty, bool bIsDefault, DWORD dwKey)
+bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValue, bool bIsDirty, bool bIsDefault, POSITION dwKey)
 {
 	
 	CComPtr<IMgaMetaAttribute> ccpMetaAttribute=m_MetaAttributePtrList.GetAt(POSITION(dwKey));
@@ -537,7 +536,7 @@ void CAttribute::WriteItemToMga(CListItem ListItem, CComPtr<IMgaProject> ccpProj
 	strValue.Replace(_T("\r\n"), _T("\n"));
 	CComBSTR bstrValue(strValue);
 
-	switch (ListItem.dwKeyValue) {
+	switch ((size_t)ListItem.dwKeyValue) {
 	case PROJECT_AUTHOR:
 		COMTHROW(ccpProject->put_Author(bstrValue));
 		break;

@@ -67,10 +67,10 @@ public:
 	void RefreshState();
 	void NotifyParent(UINT nSelItem);
 
-	void DeleteByKey(DWORD dwKey);
-	void DeleteByKey(DWORD dwKey, DWORD dwUserData);
-	bool FindByKey(DWORD,CListItem&);
-	bool FindByKey(DWORD, DWORD, CListItem&);
+	void DeleteByKey(void* dwKey);
+	void DeleteByKey(void* dwKey, DWORD dwUserData);
+	bool FindByKey(void*, CListItem&);
+	bool FindByKey(void*, DWORD, CListItem&);
 
 	bool OnRightSideClick(CPoint point);
 	bool OnPlusMinusClick(CPoint point);

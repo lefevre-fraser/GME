@@ -739,7 +739,7 @@ void CPreference::CreateListItem(CArray<CListItem,CListItem&> &ListItems,
 	ListItem.strToolTip=(*pTableRow)[4];
 	ListItem.bIsDefault=bIsDefault;
 	ListItem.bIsDifferentValue=!bSameValueForAll;
-	ListItem.dwKeyValue=(DWORD)nKey;
+	ListItem.dwKeyValue = nKey;
 	ListItem.dwUserData=0;
 
 	CString strPrefName=(*pTableRow)[1];

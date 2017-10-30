@@ -26,7 +26,7 @@ public:
 	void WriteItemToMga(CListItem ListItem, CComPtr<IMgaProject> ccpProject);
 	
 private:
-	bool CreateListItem(CListItem& ListItem, const CComVariant& ccvtValue, bool bIsDirty, bool bIsDefault, DWORD dwKey);
+	bool CreateListItem(CListItem& ListItem, const CComVariant& ccvtValue, bool bIsDirty, bool bIsDefault, POSITION dwKey);
 	bool isViewable( const CComPtr<IMgaFCO>& r, const CComPtr<IMgaMetaAttribute>& a) const;
 };
 
