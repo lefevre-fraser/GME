@@ -89,7 +89,7 @@ void CCompDlg::OnAllCompsHeader(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NMLISTVIEW *pLV = (NMLISTVIEW *) pNMHDR;
 	SortParam s = { this, pLV->iItem };
-	m_list.SortItemsEx(SortFunc, (DWORD)(void*)&s);
+	m_list.SortItemsEx(SortFunc, (DWORD_PTR)(void*)&s);
 	
 	*pResult = 0;
 }

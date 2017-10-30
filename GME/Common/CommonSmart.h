@@ -427,7 +427,7 @@ public:
 	template<> PutInBstr(const BSTR& a) : b(a) { }
 
 	template<> PutInBstr(const std::wstring& t) {
-		b.p = SysAllocStringLen(t.c_str(), t.length());
+		b.p = SysAllocStringLen(t.c_str(), (UINT)t.length());
 	}
 
 	operator BSTR () { return b; }

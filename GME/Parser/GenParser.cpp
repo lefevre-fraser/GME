@@ -154,7 +154,7 @@ void CGenParser::startElement(const XMLCh* const name, AttributeList& attrlist)
 	{
 		attributes_type attributes;
 
-		unsigned int len = attrlist.getLength();
+		unsigned int len = (unsigned int)attrlist.getLength();
 		for(unsigned int index = 0; index < len; index++)
 		{
 			attributes.push_back( std::pair<std::tstring,std::tstring>(

@@ -93,7 +93,7 @@ void CGMEOLEColl::CheckIndex(long nIndex)
 LPUNKNOWN CGMEOLEColl::GetNewEnum()
 {
 	std::unique_ptr<CEnumVariant> pEnum(new CEnumVariant);
-	int nCount = m_ptrArray.GetSize();
+	int nCount = (int)m_ptrArray.GetSize();
 	std::unique_ptr<VARIANT[]> pContents(new VARIANT[nCount]);
 	int i;
 
@@ -124,7 +124,7 @@ LPUNKNOWN CGMEOLEColl::GetNewEnum()
 
 long CGMEOLEColl::GetCount()
 {
-	return m_ptrArray.GetSize();
+	return (long)m_ptrArray.GetSize();
 }
 
 LPDISPATCH CGMEOLEColl::GetItem(long nIndex)
@@ -150,7 +150,7 @@ void CGMEOLEColl::Add(LPDISPATCH newValue)
 
 long CGMEOLEColl::Find(LPDISPATCH findValue)
 {
-	int nCount = m_ptrArray.GetSize();
+	int nCount = (int)m_ptrArray.GetSize();
 	for (int i = 0; i < nCount; ++i)
 	{
 		if (m_ptrArray.ElementAt(i) == findValue)

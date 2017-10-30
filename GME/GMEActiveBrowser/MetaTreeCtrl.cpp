@@ -45,7 +45,7 @@ HTREEITEM CMetaTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectName, LP
 		HTREEITEM hItem=CTreeCtrlEx::InsertItem(strObjectName,(int)otObjectType,(int)otObjectType,hParent,TVI_SORT);	
 		HTREEITEM hRefItem;
 		m_MgaMap.LookupTreeItem(pUnknown,hRefItem); // Search for the handle of the inserted element
-		SetItemData(hItem,(DWORD)hRefItem); // Set item data to reference that
+		SetItemData(hItem,(DWORD_PTR)hRefItem); // Set item data to reference that
 		return NULL;
 	}
 	else
@@ -53,7 +53,7 @@ HTREEITEM CMetaTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectName, LP
 		HTREEITEM hItem=CTreeCtrlEx::InsertItem(strObjectName,(int)otObjectType,(int)otObjectType,hParent,TVI_SORT);	
 		CMgaObjectProxy ObjectProxy(pUnknown,otObjectType);
 		m_MgaMap.AddEntry(hItem,ObjectProxy);
-		SetItemData(hItem,(DWORD)0); // Set to zero if this is the first and hence no referenced element
+		SetItemData(hItem,(DWORD_PTR)0); // Set to zero if this is the first and hence no referenced element
 		return hItem;
 	}
 }

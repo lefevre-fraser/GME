@@ -531,8 +531,12 @@ bool libraryNameEqual( CComBSTR n1, CComBSTR n2)
 	// return false if both are not libraries
 	if ( s1.find("MGA=") == std::string::npos || s2.find("MGA=") == std::string::npos) return false;
 
-	int i1 = s1.length() - 1; while ( i1 >= 0 && s1[i1] != '\\' && s1[i1] != ':' && s1[i1] != '=') --i1; //int i1 = s1.rfind( '\\' || '=');
-	int i2 = s2.length() - 1; while ( i2 >= 0 && s2[i2] != '\\' && s2[i2] != ':' && s2[i2] != '=') --i2; //int i2 = s2.rfind( '\\' || '=');
+	int i1 = s1.length() - 1;
+	while ( i1 >= 0 && s1[i1] != '\\' && s1[i1] != ':' && s1[i1] != '=')
+		--i1; //int i1 = s1.rfind( '\\' || '=');
+	int i2 = s2.length() - 1;
+	while ( i2 >= 0 && s2[i2] != '\\' && s2[i2] != ':' && s2[i2] != '=')
+		--i2; //int i2 = s2.rfind( '\\' || '=');
 	
 	if ( i1 >= 0) s1 = s1.substr( i1 + 1, s1.length() - i1 - 1); 
 	if ( i2 >= 0) s2 = s2.substr( i2 + 1, s2.length() - i2 - 1);

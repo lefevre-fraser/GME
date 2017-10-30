@@ -319,7 +319,7 @@ inline void CMgaDumper::StartElem(const TCHAR *name)
 	elems.back().inbody = false;
 	elems.back().indata = false;
 
-	Indent(elems.size()-1);
+	Indent((int)elems.size()-1);
 	ofs << L'<' << name;
 }
 
@@ -381,7 +381,7 @@ inline void CMgaDumper::EndElem()
 	if( elems.back().inbody )
 	{
 		if( !elems.back().indata )
-			Indent(elems.size()-1);
+			Indent((int)elems.size()-1);
 
 		ofs << L"</" << elems.back().name << L">\n";
 	}

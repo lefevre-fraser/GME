@@ -164,7 +164,7 @@ void CRegistryTree::OnCntxAddnode()
 	int imageNum;
 	dlg->m_imageMap.Lookup(IDI_ICON_REGHERE, imageNum);
 	newNode->handle = InsertItem(newNode->name, imageNum, imageNum, hItem, TVI_LAST);
-	SetItemData((HTREEITEM)newNode->handle, (DWORD) newNode);
+	SetItemData((HTREEITEM)newNode->handle, (DWORD_PTR) newNode);
 
 	dlg->m_nodes.AddTail(newNode);
     if (hItem)

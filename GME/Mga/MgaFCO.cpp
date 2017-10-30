@@ -910,7 +910,7 @@ HRESULT get_Modifications(FCO *fco, unsigned long changemask, CComVariant *mods)
 		SAFEARRAY *pVariantsArray = NULL;
 		SAFEARRAYBOUND rgsabound[1];
 		rgsabound[0].lLbound = 0;
-		rgsabound[0].cElements = modifications.size();
+		rgsabound[0].cElements = (ULONG)modifications.size();
 		pVariantsArray = SafeArrayCreate(VT_VARIANT, 1, rgsabound);
 		for (LONG i=0; i<LONG(modifications.size()); i++) {
 			COMTHROW(SafeArrayPutElement(pVariantsArray, &i, &modifications[i]));

@@ -560,7 +560,7 @@ void CInPlaceManager::OnClickArrowButton(bool rightSideClick)
 		}break;
 	case ITEMDATA_FIXED_LIST:
 		{
-			rectWnd.bottom += min(ListItem.Value.stringVal.GetSize(), 8) 
+			rectWnd.bottom += min((long)ListItem.Value.stringVal.GetSize(), 8) 
 				* m_pInspectorList->m_ComboboxLineHeight + 2;
 			DisplayCombo(rectWnd);
 		}break;

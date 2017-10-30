@@ -1951,7 +1951,7 @@ void RefreshManager::copyNewArrivals( CoreObj& p_adaptiveObj, std::vector< CoreO
 									 , SET_CREALIST& p_sets, REF_CREALIST& p_refs)
 {
 	int targetlevel = 0;
-	unsigned int cnt = p_newComers.size();
+	unsigned int cnt = (unsigned int)p_newComers.size();
 	CoreObj rootp;
 	GetRootOfDeriv( p_adaptiveObj, rootp, &targetlevel);
 

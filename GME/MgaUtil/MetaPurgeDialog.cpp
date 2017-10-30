@@ -171,6 +171,7 @@ void CMetaPurgeDialog::OnParadigmsHeader(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NMLISTVIEW *pLV = (NMLISTVIEW *) pNMHDR;
 	SortParam s = { this->m_list, pLV->iSubItem };
+	// FIXME x64: pointer may be truncated (but it is on the stack so we are probably ok)
 	m_list.SortItemsEx(SortFunc, (DWORD)(void*)&s);
 	
 	*pResult = 0;

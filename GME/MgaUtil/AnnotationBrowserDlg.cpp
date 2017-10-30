@@ -125,7 +125,7 @@ BOOL CAnnotationBrowserDlg::OnInitDialog()
 	ctrlSize = clientRect.Width();
 	m_wndAnnotationAspectList.InsertColumn(0, _T("Aspect"), LVCFMT_LEFT,  ctrlSize, -1);
 
-	DWORD dwStyle = ::SendMessage(m_wndAnnotationAspectList.GetSafeHwnd(),LVM_GETEXTENDEDLISTVIEWSTYLE,0,0);
+	LPARAM dwStyle = ::SendMessage(m_wndAnnotationAspectList.GetSafeHwnd(),LVM_GETEXTENDEDLISTVIEWSTYLE,0,0);
 	dwStyle |= LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES ;
 	::SendMessage(m_wndAnnotationAspectList.GetSafeHwnd(),LVM_SETEXTENDEDLISTVIEWSTYLE,0,dwStyle);
 

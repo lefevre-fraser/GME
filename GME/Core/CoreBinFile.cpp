@@ -734,7 +734,7 @@ void CCoreBinFile::write(const bindata &b)
 {
 	ASSERT( ofs.is_open() );
 
-	int len = b.size();
+	int len = (int)b.size();
 	ASSERT( len >= 0 );
 	
 	write(len);

@@ -274,7 +274,7 @@ void CRegistryBrowserDlg::AddNodes(CRegBrwNode *parent, CComPtr<IMgaRegNodes> &r
 		}
 
 		brNode->handle = (void*)hnd;
-		m_wndRegistryTree.SetItemData(hnd,(DWORD)brNode);
+		m_wndRegistryTree.SetItemData(hnd,(DWORD_PTR)brNode);
 		
 		int imageNum;
 		switch (brNode->status) {

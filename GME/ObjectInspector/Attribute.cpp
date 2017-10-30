@@ -330,14 +330,14 @@ bool CAttribute::CreateListItem(CListItem &ListItem, const CComVariant &ccvtValu
 					CString strValue=CComBSTR(ccvtValue.bstrVal);
 					CStringArray strValueArray;
 					str_split(strValue, strValueArray);
-					int nLineNum = max(nLineNumMin, strValueArray.GetCount());
+					int nLineNum = max(nLineNumMin, (int)strValueArray.GetCount());
 					ListItem.Value.SetStringValue(strValueArray, nLineNum);
 
 					// Setting default value
 					CString strDefValue=CComBSTR(ccvtDefValue.bstrVal);
 					CStringArray strDefValueArray;
 					strDefValueArray.Add(strDefValue);
-					nLineNum = max(nLineNum, max(nLineNumMin, strDefValueArray.GetCount()));
+					nLineNum = max(nLineNum, max(nLineNumMin, (int)strDefValueArray.GetCount()));
 					ListItem.DefValue.SetStringValue(strDefValueArray, nLineNum);
 
 				}

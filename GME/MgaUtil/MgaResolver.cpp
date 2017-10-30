@@ -1173,7 +1173,7 @@ STDMETHODIMP CMgaResolver::get_AttrByStr(IMgaFCO *parent,
 				} // eo for()
 				MGACOLL_ITERATE_END;
 
-                int dlgres = cdl.DoModal();
+                INT_PTR dlgres = cdl.DoModal();
                 if( dlgres == IDIGNORE )
                 {
                     *p = NULL;

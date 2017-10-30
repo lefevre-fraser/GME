@@ -677,7 +677,7 @@ void CGuiMetaAspect::InitContextMenu(CMenu* menu, const CString& label, CDynMenu
 		CMenu& dmm = dm->GetMenu();
 		menu->InsertMenu(pos, MF_BYPOSITION | MF_POPUP |
 			(dm->GetCount() > 0 ? MF_ENABLED : (MF_DISABLED | MF_GRAYED)),
-			(UINT)dmm.m_hMenu, label);
+			(UINT_PTR)dmm.m_hMenu, label);
 	}
 
 }

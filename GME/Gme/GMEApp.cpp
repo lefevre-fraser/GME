@@ -954,8 +954,8 @@ void CGMEApp::UpdateComponentToolbar()
 
 
 		// Traversing  the plugins and interpreters
-		int plugins_size = min(plugins.GetSize(), ID_FILE_RUNPLUGIN_LAST - ID_FILE_RUNPLUGIN1);
-		int interpreters_size = min(interpreters.GetSize(), ID_FILE_INTERPRET_LAST - ID_FILE_INTERPRET1);
+		int plugins_size = min((int)plugins.GetSize(), ID_FILE_RUNPLUGIN_LAST - ID_FILE_RUNPLUGIN1);
+		int interpreters_size = min((int)interpreters.GetSize(), ID_FILE_INTERPRET_LAST - ID_FILE_INTERPRET1);
 		for(int i = 0; i < plugins_size + interpreters_size; ++i)
 		{
 			// Querying component name
@@ -1044,7 +1044,7 @@ void CGMEApp::UpdateComponentToolbar()
 			ASSERT(succ == TRUE);
 
 			// Adding button
-			INT_PTR commandID = (i < plugins_size) ? ID_FILE_RUNPLUGIN1 + i : ID_FILE_INTERPRET1 + i - plugins_size;
+			UINT commandID = (i < plugins_size) ? ID_FILE_RUNPLUGIN1 + i : ID_FILE_INTERPRET1 + i - plugins_size;
 			CMFCToolBarButton toolBarButton(commandID, nIndex, componentName + '\n' + toolTip, TRUE);
 
 			VERIFY(componentBar.InsertButton(toolBarButton) != -1);

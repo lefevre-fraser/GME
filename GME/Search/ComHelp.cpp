@@ -58,7 +58,7 @@ SAFEARRAY* CIUnknownPtrList::Store()
 {
 	SAFEARRAY *psa;
 
-	psa = SafeArrayCreateVector(VT_UNKNOWN, 0, GetCount());
+	psa = SafeArrayCreateVector(VT_UNKNOWN, 0, (ULONG)GetCount());
 	ASSERT(psa);
 
 	IUnknown* *p;
@@ -132,7 +132,7 @@ SAFEARRAY* StoreBstrSafeArray(CStringList& source)
 {
 	SAFEARRAY *psa;
 
-	psa = SafeArrayCreateVector(VT_BSTR, 0, source.GetCount());
+	psa = SafeArrayCreateVector(VT_BSTR, 0, (ULONG)source.GetCount());
 	ASSERT(psa);
 
 	BSTR *p;

@@ -289,7 +289,7 @@ public:
 //start and index are 1-based, index is 0 if not found
 	STDMETHOD(Find)(ITFTYPE* pvar, long start, long *index) {
 
-		if(start == 0) start = m_coll.size();
+		if(start == 0) start = (long) m_coll.size();
 		else start--;
 		if((unsigned long)start > m_coll.size()) return E_FAIL;
 		if (pvar == NULL)
@@ -298,7 +298,7 @@ public:
 		COLLTYPE::iterator iter = m_coll.begin()+start;
 		while (iter != m_coll.end()) {
 			if(pvar == *iter) {
-				*index = m_coll.begin() - iter + 1;
+				*index = (long)(m_coll.begin() - iter + 1);
 				return S_OK;
 			}
 			++iter;
@@ -311,7 +311,7 @@ public:
 	STDMETHOD(Insert)(ITFTYPE* pvar, long pos) {
 		// this fuction must be supplied by the user for CollectionEx to compile
 		// extern HRESULT check_location_compatibility(ITFTYPE *newobj, ITFTYPE *oldobj);
-		if(pos == 0) pos = m_coll.size();
+		if(pos == 0) pos = (long)m_coll.size();
 		else pos--;
 		if((unsigned long)pos > m_coll.size()) return E_FAIL;
 		if (pvar == NULL)
@@ -331,7 +331,7 @@ public:
 	}
 
 	STDMETHOD(Remove)(long pos) {
-		if(pos == 0) pos = m_coll.size();
+		if(pos == 0) pos = (long)m_coll.size();
 		else pos--;
 		if((unsigned long)pos > m_coll.size()) return E_FAIL;
 		GETALL_COPYTYPE::destroy(&(m_coll[0])+pos);

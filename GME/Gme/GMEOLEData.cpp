@@ -116,7 +116,7 @@ bool CGMEDataDescriptor::Load(COleDataObject* pDataObject)
 int CGMEDataDescriptor::GetCount()
 {
 	/* return (rects.GetCount() + annRects.GetCount()); */
-	return rects.GetCount(); 
+	return (int)rects.GetCount(); 
 }
 
 void CGMEDataDescriptor::Clean()

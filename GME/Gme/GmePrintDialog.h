@@ -57,7 +57,7 @@ public:
 		if (m_selasp == CUR_ASP)
 			return 1;
 		else
-			return m_selAspects.size();
+			return (int)m_selAspects.size();
 	}
 	bool HasHeader() {return m_noheader == FALSE;}
 	bool IsAutorotate() {return m_autorotate != FALSE;}

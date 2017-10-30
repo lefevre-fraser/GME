@@ -793,7 +793,7 @@ void CAggregateContextMenu::SetFolderChildren(LPUNKNOWN pUnknown)
 	// will automatically destroy it
 	if(mnuInsertFolder.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertFolder.GetSafeHmenu(),_T("Insert &Folder"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertFolder.GetSafeHmenu(),_T("Insert &Folder"));
 		mnuInsertFolder.Detach();
 	}
 
@@ -868,28 +868,28 @@ void CAggregateContextMenu::SetFolderChildren(LPUNKNOWN pUnknown)
 	// Append Atom
 	if(mnuInsertAtom.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertAtom.GetSafeHmenu(),_T("Insert &Atom"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertAtom.GetSafeHmenu(),_T("Insert &Atom"));
 		mnuInsertAtom.Detach();
 	}
 	
 	// Append Model
 	if(mnuInsertModel.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertModel.GetSafeHmenu(),_T("Insert &Model"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertModel.GetSafeHmenu(),_T("Insert &Model"));
 		mnuInsertModel.Detach();
 	}
 
 	// Append Reference
 	if(mnuInsertReference.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertReference.GetSafeHmenu(),_T("Insert &Reference"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertReference.GetSafeHmenu(),_T("Insert &Reference"));
 		mnuInsertReference.Detach();
 	}
 
 	// Append Set
 	if(mnuInsertSet.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertSet.GetSafeHmenu(),_T("Insert &Set"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertSet.GetSafeHmenu(),_T("Insert &Set"));
 		mnuInsertSet.Detach();
 	}
 
@@ -1014,28 +1014,28 @@ void CAggregateContextMenu::SetModelChildren(LPUNKNOWN pUnknown)
 	// Append Atom
 	if(mnuInsertAtom.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertAtom.GetSafeHmenu(),_T("Insert &Atom"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertAtom.GetSafeHmenu(),_T("Insert &Atom"));
 		mnuInsertAtom.Detach();
 	}
 	
 	// Append Model
 	if(mnuInsertModel.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertModel.GetSafeHmenu(),_T("Insert &Model"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertModel.GetSafeHmenu(),_T("Insert &Model"));
 		mnuInsertModel.Detach();
 	}
 
 	// Append Reference
 	if(mnuInsertReference.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertReference.GetSafeHmenu(),_T("Insert &Reference"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertReference.GetSafeHmenu(),_T("Insert &Reference"));
 		mnuInsertReference.Detach();
 	}
 
 	// Append Set
 	if(mnuInsertSet.GetMenuItemCount()!=NULL) 
 	{
-		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT)mnuInsertSet.GetSafeHmenu(),_T("Insert &Set"));
+		InsertMenu(ID_POPUP_INSERTIONS,MF_POPUP|MF_STRING,(UINT_PTR)mnuInsertSet.GetSafeHmenu(),_T("Insert &Set"));
 		mnuInsertSet.Detach();
 	}
 }

@@ -116,7 +116,7 @@ void CopyTo(const CComBstrObj *start, const CComBstrObj *end, SAFEARRAY **p)
 	ASSERT( p != NULL && *p == NULL );
 	ASSERT( start <= end );
 
-	*p = SafeArrayCreateVector(VT_BSTR, 1, end - start);
+	*p = SafeArrayCreateVector(VT_BSTR, 1, (ULONG)(end - start));
 	if( *p == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
@@ -151,7 +151,7 @@ void MoveTo(CComBstrObj *start, CComBstrObj *end, SAFEARRAY **p)
 	ASSERT( p != NULL && *p == NULL );
 	ASSERT( start <= end );
 
-	*p = SafeArrayCreateVector(VT_BSTR, 1, end - start);
+	*p = SafeArrayCreateVector(VT_BSTR, 1, (ULONG)(end - start));
 	if( *p == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
@@ -186,7 +186,7 @@ void CopyTo(const unsigned char *start, const unsigned char *end, SAFEARRAY **p)
 	ASSERT( p != NULL && *p == NULL );
 	ASSERT( start <= end );
 
-	*p = SafeArrayCreateVector(VT_UI1, 1, end - start);
+	*p = SafeArrayCreateVector(VT_UI1, 1, (ULONG)(end - start));
 	if( *p == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
@@ -222,7 +222,7 @@ void CopyTo(const long *start, const long *end, SAFEARRAY **p)
 	ASSERT( p != NULL && *p == NULL );
 	ASSERT( start <= end );
 
-	*p = SafeArrayCreateVector(VT_I4, 1, end - start);
+	*p = SafeArrayCreateVector(VT_I4, 1, (ULONG)(end - start));
 	if( *p == NULL )
 		HR_THROW(E_OUTOFMEMORY);
 
@@ -258,7 +258,7 @@ void CopyTo(const GUID *start, const GUID *end, SAFEARRAY **p)
 	ASSERT( start <= end );
 
 	SAFEARRAYBOUND bounds[2];
-	bounds[0].cElements = end - start;
+	bounds[0].cElements = (ULONG)(end - start);
 	bounds[0].lLbound = 1;
 	bounds[1].cElements = sizeof(GUID);
 	bounds[1].lLbound = 0;

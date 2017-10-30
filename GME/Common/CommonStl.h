@@ -24,10 +24,10 @@ inline void CopyTo(const std::string::const_iterator i, int l, CComVariant &a){}
 inline void CopyTo(BSTR b, std::string::iterator i, int l) {}
 inline void CopyTo(VARIANT &v, std::string::iterator i, int l) {}
 */
-inline void CopyTo(const std::string &s, BSTR *b) { CopyTo( s.c_str(), s.length(), b); }
-inline void CopyTo(const std::string &s, VARIANT *v) { CopyTo(s.c_str(), s.length(), v); }
-inline void CopyTo(const std::string &s, CComBstrObj &a) { CopyTo(s.c_str(), s.length(), a); }
-inline void CopyTo(const std::string &s, CComVariant &a) { CopyTo(s.c_str(), s.length(), a); }
+inline void CopyTo(const std::string &s, BSTR *b) { CopyTo( s.c_str(), (int)s.length(), b); }
+inline void CopyTo(const std::string &s, VARIANT *v) { CopyTo(s.c_str(), (int)s.length(), v); }
+inline void CopyTo(const std::string &s, CComBstrObj &a) { CopyTo(s.c_str(), (int)s.length(), a); }
+inline void CopyTo(const std::string &s, CComVariant &a) { CopyTo(s.c_str(), (int)s.length(), a); }
 
 inline void CopyTo(BSTR b, std::string &s)
 {

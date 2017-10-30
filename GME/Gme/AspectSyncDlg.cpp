@@ -75,14 +75,14 @@ BOOL CAspectSyncDlg::OnInitDialog()
 		CGuiMetaAspect *metaAspect = m_allAspects.GetNext(apos);
 		
 		int nItem = m_srcAspectCombo.AddString(metaAspect->name);
-		m_srcAspectCombo.SetItemData(nItem, (DWORD)metaAspect);
+		m_srcAspectCombo.SetItemData(nItem, (DWORD_PTR)metaAspect);
 
 		if (m_srcAspect == metaAspect) {
 			m_srcAspectCombo.SetCurSel(nItem);
 		}
 
 		nItem = m_dstAspectList.InsertItem(aspectCount++, metaAspect->name);
-		m_dstAspectList.SetItemData(nItem, (DWORD)metaAspect);
+		m_dstAspectList.SetItemData(nItem, (DWORD_PTR)metaAspect);
 		if (m_srcAspect != metaAspect) {
 			m_dstAspectList.SetItemState(nItem, LVIS_SELECTED, LVIS_SELECTED);
 		} else {

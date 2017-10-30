@@ -136,7 +136,7 @@ HTREEITEM CAggregateTreeCtrl::InsertItem(HTREEITEM hParent, CString strObjectNam
 	strObjectName.ReleaseBuffer();
 
 	// tvInsert.item.iImage = 0;
-	SetItemData(hItem,(DWORD)hItem);
+	SetItemData(hItem,(DWORD_PTR)hItem);
 	
 	CAggregateMgaObjectProxy ObjectProxy(pUnknown, otObjectType);
 	CAggregateMgaObjectProxy& insertedProxy = m_MgaMap.AddEntry(hItem, ObjectProxy);

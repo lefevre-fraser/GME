@@ -543,7 +543,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			else
 				iImNum = eType + 10;
 			HTREEITEM hItem = m_treeObjects.InsertItem( uiMask, OclCommonEx::Convert( strKind ), iImNum, iImNum, iImNumS << 12 , TVIS_STATEIMAGEMASK, NULL, TVI_ROOT, TVI_LAST );
-			m_treeObjects.SetItemData( hItem, ( DWORD ) hItem );
+			m_treeObjects.SetItemData( hItem, (DWORD_PTR) hItem );
 			m_mapH2ID.insert( MapH2ID::value_type( hItem, strKind ) );
 			m_mapID2H.insert( MapID2H::value_type( strKind, hItem ) );
 		}
@@ -592,7 +592,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		UINT uiMask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE | TVIF_TEXT;
 		int iImNum = spConstraint->GetType();
 		HTREEITEM hItem = m_treeConstraints.InsertItem( uiMask, OclCommonEx::Convert( spConstraint->GetFullName() ), iImNum, iImNum, iImNumS << 12 , TVIS_STATEIMAGEMASK, NULL, TVI_ROOT, TVI_LAST );
-		m_treeConstraints.SetItemData( hItem, ( DWORD ) hItem );
+		m_treeConstraints.SetItemData( hItem, (DWORD_PTR) hItem );
 		if ( iImNumS == CSIMG_OK ) {
 			ConstraintVectorMap::iterator it = m_mapConstraints.find( spConstraint->GetContextType() );
 			if ( it == m_mapConstraints.end() )
@@ -625,7 +625,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			int iImNum = vecConstraints[ i ]->GetType();
 			int iImNumS = ( vecConstraints[ i ]->GetLocation() != OclGme::ConstraintBase::CL_PROJECT && vecConstraints[ i ]->GetPriority() == 1 ) ? NS_CHECKED_DISABLED : NS_CHECKED;
 			HTREEITEM hCItem = m_treeObjects.InsertItem( uiMask, OclCommonEx::Convert( vecConstraints[ i ]->GetFullName() ), iImNum, iImNum, iImNumS << 12 , TVIS_STATEIMAGEMASK, NULL, hItem, TVI_LAST );
-			m_treeObjects.SetItemData( hCItem, ( DWORD ) hCItem );
+			m_treeObjects.SetItemData( hCItem, (DWORD_PTR)hCItem );
 		}
 		m_treeObjects.SETSTATE( hItem, (int) ( ( vecConstraints.size() == 0 ) ? NS_UNCHECKED_DISABLED : NS_CHECKED ) );
 
@@ -678,7 +678,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		int iImNumS = NS_UNKNOWN;
 		UINT uiMask = TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE | TVIF_TEXT;
 		HTREEITEM hItem = m_treeObjects.InsertItem( uiMask, OclCommonEx::Convert( strName ), iImNum, iImNum, iImNumS << 12 , TVIS_STATEIMAGEMASK, NULL, hParent, TVI_LAST );
-		m_treeObjects.SetItemData( hItem, ( DWORD ) hItem );
+		m_treeObjects.SetItemData( hItem, (DWORD_PTR)hItem );
 		m_mapH2ID.insert( MapH2ID::value_type( hItem, OclCommonEx::Convert( strID ) ) );
 		m_mapID2H.insert( MapID2H::value_type( OclCommonEx::Convert( strID ), hItem ) );
 
@@ -689,7 +689,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 			int iImCNum = vecConstraints[ i ]->GetType();
 			int iImCNumS = NS_UNKNOWN;
 			HTREEITEM hCItem = m_treeObjects.InsertItem( uiMask, OclCommonEx::Convert( vecConstraints[ i ]->GetFullName() ), iImCNum, iImCNum, iImCNumS << 12 , TVIS_STATEIMAGEMASK, NULL, hItem, TVI_LAST );
-			m_treeObjects.SetItemData( hCItem, ( DWORD ) hCItem );
+			m_treeObjects.SetItemData( hCItem, (DWORD_PTR)hCItem );
 
 			// Determine state
 
@@ -915,7 +915,7 @@ void CConstraintBrowserDialog::OnSelectionChangedTreeObjects(NMHDR* pNMHDR, LRES
 		else
 			iImNum = eType + 10;
 		HTREEITEM hItem = m_treeObjects.InsertItem( uiMask, OclCommonEx::Convert( strKind ), iImNum, iImNum, iImNumS << 12 , TVIS_STATEIMAGEMASK, NULL, TVI_ROOT, TVI_LAST );
-		m_treeObjects.SetItemData( hItem, ( DWORD ) hItem );
+		m_treeObjects.SetItemData( hItem, (DWORD_PTR)hItem );
 		m_mapH2ID.insert( MapH2ID::value_type( hItem, strKind ) );
 		m_mapID2H.insert( MapID2H::value_type( strKind, hItem ) );
 
