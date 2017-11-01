@@ -160,8 +160,8 @@ struct SortParam {
 int CALLBACK CMetaPurgeDialog::SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort) {
 	SortParam& param = *(SortParam*)lParamSort;
 	
-	CString a = param.list.GetItemText(lParam1, param.columnIndex);
-	CString b = param.list.GetItemText(lParam2, param.columnIndex);
+	CString a = param.list.GetItemText(static_cast<int>(lParam1), param.columnIndex);
+	CString b = param.list.GetItemText(static_cast<int>(lParam2), param.columnIndex);
 
 	return _tcsicmp(a, b);
 }
@@ -171,8 +171,7 @@ void CMetaPurgeDialog::OnParadigmsHeader(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NMLISTVIEW *pLV = (NMLISTVIEW *) pNMHDR;
 	SortParam s = { this->m_list, pLV->iSubItem };
-	// FIXME x64: pointer may be truncated (but it is on the stack so we are probably ok)
-	m_list.SortItemsEx(SortFunc, (DWORD)(void*)&s);
+	m_list.SortItemsEx(SortFunc, (DWORD_PTR)(void*)&s);
 	
 	*pResult = 0;
 }
