@@ -780,7 +780,31 @@ STDMETHODIMP CMgaProject::GetObjectByID(BSTR id, IMgaObject **pVal)
 		CoreObj obj;
 		COMTHROW(dataproject->get_Object(mm,ss,&obj.ComPtr()));
 		if (obj)
-			ObjForCore(obj)->getinterface(pVal);
+		{
+			IMgaObject *ret;
+			ObjForCore(obj)->getinterface(&ret);
+			if (ret == NULL)
+			{
+				// this should never happen
+				ASSERT(false);
+				obj->Delete();
+				COMTHROW(E_NOTFOUND);
+			}
+			// get_Object will create an object if the ID does not exist
+			// need to read from core storage to test if it exists
+			_bstr_t name;
+			HRESULT hr = ret->get_Name(name.GetAddress());
+			if (SUCCEEDED(hr)) {
+				*pVal = ret;
+				return S_OK;
+			}
+			else
+			{
+				obj->Delete();
+				ret->Release();
+				COMTHROW(hr);
+			}
+		}
 		else
 			COMTHROW(E_MGA_BAD_ID);
     } COMCATCH(;);
