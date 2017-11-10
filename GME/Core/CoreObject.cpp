@@ -40,12 +40,13 @@ CComObjPtr<CCoreObject> CCoreObject::Create(CCoreProject *project, metaid_type m
 	CComObjPtr<CCoreObject> object;
 	CreateComObject(object);
 
+	project->RegisterObject(metaid, objid, object);
+
 	// nothing will throw here
 	object->project = project;
 	object->objid = objid;
 	object->metaobject = metaobject;
 
-	project->RegisterObject(metaid, objid, object);
 	// the object is ready for deletion
 
 	object->CreateAttributes();

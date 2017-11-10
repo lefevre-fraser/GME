@@ -677,7 +677,11 @@ void CCoreProject::RegisterObject(metaid_type metaid, objid_type objid, CCoreObj
 	idpair.objid = objid;
 
 	ASSERT( object_lookup.find(idpair) == object_lookup.end() );
-	object_lookup.insert( object_lookup_type::value_type(idpair, object) );
+	auto old = object_lookup.insert( object_lookup_type::value_type(idpair, object) );
+	if (old.second != true) {
+		// this can happen if the user calls MgaProject::GetObjectByID with and ID that doesn't exist, and then we create an object with that ID
+		COMTHROW(E_INVALIDARG);
+	}
 }
 
 void CCoreProject::UnregisterObject(metaid_type metaid, objid_type objid)

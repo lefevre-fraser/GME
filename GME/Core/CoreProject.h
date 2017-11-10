@@ -186,7 +186,7 @@ public:
 
 	CComObjPtr<CCoreObject> CreateObject(metaid_type metaid);
 
-	void RegisterObject(metaid_type metaid, objid_type objid, CCoreObject *object) NOTHROW;
+	void RegisterObject(metaid_type metaid, objid_type objid, CCoreObject *object);
 	void UnregisterObject(metaid_type metaid, objid_type objid) NOTHROW;
 
 	void CastProject(ICoreProject *project) const;		// throws E_SAMEPROJECT
