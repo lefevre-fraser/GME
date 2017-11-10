@@ -110,6 +110,23 @@ class TestInstances(unittest.TestCase):
         self.project.CommitTransaction()
 
     @dec_disable_early_binding
+    def test_DetachFromArcheType_Attrs(self):
+        self.project = GPyUnit.util.parse_xme(self.connstr)
+        self.project.BeginTransactionInNewTerr()
+        aspects = self.project.RootFolder.GetObjectByPathDisp("/@Aspects")
+        aspect = self.project.RootFolder.GetObjectByPathDisp("/@Aspects/@Aspect")
+        subtype = self.project.RootFolder.DeriveRootObject(aspects, False)
+        instance = self.project.RootFolder.DeriveRootObject(subtype, True)
+
+        aspect.SetStrAttrByNameDisp("GeneralPreferences", "test123")
+        aspect_instance = instance.GetObjectByPathDisp("/@Aspect")
+        self.assertEquals(aspect.GetStrAttrByNameDisp("GeneralPreferences"), aspect_instance.GetStrAttrByNameDisp("GeneralPreferences"))
+
+        instance.DetachFromArcheType()
+        self.assertEquals(aspect.GetStrAttrByNameDisp("GeneralPreferences"), aspect_instance.GetStrAttrByNameDisp("GeneralPreferences"))
+        self.project.CommitTransaction()
+
+    @dec_disable_early_binding
     def test_RemoveArchetypeConnpoint(self):
         self.project = GPyUnit.util.parse_xme(self.connstr)
         self.project.BeginTransactionInNewTerr()
@@ -190,3 +207,6 @@ class TestInstancesLib(unittest.TestCase):
         
         self.project.CommitTransaction()
         self.project.Save()
+
+if __name__ == "__main__":
+        unittest.main()

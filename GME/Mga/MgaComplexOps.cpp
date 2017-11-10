@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "MgaFCO.h"
 #include <map>
+#include <unordered_set>
 #include "MgaComplexOps.h"
 #include "MgaSet.h"
 #include "limits.h"
@@ -1658,6 +1659,7 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 	MGACOLL_ITERATE(ICoreAttribute, atts) {
 			attrid_type ai;
 			CComPtr<ICoreMetaAttribute> mattr;
+
 			COMTHROW(MGACOLL_ITER->get_MetaAttribute(&mattr));
 			COMTHROW(mattr->get_AttrID(&ai));
 			if(ai < ATTRID_COLLECTION) {
@@ -1744,20 +1746,22 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 				switch( ai) {
 					case ATTRID_ATTRPARENT: // copy the unfilled attributes
 					{
+#ifdef _DEBUG
 						unsigned int owned_attrs(0), inherited_attrs(0), l3(0);
 						CComBSTR nm;
 						ObjForCore(nobj)->get_Name( &nm);
+#endif
 
-						std::list<metaref_type> ownedAttrVec;
+						std::unordered_set<metaref_type> setAttrs;
 						{
-							CoreObjs my_attrs = nobj[ai + ATTRID_COLLECTION]; // count first the # of owned attributes
+							CoreObjs my_attrs = nobj[ai + ATTRID_COLLECTION];
 							ITERATE_THROUGH(my_attrs) { 
+#ifdef _DEBUG
 								++owned_attrs;
+#endif
 								metaref_type attr_i = ITER[ATTRID_META];
-								if( std::find( ownedAttrVec.begin(), ownedAttrVec.end(), attr_i) == ownedAttrVec.end())
-									ownedAttrVec.push_back( attr_i);
-								else
-									ASSERT(0); // can an attribute belong to self twice?
+								bool inserted = setAttrs.insert(attr_i).second;
+								ASSERT(inserted); // can an attribute belong to self twice?
 							}
 						}
 						// owned_attrs is the number of owned attributes
@@ -1765,28 +1769,35 @@ void ObjDetachAndMerge( CMgaProject *mgaproject, CoreObj orig, CoreObj &nobj, co
 						// the instance or subtype gets an additional attribute (initially had none)
 						// thus in case of detaching, we need to distinguish between owned values
 						// and inherited values (owned preferred)
+						CoreObj baseObject = orig;
+						do {
+							CoreObjs base_attrs = baseObject[ai + ATTRID_COLLECTION]; // copy the base's values selectively
+							ITERATE_THROUGH(base_attrs) {
 
-						{
-							CoreObjs base_attrs = orig[ai + ATTRID_COLLECTION]; // copy the base's values selectively
-							ITERATE_THROUGH(base_attrs) { 
-								bool fnd = std::find( ownedAttrVec.begin(), ownedAttrVec.end(), ITER[ATTRID_META]) != ownedAttrVec.end();
-								if( !fnd)
+								if (setAttrs.insert(ITER[ATTRID_META]).second == true)
 								{
+#ifdef _DEBUG
 									++inherited_attrs;
+#endif
 									CoreObj nchild;
 									ObjTreeCopy(mgaproject, ITER, nchild, crealist);
 									nchild[ai] = nobj;
+									setAttrs.insert(ITER[ATTRID_META]);
 								}
 							}
-						}
-						{
-							CoreObjs mine = nobj[ai + ATTRID_COLLECTION]; // overwrite with mine 
-							ITERATE_THROUGH( mine) { 
-								++l3;
-							}
-						}
 
+							// folders may not be derived
+							ASSERT(baseObject.IsFCO());
+						} while (baseObject = baseObject[ATTRID_DERIVED]);
+
+#ifdef _DEBUG
+						CoreObjs mine = nobj[ai + ATTRID_COLLECTION];
+						ITERATE_THROUGH(mine) {
+							++l3;
+						}
 						ASSERT( owned_attrs + inherited_attrs == l3);
+#endif
+
 						break;
 					}
 					case ATTRID_FCOPARENT: // for all secondary derived fco children-> detach
