@@ -25,7 +25,7 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 17.11.14
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix crash under GME x64 and high memory usage
