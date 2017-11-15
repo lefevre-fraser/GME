@@ -29,7 +29,7 @@ Release Notes of Release 17.11.14
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix crash under GME x64 and high memory usage
-  - IMgaProject.ObjectByID fail when there is not object with the supplied ID
+  - IMgaProject.ObjectByID: fail when there is no object with the supplied ID
   - DetachFromArchetype: fix bug where attribute values from basetype's basetype were lost
 
 Release Notes of Release 17.10.13
