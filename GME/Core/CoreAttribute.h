@@ -13,6 +13,13 @@
 #include <set>
 
 
+template <class T>
+struct ptr_compare
+{
+	size_t operator()(const T* p) const { return (size_t)p; }
+	bool operator()(const T *a, const T *b) const { return a < b; }
+};
+
 class CCoreProject;
 class CCoreLockAttribute;
 class CCoreCollectionAttribute;

@@ -29,6 +29,7 @@
 //something, but do not change the name of _Module
 extern CComModule _Module;
 #include <atlcom.h>
+#include <hash_map>
 
 #define _NOTHREADS
 

@@ -160,21 +160,21 @@ STDMETHODIMP CMgaParser::ParseClos1(IMgaObject *here, BSTR filename)
 CMgaParser::elementfunc CMgaParser::elementfuncs_bcmga[] = 
 {
 	//elementfunc(_T("project"), StartProject, EndNone),
-	elementfunc(_T("name"), StartNone, EndName),
-	elementfunc(_T("comment"), StartNone, EndComment),
-	elementfunc(_T("author"), StartNone, EndAuthor),
-	elementfunc(_T("value"), StartNone, EndValue),
-	elementfunc(_T("regnode"), StartRegNode, EndNone),
-	elementfunc(_T("attribute"), StartAttribute, EndNone),
-	elementfunc(_T("constraint"), StartNone, EndConstraint),
-	elementfunc(_T("folder"), StartFolder, EndNone),
-	elementfunc(_T("model"), StartModel, EndNone),
-	elementfunc(_T("atom"), StartAtom, EndNone),
-	elementfunc(_T("connection"), StartConnection, EndNone),
-	elementfunc(_T("connpoint"), StartBCConnPoint, EndNone),	// diff
-	elementfunc(_T("reference"), StartBCReference, EndNone),	// diff
-	elementfunc(_T("set"), StartBCSet, EndNone),				// diff
-	elementfunc(_T("clipboard"), StartBCClipboard, EndNone),	// diff, common for closure clipboards
+	elementfunc(_T("name"), &StartNone, &EndName),
+	elementfunc(_T("comment"), &StartNone, &EndComment),
+	elementfunc(_T("author"), &StartNone, &EndAuthor),
+	elementfunc(_T("value"), &StartNone, &EndValue),
+	elementfunc(_T("regnode"), &StartRegNode, &EndNone),
+	elementfunc(_T("attribute"), &StartAttribute, &EndNone),
+	elementfunc(_T("constraint"), &StartNone, &EndConstraint),
+	elementfunc(_T("folder"), &StartFolder, &EndNone),
+	elementfunc(_T("model"), &StartModel, &EndNone),
+	elementfunc(_T("atom"), &StartAtom, &EndNone),
+	elementfunc(_T("connection"), &StartConnection, &EndNone),
+	elementfunc(_T("connpoint"), &StartBCConnPoint, &EndNone),	// diff
+	elementfunc(_T("reference"), &StartBCReference, &EndNone),	// diff
+	elementfunc(_T("set"), &StartBCSet, &EndNone),				// diff
+	elementfunc(_T("clipboard"), &StartBCClipboard, &EndNone),	// diff, common for closure clipboards
 	elementfunc(_T(""), NULL, NULL)
 };
 

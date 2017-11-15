@@ -1220,7 +1220,7 @@ void CInspectorList::OnRButtonDown(UINT nFlags, CPoint point)
 
 				const wchar_t* archetype = L" (Archetype)";
 				auto value = listItem.Value.stringVal.GetAt(0);
-				if (value.GetLength() >= wcslen(archetype) && wcscmp(archetype, value.Right(wcslen(archetype))) == 0) {
+				if ((size_t)value.GetLength() >= wcslen(archetype) && wcscmp(archetype, value.Right(wcslen(archetype))) == 0) {
 					// FIXME: should disable for non-primary derived
 					menu.EnableMenuItem(ID_LISTCONTEXT_RESETTODEFAULT, MF_GRAYED);
 				}

@@ -77,7 +77,7 @@ bool CPartBrowserPane::IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart)
 	return false;
 }
 
-bool CPartBrowserPane::FindObject(CPoint &pt, PartWithDecorator& pdt)
+bool CPartBrowserPane::FindObject(CPoint &pt, const PartWithDecorator*& pdt)
 {
 	if (currentAspectIndex < 0 || pdts.size() <= 0)
 		return NULL;
@@ -92,7 +92,7 @@ bool CPartBrowserPane::FindObject(CPoint &pt, PartWithDecorator& pdt)
 			COMTHROW((*ii).decorator->GetLocation(&x1, &y1, &x2, &y2));
 			CRect rc (x1, y1, x2, y2);
 			if (rc.PtInRect(pt)) {
-				pdt = (*ii);
+				pdt = &(*ii);
 
 				long sizeX = 0;
 				long sizeY = 0;
@@ -160,7 +160,7 @@ void CPartBrowserPane::CreateDecorators(CComPtr<IMgaMetaParts> metaParts)
 				decorator->__SetLocation(0, 0, sx, sy);
 				tuple.decorator = decorator;
 
-				pdt.push_back(tuple);
+				pdt.emplace_back(std::move(tuple));
 			}
 		}
 		MGACOLL_ITERATE_END;
@@ -471,7 +471,7 @@ void CPartBrowserPane::OnLButtonDown(UINT nFlags, CPoint point)
 
 	point.y += parent->GetScrollPosition ();
 
-	PartWithDecorator pdt;
+	const PartWithDecorator* pdt;
 	bool found = FindObject(point, pdt);
 
 	if (found) {
@@ -482,7 +482,7 @@ void CPartBrowserPane::OnLButtonDown(UINT nFlags, CPoint point)
 
 		long x1 = 0; long y1 = 0;
 		long x2 = 0; long y2 = 0;
-		COMTHROW(pdt.decorator->GetLocation(&x1, &y1, &x2, &y2));
+		COMTHROW(pdt->decorator->GetLocation(&x1, &y1, &x2, &y2));
 		CRect partRect (x1, y1, x2, y2);
 		CPoint ptClickOffset(point.x - partRect.left, point.y - partRect.top);
 
@@ -495,7 +495,7 @@ void CPartBrowserPane::OnLButtonDown(UINT nFlags, CPoint point)
 
 		CGMEDataSource dataSource(mgaProject);
 		CComPtr<IMgaMetaRole> mmRole;
-		COMTHROW(pdt.part->get_Role(&mmRole));
+		COMTHROW(pdt->part->get_Role(&mmRole));
 		dataSource.SetMetaRole(mmRole);
 		dataSource.CacheDescriptor(&desc);
 		DROPEFFECT de = dataSource.DoDragDrop(DROPEFFECT_COPY, &rectAwake);

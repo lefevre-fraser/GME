@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include <algorithm>
 #include "mgautil.h"
 #include "MetaPurgeDialog.h"
 #include "atlsafe.h"

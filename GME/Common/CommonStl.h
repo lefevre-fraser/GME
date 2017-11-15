@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <string>
-#include <hash_map>
 
 #ifndef MGA_COMMONSMART_H
 #include "CommonSmart.h"
@@ -161,17 +160,6 @@ inline void CopyTo(const std::vector<GUID> &guids, SAFEARRAY **p)
 		CopyTo(&guids[0], (&guids[0]) + guids.size(), p);
 	}
 }
-
-// --------------------------- STL function objects
-
-template <class T>
-struct ptr_compare : public stdext::hash_compare<T>
-{
-	size_t operator()(const T* p) const { return (size_t) p; }
-	bool operator()(const T *a, const T *b) const { return a < b; }
-
-	// both hashing and comparing must be implemented here
-};
 
 // --------------------------- Iterator
 

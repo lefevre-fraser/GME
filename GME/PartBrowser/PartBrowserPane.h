@@ -22,7 +22,9 @@ public:
 	CString										name;	// Calculated, cached for speedup
 	CComPtr<IMgaDecorator>						decorator;
 	CComPtr<IMgaElementDecorator>				newDecorator;
-
+#if _MSC_VER >= 1900
+	PartWithDecorator& operator=(const PartWithDecorator& that) = delete;
+#endif
 	PartWithDecorator& operator=(PartWithDecorator&& that)
 	{
 		if (this != &that)
@@ -59,7 +61,7 @@ private:
 // Operations
 	CComBSTR	GetDecoratorProgId(IMgaMetaFCO* metaFCO);
 	bool		IsPartDisplayable(CComPtr<IMgaMetaPart> metaPart);
-	bool		FindObject(CPoint &pt, PartWithDecorator& pdt);
+	bool		FindObject(CPoint &pt, const PartWithDecorator*& pdt);
 	void		CreateDecorators(CComPtr<IMgaMetaParts> metaParts);
 	void		DestroyDecorators(void);
 

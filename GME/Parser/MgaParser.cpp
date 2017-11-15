@@ -751,22 +751,22 @@ void CMgaParser::fireEndFunction(const std::tstring& namestr)
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_mga[] = 
 {
-	elementfunc(_T("project"), StartProject, EndNone),
-	elementfunc(_T("name"), StartNone, EndName),
-	elementfunc(_T("comment"), StartNone, EndComment),
-	elementfunc(_T("author"), StartNone, EndAuthor),
-	elementfunc(_T("value"), StartNone, EndValue),
-	elementfunc(_T("folder"), StartFolder, EndObject),
-	elementfunc(_T("model"), StartModel, EndObject),
-	elementfunc(_T("atom"), StartAtom, EndObject),
-	elementfunc(_T("regnode"), StartRegNode, EndNone),
-	elementfunc(_T("attribute"), StartAttribute, EndNone),
-	elementfunc(_T("connection"), StartConnection, EndObject),
-	elementfunc(_T("connpoint"), StartConnPoint, EndNone),
-	elementfunc(_T("constraint"), StartNone, EndConstraint),
-	elementfunc(_T("reference"), StartReference, EndObject),
-	elementfunc(_T("set"), StartSet, EndObject),
-	elementfunc(_T("clipboard"), StartClipboard, EndNone),
+	elementfunc(_T("project"), &StartProject, &EndNone),
+	elementfunc(_T("name"), &StartNone, &EndName),
+	elementfunc(_T("comment"), &StartNone, &EndComment),
+	elementfunc(_T("author"), &StartNone, &EndAuthor),
+	elementfunc(_T("value"), &StartNone, &EndValue),
+	elementfunc(_T("folder"), &StartFolder, &EndObject),
+	elementfunc(_T("model"), &StartModel, &EndObject),
+	elementfunc(_T("atom"), &StartAtom, &EndObject),
+	elementfunc(_T("regnode"), &StartRegNode, &EndNone),
+	elementfunc(_T("attribute"), &StartAttribute, &EndNone),
+	elementfunc(_T("connection"), &StartConnection, &EndObject),
+	elementfunc(_T("connpoint"), &StartConnPoint, &EndNone),
+	elementfunc(_T("constraint"), &StartNone, &EndConstraint),
+	elementfunc(_T("reference"), &StartReference, &EndObject),
+	elementfunc(_T("set"), &StartSet, &EndObject),
+	elementfunc(_T("clipboard"), &StartClipboard, &EndNone),
 	elementfunc(_T(""), NULL, NULL)
 };
 
@@ -1777,8 +1777,8 @@ void CMgaParser::StartSet(const attributes_type &attributes)
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_mgainfo[] = 
 {
-	elementfunc(_T("project"), StartProjectInfo, EndNone),
-	elementfunc(_T("name"), StartNone, EndNameInfo),
+	elementfunc(_T("project"), &StartProjectInfo, &EndNone),
+	elementfunc(_T("name"), &StartNone, &EndNameInfo),
 	elementfunc(_T(""), NULL, NULL)
 };
 
@@ -1836,7 +1836,7 @@ void CMgaParser::EndNameInfo()
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_clipmgainfo[] = 
 {
-	elementfunc(_T("clipboard"), StartClipboardInfo, EndNone),
+	elementfunc(_T("clipboard"), &StartClipboardInfo, &EndNone),
 	elementfunc(_T(""), NULL, NULL)
 };
 

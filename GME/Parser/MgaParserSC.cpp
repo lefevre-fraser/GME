@@ -162,22 +162,22 @@ STDMETHODIMP CMgaParser::ParseClos4(IMgaObject *here, BSTR filename, int options
 
 CMgaParser::elementfunc CMgaParser::elementfuncs_scmga[] = // special handlers for all elements
 {
-	//elementfunc(_T("project"),  StartProject,      EndNone),
-	elementfunc(_T("name"),       StartNone,         EndSCName),
-	//elementfunc(_T("comment"),  StartNone,         EndComment),
-	//elementfunc(_T("author"),   StartNone,         EndAuthor),
-	elementfunc(_T("value"),      StartNone,         EndSCValue),
-	elementfunc(_T("regnode"),    StartSCRegNode,    EndSCRegNode),
-	elementfunc(_T("attribute"),  StartSCAttribute,  EndNone),
-	elementfunc(_T("constraint"), StartNone,         EndSCConstraint),
-	elementfunc(_T("folder"),     StartSCFolder,     EndNone),
-	elementfunc(_T("model"),      StartSCModel,      EndNone),
-	elementfunc(_T("atom"),       StartSCAtom,       EndNone),
-	elementfunc(_T("connection"), StartSCConnection, EndSCConnection),
-	elementfunc(_T("connpoint"),  StartSCConnPoint,  EndNone),
-	elementfunc(_T("reference"),  StartSCReference,  EndNone),
-	elementfunc(_T("set"),        StartSCSet,        EndNone),
-	elementfunc(_T("clipboard"),  StartBCClipboard,  EndNone),	// common for closures
+	//elementfunc(_T("project"),  &StartProject,      &EndNone),
+	elementfunc(_T("name"),       &StartNone,         &EndSCName),
+	//elementfunc(_T("comment"),  &StartNone,         &EndComment),
+	//elementfunc(_T("author"),   &StartNone,         &EndAuthor),
+	elementfunc(_T("value"),      &StartNone,         &EndSCValue),
+	elementfunc(_T("regnode"),    &StartSCRegNode,    &EndSCRegNode),
+	elementfunc(_T("attribute"),  &StartSCAttribute,  &EndNone),
+	elementfunc(_T("constraint"), &StartNone,         &EndSCConstraint),
+	elementfunc(_T("folder"),     &StartSCFolder,     &EndNone),
+	elementfunc(_T("model"),      &StartSCModel,      &EndNone),
+	elementfunc(_T("atom"),       &StartSCAtom,       &EndNone),
+	elementfunc(_T("connection"), &StartSCConnection, &EndSCConnection),
+	elementfunc(_T("connpoint"),  &StartSCConnPoint,  &EndNone),
+	elementfunc(_T("reference"),  &StartSCReference,  &EndNone),
+	elementfunc(_T("set"),        &StartSCSet,        &EndNone),
+	elementfunc(_T("clipboard"),  &StartBCClipboard,  &EndNone),	// common for closures
 	elementfunc(_T(""), NULL, NULL)
 };
 

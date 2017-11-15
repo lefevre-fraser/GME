@@ -76,7 +76,6 @@
     </None>
     <None Include="edf.dtd" />
     <None Include="mga.dtd" />
-    <None Include="mgaclosure.dtd" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Parser.rc">
@@ -117,5 +116,8 @@
     <ClInclude Include="Transcoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="mgaclosure.dtd" />
   </ItemGroup>
 </Project>

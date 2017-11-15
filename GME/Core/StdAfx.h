@@ -29,6 +29,7 @@
 #include "EASTL/hash_set.h"
 #else
 #include <hash_set>
+#include <hash_map>
 #include <forward_list>
 #endif
 
