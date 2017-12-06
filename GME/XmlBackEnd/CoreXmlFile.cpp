@@ -3620,10 +3620,10 @@ void CCoreXmlFile::writeObject(XmlObject * obj, Transcoder& ofs, bool container,
 			for (auto i = dictValue->m_dict.begin(); i != dictValue->m_dict.end(); i++)
 			{
 				ofs << Transcoder::NoEscape << "<Key>";
-				ofs << Transcoder::StdEscape << static_cast<const char*>(_bstr_t(i->first));
+				ofs << Transcoder::StdEscape << static_cast<const wchar_t*>(_bstr_t(i->first));
 				ofs << Transcoder::NoEscape << "</Key>";
 				ofs << Transcoder::NoEscape << "<Value>";
-				ofs << Transcoder::StdEscape << static_cast<const char*>(_bstr_t(i->second));
+				ofs << Transcoder::StdEscape << static_cast<const wchar_t*>(_bstr_t(i->second));
 				ofs << Transcoder::NoEscape << "</Value>";
 			}
 			ofs << Transcoder::NoEscape << "</Dict>";
