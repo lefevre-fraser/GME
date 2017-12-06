@@ -1163,6 +1163,7 @@ STDMETHODIMP CMgaProject::CreateAddOn(IMgaEventSink *sink, IMgaAddOn **pp) {
 		CComPtr< CMgaAddOn > saddon;
 		CreateComObject(saddon);
 		saddon->mgaproject = this;
+		saddon->mgaproject->AddRef();
 		saddon->progid = autoaddoncreate_progid;
 		alladdons.push_front(saddon);
 		saddon->handler=sink;

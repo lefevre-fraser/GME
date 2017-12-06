@@ -131,14 +131,19 @@ STDMETHODIMP CMgaTerritory::GetNamespace( BSTR * pNmsp)
 }
 
 STDMETHODIMP CMgaAddOn::CheckProject(IMgaProject *project) {
-	return(project == mgaproject? S_OK : E_MGA_FOREIGN_PROJECT);
+	COMTRY {
+		if (!IsEqualObject(project, (IMgaProject*)mgaproject)) {
+			COMTHROW(E_MGA_FOREIGN_PROJECT);
+		}
+	} COMCATCH(;)
 }
 
 
 STDMETHODIMP CMgaAddOn::Destroy() {
 	COMTRY {
 		MARKSIG('8'); 
-		if(!handler) COMTHROW(E_MGA_TARGET_DESTROYED);
+		if (!handler)
+			COMTHROW(E_MGA_TARGET_DESTROYED);
 		CMgaProject::addoncoll::iterator i = mgaproject->alladdons.begin(), end = mgaproject->alladdons.end();
 		while (i != end) {
 			if (*i == this) {
@@ -154,7 +159,6 @@ STDMETHODIMP CMgaAddOn::Destroy() {
 			
 		}
 		ASSERT(("addon not found among project addons",false));	
-		active = false;
 	} COMCATCH(;)
 }
 

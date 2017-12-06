@@ -95,7 +95,6 @@ class ATL_NO_VTABLE CMgaAddOn :
 	public IDispatchImpl<IMgaAddOn, &__uuidof(IMgaAddOn), &__uuidof(__MGALib)>
 {
     DEFSIG;
-	bool active;
 	bool automatic;   // this addon was created automatically
 public:
 	CMgaAddOn()	{
@@ -103,7 +102,6 @@ public:
 #ifdef DEBUG
 		MGA_TRACE("Constructed: %s - %08X\n", sig, this);
 #endif
-		active = true;
 		notified = false;
 		automatic = false;
 	}
@@ -112,7 +110,9 @@ public:
 		MGA_TRACE("Destructed: %s - %08X\n", sig, this);
 #endif
 		MARKSIG('9'); 
-		if(active) Destroy();	
+		if (handler)
+			Destroy();
+		mgaproject->Release();
 	}
 
 	void SetAutomatic() { automatic = true; }
@@ -131,15 +131,18 @@ public:
 	STDMETHOD(put_Priority)( long newVal);
 	STDMETHOD(put_EventMask)( unsigned long mask) { 
 		COMTRY {
-			if(!handler) COMTHROW( E_MGA_TARGET_DESTROYED);
+			if (!handler)
+				COMTHROW(E_MGA_TARGET_DESTROYED);
 			eventmask = mask;
 		} COMCATCH(;);
 	};
 	STDMETHOD(get_Project)(IMgaProject **pVal) { 
 		COMTRY {
-			if(!handler) COMTHROW( E_MGA_TARGET_DESTROYED);
+			if (!handler)
+				COMTHROW(E_MGA_TARGET_DESTROYED);
 			CHECK_OUTPTRPAR(pVal); 
-			*pVal = mgaproject; (*pVal)->AddRef(); 
+			*pVal = mgaproject;
+			(*pVal)->AddRef(); 
 		} COMCATCH(;);
 	};
 	STDMETHOD(CheckProject)( IMgaProject *project);  
@@ -147,7 +150,7 @@ public:
 
 	unsigned long eventmask;
 	bool notified;
-	CMgaProject *mgaproject;
+	CMgaProject* mgaproject;
 	_bstr_t progid;
 	CComPtr<IMgaEventSink> handler;    // non-null if object active 
 };

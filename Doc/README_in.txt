@@ -25,6 +25,11 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - Fix rare crash when IMgaAddOn is garbage collected (e.g. C# AddOns)
+
 Release Notes of Release 17.11.14
 ----------------------------------
   - Binary compatibility with 11.12.2
