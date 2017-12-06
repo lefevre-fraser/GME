@@ -206,7 +206,11 @@ STDMETHODIMP COMCLASS::GlobalEvent(globalevent_enum event) {
 		}
 		return S_OK;
 	#else
-		return pThis->comp->rawcomp.GlobalEvent(event);
+		HRESULT hr = pThis->comp->rawcomp.GlobalEvent(event);
+		if (event == GLOBALEVENT_CLOSE_PROJECT) {
+			pThis->comp->rawcomp.addon = NULL;
+		}
+		return hr;
 	#endif // BUILDER_OBJECT_NETWORK_V2
 }
 
@@ -946,6 +950,7 @@ STDMETHODIMP COMCLASS::Initialize(struct IMgaProject *p) {
 		COMTHROW(p->CreateAddOn(pThis->e_sink, &(pThis->rawcomp.addon)) );
 		COMTHROW(pThis->rawcomp.addon->put_EventMask(ADDON_EVENTMASK));
 
+		es->ExternalRelease();
 #endif
 		// FIXME: This always fails in Addons (E_MGA_NAME_NOT_FOUND)
 		GMEConsole::Console::SetupConsole(p);
