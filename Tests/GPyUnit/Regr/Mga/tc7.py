@@ -3,6 +3,7 @@ import win32com.client
 import win32ui
 import pythoncom
 import os
+import pywintypes
 import utils.Builder
 bd = utils.Builder
 
@@ -340,8 +341,8 @@ class TestCase7( unittest.TestCase ):
         to_find = "id-0066-00000001"
         inpar = project.GetFCOByID( to_find )   # inputparameter
 
-        to_find = "id-0066-00000002"
-        insig = project.GetFCOByID( to_find )   # inputsignal
+        insig = project.ObjectByPath("/@Samples/@NewCompound/@NewCompoundParts/@NewInputSignals")
+        assert insig
         
         to_find = "id-0065-00000003"
         cp = project.GetFCOByID( to_find )      # newcompoundparts
@@ -355,10 +356,10 @@ class TestCase7( unittest.TestCase ):
         #
         # tests for insig "InputSignal"
         #
-        part = insig.Part( aspect_1)
-        assert part == None
+        with self.assertRaises(pywintypes.com_error):
+            insig.Part(aspect_1)
 
-        part = insig.Part( aspect_2)
+        part = insig.Part(aspect_2)
         assert part != None
         assert part in insig.Parts
         metapart = part.Meta
@@ -370,8 +371,8 @@ class TestCase7( unittest.TestCase ):
         #
         # tests for inpar "InputParameter"
         #
-        part = inpar.Part( aspect_2)
-        assert part == None
+        with self.assertRaises(pywintypes.com_error):
+            inpar.Part(aspect_2)
         
         part = inpar.Part( aspect_1)
         assert part != None
