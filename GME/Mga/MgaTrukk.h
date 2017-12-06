@@ -420,7 +420,7 @@ else \
 
 
 #define MODIFIED	{ if(mgaproject->opened < 1000) mgaproject->opened++; }
- 
+
 #undef COMCATCH
 #define COMCATCH( CLEANUP )  \
 	catch(hresult_exception &e) \
@@ -429,7 +429,7 @@ else \
 		{ \
 			CLEANUP; \
 		} \
-		MgaSetErrorInfo(e.hr); \
+		SetStandardOrGMEErrorInfo(e.hr); \
 		return e.hr; \
 	} \
 	catch(_com_error &err) \

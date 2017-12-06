@@ -601,7 +601,7 @@ HRESULT FCO::get_Part(IMgaMetaAspect * asp, IMgaPart **pVal) {
 			}
 			if (ret == nullptr)
 			{
-				return E_NOTFOUND;
+				COMTHROW(E_NOTFOUND);
 			}
 			*pVal = ret.Detach();
 
