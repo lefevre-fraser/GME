@@ -1242,6 +1242,29 @@ void CInspectorList::OnRButtonDown(UINT nFlags, CPoint point)
 				ClientToScreen(&point);
 				menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
 			}
+			else if (listItem.strName == L"GUID" || listItem.strName == L"Object ID") {
+				CMenu menu;
+				menu.CreatePopupMenu();
+				menu.AppendMenuW(MF_STRING, ID_LISTCONTEXT_COPY, L"Copy");
+
+				ClientToScreen(&point);
+				auto cmd = menu.TrackPopupMenu(TPM_RETURNCMD | TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+				if (cmd == ID_LISTCONTEXT_COPY)
+				{
+					const wchar_t* text = listItem.Value.stringVal[0];
+					const size_t len = wcslen(text) + 1;
+					HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len * sizeof(wchar_t));
+					memcpy(GlobalLock(hMem), text, len * sizeof(wchar_t));
+					GlobalUnlock(hMem);
+					if (OpenClipboard() == 0)
+					{
+						return;
+					}
+					EmptyClipboard();
+					VERIFY(SetClipboardData(CF_UNICODETEXT, hMem));
+					CloseClipboard();
+				}
+			}
 		}
 
 	}
