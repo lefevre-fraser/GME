@@ -50,20 +50,27 @@ class CCoreCollectionHandlerTearOff : public ICoreMetaObjects
 	CComPtr<CCoreCollectionHandler> m_pHandler;
 
     public:
-		CCoreCollectionHandlerTearOff() : refcount(1) {}
+		CCoreCollectionHandlerTearOff() :
+			refcount(1)
+		{
+			_pAtlModule->Lock();
+		}
 
 		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject);
 
         virtual ULONG STDMETHODCALLTYPE AddRef(void)
 		{
-			return InterlockedIncrement(&refcount);
+			return InterlockedIncrement(&this->refcount);
 		}
 
         virtual ULONG STDMETHODCALLTYPE Release(void)
 		{
-			long refcount = InterlockedDecrement(&refcount);
+			long refcount = InterlockedDecrement(&this->refcount);
 			if (refcount == 0)
+			{
 				delete this;
+				_pAtlModule->Unlock();
+			}
 			return refcount;
 		}
 

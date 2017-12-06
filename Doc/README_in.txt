@@ -29,6 +29,7 @@ Release Notes
 ----------------------------------
   - Binary compatibility with 11.12.2
   - Fix rare crash when IMgaAddOn is garbage collected (e.g. C# AddOns)
+  - Fix rare crash when calling Mga from a different COM apartment
 
 Release Notes of Release 17.11.14
 ----------------------------------
