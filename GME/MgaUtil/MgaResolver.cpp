@@ -1003,7 +1003,7 @@ STDMETHODIMP CMgaResolver::get_RoleByStr(IMgaModel *parent, BSTR kind,
 					return RESOLV_ERR_get_RoleByStr;
 				}
 
-				INT_PTR dlgResult;
+				INT_PTR dlgResult = IDOK;
 				if ((cdl.m_sz_prelist.GetCount() != 0) 
 					&& 
 					((dlgResult = cdl.DoModal()) == IDOK) 

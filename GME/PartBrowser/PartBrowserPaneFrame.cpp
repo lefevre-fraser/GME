@@ -22,7 +22,8 @@ CPartBrowserPaneFrame::CPartBrowserPaneFrame(CWnd* pParent/* = NULL*/)
 	lineSize (20),
 	pageSize (60),
     pageHeight(100), // maybe fix UNINITIALIZED READ: reading register edx PartBrowser.OCX!CPartBrowserPaneFrame::Resize [c:\users\kevin\documents\gme\gme\partbrowser\partbrowserpaneframe.cpp:57]
-    logicalHeight(100)
+    logicalHeight(100),
+    scrollPos(0)
 {
 	//{{AFX_DATA_INIT(CPartBrowserPaneFrame)
 		// NOTE: the ClassWizard will add member initialization here
