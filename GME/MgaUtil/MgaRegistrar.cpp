@@ -1928,8 +1928,10 @@ STDMETHODIMP CMgaRegistrar::QueryComponent(BSTR progid, componenttype_enum *type
 				res = comp.QueryStringValue(_T("Description"), NULL, &count);
 				if (strDesc == _T("") && res == ERROR_SUCCESS) {
 					CString ret;
-					if (comp.QueryStringValue(_T("Description"), ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS)
+					if (comp.QueryStringValue(_T("Description"), ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+						ret.ReleaseBuffer();
 						strDesc = ret;
+					}
 				}
 			}
 		}
@@ -2044,6 +2046,7 @@ STDMETHODIMP CMgaRegistrar::get_ComponentExtraInfo(regaccessmode_enum mode,
 				if (res == ERROR_SUCCESS) {
 					CString ret;
 					if (comp.QueryStringValue(PutInCString(name), ret.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+						ret.ReleaseBuffer();
 						CopyTo(ret, pVal);
 						return S_OK;
 					}
@@ -2086,12 +2089,14 @@ STDMETHODIMP CMgaRegistrar::get_LocalDllPath(BSTR progid, BSTR* pVal) {
 				CString data;
 				ULONG count = 1024;
 				if (comp.QueryStringValue(_T("CodeBase"), data.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+					data.ReleaseBuffer();
 					m_strPath = data;
 					m_strPath = m_strPath.Right(m_strPath.GetLength() - 8);
 					m_strPath.Replace('/', '\\');
 				} else {
 					count = 1024;
 					if (comp.QueryStringValue(_T("Assembly"), data.GetBufferSetLength(count), &count) == ERROR_SUCCESS) {
+						data.ReleaseBuffer();
 						m_strPath = _T("GAC: ");
 						m_strPath += data;
 					}

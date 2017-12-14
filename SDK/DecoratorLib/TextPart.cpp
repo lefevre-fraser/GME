@@ -42,6 +42,7 @@ TextPart::~TextPart()
 
 void TextPart::Initialize(CComPtr<IMgaProject>& pProject, CComPtr<IMgaMetaPart>& pPart, CComPtr<IMgaFCO>& pFCO)
 {
+	resizeLogic.Initialize(pProject, pPart, pFCO);
 	if (m_spFCO)
 		resizeLogic.SetResizeFeatures(ResizeLogic::Resizeable | /* TODO: temp ResizeLogic::Movable |*/ ResizeLogic::DrawSelectionRectangle);
 

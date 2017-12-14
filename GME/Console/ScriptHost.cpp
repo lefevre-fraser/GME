@@ -84,6 +84,7 @@ void CScriptHost::Message(BSTR message, msgtype_enum level)
 
 STDMETHODIMP CScriptHost::GetLCID(/*[out]*/ LCID *plcid)
 {
+	*plcid = LANG_ENGLISH;
 	return S_OK;
 }
 
@@ -95,37 +96,40 @@ STDMETHODIMP CScriptHost::GetItemInfo(
 {
 	if (!m_gmeptr)
 		return E_FAIL;
-	if (dwReturnMask&SCRIPTINFO_IUNKNOWN)
+	if (dwReturnMask & SCRIPTINFO_IUNKNOWN)
 	{
-		if (m_gmeptr && (_bstr_t)pstrName == _bstr_t(L"gme"))
+		if (m_gmeptr && wcscmp(pstrName, L"gme") == 0)
 		{
 			CComPtr<IUnknown> punk(m_gmeptr);
-			((IUnknown*)punk)->AddRef(); 
-			*ppiunkItem = punk;
+			*ppiunkItem = punk.Detach();
 		}
-		else if (m_mgaproj && (_bstr_t)pstrName == _bstr_t(L"project"))
+		else if (m_mgaproj && wcscmp(pstrName, L"project") == 0)
 		{
 			CComPtr<IUnknown> punk(m_mgaproj);
-			((IUnknown*)punk)->AddRef(); 
-			*ppiunkItem = punk;
+			*ppiunkItem = punk.Detach();
 		}
-		else if (m_actMod && (_bstr_t)pstrName == _bstr_t(L"it"))
+		else if (m_actMod && wcscmp(pstrName, L"it") == 0)
 		{
 			CComPtr<IUnknown> punk(m_actMod);
-			((IUnknown*)punk)->AddRef(); 
-			*ppiunkItem = punk;
+			*ppiunkItem = punk.Detach();
 		}
+		else
+		{
+			return TYPE_E_ELEMENTNOTFOUND;
+		}
+
+		return S_OK;
 	}
-	if (dwReturnMask&SCRIPTINFO_ITYPEINFO)
+	if (dwReturnMask & SCRIPTINFO_ITYPEINFO)
 	{
 	}
-
+	*ppti = NULL;
 	return S_OK;
 }
 
 STDMETHODIMP CScriptHost::GetDocVersionString(/*[out]*/ BSTR      *pbstrVersion)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 STDMETHODIMP CScriptHost::OnScriptTerminate(
