@@ -1,5 +1,5 @@
               Generic Modeling Environment
-       Copyright © 2000-2017 Vanderbilt University
+       Copyright © 2000-2018 Vanderbilt University
 
 
 ************************************************
