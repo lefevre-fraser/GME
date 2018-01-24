@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #ifndef MGA_COMMONSMART_H
 #include "CommonSmart.h"
@@ -185,6 +186,14 @@ inline bool IsValidIterator(const CONTAINER &container, typename CONTAINER::cons
 
 template<class CONTAINER>
 inline int limited_size(const CONTAINER &container, int limit)
+{
+	ASSERT(limit >= 1);
+
+	return (std::min)(static_cast<CONTAINER::size_type>(limit), container.size());
+}
+
+template<class CONTAINER>
+inline int limited_size_count(const CONTAINER &container, int limit)
 {
 	ASSERT( limit >= 1 );
 	int counter = limit;

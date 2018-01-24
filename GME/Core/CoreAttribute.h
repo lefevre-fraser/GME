@@ -478,7 +478,7 @@ public:
 #endif
 
 public:
-	typedef std::set< CCoreObject*, ptr_compare<CCoreObject> > objects_type;
+	typedef CCorePointerAttrBase::objects_type objects_type;
 	typedef objects_type::iterator objects_iterator;
 
 public:
