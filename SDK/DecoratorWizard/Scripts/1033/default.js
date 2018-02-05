@@ -2,11 +2,11 @@ function OnFinish(selProj, selObj)
 {
     try
     {
-        if (dte.Version == '10.0') {
-		    OnFinish100(selProj, selObj);
+        if (dte.Version == '9.0') {
+		    OnFinish90(selProj, selObj);
 		}
 		else {
-		    OnFinish90(selProj, selObj);
+		    OnFinish100(selProj, selObj);
 		}
     }
     catch(e)
@@ -26,14 +26,20 @@ function OnFinish100(selProj, selObj)
 
 		selProj = CreateProject(strProjectName, strProjectPath);
 
+        // see C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCWizards\1033\common.js
 		AddCommonConfig(selProj, strProjectName);
 		AddConfig(selProj, strProjectName);
 
 		SetupFilters(selProj);
 
-		var InfFile = CreateCustomInfFile();
+		var InfFile = CreateCustomInfFile('Templates.inf');
 		AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
 		AddDecoratorLibRc(selProj);
+
+		InfFile = CreateCustomInfFile('Common.inf');
+        var filter = selProj.Object.AddFilter("DecoratorLib");
+		AddCommonFilesToCustomProj(selProj, InfFile, filter);
+
 		PchSettings(selProj);
 		InfFile.Delete();
 
@@ -58,7 +64,7 @@ function OnFinish90(selProj, selObj)
 		AddConfig(selProj, strProjectName);
 		AddFilters90(selProj);
 
-		var InfFile = CreateCustomInfFile();
+		var InfFile = CreateCustomInfFile('Templates.inf');
 		AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
 		AddDecoratorLibRc(selProj);
 		PchSettings(selProj);
@@ -79,7 +85,7 @@ function AddDecoratorLibRc(proj)
 	var strFile = '$(GME_ROOT)\\SDK\\DecoratorLib\\DecoratorLib.rc';
 	vcfile = proj.Object.AddFile(strFile);
 
-	if (dte.Version != '10.0') {
+	if (dte.Version == '9.0') {
 	    // This is needed to remove the '.' from the beginning of the relative path (added by default)
 	    vcfile.RelativePath = strFile;
 	}
@@ -128,27 +134,6 @@ function CreateCustomProject90(strProjectName, strProjectPath)
 			prj.Object.TargetFrameworkVersion = parseInt(fxtarget[0]) * 0x10000 + parseInt(fxtarget[1])
 		}
 
-		// Add DecoratorLib Project to the Solution
-		var wshShell = new ActiveXObject('WScript.Shell');
-		var wshSysEnv = wshShell.Environment('SYSTEM');
-		var gmeRoot = wshSysEnv('GME_ROOT');
-		if (gmeRoot == '')
-		{
-			var wshUsrEnv = wshShell.Environment('USER');
-			gmeRoot = wshSysEnv('GME_ROOT');
-		}
-		if (gmeRoot != '')
-		{
-			if (gmeRoot[gmeRoot.length - 1] != '\\' && gmeRoot[gmeRoot.length - 1] != '/')
-				gmeRoot += '/';
-			var decoratorLibPath = gmeRoot += 'SDK\\DecoratorLib\\DecoratorLib.vcproj';
-			Solution.AddFromFile(decoratorLibPath, false);
-		}
-		else
-		{
-			// coudn't find GME_ROOT environment variable
-		}
-
 		return prj;
 	}
 	catch(e)
@@ -181,19 +166,24 @@ function AddConfig(proj, strProjectName)
 {
 	try
 	{
-	// --------------------------- DEBUG SETTINGS --------------------------- //
+        
+        var configs = proj.Object.Configurations;
+        for (var n = 1; n <= configs.Count; n++) {
+            var config = configs(n);
+
+            if (config.ConfigurationName === "Debug") {
+
+        // --------------------------- DEBUG SETTINGS --------------------------- //
 
 		// DEBUG GENERAL SETTINGS
-		var config = proj.Object.Configurations('Debug');
 		config.ConfigurationType = ConfigurationTypes.typeDynamicLibrary;
 		config.useOfMfc = useOfMfc.useMfcDynamic;
 		config.useOfATL = useOfATL.useATLDynamic;
 		config.CharacterSet = charSet.charSetMBCS;
-	    if (dte.Version == '10.0') {
+	    if (dte.Version != '9.0') {
 	    	var rule = config.Rules.Item("ConfigurationGeneral");
 	    	rule.SetPropertyValue("TargetName", "$(ProjectName)D");
-            var PreBuild = config.Tools('VCPreBuildEventTool');
-            PreBuild.CommandLine = "msbuild \"$(GME_ROOT)\\SDK\\DecoratorLib\\DecoratorLib.vcxproj\" /p:Configuration=$(Configuration) \"/p:SolutionDir=$(SolutionDir)\\\" /p:Platform=$(Platform)"
+            config.CharacterSet = charSet.charSetUNICODE;
 	    }
 
 		// DEBUG MIDL SETTINGS
@@ -203,7 +193,7 @@ function AddConfig(proj, strProjectName)
 		MIDLTool.ValidateParameters="true";
 		MIDLTool.TypeLibraryName = ".\\DecoratorLib.tlb";
 		MIDLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)\\SDK\\DecoratorLib;$(GME_ROOT)\\bin;$(GME_ROOT)\\Gme\\Release;$(GME_ROOT)\\Gme\\Debug;$(GME_ROOT)\\Gme\\Interfaces;$(GME_ROOT)\\Interfaces";
-	    if (dte.Version == '10.0')
+	    if (dte.Version != '9.0')
 	    	MIDLTool.HeaderFileName = "%(Filename).h";
 	    else
 	    	MIDLTool.HeaderFileName = "$(InputName).h";
@@ -227,27 +217,25 @@ function AddConfig(proj, strProjectName)
 
 		// DEBUG LINKER SETTINGS
 		var LinkTool = config.Tools('VCLinkerTool');
-		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLibD.lib";
+		LinkTool.AdditionalDependencies = "gdiplus.lib";
 		LinkTool.AdditionalLibraryDirectories = "$(Configuration);$(SolutionDir)$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalYes;
 		LinkTool.GenerateDebugInformation = "true";
 		LinkTool.RegisterOutput = true;
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
 		LinkTool.ModuleDefinitionFile = 'DecoratorApp.def';
-	    if (dte.Version != '10.0')
+	    if (dte.Version == '9.0')
 	    	LinkTool.OutputFile = "$(OutDir)\\$(ProjectName)D.dll"
 
 	// --------------------------- RELEASE SETTINGS --------------------------- //
-
+            } else if (config.ConfigurationName === "Release") {
 		// RELEASE GENERAL SETTINGS
-		config = proj.Object.Configurations('Release');
 		config.ConfigurationType = ConfigurationTypes.typeDynamicLibrary;
 		config.useOfMfc  = useOfMfc.useMfcDynamic;
 		config.useOfATL = useOfATL.useATLDynamic;
 		config.CharacterSet = charSet.charSetMBCS;
-	    if (dte.Version == '10.0') {
-            var PreBuild = config.Tools('VCPreBuildEventTool');
-            PreBuild.CommandLine = "msbuild \"$(GME_ROOT)\\SDK\\DecoratorLib\\DecoratorLib.vcxproj\" /p:Configuration=$(Configuration) \"/p:SolutionDir=$(SolutionDir)\\\" /p:Platform=$(Platform)"
+	    if (dte.Version != '9.0') {
+            config.CharacterSet = charSet.charSetUNICODE;
 	    }
 
 		// RELEASE MIDL SETTINGS
@@ -257,7 +245,7 @@ function AddConfig(proj, strProjectName)
 		MIDLTool.ValidateParameters = "true";
 		MIDLTool.TypeLibraryName = ".\\DecoratorLib.tlb";
 		MIDLTool.AdditionalIncludeDirectories = ".;$(GME_ROOT)\\SDK\\DecoratorLib;$(GME_ROOT)\\bin;$(GME_ROOT)\\Gme\\Release;$(GME_ROOT)\\Gme\\Debug;$(GME_ROOT)\\Gme\\Interfaces;$(GME_ROOT)\\Interfaces";
-	    if (dte.Version == '10.0')
+	    if (dte.Version != '9.0')
 	    	MIDLTool.HeaderFileName = "%(Filename).h";
 	    else
 	    	MIDLTool.HeaderFileName = "$(InputName).h";
@@ -283,7 +271,7 @@ function AddConfig(proj, strProjectName)
 
 		// RELASE LINKER SETTINGS
 		var LinkTool = config.Tools('VCLinkerTool');
-		LinkTool.AdditionalDependencies = "gdiplus.lib DecoratorLib.lib";
+		LinkTool.AdditionalDependencies = "gdiplus.lib";
 		LinkTool.AdditionalLibraryDirectories = "$(Configuration);$(SolutionDir)$(Configuration)";
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalNo;
 		LinkTool.GenerateDebugInformation = "true";
@@ -292,6 +280,8 @@ function AddConfig(proj, strProjectName)
 		LinkTool.RegisterOutput = true;
 	    if (dte.Version != '10.0')
 	    	LinkTool.OutputFile = "$(OutDir)\\$(ProjectName).dll"
+        }
+        }
 	}
 	catch(e)
 	{
@@ -320,7 +310,7 @@ function DelFile(fso, strWizTempFile)
 	}
 }
 
-function CreateCustomInfFile()
+function CreateCustomInfFile(infFileName)
 {
 	try
 	{
@@ -334,7 +324,7 @@ function CreateCustomInfFile()
 		var strWizTempFile = strTempFolder + "\\" + fso.GetTempName();
 
 		var strTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
-		var strInfFile = strTemplatePath + '\\Templates.inf';
+		var strInfFile = strTemplatePath + '\\' + infFileName;
 		wizard.RenderTemplate(strInfFile, strWizTempFile);
 
 		var WizTempFile = fso.GetFile(strWizTempFile);
@@ -401,6 +391,41 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
 		throw e;
 	}
 }
+
+
+function AddCommonFilesToCustomProj(proj, InfFile, proj)
+{
+	try
+	{
+
+		var strTextStream = InfFile.OpenAsTextStream(1, -2);
+		while (!strTextStream.AtEndOfStream)
+		{
+			strTpl = strTextStream.ReadLine();
+			if (strTpl != '' && strTpl != 'Stdafx.cpp')
+			{
+
+
+				var strFile = '$(GME_ROOT)\\SDK\\DecoratorLib\\' + strTpl;
+				vcfile = proj.AddFile(strFile);
+				
+				if (dte.Version > 9 ) {
+
+				    // This is needed to remove the '.' from the beginning of the relative path (added by default)
+				    vcfile = '$(GME_ROOT)\\SDK\\SDK\\DecoratorLib\\' + strTpl;
+
+				}
+	
+			}
+		}
+		strTextStream.Close();
+	}
+	catch(e)
+	{
+		throw e;
+	}
+}
+
 
 
 // SIG // Begin signature block

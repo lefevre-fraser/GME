@@ -14,6 +14,7 @@
 #include <memory>
 #include "TypeableBitmapPart.h"
 #include "PortPart.h"
+#include <comdef.h>
 
 
 namespace DecoratorSDK {

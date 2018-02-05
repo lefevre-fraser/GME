@@ -926,6 +926,10 @@
         <File Id="DecoratorWizard.vsdir" Name="DecoratorWizard.vsdir" KeyPath="yes" Source="..\SDK\DecoratorWizard\DecoratorWizard.vsdir" />
         <File Id="DecoratorWizard_default.vcproj" Name="default.vcproj"  Source="..\SDK\DecoratorWizard\default.vcproj" />
         <File Id="DecoratorWizard_setup100.js" Name="setup100.js"  Source="..\SDK\DecoratorWizard\setup100.js" />
+        <File Id="DecoratorWizard_setup11.js" Name="setup11.js"  Source="..\SDK\DecoratorWizard\setup11.js" />
+        <File Id="DecoratorWizard_setup12.js" Name="setup12.js"  Source="..\SDK\DecoratorWizard\setup12.js" />
+        <File Id="DecoratorWizard_setup14.js" Name="setup14.js"  Source="..\SDK\DecoratorWizard\setup14.js" />
+        <File Id="DecoratorWizard_setup15.js" Name="setup15.js"  Source="..\SDK\DecoratorWizard\setup15.js" />
       </Component>
 
       <Component Id="DecoratorWizard1033Files" Guid="{FD5EDE74-DB08-4405-9FF8-DDDD23D0C4CE}" Directory="INSTALLDIR_SDK_DECORATOR_WIZARD_1033">
