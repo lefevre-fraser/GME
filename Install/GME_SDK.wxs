@@ -736,6 +736,7 @@
         <File Id="setup110.js" Name="setup11.js"  Source="..\SDK\BON\Wizard\setup11.js" />
         <File Id="setup12.js" Name="setup12.js"  Source="..\SDK\BON\Wizard\setup12.js" />
         <File Id="setup14.js" Name="setup14.js"  Source="..\SDK\BON\Wizard\setup14.js" />
+        <File Id="setup15.js" Name="setup15.js"  Source="..\SDK\BON\Wizard\setup15.js" />
       </Component>
 
       <Component Id="BONWizard1033Files" Guid="{3183F8EB-28B7-433A-B645-E8BB483F7021}" Directory="INSTALLDIR_SDK_BON_WIZARD_1033">

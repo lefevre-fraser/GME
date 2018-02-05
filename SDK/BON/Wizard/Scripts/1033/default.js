@@ -168,21 +168,28 @@ function AddFilters90(proj)
 function AddConfig100(proj, strProjectName)
 {
     AddConfig90(proj, strProjectName);
+
+    var configs = proj.Object.Configurations;
+    for (var n = 1; n <= configs.Count; n++) {
+        var config = configs(n);
+
+        if (config.ConfigurationName === "Debug") {
     
     // Differences between VS2010 and earlier
-    var config = proj.Object.Configurations('Debug');
     var MIDLTool = config.Tools('VCMIDLTool');
     MIDLTool.TypeLibraryName = "$(ProjectDir)%(FileName).tlb";
     if (dte.Version >= 12 ) {
         // http://blogs.msdn.com/b/vcblog/archive/2013/07/08/mfc-support-for-mbcs-deprecated-in-visual-studio-2013.aspx
         config.CharacterSet = charSetUNICODE;
     }
+        } else if (config.ConfigurationName === "Release") {
     
-    config = proj.Object.Configurations('Release');
     MIDLTool = config.Tools('VCMIDLTool');
     MIDLTool.TypeLibraryName = "$(ProjectDir)%(FileName).tlb";
     if (dte.Version >= 12 ) {
         config.CharacterSet = charSetUNICODE;
+    }
+    }
     }
 }
 
@@ -191,12 +198,17 @@ function AddConfig90(proj, strProjectName)
 	try
 	{
 	    var framework = wizard.FindSymbol('COMPONENT_FRAMEWORK');
-	    
+	
+    var configs = proj.Object.Configurations;
+    for (var n = 1; n <= configs.Count; n++) {
+        var config = configs(n);
+
+        if (config.ConfigurationName === "Debug") {
+    
 	// --------------------------- DEBUG SETTINGS --------------------------- //
 	
 	    // DEBUG GENERAL SETTINGS
-		var config = proj.Object.Configurations('Debug');
-	
+
 		config.ConfigurationType = ConfigurationTypes.typeDynamicLibrary;
           config.useOfMfc = useOfMfc.useMfcDynamic;
           config.UseOfAtl = useOfAtl.useAtlDynamic
@@ -236,13 +248,13 @@ function AddConfig90(proj, strProjectName)
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalYes;
 		LinkTool.GenerateDebugInformation = "true";
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
-		LinkTool.TargetMachine = machineTypeOption.machineX86;
 		LinkTool.ModuleDefinitionFile = 'Component.def';
 		LinkTool.RegisterOutput = true;
+                } else if (config.ConfigurationName === "Release") {
+
 	// --------------------------- RELEASE SETTINGS --------------------------- //
         
         // RELEASE GENERAL SETTINGS
-		config = proj.Object.Configurations('Release');
 		
 		config.ConfigurationType = ConfigurationTypes.typeDynamicLibrary;
         config.useOfMfc = useOfMfc.useMfcDynamic;
@@ -282,9 +294,10 @@ function AddConfig90(proj, strProjectName)
 		LinkTool.LinkIncremental = linkIncrementalType.linkIncrementalNo;
 		LinkTool.GenerateDebugInformation = "true";
 		LinkTool.SubSystem = subSystemOption.subSystemWindows;
-		LinkTool.TargetMachine = machineTypeOption.machineX86;
 		LinkTool.ModuleDefinitionFile = 'Component.def';
 		LinkTool.RegisterOutput = true;
+        }
+        }
 	}
 	catch(e)
 	{
