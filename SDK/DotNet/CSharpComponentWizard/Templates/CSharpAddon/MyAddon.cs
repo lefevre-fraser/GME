@@ -15,7 +15,7 @@ namespace MyAddon
     ProgId(ComponentConfig.progID),
     ClassInterface(ClassInterfaceType.AutoDual)]
     [ComVisible(true)]
-    public class MyAddon : IMgaComponentEx, IGMEVersionInfo, IMgaEventSink
+    public class MyAddon : IMgaComponentEx, IGMEVersionInfo, IMgaEventSink, IDisposable
     {
 
         private MgaAddOn addon;
@@ -37,6 +37,7 @@ namespace MyAddon
                     }
                     GMEConsole = null;
                 }
+                addon.Destroy();
                 Marshal.FinalReleaseComObject(addon);
                 addon = null;
             }
@@ -244,5 +245,14 @@ namespace MyAddon
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            if (addon != null)
+            {
+                addon.Destroy();
+                addon = null;
+            }
+        }
     }
 }

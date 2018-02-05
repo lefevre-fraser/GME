@@ -25,6 +25,11 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Binary compatibility with 11.12.2
+  - C# AddOn wizard: fix deactivating addon when restarting addons
+
 Release Notes of Release 17.12.6
 ----------------------------------
   - Binary compatibility with 11.12.2
