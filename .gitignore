@@ -444,3 +444,5 @@ Tests/GPyUnit/GME_310/DerivedRefport_test.mga
 /redist/
 /GME-*.*.*_src/
 /GME-src.zip
+Install/vc_redist.x64.v10.0.40219.325.exe
+Install/vc_redist.x86.v10.0.40219.325.exe
