@@ -634,13 +634,13 @@ void BitmapMasked::Free()
 	// Make sure all member data that might have been allocated is freed.
 	if(m_pBMI)
 	{
-		delete m_pBMI;
+		delete[] m_pBMI;
 		m_pBMI = NULL;
 	}
 	
 	if(m_pBits)
 	{
-		delete m_pBits;
+		delete[] m_pBits;
 		m_pBits = NULL;
 	}
 	if(m_pPalette)

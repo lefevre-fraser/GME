@@ -1274,6 +1274,8 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	long numberOfGaps = 0;
 	long heightPreEstimation = m_DecoratorMarginY;
 	if (m_LabelPart != NULL) {
+		// GetTextLocation calculation depends on SetTextRelYPosition
+		m_LabelPart->SetTextRelYPosition(0);
 		CRect labelLoc = m_LabelPart->GetTextLocation(pDC, gdip);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, labelLoc.Width());
 		m_lMaxTextHeight = max(m_lMaxTextHeight, labelLoc.Height());
@@ -1281,6 +1283,8 @@ void ClassComplexPart::CalcRelPositions(CDC* pDC, Gdiplus::Graphics* gdip)
 	}
 
 	if (m_StereotypePart != NULL) {
+		// GetTextLocation calculation depends on SetTextRelYPosition
+		m_StereotypePart->SetTextRelYPosition(0);
 		CRect stereoLoc = m_StereotypePart->GetTextLocation(pDC, gdip);
 		m_lMaxTextWidth = max(m_lMaxTextWidth, stereoLoc.Width());
 		m_lMaxTextHeight = max(m_lMaxTextHeight, stereoLoc.Height());
