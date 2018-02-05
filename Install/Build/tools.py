@@ -9,6 +9,8 @@
 
 import os
 import os.path
+import sys
+import subprocess
 import win32com.client
 from prefs import prefs
 
@@ -99,12 +101,9 @@ def system(args, dirname=None):
     """
     toolmsg("Executing " + str(args))
     #toolmsg(" ".join(map(lambda x: '"' + x + '"', args)))
-    import subprocess
     with open(os.devnull, "w") as nulfp:
         # n.b. stderr=subprocess.STDOUT fails mysteriously
-        import sys
         subprocess.check_call(args, stdout=(sys.stdout if prefs['verbose'] else nulfp), stderr=subprocess.STDOUT, shell=True, cwd=dirname)
-
 
 
 def test_VS():
@@ -127,16 +126,15 @@ def build_VS(sln_path, config_name, arch=None, msbuild=MSBUILD, target=None):
     arch = arch or prefs['arch']
     target = target or ("Clean;" * prefs['clean']) + 'Build'
 
-    import subprocess
     # , '/fl', '/flp:Verbosity=diagnostic'
     # , '/m'
-    args = [msbuild, sln_path, '/m', '/t:' + target,
+    args = [msbuild, sln_path, '/nologo', '/m', '/t:' + target,
          '/p:VisualStudioVersion=%s.0;PlatformToolset=v%s0;Configuration=%s' % (prefs['toolset'], prefs['toolset'], config_name) +
-        (';Platform=x64' if arch == 'x64' else '') ]
-    with open(os.devnull, "w") as nulfp:
-        # n.b. stderr=subprocess.STDOUT fails mysteriously
-        import sys
-        subprocess.check_call(args, stdout=(sys.stdout if prefs['verbose'] else nulfp), stderr=None, shell=True)
+        (';Platform=x64' if arch == 'x64' else ''),
+        '/fl', '/flp:Verbosity=normal;LogFile=msbuild_{}_{}.log'.format(os.path.basename(sln_path), arch),
+        '/clp:' + ('Verbosity=minimal' if prefs['verbose'] else 'Verbosity=quiet')]
+    # n.b. stderr=subprocess.STDOUT fails mysteriously
+    subprocess.check_call(args, stdout=sys.stdout, stderr=None, shell=True)
 
 def xme2mga(xml_file, paradigm):
     """
