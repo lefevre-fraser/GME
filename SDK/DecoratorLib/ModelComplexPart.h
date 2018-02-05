@@ -11,6 +11,7 @@
 
 #include "StdAfx.h"
 #include <comutil.h>
+#include <memory>
 #include "TypeableBitmapPart.h"
 #include "PortPart.h"
 
