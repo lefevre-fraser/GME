@@ -57,8 +57,8 @@ def test_SVN():
 def test_zip():
     "Test for ZIP utility. Raises exception if not found."
     system([ZIP_PRG, '>NUL'])
-    
-    
+
+
 def zip(dirname, zipname, list=None):
     """
     Build zip archive in the specified directory.
@@ -74,7 +74,7 @@ def zip(dirname, zipname, list=None):
         cmd_line.append("-i@" + list)
     cmd_line.extend([zipname, '.', '>NUL'])
     system(cmd_line, dirname)
-    
+
 def collect_and_zip(dirname, zipname, pattern=None):
     """
     Collect files (recursively) and build zip archive in the specified directory.
@@ -129,7 +129,7 @@ def build_VS(sln_path, config_name, arch=None, msbuild=MSBUILD, target=None):
     import subprocess
     # , '/fl', '/flp:Verbosity=diagnostic'
     # , '/m'
-    args = [msbuild, sln_path, '/m', '/t:' + target, 
+    args = [msbuild, sln_path, '/m', '/t:' + target,
          '/p:VisualStudioVersion=%s.0;PlatformToolset=v%s0;Configuration=%s' % (prefs['toolset'], prefs['toolset'], config_name) +
         (';Platform=x64' if arch == 'x64' else '') ]
     with open(os.devnull, "w") as nulfp:
@@ -141,9 +141,9 @@ def xme2mga(xml_file, paradigm):
     """
     Generates an .mga file from an .xme file
     params
-        xml_file    : full path to the xme file 
+        xml_file    : full path to the xme file
         paradigm    : use the specified paradigm to parse the project
-        
+
     The generated .mga file will be created with the same name/path but different
     extension.
     """
@@ -153,16 +153,16 @@ def xme2mga(xml_file, paradigm):
     mga_file = os.path.splitext(xml_file)[0] + ".mga"
     project.Create( "MGA="+mga_file, paradigm )
     parser.ParseProject( project, xml_file )
-    project.Close()    
+    project.Close()
 
-    
+
 def xmp2mta(xml_file, paradigm):
     """
     Generates and registers (system-wide) an .mta file from an .xmp file
     params
-        xml_file    : full path to the xmp file 
+        xml_file    : full path to the xmp file
         paradigm    : use the specified paradigm name to parse the paradigm file
-        
+
     The generated .mta file will be created with the same name/path but different
     extension.
     """
@@ -179,9 +179,9 @@ def query_GUID(mta_file):
     Queries the current GUID of the specified paradigm.
     params
         paradigm    : the name of the paradigm to be queried
-    
+
     returns the GUID as a string
-    """ 
+    """
     metaproject = Dispatch("MGA.MgaMetaProject")
     metaproject.Open('MGA=' + mta_file)
     try:
@@ -193,19 +193,21 @@ def query_GUID(mta_file):
 
 def _get_wix_path():
     import _winreg
-    for wix_ver in ('3.11', '3.10', '3.9', '3.8', '3.7', '3.6', '3.5'):
+    wix_vers = ('3.11', '3.10')
+    for wix_ver in wix_vers:
         try:
-            with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows Installer XML\\' + wix_ver) as wixkey:
+            with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows Installer XML\\' + wix_ver, 0, _winreg.KEY_READ | _winreg.KEY_WOW64_32KEY) as wixkey:
                 return _winreg.QueryValueEx(wixkey, 'InstallRoot')[0]
         except Exception as e:
             pass
-        
+    raise ValueError('Could not find WiX {}'.format(' or '.join(wix_vers)))
+
 def test_WiX():
     "Test for WiX. Raises exception if not found."
     toolmsg("Trying to execute WiX tool candle.exe")
     exepath = os.path.join(_get_wix_path(), WIX_CANDLE_PRG)
     system([exepath])
-    
+
 
 def _x64_suffix(str):
     return str + '_x64' if prefs['arch'] == 'x64' else str
@@ -228,10 +230,10 @@ def build_WiX(wix_files):
     toolmsg("Building " + filename + " in " + dirname)
     wxi_files = filter(lambda file: file.find(".wxi") != -1, wix_files)
     mm_files = filter(lambda file: file.find(".wxs") != -1, wix_files)
-    
+
     for file in wix_files:
         _candle(file)
-    
+
     for wxs in mm_files:
         if wxs.find('GME.wxs') == -1:
             exepath = os.path.join(_get_wix_path(), 'lit.exe')
@@ -245,3 +247,88 @@ def build_WiX(wix_files):
                 wixlibs += ['GME_bin_x64.wixlib']
         cmd_line = [exepath] + ['-o', _x64_suffix(os.path.splitext(wxs)[0]) + ext] + [ _get_wixobj(file) for file in wxi_files ] + [ _get_wixobj(wxs)] + wixlibs
         system(cmd_line, dirname)
+
+
+import errno
+import requests
+import tempfile
+import hashlib
+import itertools
+from xml.etree import ElementTree
+import xml.sax
+from xml.sax.handler import ContentHandler
+
+
+def download_file(url, filename):
+    if os.path.isfile(filename):
+        return
+    print('Downloading {} => {}'.format(url, filename))
+    if os.path.dirname(filename):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+    r = requests.get(url, stream=True)
+    r.raise_for_status()
+    fd, tmp_path = tempfile.mkstemp()
+    # wix bootstrapper uses SHA1
+    hash = hashlib.sha1()
+    with os.fdopen(fd, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:  # filter out keep-alive new chunks
+                hash.update(chunk)
+                f.write(chunk)
+        # n.b. don't use f.tell(), since it will be wrong for Content-Encoding: gzip
+        downloaded_octets = r.raw._fp_bytes_read
+    if int(r.headers.get('content-length', downloaded_octets)) != downloaded_octets:
+        os.unlink(tmp_path)
+        raise ValueError('Download of {} was truncated: {}/{} bytes'.format(url, downloaded_octets, r.headers['content-length']))
+    else:
+        os.rename(tmp_path, filename)
+        print('  => {} {}'.format(filename, hash.hexdigest()))
+
+
+class WixProcessingInstructionHandler(ContentHandler):
+    def __init__(self):
+        ContentHandler.__init__(self)
+        self.defines = {}
+
+    def processingInstruction(self, target, data):
+        if target == 'define':
+            eval(compile(data, '<string>', 'exec'), globals(), self.defines)
+        elif target == 'include':
+            pass  # TODO
+
+
+def download_bundle_deps(bundle_wxs, define_files=[]):
+    bundle_dir = os.path.dirname(os.path.abspath(bundle_wxs))
+    downloaded_files = []
+    defines = WixProcessingInstructionHandler()
+    for define_file in define_files:
+        assert os.path.isfile(define_file)
+        print(define_file)
+        xml.sax.parse(define_file, defines)
+
+    def eval_vars(attr):
+        for name, val in defines.defines.iteritems():
+            attr = attr.replace('$(var.{})'.format(name), val)
+        return attr
+
+    tree = ElementTree.parse(bundle_wxs).getroot()
+    ElementTree.register_namespace("", "http://schemas.microsoft.com/wix/2006/wi")
+
+    for package in itertools.chain(tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}ExePackage"),
+            tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}MsuPackage"),
+            tree.findall(".//{http://schemas.microsoft.com/wix/2006/wi}MsiPackage")):
+        url = eval_vars(package.get('DownloadUrl', ''))
+        if not url:
+            continue
+        filename = os.path.join(bundle_dir, eval_vars(package.get('SourceFile', '') or package.get('Name', '')))
+        download_file(url, filename)
+        downloaded_files.append(filename)
+    # from https://github.com/wixtoolset/wix3/blob/develop/src/ext/NetFxExtension/wixlib/NetFx4.5.wxs
+    # filename = 'redist\\dotNetFx45_Full_setup.exe'
+    # download_file('http://go.microsoft.com/fwlink/?LinkId=225704', filename)
+    # downloaded_files.append(filename)
+    return downloaded_files

@@ -97,6 +97,24 @@
       <![CDATA[Installed OR (VersionNT >= 501)]]>
     </Condition>
 
+    <Property Id="UCRTINSTALLED">
+      <DirectorySearch Id="UCRTSystemSearch" Path="[SystemFolder]" Depth="0">
+        <FileSearch Id="UCRTFileSearch" Name="ucrtbase.dll"/>
+      </DirectorySearch>
+    </Property>
+    <Condition Message="This application requires the Universal CRT. Please install KB2999226 via Windows Update or https://support.microsoft.com/en-us/kb/2999226">
+      <![CDATA[Installed OR UCRTINSTALLED]]>
+    </Condition>
+
+    <Property Id="MSVCPINSTALLED">
+      <DirectorySearch Id="MSVCPSystemSearch" Path="[SystemFolder]" Depth="0">
+        <FileSearch Id="MSVCPFileSearch" Name="msvcp140.dll"/>
+      </DirectorySearch>
+    </Property>
+    <Condition Message="This application requires Visual C++ Redistributable for Visual Studio 2015">
+      <![CDATA[Installed OR MSVCPINSTALLED]]>
+    </Condition>
+
     <Property Id='ARPPRODUCTICON' Value='GME.ico' />
 
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch GME" />
@@ -300,20 +318,14 @@
       <?endif?>
     </Directory>
 
-    <!-- =========================================================== -->
-    <!-- MERGE MODULES -->
-    <!-- =========================================================== -->
     <DirectoryRef Id='TARGETDIR'>
       <?if $(sys.BUILDARCH)=x86 ?>
       <?endif?>
+      <!-- needed for CrashRpt.dll on x86, x64; for libapr-1.dll, libeay32.dll, et al on x86 -->
       <Merge Id="CRT100" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_CRT_$(sys.BUILDARCH).msm" DiskId="1" />
-      <Merge Id="MFC100" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_MFC_$(sys.BUILDARCH).msm" DiskId="1" />
-      <Merge Id="ATL100" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_ATL_$(sys.BUILDARCH).msm" DiskId="1" />
 
       <?if $(sys.BUILDARCH)=x64 ?>
       <Merge Id="CRT100_x86" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" />
-      <Merge Id="MFC100_x86" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_MFC_x86.msm" DiskId="1" />
-      <Merge Id="ATL100_x86" Language="0" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_ATL_x86.msm" DiskId="1" />
       <?endif?>
     </DirectoryRef>
 
@@ -331,16 +343,12 @@
         <?if $(sys.BUILDARCH)=x64 ?>
         <ComponentGroupRef Id='GME_binx64' />
         <MergeRef Id='CRT100_x86' />
-        <MergeRef Id='MFC100_x86' />
-        <MergeRef Id='ATL100_x86' />
         <?endif?>
 
         <?if $(sys.BUILDARCH)=x86 ?>
         <?endif?>
 
         <MergeRef Id='CRT100' />
-        <MergeRef Id='MFC100' />
-        <MergeRef Id='ATL100' />
       </Feature>
 
       <Feature Id='Samples' Title='Samples' Description='These are sample paradigms and interpreters with source code'

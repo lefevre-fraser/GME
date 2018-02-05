@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?define ProviderKey="{17CDE67A-A87A-4B71-B91B-75606E3AC99E}" ?>
+<?define BundleUpgradeCode="{B6ABF941-4DF8-4A63-88F5-87F76AC3F728}" ?>
+<?define CompanyName="Vanderbilt University, ISIS" ?>
+<?define UpdateURL="https://forge.isis.vanderbilt.edu/gme/" ?>
+<?define InstallerVersion="500" ?>
+<?define Compressed="no" ?>
+<?define Vc9RedistVersion="v9.0.30729.4148" ?>
+<?define VcRedistVersion="v14.0.24123" ?>
+
+<?include GME_inc.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension"
+     xmlns:dep='http://schemas.microsoft.com/wix/DependencyExtension'
+     xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'
+     xmlns:netfx='http://schemas.microsoft.com/wix/NetFxExtension'
+>
+    <Bundle Name="$(var.ProductName) $(var.VERSIONSTR)"
+            IconSourceFile="../GME/Gme/res/GME.ico"
+            Version="$(var.VERSIONSTR)"
+            Manufacturer="$(var.CompanyName)"
+            dep:ProviderKey="$(var.ProviderKey)"
+            UpgradeCode="$(var.BundleUpgradeCode)"
+            UpdateUrl="$(var.UpdateURL)"
+            DisableModify="yes"
+            >
+
+      <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+        <bal:WixStandardBootstrapperApplication
+          LicenseFile="..\Doc\Legal\License.rtf"
+          LogoFile="../SDK/DotNet/CSharpComponentWizard/Images/gmeICON.png"
+          ShowVersion="yes"
+          SuppressOptionsUI="no"
+          SuppressRepair="yes"
+          ThemeFile="RtfTheme.xml"/>
+      </BootstrapperApplicationRef>
+
+    <util:FileSearch Id="SearchSystem"
+                     Path="[SystemFolder]advapi32.dll"
+                     Variable="ADVAPIVERSION"
+                     Result="version"
+                     />
+
+    <util:FileSearch Id="SearchSystem2"
+                     Path="[SystemFolder]ucrtbase.dll"
+                     Variable="UCRTVERSION"
+                     Result="version"
+                     />
+
+      <util:FileSearch Id="SearchSystem3"
+                       Path="[WindowsFolder]System32\ucrtbase.dll"
+                       Variable="UCRTVERSION64"
+                       Result="version"
+                       />
+
+    <util:RegistrySearch Id="vcredist_2015_x86_check" Root="HKLM" Key="SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum" Value="Install" Variable="vcredist_2015_x86_installed" Win64="no"/>
+    <util:RegistrySearch Id="vcredist_2015_x86_versioncheck" Root="HKLM" Key="SOFTWARE\Classes\Installer\Dependencies\Microsoft.VS.VC_RuntimeMinimumVSU_x86,v14" Value="Version" Variable="vcredist_2015_x86_version" Result="exists" Win64="no"/>
+    <util:RegistrySearch Id="vcredist_2015_x86_versionnumbercheck" Root="HKLM" Key="SOFTWARE\Classes\Installer\Dependencies\Microsoft.VS.VC_RuntimeMinimumVSU_x86,v14" Value="Version" Variable="vcredist_2015_x86_versionnumber" Result="value" Win64="no"/>
+
+    <util:RegistrySearch Id="vcredist_2015_x64_check" Root="HKLM" Key="SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum" Value="Install" Variable="vcredist_2015_x64_installed" Win64="yes"/>
+    <util:RegistrySearch Id="vcredist_2015_x64_versioncheck" Root="HKLM" Key="SOFTWARE\Classes\Installer\Dependencies\Microsoft.VS.VC_RuntimeMinimumVSU_amd64,v14" Value="Version" Variable="vcredist_2015_x64_version" Result="exists" Win64="yes"/>
+    <util:RegistrySearch Id="vcredist_2015_x64_versionnumbercheck" Root="HKLM" Key="SOFTWARE\Classes\Installer\Dependencies\Microsoft.VS.VC_RuntimeMinimumVSU_amd64,v14" Value="Version" Variable="vcredist_2015_x64_versionnumber" Result="value" Win64="yes"/>
+
+    <!-- n.b. this does not work. the x86 package has the same UpgradeCode. If you install x86 first then this bundle, x64 will not be installed -->
+    <!-- <util:ProductSearch Id="vcredist_2008sp1_x64_versioncheck" UpgradeCode="{AA783A14-A7A3-3D33-95F0-9A351D530011}" Result="version" Variable="vcredist_2008sp1_x64_versionnumber"/> -->
+    <!-- uplevel.30729.4148.Microsoft_VC90_CRT_x64.QFE {3FA0170E-227C-37C7-BAC0-64691A992C81} -->
+    <util:ComponentSearch Id="vcredist_2008sp1_x64_msvcr90" Guid="{3FA0170E-227C-37C7-BAC0-64691A992C81}" Result="directory" Variable="vcredist_2008sp1_x64_msvcr90" />
+    <util:FileSearch Id="vcredist_2008sp1_x64_versionnumber" After="vcredist_2008sp1_x64_msvcr90" Condition="vcredist_2008sp1_x64_msvcr90" Path="[vcredist_2008sp1_x64_msvcr90]\msvcr90.dll" Result="version" Variable="vcredist_2008sp1_x64_versionnumber" />
+
+    <bal:Condition Message="Installation failed because your version of Windows is too old. $(var.ProductName) requires Windows 7 SP1 or newer."><![CDATA[Installed OR VersionNT > v6.1 OR (VersionNT = v6.1 AND ServicePackLevel >= 1)]]></bal:Condition>
+    <Chain>
+      <PackageGroupRef Id="NetFx45Web"/>
+
+      <!-- Python -> CRT90 -->
+      <ExePackage Id="vcredist_2008SP1_x64.exe"
+                  Name="vc_redist.x64.$(var.Vc9RedistVersion).exe"
+                  InstallCommand="/q"
+                  RepairCommand="/q"
+                  UninstallCommand="/qu"
+                  Protocol="none"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  DetectCondition="vcredist_2008sp1_x64_versionnumber &gt;= $(var.Vc9RedistVersion)"
+                  PerMachine="yes"
+                  Vital="yes"
+                  Cache="no"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\VCRedist_2008SP1\vc_redist.x64.$(var.Vc9RedistVersion).exe"
+                  DownloadUrl="https://download.microsoft.com/download/9/7/7/977B481A-7BA6-4E30-AC40-ED51EB2028F2/vcredist_x64.exe"
+      />
+
+      <ExePackage Id="vcredist_2015_x86.exe"
+                  Name="vc_redist.x86.$(var.VcRedistVersion).exe"
+                  InstallCommand="/norestart /q /chainingpackage ADMINDEPLOYMENT"
+                  RepairCommand="/norestart /q /chainingpackage ADMINDEPLOYMENT"
+                  UninstallCommand="/norestart /q /chainingpackage ADMINDEPLOYMENT"
+                  Protocol="netfx4"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  DetectCondition="vcredist_2015_x86_installed AND vcredist_2015_x86_version AND vcredist_2015_x86_versionnumber &gt;= $(var.VcRedistVersion)"
+                  PerMachine="yes"
+                  Vital="yes"
+                  Cache="no"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\VCRedist_2015\vc_redist.x86.$(var.VcRedistVersion).exe"
+                  DownloadUrl="https://download.microsoft.com/download/0/6/4/064F84EA-D1DB-4EAA-9A5C-CC2F0FF6A638/vc_redist.x86.exe"
+      />
+
+      <ExePackage Id="vcredist_2015_x64.exe"
+                  Name="vc_redist.x64.$(var.VcRedistVersion).exe"
+                  InstallCommand="/norestart /q /chainingpackage ADMINDEPLOYMENT"
+                  RepairCommand="/norestart /q /chainingpackage ADMINDEPLOYMENT"
+                  UninstallCommand="/norestart /q /chainingpackage ADMINDEPLOYMENT"
+                  Protocol="netfx4"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  InstallCondition="VersionNT64"
+                  DetectCondition="vcredist_2015_x64_installed AND vcredist_2015_x64_version AND vcredist_2015_x64_versionnumber &gt;= $(var.VcRedistVersion)"
+                  PerMachine="yes"
+                  Vital="yes"
+                  Cache="yes"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\VCRedist_2015\vc_redist.x64.$(var.VcRedistVersion).exe"
+                  DownloadUrl="https://download.microsoft.com/download/0/6/4/064F84EA-D1DB-4EAA-9A5C-CC2F0FF6A638/vc_redist.x64.exe"
+                  />
+
+      <MsuPackage Id="Win61_KB2999226_x64"
+                  Name="Windows6.0-KB2999226-x64.msu"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  InstallCondition="VersionNT64 AND VersionNT = v6.0"
+                  DetectCondition="UCRTVERSION64 &gt;= v6.2.10585.0"
+                  Vital="yes"
+                  Cache="no"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\KB2999226\Windows6.0-KB2999226-x64.msu"
+                  DownloadUrl="https://download.microsoft.com/download/5/4/E/54E27BE2-CFB2-4FC9-AB03-C39302CA68A0/Windows6.0-KB2999226-x64.msu"
+                  />
+
+      <MsuPackage Id="Win71_KB2999226_x64"
+                  Name="Windows6.1-KB2999226-x64.msu"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  InstallCondition="VersionNT64 AND VersionNT = v6.1"
+                  DetectCondition="UCRTVERSION64 &gt;= v6.2.10585.0"
+                  Vital="yes"
+                  Cache="no"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\KB2999226\Windows6.1-KB2999226-x64.msu"
+                  DownloadUrl="https://download.microsoft.com/download/1/1/5/11565A9A-EA09-4F0A-A57E-520D5D138140/Windows6.1-KB2999226-x64.msu"
+                  />
+
+      <MsuPackage Id="Win80_KB2999226_x64"
+                  Name="Windows8-RT-KB2999226-x64.msu"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  InstallCondition="VersionNT64 AND VersionNT = v6.2"
+                  DetectCondition="UCRTVERSION64 &gt;= v6.2.10585.0"
+                  Vital="yes"
+                  Cache="no"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\KB2999226\Windows8-RT-KB2999226-x64.msu"
+                  DownloadUrl="https://download.microsoft.com/download/A/C/1/AC15393F-A6E6-469B-B222-C44B3BB6ECCC/Windows8-RT-KB2999226-x64.msu"
+                  />
+
+      <MsuPackage Id="Win81_KB2999226_x64"
+                  Name="Windows8.1-KB2999226-x64.msu"
+                  Compressed="$(var.Compressed)"
+                  Permanent="yes"
+                  InstallCondition="VersionNT64 AND VersionNT &gt;= v6.3 AND ADVAPIVERSION &lt; v6.3.10000.0"
+                  DetectCondition="UCRTVERSION64 &gt;= v6.2.10585.0"
+                  Vital="yes"
+                  Cache="no"
+                  SuppressSignatureVerification="yes"
+                  SourceFile="Redist\KB2999226\Windows8.1-KB2999226-x64.msu"
+                  DownloadUrl="https://download.microsoft.com/download/9/6/F/96FD0525-3DDF-423D-8845-5F92F4A6883E/Windows8.1-KB2999226-x64.msu"
+                  />
+
+      <MsiPackage Id="GME"
+                  Name="GME_x64.msi"
+                  Compressed="yes"
+                  Visible="no"
+                  ForcePerMachine="yes"
+                  >
+        <MsiProperty Name="MSIUNINSTALLSUPERSEDEDCOMPONENTS" Value="1"/>
+      </MsiPackage>
+
+    </Chain>
+	</Bundle>
+</Wix>

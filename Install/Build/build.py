@@ -7,7 +7,8 @@
 """GME Build System - central module"""
 
 import sys
-import os, os.path
+import os
+import os.path
 import getopt
 from prefs import prefs
 import tools
@@ -36,43 +37,43 @@ def mta_for_xmp(file):
 
 def check_prerequisites():
     "Check prerequisites (required tools, etc.)"
-    
+
     # Test for GME_ROOT environment variable
     if not os.environ['GME_ROOT']:
         print "GME_ROOT environment variable is not set! (It should point to the GMESRC folder)"
         raise
-        
+
     if not os.environ['JAVA_HOME']:
         print "JAVA_HOME environment variable is not set! (It should point to the JDK root folder)"
         raise
-        
+
     if os.path.normpath(os.path.abspath(os.environ['GME_ROOT'])) != GME_ROOT:
         print "GME_ROOT environment variable is not set to the current dev. source tree!"
         print "GME_ROOT =", os.environ['GME_ROOT']
         print "Current dev. source tree:", GME_ROOT
         raise
-    
+
     # Test for Microsoft Visual Studio 2010
     try:
         tools.test_VS()
     except:
         print "Microsoft Visual Studio 2010 is not installed!"
         raise
-    
+
     # Test for zip utility
     try:
         tools.test_zip()
     except:
         print "ZIP utility cannot be found!"
         raise
-    
+
     # Test for InstallShield
     try:
         tools.test_WiX()
     except:
         print "WiX toolset cannot be found in your path!"
         raise
-    
+
     # Test for SVN
     try:
         tools.test_SVN()
@@ -96,8 +97,8 @@ def update_version_str():
             header.write(text)
     # resource compiler doesn't do dependency tracking well
     #  echo `grep -rlI GME_VERSION GME | grep \\.rc | sed 's/^/"/; s/$/",/'`
-    for filename in ("GME/Console/Console.rc", "GME/ConstraintManager/ConstraintManager.rc", "GME/Core/Core.rc", "GME/Gme/GME.rc", "GME/Gme/res/AboutBox.rc", 
-            "GME/GMEActiveBrowser/GMEActiveBrowser.rc", "GME/Meta/Meta.rc", "GME/Mga/Mga.rc", "GME/MgaUtil/MgaUtil.rc", "GME/ObjectInspector/ObjectInspector.rc", 
+    for filename in ("GME/Console/Console.rc", "GME/ConstraintManager/ConstraintManager.rc", "GME/Core/Core.rc", "GME/Gme/GME.rc", "GME/Gme/res/AboutBox.rc",
+            "GME/GMEActiveBrowser/GMEActiveBrowser.rc", "GME/Meta/Meta.rc", "GME/Mga/Mga.rc", "GME/MgaUtil/MgaUtil.rc", "GME/ObjectInspector/ObjectInspector.rc",
             "GME/PanningView/PanningView.rc", "GME/Parser/Parser.rc", "GME/PartBrowser/PartBrowser.rc", "GME/Search/Search.rc", "GME/XmlBackEnd/XmlBackEnd.rc"):
         os.utime(os.path.join(GME_ROOT, filename), None)
 
@@ -115,7 +116,7 @@ def _remove_dlldata_from_tlog():
         lines = [line for line in lines if line.find(u'DLLDATA.C') == -1]
     with codecs.open(tlog, 'w', encoding='utf-16-le') as f:
         for line in lines: f.write(line)
-        
+
 def compile_GME():
     "Compile GME core components"
     if prefs['arch'] == 'x64':
@@ -135,7 +136,7 @@ def compile_GME():
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
     sln_file = os.path.join(GME_ROOT, "GME", "DotNetPIAs", "DotNetPIAs.vcxproj")
     tools.build_VS( sln_file, "Release" )
-    
+
     for filename in ('policy.1.0.GME.MGA.Core', 'policy.1.0.GME.MGA.Meta', 'policy.1.0.GME.MGA', 'policy.1.0.GME', 'policy.1.0.GME.Util', 'policy.1.0.GME.MGA.Parser'):
         pia_dir = os.path.join(GME_ROOT, "GME", "DotNetPIAs_1.0.1.0")
         config = '%s.config' % filename
@@ -145,7 +146,7 @@ def compile_GME():
                 '/link:' + config, '/out:' + dll,
                 '/keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk', '/platform:anycpu', '/version:1.0.0.0'], pia_dir)
             tools.system([r'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\gacutil.exe', '/i', dll], pia_dir)
-    
+
 def _Release_PGO_dir():
     if prefs['arch'] == 'x64':
         return os.path.join(GME_ROOT, 'GME', 'x64', 'Release_PGO')
@@ -217,7 +218,7 @@ def compile_meta():
     cmd_dir = os.path.join(GME_ROOT, "Paradigms", "MetaGME")
     tools.system( ['call', 'regrelease.bat'] + (['x64'] if prefs['arch'] == 'x64' else []) + ['<NUL'], cmd_dir)
 
-        
+
 def compile_JBON():
     "Compile Java component support (JBON)"
     if prefs['arch'] == 'x64': return
@@ -226,22 +227,22 @@ def compile_JBON():
     sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln")
     tools.build_VS( sln_file, "Release" )
 
-        
+
 def compile_tools():
     "Compile external tool components"
     import _winreg
-    
+
     # Auto Layout
     sln_file = os.path.join(GME_ROOT, "Tools", "AutoLayout", "AutoLayout.sln")
     tools.build_VS( sln_file, "Release" )
 
     sln_file = os.path.join(GME_ROOT, "SDK", "DotNet", "DsmlGenerator", "DsmlGenerator.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
-    
+
     with _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft", 0, _winreg.KEY_WOW64_32KEY | _winreg.KEY_WRITE | _winreg.KEY_READ) as ms:
         with _winreg.CreateKey(ms, r".NETFramework\v4.0.30319\AssemblyFoldersEx\ISIS.GME.Common") as key:
             _winreg.SetValueEx(key, None, 0, _winreg.REG_SZ, os.path.join(os.environ['windir'], r"Microsoft.NET\assembly\GAC_MSIL\ISIS.GME.Common\v4.0_1.0.7.0__1321e6b92842fe54"))
-    
+
     sln_file = os.path.join(GME_ROOT, "Tools", "DumpWMF", "DumpWMF.sln")
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
 
@@ -258,7 +259,7 @@ def compile_tools():
     # Table Editor
     sln_file = os.path.join(GME_ROOT, "Tools", "TableEditor", "TableEditor.sln")
     tools.build_VS( sln_file, "Release" )
-    
+
     # GMEplink
     sln_file = os.path.join(GME_ROOT, "Tools", "GMEplink", "GMEplink.sln")
     tools.build_VS( sln_file, "Release" )
@@ -268,7 +269,7 @@ def compile_tools():
 
 def compile_samples():
     "Compile sample components"
-    
+
     # UML Paradigm
     sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln")
     tools.build_VS( sln_file, "Release" )
@@ -277,7 +278,7 @@ def compile_samples():
 
     sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln")
     tools.build_VS( sln_file, "Release" )
-    
+
     # SF Paradigm
     sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "SFInterpreter", "SFInterpreter.sln")
     tools.build_VS( sln_file, "Release" )
@@ -285,11 +286,11 @@ def compile_samples():
     tools.build_VS( sln_file, "Release" )
     sln_file = os.path.join(GME_ROOT, "Paradigms", "SF", "BON2SFInterpreter", "BON2SFInterpreter.sln")
     tools.build_VS( sln_file, "Release" )
-    
+
     # HFSM Paradigm
     sln_file = os.path.join(GME_ROOT, "Paradigms", "HFSM", "HFSMSimulator", "HFSMSimulator.sln")
     tools.build_VS( sln_file, "Release" )
-    
+
 
 def zip_decorsamples():
     "Create PlainDecoratorSample.zip"
@@ -317,23 +318,23 @@ def generate_meta_files():
 def generate_sample_files():
     "Generate sample files (mta/mga)"
     samples_root = os.path.join(GME_ROOT, "Paradigms")
-    
+
     # SF Paradigm
     sample_file = os.path.join(samples_root, "SF", "SFMeta.xme")
     tools.xme2mga(sample_file, "MetaGME")
-    tools.xmp2mta(SF_XMP, "SF") 
+    tools.xmp2mta(SF_XMP, "SF")
     sample_file = os.path.join(samples_root, "SF", "SFDemo.xme")
     tools.xme2mga(sample_file, "SF")
 
     # HFSM Paradigm
     sample_file = os.path.join(samples_root, "HFSM", "HFSM-Meta.xme")
     tools.xme2mga(sample_file, "MetaGME")
-    tools.xmp2mta(HFSM_XMP, "HFSM") 
+    tools.xmp2mta(HFSM_XMP, "HFSM")
     sample_file = os.path.join(samples_root, "HFSM", "HFSM-Demo01.xme")
     tools.xme2mga(sample_file, "HFSM")
     sample_file = os.path.join(samples_root, "HFSM", "HFSM-Demo02.xme")
     tools.xme2mga(sample_file, "HFSM")
-    
+
     # UML Paradigm
     sample_file = os.path.join(samples_root, "UML", "UMLMeta.xme")
     tools.xme2mga(sample_file, "MetaGME")
@@ -348,12 +349,12 @@ def build_nuget():
         "-Verbosity", "detailed",
         "-BasePath", dsml_generator,
         "-OutputDirectory", os.path.join(GME_ROOT, "Install")])
-        
+
     tools.system([nuget, "pack", os.path.join(dsml_generator, "GME.DSMLGenerator.Runtime.nuspec"),
         "-Verbosity", "detailed",
         "-BasePath", dsml_generator,
         "-OutputDirectory", os.path.join(GME_ROOT, "Install")])
-        
+
     dotnet_pias = os.path.join(GME_ROOT, "GME", "DotNetPIAs")
     tools.system([nuget, "pack", os.path.join(dotnet_pias, "GME.PIAs.nuspec"),
         "-Verbosity", "detailed",
@@ -364,7 +365,7 @@ def build_msms():
     """Build WiX libraries (wixlibs files)
     (Still called build_msms, for historical reasons)
     """
-    
+
     # Prepare include file with dynamic data
     f = open(os.path.join(GME_ROOT, "Install", "GME_dyn.wxi"), 'w')
     print >> f, "<!-- DO NOT EDIT THIS FILE. WILL BE REGENERATED BY THE BUILD SCRIPTS -->"
@@ -373,11 +374,11 @@ def build_msms():
     print >> f, "   <?define GUIDSTRHFSM='%s' ?>" % (tools.query_GUID(mta_for_xmp(HFSM_XMP)))
     print >> f, "   <?define GUIDSTRSF='%s' ?>" % (tools.query_GUID(mta_for_xmp(SF_XMP)))
     print >> f, "   <?define GUIDSTRUML='%s' ?>" % (tools.query_GUID(mta_for_xmp(UML_XMP)))
-    print >> f, "</Include>" 
+    print >> f, "</Include>"
     f.close()
-   
+
     import glob
-    sources = [f for f in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if f.find('GME.wxs') == -1 ]
+    sources = [f for f in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if os.path.basename(f) not in ('GME.wxs', 'GME_bundle.wxs')]
     if prefs['arch'] == 'x64':
         sources.remove(os.path.join(GME_ROOT, "Install", "GME_SDK.wxs"))
         sources.remove(os.path.join(GME_ROOT, "Install", "GME_paradigms.wxs"))
@@ -387,19 +388,23 @@ def build_msms():
             extras = glob.glob(os.path.join(GME_ROOT, "Install", "PIA*/*.wxi"))
         tools.build_WiX([file_] + extras)
 
-def build_msi():
-    "Build WiX installer (msi file)"
 
-    # Build the msi file
-    tools.build_WiX([os.path.join(GME_ROOT, "Install", "GME.wxs")])
-   
+def build_msi():
+    """Build WiX installer (msi file)."""
+    # tools.build_WiX([os.path.join(GME_ROOT, "Install", "GME.wxs")])
+
+    if prefs['arch'] == 'x64':
+        tools.download_bundle_deps(os.path.join(GME_ROOT, "Install", "GME_bundle.wxs"), [os.path.join(GME_ROOT, "Install", "GME_inc.wxi"), os.path.join(GME_ROOT, "Install", "GME_bundle.wxs")])
+        tools.system([os.path.join(tools._get_wix_path(), 'candle.exe'), "GME_bundle.wxs"] + '-ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension'.split() + ['-dVERSIONSTR=' + prefs['version_string']], os.path.join(GME_ROOT, "Install"))
+        tools.system([os.path.join(tools._get_wix_path(), 'light.exe'), "GME_bundle.wixobj"] + '-ext WixBalExtension -ext WixUtilExtension -ext WixDependencyExtension -ext WixNetFxExtension'.split(), os.path.join(GME_ROOT, "Install"))
+
 
 def zip_pdb():
     "Collect and zip all debug information (*.pdb)"
     tools.system(r"call install\symbols_source_server.cmd <NUL".split(), GME_ROOT)
     zipname = os.path.join(GME_ROOT, "Install", "GME-" + prefs['version_string'] + "-symbols.zip")
     tools.collect_and_zip(GME_ROOT, zipname, "*.pdb *.dll *.exe *.ocx")
-    pass
+
 
 def publish():
     "Publish and archive the install image and debug info"
@@ -428,11 +433,11 @@ build_steps = [
     compile_meta,
     compile_JBON,
     compile_tools,
-    compile_samples, 
-    zip_decorsamples, 
-    zip_scriptSDK, 
+    compile_samples,
+    zip_decorsamples,
+    zip_scriptSDK,
     generate_meta_files,
-    generate_sample_files, 
+    generate_sample_files,
     compile_GME_PGO_Instrument,
     PGO_train,
     compile_GME_PGO_Optimize,
@@ -462,7 +467,7 @@ Build an installation image (msi) for GME.
   -V, --version=MAJOR.MINOR.PATCHLEVEL.BUILD
                       set version (default: %d.%d.%d.%d)
   -b, --build_version=BUILD
-                      set only the build version  
+                      set only the build version
 
   -a, --arch=ARCH     set architecture (x64 or x86)
 \tBuild steps:
@@ -525,12 +530,12 @@ try:
             prefs["version_build"] = int(b)
         if opt in ("-a", "--arch"):
             prefs["arch"] = val
-            
+
 except (getopt.GetoptError, ValueError, AttributeError), e:
     print e
     print usage
     sys.exit(2)
-    
+
 prefs["version_string"] = ".".join([str(prefs["version_major"]),
                                    str(prefs["version_minor"]),
                                    str(prefs["version_patch"])] +
