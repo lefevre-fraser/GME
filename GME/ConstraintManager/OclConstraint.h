@@ -27,7 +27,7 @@ namespace Ocl
 	class Constraint
 	{
 		public :
-			typedef enum State
+			enum State
 				{
 					CS_UNREGISTERED = 0,
 					CS_REGISTERED = 1,
@@ -46,7 +46,7 @@ namespace Ocl
 					CS_EVAL_SUCCEEDED = 14
 				};
 
-			typedef enum Stereotype
+			enum Stereotype
 				{
 					CS_INVARIANT = 20,
 					CS_PRECONDITION = 21,

@@ -71,7 +71,7 @@ namespace OclCommon
 
 
 		private :
-			typedef struct StoreItem{ TItem object; bool bAssignable; };
+			struct StoreItem{ TItem object; bool bAssignable; };
 			typedef std::map< std::string, StoreItem > TMap;
 
 		private :

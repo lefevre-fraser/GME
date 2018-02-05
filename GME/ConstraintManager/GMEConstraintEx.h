@@ -43,8 +43,8 @@ namespace OclGme
 		: public Ocl::Constraint
 	{
 		public :
-			typedef enum Type { CT_CRITICAL_META = 0, CT_NON_CRITICAL_META = 1, CT_CRITICAL_USER = 2, CT_NON_CRITICAL_USER = 3, CT_CRITICAL_LIBRARY = 4, CT_NON_CRITICAL_LIBRARY = 5, CT_ATTRIBUTE_META = 6, CT_ATTRIBUTE_USER = 7, CT_METHOD_META = 8, CT_METHOD_USER = 9 };
-			typedef enum Location { CL_META = 0, CL_PROJECT = 1, CL_LIBRARY };
+			enum Type { CT_CRITICAL_META = 0, CT_NON_CRITICAL_META = 1, CT_CRITICAL_USER = 2, CT_NON_CRITICAL_USER = 3, CT_CRITICAL_LIBRARY = 4, CT_NON_CRITICAL_LIBRARY = 5, CT_ATTRIBUTE_META = 6, CT_ATTRIBUTE_USER = 7, CT_METHOD_META = 8, CT_METHOD_USER = 9 };
+			enum Location { CL_META = 0, CL_PROJECT = 1, CL_LIBRARY };
 
 		private :
 			Type							m_eType;
@@ -82,7 +82,7 @@ namespace OclGme
 		: public ConstraintBase, public OclCommon::ReferenceCountable< Constraint >
 	{
 		public :
-			typedef enum EnableInfo { CE_NONE = 0, CE_ENABLED = 1, CE_ENABLED_INHERITED = 2, CE_ENABLED_READONLY = 3, CE_DISABLED = 4, CE_DISABLED_INHERITED = 5, CE_DISABLED_READONLY = 6 };
+			enum EnableInfo { CE_NONE = 0, CE_ENABLED = 1, CE_ENABLED_INHERITED = 2, CE_ENABLED_READONLY = 3, CE_DISABLED = 4, CE_DISABLED_INHERITED = 5, CE_DISABLED_READONLY = 6 };
 
 		private :
 			unsigned long 					m_ulEventMask;
