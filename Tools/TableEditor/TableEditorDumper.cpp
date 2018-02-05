@@ -104,19 +104,19 @@ void TableEditorDumper::DumpCell(CString cell_type, CString cell_entry, BOOL mul
 
 // ------- Low level stuff
 
-inline void TableEditorDumper::StartElem(const char *name)
+void TableEditorDumper::StartElem(const char *name)
 {
 	ASSERT( name != NULL );
 	ofs << '<' << name << '>';
 }
 
-inline void TableEditorDumper::StartElemAttr(const char *name)
+void TableEditorDumper::StartElemAttr(const char *name)
 {
 	ASSERT( name != NULL );
 	ofs << '<' << name;
 }
 
-inline void TableEditorDumper::Attr(const char *name, const char *value, BOOL last)
+void TableEditorDumper::Attr(const char *name, const char *value, BOOL last)
 {
 	ASSERT( name != NULL );
 	ASSERT( value != NULL );
@@ -125,7 +125,7 @@ inline void TableEditorDumper::Attr(const char *name, const char *value, BOOL la
 	if(last) ofs << ">";
 }
 
-inline void TableEditorDumper::EndElem(const char *name)
+void TableEditorDumper::EndElem(const char *name)
 {
 	ofs << "</" << name << ">\n";
 }

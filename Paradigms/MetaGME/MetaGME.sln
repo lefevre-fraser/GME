@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MetaDecorator", "MetaDecorator\MetaDecorator.vcxproj", "{8789990A-1CEB-457D-9E99-C718A6D89781}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Paradigm", "Paradigm\Paradigm.vcxproj", "{E0F4960A-05DD-483D-92EE-F5CBB354FE43}"

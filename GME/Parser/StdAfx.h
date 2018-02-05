@@ -21,6 +21,8 @@
 
 #define _ATL_APARTMENT_THREADED
 
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS 1
+
 #include <atlbase.h>
 //You may derive a class from CComModule and use it if you want to override
 //something, but do not change the name of _Module

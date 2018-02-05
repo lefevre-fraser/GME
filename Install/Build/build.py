@@ -10,6 +10,7 @@ import sys
 import os
 import os.path
 import getopt
+import platform
 from prefs import prefs
 import tools
 import win32com
@@ -53,11 +54,11 @@ def check_prerequisites():
         print "Current dev. source tree:", GME_ROOT
         raise
 
-    # Test for Microsoft Visual Studio 2010
+    # Test for Microsoft Visual Studio 2015
     try:
         tools.test_VS()
     except:
-        print "Microsoft Visual Studio 2010 is not installed!"
+        print "Microsoft Visual Studio 2015 is not installed!"
         raise
 
     # Test for zip utility
@@ -115,11 +116,12 @@ def _remove_dlldata_from_tlog():
         lines = f.readlines()
         lines = [line for line in lines if line.find(u'DLLDATA.C') == -1]
     with codecs.open(tlog, 'w', encoding='utf-16-le') as f:
-        for line in lines: f.write(line)
+        for line in lines:
+            f.write(line)
 
 def compile_GME():
     "Compile GME core components"
-    if prefs['arch'] == 'x64':
+    if prefs['arch'] == 'x64' and '64bit' not in platform.architecture():
         # To use 32bit Python.exe for the tests, 32bit CoreCollectionHandler must be registered
         sln_file = os.path.join(GME_ROOT, "GME", "GME.sln")
         _remove_dlldata_from_tlog()
@@ -142,10 +144,12 @@ def compile_GME():
         config = '%s.config' % filename
         dll = '%s.dll' % filename
         if newer(os.path.join(pia_dir, config), os.path.join(pia_dir, dll)):
-            tools.system([r'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\al.exe',
+            tools.system([
+                tools.VCVARS, 'x86', '&',
+                'al.exe',
                 '/link:' + config, '/out:' + dll,
                 '/keyfile:..\MgaDotNetServices\MgaDotNetServicesKey.snk', '/platform:anycpu', '/version:1.0.0.0'], pia_dir)
-            tools.system([r'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\gacutil.exe', '/i', dll], pia_dir)
+            tools.system([tools.VCVARS, 'x86', '&', 'gacutil.exe', '/i', dll], pia_dir)
 
 def _Release_PGO_dir():
     if prefs['arch'] == 'x64':
@@ -203,13 +207,16 @@ def compile_GME_PGO_Optimize():
 def PGO_train():
     "Run tests/Create training data for the PGO binaries"
     import glob
-    for file in glob.glob(GME_ROOT + '\\GME' + ('\\x64' if prefs['arch'] == 'x64' else '') + '\\Release_PGO\\*.pgc'):
+    pgc_glob = GME_ROOT + '\\GME' + ('\\x64' if prefs['arch'] == 'x64' else '') + '\\Release_PGO\\*.pgc'
+    for file in glob.glob(pgc_glob):
         os.remove(file)
     tools.system([sys.executable, '-m', 'GPyUnit.__main__', '-x'] + (['-a', 'x64', '-o', 'tests_x64.xml'] if prefs['arch'] == 'x64' else []), os.path.join(GME_ROOT, 'Tests'))
     if prefs['arch'] == 'x64':
         # wait for dllhost.exe to exit
         import time
         time.sleep(31)
+    if len(glob.glob(pgc_glob)) < 3:
+        raise ValueError('3 .pgc files not created. Looking for {}. (Use a 64bit Python for 64bit GME)'.format(pgc_glob))
 
 def compile_meta():
     "Compile MetaGME components"
@@ -221,7 +228,8 @@ def compile_meta():
 
 def compile_JBON():
     "Compile Java component support (JBON)"
-    if prefs['arch'] == 'x64': return
+    if prefs['arch'] == 'x64':
+        return
     tools.system(r"reg add HKLM\Software\GME /t REG_SZ /v JavaClassPath /d".split() +
         [os.path.join(GME_ROOT, "SDK", "Java", "gme.jar"), "/reg:32", "/f"])
     sln_file = os.path.join(GME_ROOT, "SDK", "Java", "native", "JavaSupport.sln")
@@ -247,12 +255,12 @@ def compile_tools():
     tools.build_VS(sln_file, "Release", arch='Any CPU', msbuild=(prefs['arch'] == 'x64' and tools.MSBUILD.replace('Framework', 'Framework64') or tools.MSBUILD))
 
     if prefs['arch'] == 'x64':
-        tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
+        tools.system([tools.VCVARS, 'amd64', '&', 'RegAsm.exe', '/codebase',
                       os.path.join(GME_ROOT, 'Tools', 'DumpWMF', 'bin', 'Release', 'DumpWMF.dll')])
         with _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, r"CLSID\{A051FEEA-E310-3F6A-8D71-A55E3F4F2E14}", 0, _winreg.KEY_WRITE | _winreg.KEY_WOW64_64KEY) as key:
             _winreg.SetValueEx(key, "AppID", 0, _winreg.REG_SZ, "{461F30AF-3BF0-11D4-B3F0-005004D38590}")
 
-        tools.system([r'%windir%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe', '/codebase',
+        tools.system([tools.VCVARS, 'amd64', '&', 'RegAsm.exe', '/codebase',
                       os.path.join(GME_ROOT, 'SDK', 'DotNet', 'DsmlGenerator', 'CSharpDsmlGenerator', 'bin', 'Release', 'CSharpDSMLGenerator.dll')])
         return
 
@@ -274,7 +282,8 @@ def compile_samples():
     sln_file = os.path.join(GME_ROOT, "Paradigms", "UML", "decorator", "UMLDecorator.sln")
     tools.build_VS( sln_file, "Release" )
 
-    if prefs['arch'] == 'x64': return
+    if prefs['arch'] == 'x64':
+        return
 
     sln_file = os.path.join(GME_ROOT, "SDK", "PatternProcessor", "PatternProcessor.sln")
     tools.build_VS( sln_file, "Release" )
@@ -391,7 +400,7 @@ def build_msms():
 
 def build_msi():
     """Build WiX installer (msi file)."""
-    # tools.build_WiX([os.path.join(GME_ROOT, "Install", "GME.wxs")])
+    tools.build_WiX([os.path.join(GME_ROOT, "Install", "GME.wxs")])
 
     if prefs['arch'] == 'x64':
         tools.download_bundle_deps(os.path.join(GME_ROOT, "Install", "GME_bundle.wxs"), [os.path.join(GME_ROOT, "Install", "GME_inc.wxi"), os.path.join(GME_ROOT, "Install", "GME_bundle.wxs")])
@@ -544,10 +553,7 @@ prefs["version_string"] = ".".join([str(prefs["version_major"]),
 print "Building GME version " + prefs["version_string"] + " " + prefs["arch"]
 
 _pfx86 = os.environ.get('ProgramFiles(x86)', os.environ['ProgramFiles'])
-if prefs['toolset'] == '11':
-    prefs['VS_dir'] = os.path.join(_pfx86, r"Microsoft Visual Studio 11.0")
-else:
-    prefs['VS_dir'] = os.path.join(_pfx86, r"Microsoft Visual Studio 10.0")
+prefs['VS_dir'] = os.path.join(_pfx86, r"Microsoft Visual Studio {}.0".format(prefs['toolset']))
 
 try:
     for i in range(len(build_steps)):

@@ -125,4 +125,11 @@ STDAPI DllUnregisterServer(void)
     return _Module.UnregisterServer(TRUE);
 }
 
+extern "C" FILE * __cdecl __iob_func(void)
+{
+	terminate();
+	return NULL;
+}
 
+// https://msdn.microsoft.com/en-us/library/bb531344.aspx#BK_CRT
+#pragma comment(lib, "legacy_stdio_definitions.lib")

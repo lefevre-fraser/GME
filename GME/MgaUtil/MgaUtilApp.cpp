@@ -100,16 +100,24 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 STDAPI DllRegisterServer(void)
 {
 	// registers object, typelib and all interfaces in typelib
-	_Module.UpdateRegistryFromResource(IDR_MGAUTIL, TRUE);
+	HRESULT hr = _Module.UpdateRegistryFromResource(IDR_MGAUTIL, TRUE);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
 	return _Module.RegisterServer(TRUE);
 }
 /////////////////////////////////////////////////////////////////////////////
 // DllUnregisterServer - Removes entries from the system registry
 STDAPI DllUnregisterServer(void)
 {
-	_Module.UpdateRegistryFromResource(IDR_MGAUTIL, FALSE);
-	_Module.UnregisterServer(TRUE); //TRUE indicates that typelib is unreg'd
-	return S_OK;
+	HRESULT hr = _Module.UpdateRegistryFromResource(IDR_MGAUTIL, FALSE);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+	//TRUE indicates that typelib is unreg'd
+	return _Module.UnregisterServer(TRUE);
 }
 
 BOOL CMgaUtilApp::InitInstance()

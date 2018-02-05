@@ -109,6 +109,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 /////////////////////////////////////////////////////////////////////////////
 // DllRegisterServer - Adds entries to the system registry
 
+// dllmain.h : Declaration of module class.
+
 STDAPI DllRegisterServer(void)
 {
 	// AFX_MANAGE_STATE(AfxGetStaticModuleState( ));
@@ -119,7 +121,11 @@ STDAPI DllRegisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	HRESULT hr = _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, TRUE, regMap );
+#if _ATL_VER >= 0x0E00
+	HRESULT hr = _Module.UpdateRegistryFromResource(IDR_DECORATOR, TRUE, regMap);
+#else
+	HRESULT hr = _Module.UpdateRegistryFromResourceD(IDR_DECORATOR, TRUE, regMap);
+#endif
 
 	/* All the classes are registered here. We do not use the register functions in the classes themselves
 	if ( SUCCEEDED( hr ) )
@@ -144,7 +150,11 @@ STDAPI DllUnregisterServer(void)
 		{CONSTOLESTR("TYPELIB_UUID"), CONSTOLESTR(TYPELIB_UUID)},
 		{0, 0}
 	};
-	HRESULT hr = _Module.UpdateRegistryFromResourceD( IDR_DECORATOR, FALSE, regMap );
+#if _ATL_VER >= 0x0E00
+	HRESULT hr = _Module.UpdateRegistryFromResource(IDR_DECORATOR, FALSE, regMap);
+#else
+	HRESULT hr = _Module.UpdateRegistryFromResourceD(IDR_DECORATOR, FALSE, regMap);
+#endif
 
 	/* All the classes are registered here. We do not use the register functions in the classes themselves
 	if ( SUCCEEDED( hr ) )

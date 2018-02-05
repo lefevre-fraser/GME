@@ -211,7 +211,7 @@ namespace OclMeta
 				if ( (*i).second.pType->IsDynamic() )
 					i->second.pType.reset();
 				else
-					m_mapTypes.insert( TypeResultMap::value_type( (*i).first, std::move((*i).second) ) );
+					m_mapTypes.insert( TypeResultMap::value_type( (*i).first, (*i).second ) );
 	}
 
 	void TypeManager::ClearGlobals()
@@ -261,11 +261,11 @@ namespace OclMeta
 		}
 		TypeResultMap::iterator it = m_mapTypes.insert( TypeResultMap::value_type( std::move(nameResult), std::move(typeResult) ) ).first; 
 		// WAS: m_mapTypes.insert( TypeResultMap::value_type( strName, typeResult ) );
-		RegisterType( typeResult );
-		if ( typeResult.bIsValid )
-			return typeResult.pType;
+		RegisterType( it->second );
+		if ( it->second.bIsValid )
+			return it->second.pType;
 		else
-			throw OclCommon::Exception( *typeResult.pException );
+			throw OclCommon::Exception( *it->second.pException );
 	}
 
 	int TypeManager::IsTypeAR( const std::string& strName1, const std::string& strName2, int iLevel )

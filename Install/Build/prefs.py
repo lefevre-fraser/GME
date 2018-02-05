@@ -12,12 +12,12 @@ import time
 # Preferences & default values (used by other modules)
 #
 prefs = {
-	"clean" : False,
-	"verbose" : False,
-	"version_major" : (time.localtime()[0] - 2000),
-	"version_minor" : time.localtime()[1],
-	"version_patch" : time.localtime()[2],
-	"version_build" : 0,
-	"arch" : "x86",
-	"toolset": "10",
-	}
+    "clean" : False,
+    "verbose" : False,
+    "version_major" : (time.localtime()[0] - 2000),
+    "version_minor" : time.localtime()[1],
+    "version_patch" : time.localtime()[2],
+    "version_build" : 0,
+    "arch" : "x86",
+    "toolset": "14",
+    }

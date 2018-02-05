@@ -431,3 +431,16 @@ SDK/Java/gme/
 Tests/GPyUnit/DsmlGeneratorTest/bin/
 Tests/GPyUnit/DsmlGeneratorTest/packages/
 Tools/AutoLayout/x64/
+Install/GME_bundle.exe
+Install/Redist/
+Install/Windows6.0-KB2999226-x64.msu
+Install/Windows6.1-KB2999226-x64.msu
+Install/Windows8-RT-KB2999226-x64.msu
+Install/Windows8.1-KB2999226-x64.msu
+Install/vc_redist.x64.v14.0.24123.exe
+Install/vc_redist.x64.v9.0.30729.4148.exe
+Install/vc_redist.x86.v14.0.24123.exe
+Tests/GPyUnit/GME_310/DerivedRefport_test.mga
+/redist/
+/GME-*.*.*_src/
+/GME-src.zip

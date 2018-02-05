@@ -1,0 +1,22 @@
+cache:
+  - '%LOCALAPPDATA%\pip\cache -> appveyor.yml'
+
+build_script:
+  - set GME_ROOT=%CD%
+  - set PYTHON=C:\Python27\Python.exe
+  - set PYTHON_x64=C:\Python27-x64\Python.exe
+  - "%PYTHON% -m pip install pywin32 requests markdown"
+  - "%PYTHON_x64% -m pip install pywin32 requests markdown"
+  - copy c:\Python27\Lib\site-packages\pywin32_system32\pywintypes27.dll c:\windows\SysWOW64
+  - copy c:\Python27-x64\Lib\site-packages\pywin32_system32\pywintypes27.dll c:\windows\System32
+  - cmd /c Doc\GME_release.cmd || exit 1
+#  - curl -O https://raw.githubusercontent.com/ksmyth/GitHub-Source-Indexer/master/github-sourceindexer.ps1
+#  - >-
+#    for /f "usebackq" %%x in (`git rev-parse HEAD`) do set HEAD=%%x
+#  - >-
+#    powershell -ExecutionPolicy unrestricted .\github-sourceindexer.ps1 -userId "ksmyth" -repository "xerces-c" -symbolsFolder "%CD%" -branch %HEAD% -sourcesRoot "%CD%" -verbose -dbgToolsPath "'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64'" -ignoreUnknown -verifyLocalRepo
+
+test: off
+
+artifacts:
+  - path: "redist/*"

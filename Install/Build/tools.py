@@ -20,7 +20,8 @@ WIX_CANDLE_PRG = "candle.exe"
 WIX_CANDLE_ARG = "-dPIADir.1.0.0.0=..\GME\DotNetPIAs_1.0.0.0 -dPIADir.1.0.1.0=..\GME\DotNetPIAs_1.0.1.0 -dPIADir=..\GME\DotNetPIAs"
 WIX_LIGHT_PRG = "light.exe"
 WIX_LIGHT_ARG = "-sw1076 -sw1055 -sw1056 -sice:ICE43 -sice:ICE57 -ext WixUIExtension -ext WixUtilExtension -ext WiXNetFxExtension" # See comments in GME.wxs
-MSBUILD = r"c:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
+MSBUILD = r"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
+VCVARS = r"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
 
 #
 # Classes
@@ -51,7 +52,7 @@ def toolmsg(str):
 
 def test_SVN():
     "Test for SVN client. Raises exception if not found."
-    system(['svn', '-v', '>NUL'])
+    system(['svn', '--version', '>NUL'])
 
 
 def test_zip():
@@ -107,9 +108,9 @@ def system(args, dirname=None):
 
 
 def test_VS():
-    "Test for Microsoft Visual Studio 2010. Raises exception if not found."
+    "Test for Microsoft Visual Studio 2015. Raises exception if not found."
     toolmsg("Trying to create VisualStudio.DTE object")
-    win32com.client.Dispatch("VisualStudio.DTE.10.0")
+    win32com.client.Dispatch("VisualStudio.DTE.14.0")
 
 def build_VS(sln_path, config_name, arch=None, msbuild=MSBUILD, target=None):
     """

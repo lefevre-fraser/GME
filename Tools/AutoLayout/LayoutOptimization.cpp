@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <cmath>
 #include <cfloat>
+#include <algorithm>
 #include "Random.h"
 #include "LayoutOptimization.h"
 #include "GAOptimizer.h"
