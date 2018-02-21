@@ -50,6 +50,7 @@ move /y GME-%VERSION%_src.7z redist || exit /b !ERRORLEVEL!
 
 move redist\GME.msi redist\GME-%VERSION%.msi || exit /b !ERRORLEVEL!
 move redist\GME_x64.msi redist\GME_x64-%VERSION%.msi || exit /b !ERRORLEVEL!
+move redist\GME_bundle.exe redist\GME-%VERSION%.exe || exit /b !ERRORLEVEL!
 
 mkdir GME-%VERSION%_symbols
 "%SYMSTORE%" add /r /f "%GME_ROOT%" /s GME-%VERSION%_symbols /t GME || exit /b !ERRORLEVEL!
