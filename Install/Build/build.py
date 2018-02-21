@@ -389,7 +389,6 @@ def build_msms():
     import glob
     sources = [f for f in glob.glob(os.path.join(GME_ROOT, "Install", "*.wxs")) if os.path.basename(f) not in ('GME.wxs', 'GME_bundle.wxs')]
     if prefs['arch'] == 'x64':
-        sources.remove(os.path.join(GME_ROOT, "Install", "GME_SDK.wxs"))
         sources.remove(os.path.join(GME_ROOT, "Install", "GME_paradigms.wxs"))
     for file_ in sources:
         extras = []

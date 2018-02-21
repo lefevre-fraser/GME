@@ -235,7 +235,7 @@
             </Directory>
             <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSORx86' Name='PatternProcessor' />
             <Directory Id='INSTALLDIR_SDK_DOTNET' Name='DotNet'>
-              <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR' Name='CSharpDSMLGenerator'>
+              <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATORx86' Name='CSharpDSMLGenerator'>
                 <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR_1_0_4_0' Name='1.0.4.0'/>
               </Directory>
             </Directory>
@@ -310,6 +310,9 @@
           <Directory Id='INSTALLDIR_SDKx64' Name='SDK'>
             <Directory Id='INSTALLDIR_SDK_JAVAx64' Name='Java' />
             <Directory Id='INSTALLDIR_SDK_PATTERNPROCESSORx64' Name='PatternProcessor' />
+            <Directory Id='INSTALLDIR_SDK_DOTNETx64' Name='DotNet'>
+              <Directory Id='INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATORx64' Name='CSharpDSMLGenerator'/>
+            </Directory>
           </Directory>
           <Directory Id='INSTALLDIR_TOOLSx64' Name='Tools' />
           <Directory Id='INSTALLDIR_LIBSx64' Name='Lib' />
@@ -330,6 +333,7 @@
         <ComponentGroupRef Id='GME_SDKx86' />
         <ComponentGroupRef Id='GME_paradigmsx86' />
         <?if $(sys.BUILDARCH)=x64 ?>
+        <ComponentGroupRef Id='GME_SDKx64' />
         <ComponentGroupRef Id='GME_binx64' />
         <?endif?>
 

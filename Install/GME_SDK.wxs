@@ -10,15 +10,9 @@
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
     <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
 
-    <?if $(sys.BUILDARCH)=x86 ?>
     <ComponentGroup Id='GME_SDK$(sys.BUILDARCH)'>
-      <Component Id="MetaParadigmFiles" Guid="18535c6e-aeff-4e89-b262-f3eb0a7854ee" Directory="INSTALLDIR_PARADIGMS_METAGMEx86">
-        <File Id="MetaGME.xmp" Name="MetaGME.xmp" KeyPath="yes" Source="..\Paradigms\MetaGME\MetaGME.xmp" />
-        <File Id="MetaGME_model.xme" Name="MetaGME-model.xme" Source="..\Paradigms\MetaGME\MetaGME-model.xme" />
-      </Component>
-
-      <Component Id="CSharpDSMLGenerator.dll" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
-        <File Id="CSharpDSMLGenerator.dll" Name="CSharpDSMLGenerator.dll" KeyPath="yes" Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\CSharpDSMLGenerator.dll" />
+      <Component Id="CSharpDSMLGenerator.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR$(sys.BUILDARCH)">
+        <File Id="CSharpDSMLGenerator.dll$(sys.BUILDARCH)" Name="CSharpDSMLGenerator.dll" KeyPath="yes" Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\CSharpDSMLGenerator.dll" />
         <Class Id="{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}" Context="InprocServer32" Description="MGA.Interpreter.CSharpDSMLGenerator" ThreadingModel="both" ForeignServer="mscoree.dll">
           <ProgId Id="MGA.Interpreter.CSharpDSMLGenerator" Description="MGA.Interpreter.CSharpDSMLGenerator" />
         </Class>
@@ -26,11 +20,11 @@
         <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="Class" Value="CSharpDSMLGenerator.CSharpDSMLGeneratorInterpreter" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="Assembly" Value="CSharpDSMLGenerator, Version=1.0.17.1, Culture=neutral" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" Action="write" />
-        <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="CodeBase" Value="file:///[#CSharpDSMLGenerator.dll]" Type="string" Action="write" />
+        <RegistryValue Root="HKCR" Key="CLSID\{78BE7B95-3564-4BA9-8FE6-8D9B91EEE0B8}\InprocServer32" Name="CodeBase" Value="file:///[#CSharpDSMLGenerator.dll$(sys.BUILDARCH)]" Type="string" Action="write" />
         <RegistryValue Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" Action="write" />
         <RegistryKey Root='HKLM' Key='Software\GME\Components\MGA.Interpreter.CSharpDSMLGenerator'>
           <RegistryValue Name='Description' Type='string' Value='CSharp (.Net) Dsml API Generator'/>
-          <RegistryValue Name='Icon' Type='string' Value='[#CSharpDSMLGenerator.ico]'/>
+          <RegistryValue Name='Icon' Type='string' Value='[#CSharpDSMLGenerator.ico$(sys.BUILDARCH)]'/>
           <RegistryValue Name='Paradigm' Type='string' Value='MetaGME'/>
           <RegistryValue Name='Tooltip' Type='string' Value='CSharp (.Net) Dsml API Generator'/>
           <RegistryValue Name='Type' Type='integer' Value='1'/>
@@ -40,19 +34,26 @@
           </RegistryKey>
         </RegistryKey>
       </Component>
-      <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
-        <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\CSharpDSMLGenerator.ico" />
+      <Component Id="MgaMeta.dll$(sys.BUILDARCH)" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR$(sys.BUILDARCH)">
+        <File Id="MgaMeta.dll$(sys.BUILDARCH)" Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\MgaMeta.dll" />
       </Component>
-      <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR" Guid="{AEE769E8-E82D-46AF-AF94-F61B2C41DF5A}" Permanent="yes">
+      <Component Id="CSharpDSMLGenerator.ico$(sys.BUILDARCH)" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR$(sys.BUILDARCH)">
+        <File Id="CSharpDSMLGenerator.ico$(sys.BUILDARCH)" Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\CSharpDSMLGenerator.ico" />
+      </Component>
+
+     <?if $(sys.BUILDARCH)=x86 ?>
+      <Component Id="MetaParadigmFiles" Guid="18535c6e-aeff-4e89-b262-f3eb0a7854ee" Directory="INSTALLDIR_PARADIGMS_METAGMEx86">
+        <File Id="MetaGME.xmp" Name="MetaGME.xmp" KeyPath="yes" Source="..\Paradigms\MetaGME\MetaGME.xmp" />
+        <File Id="MetaGME_model.xme" Name="MetaGME-model.xme" Source="..\Paradigms\MetaGME\MetaGME-model.xme" />
+      </Component>
+
+      <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR$(sys.BUILDARCH)" Guid="{AEE769E8-E82D-46AF-AF94-F61B2C41DF5A}" Permanent="yes">
         <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\ISIS.GME.Common.dll" KeyPath="yes" Assembly=".net"/>
         <Condition>NETFRAMEWORK40</Condition>
       </Component>
       <Component Id="ISIS.GME.Common.dll.1.0.4.0" Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR_1_0_4_0" Guid="{C627CFC3-A8D1-47EB-AFF9-D1309EE08DC6}" Permanent="yes">
         <File Id="ISIS.GME.Common.dll.1.0.4.0" Source="..\SDK\DotNet\DsmlGenerator\ISIS.GME.Common\1.0.4.0\ISIS.GME.Common.dll" KeyPath="yes" Assembly=".net"/>
         <Condition>NETFRAMEWORK40</Condition>
-      </Component>
-      <Component Directory="INSTALLDIR_SDK_DOTNET_CSHARPDSMLGENERATOR">
-        <File Source="..\SDK\DotNet\DsmlGenerator\CSharpDsmlGenerator\bin\Release\MgaMeta.dll" />
       </Component>
 
       <Component Id="BON2SFInterpreter.dll" Directory="INSTALLDIR_PARADIGMS_SF">

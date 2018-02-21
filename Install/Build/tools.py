@@ -243,7 +243,7 @@ def build_WiX(wix_files):
             ext = '.msi'
             wixlibs = WIX_LIGHT_ARG.split() + ['GME_bin.wixlib', 'GME_SDK.wixlib', 'GME_paradigms.wixlib']
             if prefs['arch'] == 'x64':
-                wixlibs += ['GME_bin_x64.wixlib']
+                wixlibs += ['GME_bin_x64.wixlib', 'GME_SDK_x64.wixlib']
         cmd_line = [exepath] + ['-o', _x64_suffix(os.path.splitext(wxs)[0]) + ext] + [ _get_wixobj(file) for file in wxi_files ] + [ _get_wixobj(wxs)] + wixlibs
         system(cmd_line, dirname)
 
