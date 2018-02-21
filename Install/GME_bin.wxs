@@ -68,9 +68,9 @@
           </Extension>
         </ProgId>
         <?if $(sys.BUILDARCH)=x86 ?>
-        <Registry Id='GME.mgafile_desc' Root='HKCR' Key='GME.mgafile' Action='write' Type='string' Value='GME model file' />
-        <Registry Id='GME.xmefile_desc' Root='HKCR' Key='GME.xmefile' Action='write' Type='string' Value='GME XML model file' />
-        <Registry Id='GME.xmefile_icon' Root='HKCR' Key='GME.xmefile\DefaultIcon' Action='write' Type='string' Value='[#GME.exe$(sys.BUILDARCH)],5' />
+        <RegistryValue Id='GME.mgafile_desc' Root='HKCR' Key='GME.mgafile' Type='string' Value='GME model file' />
+        <RegistryValue Id='GME.xmefile_desc' Root='HKCR' Key='GME.xmefile' Type='string' Value='GME XML model file' />
+        <RegistryValue Id='GME.xmefile_icon' Root='HKCR' Key='GME.xmefile\DefaultIcon' Type='string' Value='[#GME.exe$(sys.BUILDARCH)],5' />
         <Environment Id="GME_ROOT" Action="set" System="yes" Name="GME_ROOT" Value="[INSTALLDIR$(sys.BUILDARCH)]" />
         <RemoveFolder Id='RemoveShortcutFolder' On='uninstall' Directory='ShortcutFolder'/>
         <?endif?>
