@@ -966,7 +966,9 @@ HRESULT FCO::ChangeObject(IMgaMetaRole *newrole, IMgaMetaFCO *kind) {
 				{ ITERATE_THROUGH(self[ATTRID_XREF+ATTRID_REFERENCE]) ITER[ATTRID_REFERENCE] = nnode; }
 				COMTHROW(self->Delete());
 /* this has to be fixed!!!! */ ASSERT(false);
+#ifndef _ATL_DEBUG_INTERFACES
 				self = nnode;
+#endif
 			}
 			metaref_type mr;
 			COMTHROW(newkind->get_MetaRef(&mr));
@@ -978,7 +980,11 @@ HRESULT FCO::ChangeObject(IMgaMetaRole *newrole, IMgaMetaFCO *kind) {
 			else mr = METAREF_NULL;
 			self[ATTRID_ROLEMETA] = mr;
 
-		} COMCATCH_IN_TRANSACTION( self = selfsave;);
+#ifndef _ATL_DEBUG_INTERFACES
+		} COMCATCH_IN_TRANSACTION(self = selfsave;);
+#else
+		} COMCATCH_IN_TRANSACTION(;);
+#endif
 }
 
 HRESULT FCO::GetSourceControlInfo( long* p_scInfo)

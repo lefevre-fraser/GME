@@ -23,11 +23,13 @@ FCO::FCO()  {
 
 STDMETHODIMP FCO::FinalConstruct() {
 	COMTRY {
+#ifndef _ATL_DEBUG_INTERFACES
 			{
 				CoreObj myself;
 				QueryInterface(__uuidof(ICoreObject),(void **)&myself);
 				self = myself;  // self does not hold reference!!!
 			}
+#endif
 			CComPtr<ICoreProject> cp;
 			COMTHROW(self->get_Project(&cp));
 #ifdef _ATL_DEBUG_INTERFACES

@@ -184,13 +184,11 @@ inline CComPtr<IUnknown> CastToUnknown_Object(CCoreObject *p)
 	return pUnk;
 }
 
-bool IsQIThunk(IUnknown *p);
-
 inline CCoreObject *CastToObject(IUnknown *p) {
-	if (IsQIThunk(p))
-		return (CCoreObject*)(ICoreObject*)((ATL::_QIThunk *)(p))->m_pUnk;
-	else
-		return (CCoreObject*)(ICoreObject*)p;
+	while (IsQIThunk(p)) {
+		p = ((ATL::_QIThunk *)(p))->m_pUnk;
+	}
+	return (CCoreObject*)(ICoreObject*)p;
 }
 #endif
 

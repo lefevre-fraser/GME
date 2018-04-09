@@ -64,6 +64,9 @@ namespace core {
 extern CComModule _Module;
 #include <atlcom.h>
 
+#ifdef _ATL_DEBUG_INTERFACES
+bool IsQIThunk(IUnknown *p);
+#endif
 
 #define _NOTHREADS
 

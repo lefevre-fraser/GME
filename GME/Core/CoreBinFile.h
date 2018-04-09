@@ -611,7 +611,14 @@ public:
 			Get(binfile, &p);
 		}
 
+#ifdef _ATL_DEBUG_INTERFACES
+		IUnknown* pUnk = dict.p;
+		while (IsQIThunk(pUnk))
+			pUnk = ((ATL::_QIThunk *)(pUnk))->m_pUnk;
+		const CCoreDictionaryAttributeValue* cdict = (const CCoreDictionaryAttributeValue*)(const ICoreDictionaryAttributeValue*)pUnk;
+#else
 		const CCoreDictionaryAttributeValue* cdict = (const CCoreDictionaryAttributeValue*)(const ICoreDictionaryAttributeValue*)dict;
+#endif
 		for (auto it = cdict->m_dict.begin(); it != cdict->m_dict.end(); it++) {
 			size += sizeof(int);
 			size += it->first.Length() * sizeof(wchar_t);

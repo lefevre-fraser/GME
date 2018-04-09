@@ -32,6 +32,14 @@ HRESULT CMgaMetaBase::PutMetaRef_(metaref_type p)
     } COMCATCH(;)
 }
 
+#ifdef _ATL_DEBUG_INTERFACES
+static bool IsQIThunk(IUnknown *p) {
+	ATL::_QIThunk dummy((IUnknown*)(void*)1, L"dummy", IID_IUnknown, 0, false);
+
+	return *((int**)(void*)p) == *((int**)(void*)&dummy);
+}
+#endif
+
 void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 {
 	ASSERT( metaproject != NULL );
@@ -45,6 +53,8 @@ void CMgaMetaBase::Traverse(CMgaMetaProject *metaproject, CCoreObjectPtr &me)
 
 #ifdef _ATL_DEBUG_INTERFACES
 	IUnknown* pUnk = ((ATL::_QIThunk *)(ibase.p))->m_pUnk;
+	while (IsQIThunk(pUnk))
+		pUnk = ((ATL::_QIThunk *)(pUnk))->m_pUnk;
 	CMgaMetaBase *base = (CMgaMetaBase *)(IMgaMetaBase*)(pUnk);
 #else
 	CMgaMetaBase *base = static_cast<CMgaMetaBase*>((IMgaMetaBase*)ibase);

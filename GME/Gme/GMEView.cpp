@@ -6836,18 +6836,18 @@ BOOL CGMEView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* p
 				ASSERT(FALSE);
 				break;
 			}
-			return true;
+			return TRUE;
 		}
 		else if(nCode == CN_UPDATE_COMMAND_UI && pExtra != NULL) {
 			CCmdUI *pUI = (CCmdUI *)pExtra;
 			pUI->Enable(isType);
-			return true;
+			return TRUE;
 		}
 	} else if (nID >= DECORATOR_CTX_MENU_MINID && nID < DECORATOR_CTX_MENU_MAXID && CGuiMetaProject::theInstance->maxMenuCmdID < DECORATOR_CTX_MENU_MINID) {
 		if (nCode == CN_UPDATE_COMMAND_UI && pExtra != NULL) {
 			CCmdUI* pUI = (CCmdUI*) pExtra;
 			pUI->Enable(isType);
-			return true;
+			return TRUE;
 		} else if (nCode == CN_COMMAND) {
 			if (selectedObjectOfContext != NULL || selectedAnnotationOfContext != NULL) {
 				// Send command using saved state

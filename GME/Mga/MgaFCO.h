@@ -327,11 +327,21 @@ private:
 	void PreDeleteNotify();
 
 public:
+#ifndef _ATL_DEBUG_INTERFACES
 	class NoAddRefCoreObj : public CoreObj {	// CoreObj, but non-addref/release-ing
 	public:
 		void operator=(CoreObj &p) { Attach(p); } 
 	   ~NoAddRefCoreObj() { Detach(); }
 	}  self;
+#else
+	CoreObj get_self()
+	{
+		CoreObj myself;
+		QueryInterface(__uuidof(ICoreObject), (void **)&myself);
+		return myself;
+	}
+	__declspec(property(get = get_self)) CoreObj self;
+#endif
 
 	typedef stdext::hash_map<CMgaTerritory*, CMgaAtom*, terr_hashfunc> pubfcohash;
 	pubfcohash pubfcos;
