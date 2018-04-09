@@ -25,10 +25,13 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
-Release Notes
+Release Notes of Release 18.4.9
 ----------------------------------
   - Binary compatibility with 11.12.2
   - C# AddOn wizard: fix deactivating addon when restarting addons
+  - CSharp Dsml Generator for GME x64
+  - Interpreter wizard: fix x64 configuration
+  - Interpreter wizard: Visual Studio 2017 support
 
 Release Notes of Release 17.12.6
 ----------------------------------
