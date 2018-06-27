@@ -1546,7 +1546,7 @@ void CGMEView::BeginTransaction(transactiontype_enum mode)
 {
 	VERIFY(inTransaction >= 0);
 	if(!inEventHandler && ++inTransaction == 1) {
-		inRWTransaction = (mode == TRANSACTION_GENERAL);
+		inRWTransaction = (mode == TRANSACTION_GENERAL || mode == TRANSACTION_NON_NESTED);
 		COMTHROW(theApp.mgaProject->BeginTransaction(terry,mode));
 	}
 }
@@ -6529,15 +6529,72 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 	OnDragLeave();
 	if (m_dropRightClick)
 	{
+		bool canMove = true;
+		bool canRef = true;
+		if (CGMEDataSource::IsGmeNativeDataAvailable(pDataObject, theApp.mgaProject))
+		{
+			canMove = false;
+			canRef = false;
+			try {
+				BeginTransaction(TRANSACTION_READ_ONLY);
+
+				CComPtr<IDataObject> p = pDataObject->GetIDataObject(FALSE);
+				CComPtr<IMgaDataSource> pt;
+				COMTHROW(p.QueryInterface(&pt));
+
+				CGMEDoc *doc = GetDocument();
+
+				CComPtr<IUnknown> unk;
+				COMTHROW(pt->get_Data(&unk));
+				IMgaFCOsPtr fcos = unk.p;
+
+				if (fcos)
+				{
+					IMgaMetaModelPtr meta = currentModel->Meta;
+					auto roles = meta->Roles;
+
+					for (int i = 1; i <= fcos->Count; i++)
+					{
+						for (int j = 1; j <= roles->Count; j++)
+						{
+							if (fcos->Item[i]->Meta == roles->Item[j]->Kind)
+							{
+								canMove = true;
+							}
+							IMgaMetaReferencePtr ref = roles->Item[j]->Kind;
+							if (ref)
+							{
+								_bstr_t descs;
+								IMgaMetaPointerItemsPtr specs = ref->RefSpec->Items;
+								for (int k = 1; k <= specs->Count; k++)
+								{
+									if (wcscmp(fcos->Item[i]->Meta->Name, specs->Item[k]->Desc) == 0)
+									{
+										canRef = true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (...) {
+				CommitTransaction();
+				throw;
+			}
+			CommitTransaction();
+		}
+
 		CMenu menu;
 		if (menu.CreatePopupMenu())
 		{
 			enum actions { MOVE= 1000, COPY, REF, INSTANCE, SUBTYPE, CANCEL };
-			menu.AppendMenu(MF_STRING, MOVE, L"Move");
-			menu.AppendMenu(MF_STRING, COPY, L"Copy");
-			menu.AppendMenu(MF_STRING, REF, L"Create reference");
-			menu.AppendMenu(MF_STRING, SUBTYPE, L"Create subtype");
-			menu.AppendMenu(MF_STRING, INSTANCE, L"Create instance");
+			UINT moveFlag = MF_STRING | (canMove ? 0u : MF_GRAYED);
+			menu.AppendMenu(moveFlag, MOVE, L"Move");
+			menu.AppendMenu(moveFlag, COPY, L"Copy");
+			menu.AppendMenu(MF_STRING | (canRef ? 0u : MF_GRAYED), REF, L"Create reference");
+			menu.AppendMenu(moveFlag, SUBTYPE, L"Create subtype");
+			menu.AppendMenu(moveFlag, INSTANCE, L"Create instance");
 			menu.AppendMenu(MF_STRING, CANCEL, L"Cancel");
 
 			UINT nItemID = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_NONOTIFY | TPM_RETURNCMD, screen.x, screen.y, this);
