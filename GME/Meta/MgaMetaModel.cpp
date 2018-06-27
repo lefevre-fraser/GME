@@ -116,7 +116,8 @@ STDMETHODIMP CMgaMetaModel::get_AspectByName(BSTR name, IMgaMetaAspect **p)
 			++i;
 		}
 
-		COMTHROW(E_NOTFOUND);
+		SetStandardOrGMEErrorInfo(E_NOTFOUND);
+		return E_NOTFOUND;
 	}
 	COMCATCH(;)
 }
