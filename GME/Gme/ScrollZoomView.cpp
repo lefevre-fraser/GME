@@ -936,7 +936,7 @@ BOOL CScrollZoomView::DoMouseWheel(UINT fFlags, short zDelta, CPoint point)
 	if (bHasVertBar && !(bHasHorzBar && preferHorizZoom))
 	{
 		nToScroll = ::MulDiv(-zDelta, uWheelScrollLines, WHEEL_DELTA);
-		if (nToScroll == -1 || uWheelScrollLines == WHEEL_PAGESCROLL)
+		if (uWheelScrollLines == WHEEL_PAGESCROLL)
 		{
 			nDisplacement = m_pageDev.cy;
 			if (zDelta > 0)
@@ -952,7 +952,7 @@ BOOL CScrollZoomView::DoMouseWheel(UINT fFlags, short zDelta, CPoint point)
 	else if (bHasHorzBar)
 	{
 		nToScroll = ::MulDiv(-zDelta, uWheelScrollLines, WHEEL_DELTA);
-		if (nToScroll == -1 || uWheelScrollLines == WHEEL_PAGESCROLL)
+		if (uWheelScrollLines == WHEEL_PAGESCROLL)
 		{
 			nDisplacement = m_pageDev.cx;
 			if (zDelta > 0)
