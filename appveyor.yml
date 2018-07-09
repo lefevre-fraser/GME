@@ -16,6 +16,9 @@ build_script:
 #  - >-
 #    powershell -ExecutionPolicy unrestricted .\github-sourceindexer.ps1 -userId "ksmyth" -repository "xerces-c" -symbolsFolder "%CD%" -branch %HEAD% -sourcesRoot "%CD%" -verbose -dbgToolsPath "'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64'" -ignoreUnknown -verifyLocalRepo
 
+on_failure:
+  - ps: Get-ChildItem .\*.log | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
 test: off
 
 artifacts:
