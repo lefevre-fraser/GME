@@ -9360,7 +9360,7 @@ void CGMEView::OnEditSync()
 		CGuiMetaAspect *metaAspect = guiMeta->aspects.GetNext(apos);
 		dlg.m_allAspects.AddTail(metaAspect);
 
-		if (currentAspect == metaAspect) {
+		if (currentAspect != metaAspect) {
 			dlg.m_dstAspects.AddTail(metaAspect);
 		}
 	}
@@ -9388,7 +9388,7 @@ void CGMEView::OnEditSync()
 	}
 
 
-	if (dlg.DoModal() == IDOK) {
+	if ((GetKeyState(VK_CONTROL) & 0x8000) || dlg.DoModal() == IDOK) {
 		CGuiMetaAspectList dstAspects;
 		CGuiMetaAspect*    srcAspect;
 		CGuiObjectList	   movingObjects;
