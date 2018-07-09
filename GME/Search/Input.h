@@ -31,7 +31,6 @@ public:
 
 	void CInput::GetInput(CString strNameFirst, CString strRoleFirst, CString strKindFirst, CString strAttributeFirst,CString strNameSecond,CString strRoleSecond,CString strKindSecond,CString strAttributeSecond,
                       CString attrval, BOOL mod, BOOL atom, BOOL ref, BOOL set,BOOL connection,BOOL splSearch, BOOL full, 
-                      IMgaFCO*, int, //WAS: IMgaFCO *root, int searchscope,
                       BOOL bMatchCase, int scopedSearch,int logicalExpr);
 
     //Getter methods
