@@ -306,7 +306,7 @@ void CSearchCtrl::SetMgaProject(LPUNKNOWN newValue)
 {
 	if(m_project != NULL)
 	{
-		m_searchDlg.RemoveAll();
+		m_searchDlg.MgaProjectSet();
 		if(m_territory != NULL)
 		{
 			COMTHROW(m_territory->Destroy() );

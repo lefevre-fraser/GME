@@ -114,6 +114,13 @@ public:
 
 //  These functions should be implemented to work with CSearchCtl
 	void RemoveAll();						// must remove all search result
+	void MgaProjectSet() {
+		RemoveAll();
+		specialSearchFCO = NULL;
+		m_chkRefCtrl.SetCheck(BST_UNCHECKED);
+		m_chkRef = false;
+		m_stcRefCtrl.SetWindowText(_T("NULL References"));
+	}
 	void RemoveZombies();					// must remove results belong to zombie objects
 	void EnableSearch();					// enable search functions
 	void DisableSearch();					// must disable search functions

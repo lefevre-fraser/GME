@@ -772,7 +772,7 @@ void CSearchDlg::CreateSearchHistory()
     CString strFirstElement=m_treeSearchHistory.GetItemText(m_treeSearchHistory.GetRootItem());
     //insert an dummy item to the tree once the processing of search text is complete
     //it will be renamed to appropriate one
-    HTREEITEM hItem=m_treeSearchHistory.InsertItem(_T("Dummy"),NULL,TVI_FIRST);
+    HTREEITEM hItem=m_treeSearchHistory.InsertItem(_T("Dummy"),TVI_ROOT,TVI_FIRST);
 
     CString strSearch;
 
@@ -870,7 +870,7 @@ void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,CString & s
 
     strSearch.Append(strNameValue);
 
-    m_treeSearchHistory.InsertItem(strNameValue,hParent,NULL);
+    m_treeSearchHistory.InsertItem(strNameValue,hParent,TVI_LAST);
 }
 
 void CSearchDlg::PrepareHistoryString(const CString &strCriteriaName,int & strSearchValue,HTREEITEM hParent,CString &strSearch)
@@ -895,7 +895,7 @@ void CSearchDlg::InsertHistory(CString strHistory)
 
     CString readValue;
 
-    HTREEITEM hItem=m_treeSearchHistory.InsertItem(_T("Dummy"),NULL,TVI_LAST);
+    HTREEITEM hItem=m_treeSearchHistory.InsertItem(_T("Dummy"),TVI_ROOT,TVI_LAST);
     HTREEITEM hFirstCriteria=m_treeSearchHistory.InsertItem(_T("First Search Criteria"),hItem,TVI_FIRST);
     HTREEITEM hSecondCriteria=m_treeSearchHistory.InsertItem(_T("Second Search Criteria"),hItem,TVI_LAST);
     HTREEITEM hOtherCriteria=m_treeSearchHistory.InsertItem(_T("Other"),hItem,TVI_LAST);
