@@ -8,6 +8,8 @@
 #include "AutoRouterEdge.h"
 
 
+// #define ASSERT(x) do { if (!(x)) DebugBreak(); } while (false)
+
 // --- CAutoRouterGraph
 
 CAutoRouterGraph::CAutoRouterGraph():
@@ -492,7 +494,13 @@ void CAutoRouterGraph::ConnectPoints(CPointListPath& ret, CPoint& start, CPoint&
 				ASSERT( !IsPointInDirFrom(start, rect, dir2) );
 				GoToNextBox(start, dir2, end);
 				// this assert fails if two boxes are adjacent, and a connection wants to go between
+				// or this assert fails if two boxes are overlapping. This can happen if the decorator got bigger (e.g. due to ports change) and now the boxes overlap (and we forgot to reset the model grid)
 				ASSERT( IsPointInDirFrom(start, rect, dir2) );
+				// avoid infinite loop by giving up
+				if (!IsPointInDirFrom(start, rect, dir2)) {
+					retend = ret.InsertAfter(retend, end);
+					return;
+				}
 			}
 			else
 			{
