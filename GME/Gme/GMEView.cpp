@@ -6656,7 +6656,9 @@ BOOL CGMEView::OnDrop(COleDataObject* pDataObject, DROPEFFECT dropEffect, CPoint
 				CPoint diff = point - CPoint(left,top);
 				CGuiObject::ShiftModels(selected, diff);
 				CGuiAnnotator::ShiftAnnotations(selectedAnnotations,diff);
-				ResetParent();
+				// moving a port inside this may make the decorator for this in the parent bigger
+				// so we reset the model grid for the parent
+				ResetParent(true);
 				__CommitTransaction();
 			}
 			catch(hresult_exception e) {                
