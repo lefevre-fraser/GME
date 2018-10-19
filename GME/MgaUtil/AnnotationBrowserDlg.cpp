@@ -358,7 +358,7 @@ void CAnnotationBrowserDlg::OnItemchangedAnnotationList(NMHDR* pNMHDR, LRESULT* 
 void CAnnotationBrowserDlg::UpdateFontStr(void) {
 	int height = m_anLogFont.lfHeight;
 	if (height < 0) {
-		height = -MulDiv(height, 72, GetDeviceCaps(GetDC()->m_hDC, LOGPIXELSY));
+		height = -MulDiv(height, 72, CClientDC(this).GetDeviceCaps(LOGPIXELSY));
 	}
 	m_anFont.Format(_T("%s, %d, %s%s"), m_anLogFont.lfFaceName, height, m_anLogFont.lfWeight <= 500 ? _T("Regular") : _T("Bold"), m_anLogFont.lfItalic ? _T(", Italic") : _T(""));
 }

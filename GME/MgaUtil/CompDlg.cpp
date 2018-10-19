@@ -120,19 +120,20 @@ BOOL CCompDlg::OnInitDialog()
 		lvc.mask = LVCF_WIDTH | LVCF_TEXT;
 
 		lvc.pszText = _T("Name");
-		lvc.cx = (int)(150.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);;
+		CClientDC dc(this);
+		lvc.cx = (int)(150.0 * dc.GetDeviceCaps(LOGPIXELSY) / 96.0);;
 		VERIFYTHROW( m_list.InsertColumn(0, &lvc) != -1 );
 
 		lvc.pszText = _T("Type");
-		lvc.cx = (int)(80.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
+		lvc.cx = (int)(80.0 * dc.GetDeviceCaps(LOGPIXELSY) / 96.0);
 		VERIFYTHROW( m_list.InsertColumn(1, &lvc) != -1 );
 
 		lvc.pszText = _T("ProgID");
-		lvc.cx = (int)(200.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
+		lvc.cx = (int)(200.0 * dc.GetDeviceCaps(LOGPIXELSY) / 96.0);
 		VERIFYTHROW( m_list.InsertColumn(2, &lvc) != -1 );
 
 		lvc.pszText = _T("Path");
-		lvc.cx = (int)(300.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
+		lvc.cx = (int)(300.0 * dc.GetDeviceCaps(LOGPIXELSY) / 96.0);
 		VERIFYTHROW( m_list.InsertColumn(3, &lvc) != -1 );
 
 		iconlist.Create(IDB_BITMAP1,16,0,15);

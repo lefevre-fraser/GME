@@ -30,7 +30,7 @@ END_MESSAGE_MAP()
 
 void CModelPropertiesDlgBar::ShowType()
 {
-	int size = (int)(16.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
+	int size = (int)(16.0 * CClientDC(this).GetDeviceCaps(LOGPIXELSY) / 96.0);
 	GetDlgItem(IDC_TYPEMARK)->MoveWindow(6, 8, size, size);
 	GetDlgItem(IDC_TYPEMARK)->ShowWindow(SW_SHOW);
 	GetDlgItem(IDC_INSTANCEMARK)->ShowWindow(SW_HIDE);
@@ -40,7 +40,7 @@ void CModelPropertiesDlgBar::ShowType()
 void CModelPropertiesDlgBar::ShowInstance()
 {
 	GetDlgItem(IDC_TYPEMARK)->ShowWindow(SW_HIDE);
-	int size = (int)(16.0 * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96.0);
+	int size = (int)(16.0 * CClientDC(this).GetDeviceCaps(LOGPIXELSY) / 96.0);
 	GetDlgItem(IDC_INSTANCEMARK)->MoveWindow(6, 8, size, size);
 	GetDlgItem(IDC_INSTANCEMARK)->ShowWindow(SW_SHOW);
 	GetDlgItem(IDC_BASETYPE_LABEL)->SetWindowText(_T("Type:"));

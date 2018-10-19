@@ -394,9 +394,8 @@ void CSplitterBar::ChangeHelpControls(CRect ctrlRect)
 	{
 		static int yDPI = 0;
 		if (yDPI == 0) {
-			HDC dc = ::GetDC(NULL);
-			yDPI = ::GetDeviceCaps(dc, LOGPIXELSY);
-			::ReleaseDC(NULL, dc);
+			CClientDC dc(this);
+			yDPI = dc.GetDeviceCaps(LOGPIXELSY);
 		}
 
 		int INSP_HELP_TITLE_HEIGHT = 15 * yDPI / 96 /*  USER_DEFAULT_SCREEN_DPI */;

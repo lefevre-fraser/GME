@@ -1333,6 +1333,6 @@ int CInspectorList::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CListBox::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	m_Settings.m_nDivider = INSP_DIVIDER_POSITION * GetDC()->GetDeviceCaps(LOGPIXELSY) / 96;
+	m_Settings.m_nDivider = INSP_DIVIDER_POSITION * CClientDC(this).GetDeviceCaps(LOGPIXELSY) / 96;
 	return 0;
 }
