@@ -106,7 +106,8 @@ void CHtmlCtrl::OnDestroy()
 		m_pBrowserApp->Release();
 		m_pBrowserApp = NULL;
 	}*/ //commented for vc7, Release its not a public member of IWebBrowser2
-	CWnd::OnDestroy(); // bypass CView doc/frame stuff
+	// CWnd::OnDestroy(); // bypass CView doc/frame stuff
+	__super::OnDestroy();
 }
 
 ////////////////
@@ -154,3 +155,161 @@ void CHtmlCtrl::OnDocumentComplete(LPCTSTR lpszURL)
 		ctrl->AddGMEToScript();
 	}
 }
+
+
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::ProcessUrlAction(
+	/* [in] */ __RPC__in LPCWSTR pwszUrl,
+	/* [in] */ DWORD dwAction,
+	/* [size_is][out] */ __RPC__out_ecount_full(cbPolicy) BYTE *pPolicy,
+	/* [in] */ DWORD cbPolicy,
+	/* [unique][in] */ __RPC__in_opt BYTE *pContext,
+	/* [in] */ DWORD cbContext,
+	/* [in] */ DWORD dwFlags,
+	/* [in] */ DWORD dwReserved)
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, InternetSecurityManager);
+	CString url = pThis->m_pView->GetLocationURL();
+	// allow e.g. <a href=\"javascript:(new ActiveXObject('shell.application')).... from trusted locations
+	if (wcsncmp(url, L"file:", 5) == 0 ||
+		wcsncmp(url, L"res:", 4) == 0 ||
+		wcsncmp(url, L"about:", 6) == 0)
+	{
+		*(PDWORD)pPolicy = URLPOLICY_ALLOW;
+		return S_OK;
+	}
+	return INET_E_DEFAULT_ACTION;
+}
+
+
+
+
+
+// the rest of this file is boilerplate
+
+CExtendedHtmlControlSite::CExtendedHtmlControlSite(COleControlContainer* pContainer, CHtmlCtrl* pView)
+	:COleControlSite(pContainer), m_pView(pView)
+{
+}
+
+CExtendedHtmlControlSite::~CExtendedHtmlControlSite(void)
+{
+}
+
+BEGIN_INTERFACE_MAP(CExtendedHtmlControlSite, COleControlSite)
+	INTERFACE_PART(CExtendedHtmlControlSite, IID_IServiceProvider, ServiceProvider)
+	INTERFACE_PART(CExtendedHtmlControlSite, IID_IInternetSecurityManager, InternetSecurityManager)
+END_INTERFACE_MAP()
+
+
+ULONG FAR EXPORT CExtendedHtmlControlSite::XServiceProvider::AddRef()
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, ServiceProvider)
+		return pThis->ExternalAddRef();
+}
+
+ULONG FAR EXPORT CExtendedHtmlControlSite::XServiceProvider::Release()
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, ServiceProvider)
+		return pThis->ExternalRelease();
+}
+
+HRESULT FAR EXPORT CExtendedHtmlControlSite::XServiceProvider::QueryInterface(REFIID riid,
+	void** ppvObj)
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, ServiceProvider)
+		HRESULT hr = (HRESULT)pThis->ExternalQueryInterface(&riid, ppvObj);
+	return hr;
+}
+
+STDMETHODIMP CExtendedHtmlControlSite::XServiceProvider::QueryService(REFGUID guidService,
+	REFIID riid,
+	void** ppvObject)
+{
+	if (riid == IID_IInternetSecurityManager)
+	{
+		METHOD_PROLOGUE(CExtendedHtmlControlSite, ServiceProvider);
+		HRESULT hr = (HRESULT)pThis->ExternalQueryInterface(&riid, ppvObject);
+		return hr;
+	}
+	else
+	{
+		*ppvObject = NULL;
+		return E_NOINTERFACE;
+	}
+}
+
+
+ULONG FAR EXPORT CExtendedHtmlControlSite::XInternetSecurityManager::AddRef()
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, InternetSecurityManager)
+	return pThis->ExternalAddRef();
+}
+
+ULONG FAR EXPORT CExtendedHtmlControlSite::XInternetSecurityManager::Release()
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, InternetSecurityManager)
+	return pThis->ExternalRelease();
+}
+
+HRESULT FAR EXPORT CExtendedHtmlControlSite::XInternetSecurityManager::QueryInterface(REFIID riid,
+	void** ppvObj)
+{
+	METHOD_PROLOGUE(CExtendedHtmlControlSite, InternetSecurityManager)
+	HRESULT hr = (HRESULT)pThis->ExternalQueryInterface(&riid, ppvObj);
+	return hr;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::SetSecuritySite(
+	/* [unique][in] */ __RPC__in_opt IInternetSecurityMgrSite *pSite)
+{
+	return INET_E_DEFAULT_ACTION;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::GetSecuritySite(
+	/* [out] */ __RPC__deref_out_opt IInternetSecurityMgrSite **ppSite) {
+	return INET_E_DEFAULT_ACTION;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::MapUrlToZone(
+	/* [in] */ __RPC__in LPCWSTR pwszUrl,
+	/* [out] */ __RPC__out DWORD *pdwZone,
+	/* [in] */ DWORD dwFlags) {
+	return INET_E_DEFAULT_ACTION;
+	// *pdwZone = 0;
+	// return S_OK;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::GetSecurityId(
+	/* [in] */ __RPC__in LPCWSTR pwszUrl,
+	/* [size_is][out] */ __RPC__out_ecount_full(*pcbSecurityId) BYTE *pbSecurityId,
+	/* [out][in] */ __RPC__inout DWORD *pcbSecurityId,
+	/* [in] */ DWORD_PTR dwReserved) {
+	return INET_E_DEFAULT_ACTION;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::QueryCustomPolicy(
+	/* [in] */ __RPC__in LPCWSTR pwszUrl,
+	/* [in] */ __RPC__in REFGUID guidKey,
+	/* [size_is][size_is][out] */ __RPC__deref_out_ecount_full_opt(*pcbPolicy) BYTE **ppPolicy,
+	/* [out] */ __RPC__out DWORD *pcbPolicy,
+	/* [in] */ __RPC__in BYTE *pContext,
+	/* [in] */ DWORD cbContext,
+	/* [in] */ DWORD dwReserved) {
+	return INET_E_DEFAULT_ACTION;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::SetZoneMapping(
+	/* [in] */ DWORD dwZone,
+	/* [in] */ __RPC__in LPCWSTR lpszPattern,
+	/* [in] */ DWORD dwFlags) {
+	return INET_E_DEFAULT_ACTION;
+}
+
+HRESULT CExtendedHtmlControlSite::XInternetSecurityManager::GetZoneMappings(
+	/* [in] */ DWORD dwZone,
+	/* [out] */ __RPC__deref_out_opt IEnumString **ppenumString,
+	/* [in] */ DWORD dwFlags) {
+	return INET_E_DEFAULT_ACTION;
+}
+
