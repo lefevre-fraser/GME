@@ -57,7 +57,6 @@ BOOL CSizeTrackerDialog::OnInitDialog()
 	TRACE1("CONSTRUCT: %X\n", m_staticWnd);
 
 	AdjustPositionAndText(m_mouseClick, m_initialRect);
-	m_staticWnd->MoveWindow(0, 0, SizeTrackerWidth - 1, SizeTrackerHeight);
 
 	ShowWindow(SW_SHOWNORMAL);	// For safety
 	SetFocus();					// For safety
@@ -88,12 +87,12 @@ CPoint	CSizeTrackerDialog::GetAdjustedPosition(const CPoint& pt)
 	switch(m_resizeType) {
 		case RightEdgeResize:			dx = SizeTrackerMargin, dy = 0;																	break;
 		case BottomEdgeResize:			dx = 0, dy = SizeTrackerMargin;																	break;
-		case LeftEdgeResize:			dx = -(SizeTrackerWidth + SizeTrackerMargin), dy = 0;											break;
-		case TopEdgeResize:				dx = 0, dy = -(SizeTrackerHeight + SizeTrackerMargin);											break;
-		case TopLeftCornerResize:		dx = -(SizeTrackerWidth + SizeTrackerMargin), dy = -(SizeTrackerHeight + SizeTrackerMargin);	break;
-		case TopRightCornerResize:		dx = SizeTrackerMargin, dy = -(SizeTrackerHeight + SizeTrackerMargin);							break;
+		case LeftEdgeResize:			dx = -(m_initialRect.Width() + SizeTrackerMargin), dy = 0;											break;
+		case TopEdgeResize:				dx = 0, dy = -(m_initialRect.Height() + SizeTrackerMargin);											break;
+		case TopLeftCornerResize:		dx = -(m_initialRect.Width() + SizeTrackerMargin), dy = -(m_initialRect.Height() + SizeTrackerMargin);	break;
+		case TopRightCornerResize:		dx = SizeTrackerMargin, dy = -(m_initialRect.Height() + SizeTrackerMargin);							break;
 		case BottomRightCornerResize:	dx = SizeTrackerMargin, dy = SizeTrackerMargin;													break;
-		case BottomLeftCornerResize:	dx = -(SizeTrackerWidth + SizeTrackerMargin), dy = SizeTrackerMargin;							break;
+		case BottomLeftCornerResize:	dx = -(m_initialRect.Width() + SizeTrackerMargin), dy = SizeTrackerMargin;							break;
 	}
 
 	CPoint offsetted = pt;
@@ -122,7 +121,7 @@ void CSizeTrackerDialog::AdjustPositionAndText(const CPoint& point, const CRect&
 
 	m_staticWnd->SetWindowText(GetStrToDisplay(location));
 	CPoint adjPos = GetAdjustedPosition(point);
-	MoveWindow(adjPos.x, adjPos.y, SizeTrackerWidth, SizeTrackerHeight);
+	MoveWindow(adjPos.x, adjPos.y, m_initialRect.Width(), m_initialRect.Height());
 }
 
 }

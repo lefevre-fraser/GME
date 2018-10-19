@@ -253,14 +253,19 @@ bool ResizeLogic::MouseLeftButtonDown(UINT nFlags, const CPoint& point, HDC tran
 					cWnd = CWnd::FromHandle(m_parentWnd);
 				}
 
+				int logPixelsX = GetDeviceCaps(transformHDC, LOGPIXELSX);
+				int logPixelsY = GetDeviceCaps(transformHDC, LOGPIXELSX);
+				int width = MulDiv(SizeTrackerWidth, logPixelsX, 96);
+				int height = MulDiv(SizeTrackerHeight, logPixelsY, 96);
 				CDialogTemplate dlgTemplate(_T(""),
 											WS_CHILD | WS_VISIBLE | WS_BORDER,	// Window Styles
 											0,	// Extended Window Styles
-											0, 0, SizeTrackerWidth, SizeTrackerHeight);
-				dlgTemplate.AddStatic(_T("EDT"), WS_VISIBLE, 0, 0, 0, SizeTrackerWidth - 1, SizeTrackerHeight, IDC_INPLACETEXTEDIT);
+											0, 0, width, height);
+				dlgTemplate.AddStatic(_T("EDT"), WS_VISIBLE, 0, 0, 0, width, height, IDC_INPLACETEXTEDIT);
 
 				sizeTrackerDlg = new CSizeTrackerDialog;
-				sizeTrackerDlg->SetParameters(m_targetLocation, point, resizeTypeCandidate, cWnd, isPermanentCWnd, transformHDC);
+				CRect location(m_targetLocation.left, m_targetLocation.top, m_targetLocation.left + width, m_targetLocation.top + height);
+				sizeTrackerDlg->SetParameters(location, point, resizeTypeCandidate, cWnd, isPermanentCWnd, transformHDC);
 				BOOL success = sizeTrackerDlg->CreateIndirect(dlgTemplate, cWnd);
 				if (success != FALSE)
 					success = sizeTrackerDlg->ShowWindow(SW_SHOWNORMAL);
