@@ -3351,3 +3351,14 @@ void CGMEApp::consoleMessage( const CString& p_msg, short p_type)
 	else
 		AfxMessageBox( p_msg);
 }
+
+#ifdef _DEBUG
+extern "C" FILE * __cdecl __iob_func(void)
+{
+	terminate();
+	return NULL;
+}
+
+// https://msdn.microsoft.com/en-us/library/bb531344.aspx#BK_CRT "Visual C++ 2015 Conformance Changes   C Runtime Library(CRT)"
+#pragma comment(lib, "legacy_stdio_definitions.lib")
+#endif
