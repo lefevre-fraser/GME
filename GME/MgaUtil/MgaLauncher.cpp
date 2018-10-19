@@ -15,9 +15,9 @@
 
 #include "CrashRpt.h"
 #ifdef _DEBUG
-#pragma comment(lib, "CrashRptd.lib")
+#pragma comment(lib, "CrashRpt1403.lib")
 #else
-#pragma comment(lib, "CrashRpt.lib")
+#pragma comment(lib, "CrashRpt1403.lib")
 #endif
 
 

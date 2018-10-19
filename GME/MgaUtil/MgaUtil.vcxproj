@@ -134,10 +134,10 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <CustomBuildStep>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt1403.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(OutDir)CrashRpt.dll</Outputs>
+      <Outputs>$(OutDir)CrashRpt1403.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -178,10 +178,10 @@
       </DataExecutionPrevention>
     </Link>
     <CustomBuildStep>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt1403.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(OutDir)CrashRpt.dll</Outputs>
+      <Outputs>$(OutDir)CrashRpt1403.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -216,12 +216,13 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <CustomBuildStep>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt1403.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(OutDir)CrashRpt.dll</Outputs>
+      <Outputs>$(OutDir)CrashRpt1403.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -257,10 +258,10 @@
       </DataExecutionPrevention>
     </Link>
     <CustomBuildStep>
-      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)"</Command>
+      <Command>xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt1403.dll "$(OutDir)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(OutDir)CrashRpt.dll</Outputs>
+      <Outputs>$(OutDir)CrashRpt1403.dll</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

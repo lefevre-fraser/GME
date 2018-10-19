@@ -99,7 +99,7 @@
                   DownloadUrl="https://download.microsoft.com/download/9/7/7/977B481A-7BA6-4E30-AC40-ED51EB2028F2/vcredist_x64.exe"
       />
 
-      <!-- needed for CrashRpt.dll, for libapr-1.dll, libeay32.dll, et al -->
+      <!-- needed for CrashRpt dll, for libapr-1.dll, libeay32.dll, et al -->
       <ExePackage Id="vcredist_2010SP1_x86.exe"
                   Name="vc_redist.x86.$(var.Vc10RedistVersion).exe"
                   InstallCommand="/q /norestart"
@@ -117,7 +117,7 @@
                   DownloadUrl="https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe"
       />
 
-      <!-- needed for CrashRpt.dll -->
+      <!-- needed for CrashRpt dll -->
       <ExePackage Id="vcredist_2010SP1_x64.exe"
                   Name="vc_redist.x64.$(var.Vc10RedistVersion).exe"
                   InstallCommand="/norestart /q"

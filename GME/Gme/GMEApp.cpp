@@ -29,9 +29,11 @@
 
 #include "CrashRpt.h"
 #ifdef _DEBUG
-#pragma comment(lib, "CrashRptd.lib")
+#pragma comment(lib, "CrashRpt1403.lib")
+// https://msdn.microsoft.com/en-us/library/bb531344.aspx#BK_CRT
+#pragma comment(lib, "legacy_stdio_definitions.lib")
 #else
-#pragma comment(lib, "CrashRpt.lib")
+#pragma comment(lib, "CrashRpt1403.lib")
 #endif
 
 #import "C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\mscorlib.tlb" no_implementation

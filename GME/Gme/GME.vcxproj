@@ -102,8 +102,8 @@
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
       <Command>xcopy /Y/D/F ..\CSGUI\bin\Release\CSGUI.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSender.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt1403.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSender1403.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
@@ -148,8 +148,8 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
       <Command>xcopy /Y/D/F ..\CSGUI\bin\Release\CSGUI.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSender.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt1403.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSender1403.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
@@ -193,8 +193,8 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
       <Command>xcopy /Y/D/F ..\CSGUI\bin\Debug\CSGUI.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashRpt1403.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\CrashSender1403.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>
@@ -235,8 +235,8 @@ xcopy /Y/D/F ..\Lib\CrashRpt\bin\crashrpt_lang.ini "$(OutDir)"
     <CustomBuildStep>
       <Message>Copying required CrashRpt files</Message>
       <Command>xcopy /Y/D/F ..\CSGUI\bin\Debug\CSGUI.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRptd.dll "$(OutDir)" &amp;&amp; ^
-xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSenderd.exe "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashRpt1403.dll "$(OutDir)" &amp;&amp; ^
+xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\CrashSender1403.exe "$(OutDir)" &amp;&amp; ^
 xcopy /Y/D/F ..\Lib\CrashRpt\bin\x64\crashrpt_lang.ini "$(OutDir)"
 </Command>
       <Outputs>$(OutDir)crashrpt_lang.ini;%(Outputs)</Outputs>

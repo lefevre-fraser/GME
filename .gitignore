@@ -78,7 +78,6 @@ GME/Interfaces/Release/
 GME/Interfaces/dlldata.c
 GME/Meta/Release/
 GME/Mga/Release/
-GME/MgaUtil/CrashRpt.dll
 GME/MgaUtil/Release/
 GME/Common/Debug
 GME/Console/Debug

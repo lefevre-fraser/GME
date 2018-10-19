@@ -204,13 +204,13 @@
       </Component>
 
       <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
-        <File Id="CrashRpt.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashRpt.dll" />
+        <File Id="CrashRpt.dll$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashRpt1403.dll" />
       </Component>
       <Component Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
         <File Id="crashrpt_lang.ini$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\bin\crashrpt_lang.ini" />
       </Component>
       <Component  Directory='INSTALLDIR_BIN$(sys.BUILDARCH)'>
-        <File Id="CrashSender.exe$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashSender.exe" />
+        <File Id="CrashSender.exe$(sys.BUILDARCH)" KeyPath="yes" Source="..\GME\lib\CrashRpt\$(var.bin)\CrashSender1403.exe" />
       </Component>
       <Component Directory='INSTALLDIR$(sys.BUILDARCH)'>
         <File Id="CrashRpt.license$(sys.BUILDARCH)" Name="CrashRpt.license" KeyPath="yes" Source="..\GME\lib\CrashRpt\License.txt" />
