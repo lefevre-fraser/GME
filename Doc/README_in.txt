@@ -27,9 +27,13 @@ You must uninstall GME versions prior to version
 
 Release Notes
 ----------------------------------
+  - Binary compatibility with 11.12.2
   - Model editor: fix scrolling with mousewheel upwards (affected only some systems)
-  - Model editor: re-place elements when ports are moved
+  - Fix hang when a model gets bigger (e.g. adding ports) and the parent is open and has many connections
+  - Fix distance scrolled up in Model Editor on some machines
   - Console: allow javascript:(new ActiveXObject('shell.application')) links
+  - Search: fix crash on searching for referred object after project was closed
+  - Right-click drag-n-drop on Model Editor: grey out options that are disallowed by metamodel
 
 Release Notes of Release 18.4.9
 ----------------------------------
