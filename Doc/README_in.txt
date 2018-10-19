@@ -25,6 +25,12 @@ You must uninstall GME versions prior to version
 1. Release Notes
 ************************************************
 
+Release Notes
+----------------------------------
+  - Model editor: fix scrolling with mousewheel upwards (affected only some systems)
+  - Model editor: re-place elements when ports are moved
+  - Console: allow javascript:(new ActiveXObject('shell.application')) links
+
 Release Notes of Release 18.4.9
 ----------------------------------
   - Binary compatibility with 11.12.2

@@ -1,7 +1,7 @@
 <link href="markdown.css" rel="stylesheet"></link>
 
 <!---
-This file is synced manually to https://forge.isis.vanderbilt.edu/gme/
+This file is synced manually to http://repo.isis.vanderbilt.edu/GME/
 See also  https://svn.isis.vanderbilt.edu/GMESRC/trunk/Doc/GME_release_howto.txt
 -->
 
