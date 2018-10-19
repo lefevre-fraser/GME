@@ -17,11 +17,18 @@
 #include "ScrollZoomView.h"
 #include "GMEViewOverlay.h"
 #include <list>
+#include "CrashRpt.h"
 
 class CViewDriver;
 class CChildFrame;
 class CGMEDoc;
 
+
+static int __stdcall exceptionFilter(unsigned int code, struct _EXCEPTION_POINTERS* ep)
+{
+	crExceptionFilter(code, ep);
+	return EXCEPTION_CONTINUE_SEARCH;
+}
 
 class CGMEView :	public CScrollZoomView
 {
@@ -35,6 +42,15 @@ public:
 		m_overlay = nullptr;
 		return __super::OnScrollBy(sizeScroll, bDoScroll);
 	}
+	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult) {
+		__try {
+			return __super::OnWndMsg(message, wParam, lParam, pResult);
+		}
+		__except (exceptionFilter(GetExceptionCode(), GetExceptionInformation()))
+		{
+		}
+	}
+
 
 protected: // create from serialization only
 	CGMEView();

@@ -246,6 +246,27 @@ gerr:
 }
 
 
+CString getUserRegistryStringValue(const TCHAR* name) {
+	CString ret;
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\GME\\"),
+		0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
+	{
+		TCHAR szData[256];
+		DWORD dwKeyDataType;
+		DWORD dwDataBufSize = sizeof(szData) / sizeof(TCHAR);
+
+		if (RegQueryValueEx(hKey, name, NULL, &dwKeyDataType,
+			(LPBYTE)&szData, &dwDataBufSize) == ERROR_SUCCESS)
+		{
+			ret = CString(szData, dwDataBufSize);
+		}
+
+		RegCloseKey(hKey);
+	}
+	return ret;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CGMEApp initialization
 
@@ -591,6 +612,47 @@ BOOL CGMEApp::ShowWelcomeWindow()
 	return TRUE;
 }
 
+// CInvalidArgException _simpleInvalidArgException(FALSE);
+static void (__stdcall *InvalidArg)() = nullptr;
+void __stdcall InvalidArgReplacement() {
+	CR_EXCEPTION_INFO ei;
+	memset(&ei, 0, sizeof(CR_EXCEPTION_INFO));
+	ei.cb = sizeof(CR_EXCEPTION_INFO);
+	ei.exctype = CR_SEH_EXCEPTION;
+	ei.code = 1234;
+	ei.pexcptrs = NULL;
+
+	int result = crGenerateErrorReport(&ei);
+
+	if (result != 0)
+	{
+		TCHAR szErrorMsg[256];
+		crGetLastErrorMsg(szErrorMsg, 256);
+		AfxMessageBox(szErrorMsg);
+	}
+	// FIXME: this shows "Internal application error" instead of invalid argument
+	throw new CInvalidArgException();
+}
+
+static void HookInvalidArg() {
+#if defined(_M_IX86)
+	// reg add HKCU\Software\GME /v HookInvalidArg /d 1 /t REG_SZ /f
+	if (getUserRegistryStringValue(L"HookInvalidArg") == L"1") {
+		InvalidArg = &AfxThrowInvalidArgException;
+		int** invalidArg = (int**)(2 + ((char*)(void*)InvalidArg));
+		DWORD oldProtect;
+		if (VirtualProtect((LPVOID)**invalidArg, 5, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+			int invalidArgHook = (int)(void*)&InvalidArgReplacement;
+			ptrdiff_t diff = invalidArgHook - **invalidArg;
+			diff -= 5;
+			*((char*)**invalidArg) = 0xe9;
+			*((int*)(1 + (char*)**invalidArg)) = diff;
+			// AfxThrowInvalidArgException();
+		}
+	}
+#endif
+}
+
 int CGMEApp::Run()
 {
 	CoFreeUnusedLibraries();	// JIRA 221: GME 9.12.15 Crashing
@@ -616,14 +678,23 @@ int CGMEApp::Run()
 	info.pszAppName = _T("GME");
 	info.pszAppVersion = _T(GME_VERSION_ID);
 	info.pszEmailSubject = _T("GME CrashRpt");
-	info.pszEmailTo = _T("gme-supp@isis.vanderbilt.edu");
-	info.pszUrl = _T("http://symbols.isis.vanderbilt.edu/GME/crashrpt.php");
+	info.uPriorities[CR_SMTP] = CR_NEGATIVE_PRIORITY;
+	info.uPriorities[CR_SMAPI] = CR_NEGATIVE_PRIORITY;
+	info.pszUrl = _T("https://gme-crashrpt.metamorphsoftware.com/crashrpt");
 	info.dwFlags = CR_INST_SEH_EXCEPTION_HANDLER | CR_INST_PURE_CALL_HANDLER | CR_INST_SECURITY_ERROR_HANDLER
 		| CR_INST_INVALID_PARAMETER_HANDLER | CR_INST_SIGABRT_HANDLER | CR_INST_SIGINT_HANDLER | CR_INST_SIGTERM_HANDLER;
 		// missing: CR_INST_NEW_OPERATOR_ERROR_HANDLER: the default std::bad_alloc is fine (sometimes we handle it)
 #ifdef _DEBUG
 	bNoProtect = true;
 #endif
+	auto disableCrashRpt = []() -> bool {
+		// reg add HKCU\Software\GME /v InstallCrashRpt /d 0 /t REG_SZ /f
+		if (getUserRegistryStringValue(L"InstallCrashRpt") == L"0") {
+			return true;
+		}
+		return false;
+	};
+	bNoProtect = bNoProtect || disableCrashRpt();
 	bNoProtect = bNoProtect || static_cast<bool>(IsDebuggerPresent());
 	if (!bNoProtect) {
 		if (crInstall(&info) != 0)
@@ -633,6 +704,7 @@ int CGMEApp::Run()
 			AfxMessageBox(buff);
 			return FALSE;
 		}
+		HookInvalidArg();
 	}
 
 	OpenCommandLineProject();

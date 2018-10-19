@@ -185,6 +185,13 @@ public:
 	virtual BOOL SaveAllModified();
 	//}}AFX_VIRTUAL
 
+	virtual LRESULT ProcessWndProcException(CException* e, const MSG* pMsg)
+	{
+		// TODO send with CrashRpt (if we didn't send it with CGMEView::OnWndMsg
+		// but the stack is gone, so a report here is much less useful
+		return __super::ProcessWndProcException(e, pMsg);
+	}
+
 	void OnUniquePrintSetup();
 // Implementation
 		// Server object for document creation
