@@ -65,7 +65,8 @@ echo Success
 
 exit /b 0
 
-for /f "usebackq" %%a in (`%python% -c "import time; print '.'.join(map(str, time.localtime()[0:3]))[2:]"`) do set VERSION=%%a
+if not exist "%PYTHON%" set PYTHON=%userprofile%\Downloads\markdown\Scripts\python.exe
+for /f "usebackq" %a in (`%python% -c "import time; print '.'.join(map(str, time.localtime()[0:3]))[2:]"`) do set VERSION=%a
 echo Version %VERSION%
 
 set PATH=%PATH%;c:\Program Files\7-Zip;c:\Program Files\Git\usr\bin;c:\cygwin\bin;C:\Program Files (x86)\Subversion\bin
@@ -76,8 +77,9 @@ svn cp -m "Tag Release %VERSION%" https://svn.isis.vanderbilt.edu/GMESRC/trunk h
 
 cd redist
 ssh repo@repo.isis.vanderbilt.edu mkdir GME/%VERSION%/ && \
-scp ../Doc/README.txt GME-%VERSION%.msi GME_x64-%VERSION%.msi GME-%VERSION%_src.7z repo@repo.isis.vanderbilt.edu:GME/%VERSION%/ && \
+scp ../Doc/README.txt GME-%VERSION%.exe GME-%VERSION%.msi GME_x64-%VERSION%.msi GME-%VERSION%_src.7z repo@repo.isis.vanderbilt.edu:GME/%VERSION%/ && \
 scp GME-%VERSION%_symbols.7z repo@repo.isis.vanderbilt.edu:GME/%VERSION%/ && \
+scp ../Doc/index.html repo@repo.isis.vanderbilt.edu:GME/ && \
 ssh repo@repo.isis.vanderbilt.edu chmod -R a+r GME/%VERSION%/
 
 pushd %GME_ROOT%\Doc
