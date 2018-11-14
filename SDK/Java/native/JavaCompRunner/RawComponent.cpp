@@ -270,7 +270,6 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 				COMTHROW(project->CommitTransaction());
 		}	
 		catch(jthrowable jexc){
-			char buf[200];
 			m_env->ExceptionClear();
 			try{
 				jclass    throwableClass  = m_env->FindClass("java/lang/Throwable");
@@ -289,18 +288,18 @@ STDMETHODIMP RawComponent::InvokeEx( IMgaProject *project,  IMgaFCO *currentobj,
 				if (exc) {
 					throw exc;
 				}
-				
+
 				const char *str = m_env->GetStringUTFChars(msg, 0);
-				sprintf(buf, "Java exception occurred at component invokation: %s", str);;
+				const char *messageTemplate = "Java exception occurred at component invocation: %s";
+				char* buf = (char*)malloc(strlen(messageTemplate) + strlen(str) + 1);
+				sprintf(buf, messageTemplate, str);
 				m_env->ReleaseStringUTFChars(msg, str);
-				
-				
-				
-				
+
 				AfxMessageBox(buf);
+				free(buf);
 			}catch(...){
 				m_env->ExceptionClear();
-				AfxMessageBox("Java exception occurred at component invokation, the cause is unrecoverable.");
+				AfxMessageBox("Java exception occurred at component invocation, the cause is unrecoverable.");
 			}
 
 			if (invokeExStartedATransaction)
