@@ -310,7 +310,7 @@ HRESULT FCO::Check() {
 				{
 					IMgaMetaFCOPtr r = meta.p;
 					_bstr_t err = L"'";
-					err += r->Name + "' cannot be contained in the root folder";
+					err += r->Name + L"' cannot be contained in the " + parentmf->Name + L" folder";
 					throw_com_error(E_MGA_META_VIOLATION, err);
 				}
 				MGACOLL_ITERATE_END;
