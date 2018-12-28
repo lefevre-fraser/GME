@@ -120,9 +120,6 @@ void CInPlaceManager::ShowInPlace(CRect rectInPlace, int nIndex)
 		}break;
 	case ITEMDATA_BOOLEAN:
 		{
-			if(!ListItem.bIsReadOnly) {
-				DisplayArrowButton(rectInPlace);
-			}
 		}break;
 
 	case ITEMDATA_COLOR	:
@@ -553,15 +550,10 @@ void CInPlaceManager::OnClickArrowButton(bool rightSideClick)
 			DisplayCompassOpt(rectWnd);
 		}break;
 
-	case ITEMDATA_BOOLEAN:
-		{
-			rectWnd.bottom += 2 * m_pInspectorList->m_ComboboxLineHeight + 2;
-			DisplayCombo(rectWnd);
-		}break;
 	case ITEMDATA_FIXED_LIST:
 		{
 			rectWnd.bottom += min((long)ListItem.Value.stringVal.GetSize(), 8) 
-				* m_pInspectorList->m_ComboboxLineHeight + 2;
+				* m_pInspectorList->m_ComboboxLineHeight + 2; // FIXME this magic number is wrong on high-DPI displays (e.g GetDeviceCaps(LOGPIXELSY) == 144)
 			DisplayCombo(rectWnd);
 		}break;
 

@@ -268,6 +268,21 @@ void CInspectorList::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 								rectText.right,rectText.bottom),
 				DT_LEFT | DT_SINGLELINE);
 			}
+			else if (ListItem.Value.dataType == ITEMDATA_BOOLEAN) {
+				CRect rectColorBox(rectRight);
+				rectColorBox.left += INSP_COLORBOX_MARGIN;
+				rectColorBox.right = rectColorBox.left + INSP_CHECKBOX_SIZE;
+				rectColorBox.top = rectColorBox.top + (rectColorBox.Height() - INSP_CHECKBOX_SIZE) / 2 - 1;
+				rectColorBox.bottom = rectColorBox.top + INSP_CHECKBOX_SIZE;
+				dc.DrawFrameControl(rectColorBox, DFC_BUTTON, DFCS_BUTTONCHECK | (ListItem.Value.boolVal ? DFCS_CHECKED : 0));
+
+				CRect rectText(rectRight);
+				rectText.left = rectColorBox.right + 2 * INSP_COLORBOX_MARGIN;
+
+				dc.DrawText(strTxt, CRect(rectText.left, rectText.top,
+					rectText.right, rectText.bottom),
+					DT_LEFT | DT_SINGLELINE);
+			}
 			else if(ListItem.Value.dataType==ITEMDATA_STRING&&ListItem.Value.cLineNum>1)
 			{
 				// Multiline string
@@ -443,6 +458,38 @@ void CInspectorList::OnLButtonUp(UINT nFlags, CPoint point)
 		// Redraw listbox
 		Invalidate();
 	}
+
+
+	BOOL bOutside;
+	int nIndex = ItemFromPoint(point, bOutside);
+
+	if (!bOutside)
+	{
+		CRect rectItem;
+		GetItemRect(nIndex, rectItem);
+
+		CRect rectRight(rectItem);
+		rectRight.left = m_Settings.m_nDivider;
+
+		if (rectRight.PtInRect(point))
+		{
+			int cxDrag = GetSystemMetrics(SM_CXDRAG);
+			int cyDrag = GetSystemMetrics(SM_CYDRAG);
+			int nIndexMouseDown = ItemFromPoint(point, bOutside);
+			if (!bOutside && nIndex == nIndexMouseDown && abs(m_ptOldTop.x - point.x) <= cxDrag && abs(m_ptOldTop.y - point.y) <= cyDrag)
+			{
+				CListItem& ListItem = m_ListItemArray[nIndex];
+				if (ListItem.Value.dataType == ITEMDATA_BOOLEAN) {
+					ListItem.Value.SetBoolValue(!ListItem.Value.boolVal);
+					ListItem.SetDirty();
+					NotifyParent(nIndex);
+					SetFocus();
+					return;
+				}
+			}
+		}
+	}
+
 	CListBox::OnLButtonUp(nFlags, point);
 }
 
@@ -855,6 +902,8 @@ bool CInspectorList::OnRightSideClick(CPoint point)
 
 		if(rectRight.PtInRect(point))
 		{
+			m_ptOldTop.y = point.y;
+			m_ptOldTop.x = point.x;
 			return m_InPlaceManager.OnRightItemClick(nIndex, rectRight);
 		}
 	}
@@ -955,6 +1004,7 @@ void CInspectorList::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				{
 					SetDefault();
 					Invalidate();
+					SetFocus();
 
 				}
 			}
@@ -963,6 +1013,7 @@ void CInspectorList::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 				SetDefault();
 				Invalidate();
+				SetFocus();
 			}
 			break;
 		case VK_TAB:	// JIRA GME-178
@@ -970,6 +1021,30 @@ void CInspectorList::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				SelectNextItem(::GetKeyState(VK_SHIFT) & 0x8000);
 			}
 			break;
+		case VK_SPACE:
+		case VK_RETURN:
+		{
+			int nSelCount = GetSelCount();
+
+			CArray<int, int> IndexArray;
+			if (nSelCount > 0)
+			{
+				IndexArray.SetSize(nSelCount);
+				CListBox::GetSelItems(nSelCount, IndexArray.GetData());
+			}
+			for (int i = 0; i < nSelCount; i++) {
+				int nIndex = IndexArray[i];
+				CListItem& ListItem = m_ListItemArray[nIndex];
+				if (ListItem.Value.dataType == ITEMDATA_BOOLEAN) {
+					ListItem.Value.SetBoolValue(!ListItem.Value.boolVal);
+					ListItem.SetDirty();
+					NotifyParent(nIndex);
+					SetFocus();
+				}
+				else if (ListItem.Value.dataType == ITEMDATA_FIXED_LIST) {
+				}
+			}
+		}
 	}
 
 	CListBox::OnKeyDown(nChar, nRepCnt, nFlags);
@@ -1145,7 +1220,18 @@ void CInspectorList::NotifyParent(UINT nSelItem)
 
 void CInspectorList::RefreshState()
 {
-	SetHelp(-1);
+	int nSelCount = GetSelCount();
+
+	if (nSelCount<1)
+	{
+		SetHelp(-1);
+	}
+	else
+	{
+		int nSelected;
+		CListBox::GetSelItems(1, &nSelected);
+		SetHelp(nSelected);
+	}
 	// PETER: Removed beacuse of JIRA #GME-64
 	// OnSelChange();
 }
