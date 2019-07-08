@@ -52,10 +52,9 @@ namespace CSGUI
         internal void ShowDialog(IWin32Window windowWrapper, List<string> recents)
         {
             this.recents = recents;
-            int y = 20;
             using (Graphics g = this.CreateGraphics())
             {
-
+            int y = this.grpRecents.DisplayRectangle.Top;
             foreach (string recent_ in recents)
             {
                 string recent = recent_;
