@@ -1442,7 +1442,7 @@ BEGIN
     ID_INDICATOR_MODE       "EDIT"
     ID_INDICATOR_ZOOM       "100%"
     ID_INDICATOR_PARADIGM   "-"
-    ID_INDICATOR_TIME       "Time"
+    ID_INDICATOR_TIME       " "
     CG_ID_VIEW_MODELPROPERTIESBAR
                             "Show or hide ModelPropertiesBar\nToggle ModelPropertiesBar"
 END
