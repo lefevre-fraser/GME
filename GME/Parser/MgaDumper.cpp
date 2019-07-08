@@ -175,7 +175,7 @@ STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hw
 		DoneDump(true);
 		if (m_progress != NULL )
 		{
-			COMTHROW(m_progress->StopProgressDialog());
+			m_progress->StopProgressDialog();
 			m_progress = NULL;
 		}
 	)
@@ -1508,16 +1508,10 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaConnPoint> *v)
 	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
-		CComBSTR bstr;
-		CComPtr<IMgaFCO> fco;
-		COMTHROW((*v)[i]->get_Target(&fco));
-		COMTHROW(fco->get_ID(&bstr));
 		std::tstring s;
-		CopyTo(bstr,s);
-		// Tie-break sort on role, for self-connections
 		CComBSTR role;
 		COMTHROW((*v)[i]->get_ConnRole(&role));
-		s += role;
+		CopyTo(role, s);
 		vPrime.push_back(s);
 	}
 	
@@ -1554,7 +1548,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFolder> *v)
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
-		COMTHROW((*v)[i]->get_ID(&bstr));
+		COMTHROW((*v)[i]->GetGuidDisp(&bstr));
 		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
@@ -1594,7 +1588,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFCO> *v)
 	for (int i=0; i<n; i++)
 	{
 		CComBSTR bstr;
-		COMTHROW((*v)[i]->get_ID(&bstr));
+		COMTHROW((*v)[i]->GetGuidDisp(&bstr));
 		std::tstring s;
 		CopyTo(bstr,s);
 		vPrime.push_back(s);
