@@ -82,7 +82,7 @@ public:
 private:
 	bool	firstResize;
 	CRect	lastRect;
-	CRect	GetWindowSizeFromResource(void) const;
+	CRect	GetWindowSizeFromResource(void);
 	void	MoveControl(int nID, int offsetX, int offsetY, int deltaWidth, int deltaHeight,
 						bool defer = false, HDWP* pdwp = NULL);
 public:

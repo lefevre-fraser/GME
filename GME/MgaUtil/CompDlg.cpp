@@ -713,17 +713,47 @@ void CCompDlg::OnBnClickedRadioboth()
 	RefreshShieldIcons();
 }
 
-// CodeGuru: Finding Display Size of Dialog From Resource
-//		by Shridhar Guravannavar
-CRect CCompDlg::GetWindowSizeFromResource(void) const
+
+#pragma pack (push, 1)
+typedef struct {
+	WORD dlgVer;
+	WORD signature;
+	DWORD helpID;
+	DWORD exStyle;
+	DWORD style;
+	WORD cDlgItems;
+	short x;
+	short y;
+	short cx;
+	short cy;
+	wchar_t menu;
+} DLGTEMPLATEEX;
+
+typedef struct {
+	WORD pointsize;
+	WORD weight;
+	BYTE italic;
+	BYTE charset;
+	wchar_t typeface;
+} DLGTEMPLATEEX_FONT;
+
+typedef struct {
+	DWORD helpID;
+	DWORD exStyle;
+	DWORD style;
+	short x;
+	short y;
+	short cx;
+	short cy;
+	DWORD id;
+} DLGITEMTEMPLATEEX;
+#pragma pack (pop)
+
+CRect CCompDlg::GetWindowSizeFromResource(void)
 {
 	CRect rectSize;
 
-	// if the dialog resource resides in a DLL ...
-	//
-
 	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(IDD), RT_DIALOG);
-
 	ASSERT(hInst != NULL);
 
 	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(IDD), RT_DIALOG);
@@ -732,41 +762,54 @@ CRect CCompDlg::GetWindowSizeFromResource(void) const
 	HGLOBAL hTemplate = ::LoadResource(hInst, hRsrc);
 	ASSERT(hTemplate != NULL);
 
-	DLGTEMPLATE* pTemplate = (DLGTEMPLATE*)::LockResource(hTemplate);
+	const DLGTEMPLATEEX* pTemplate = (DLGTEMPLATEEX*)::LockResource(hTemplate);
+	ASSERT(pTemplate->signature == 0xFFFF);
 
-	//Load coresponding DLGINIT resource
-	//(if we have any ActiveX components)
-	//
-	void* lpDlgInit;
-	HGLOBAL hDlgInit = NULL;
-	CDialog dlg;
-
-	HRSRC hsDlgInit = ::FindResource(hInst, MAKEINTRESOURCE(IDD), RT_DLGINIT);
-	if (hsDlgInit != NULL) {
-		// load it
-		hDlgInit = ::LoadResource(hInst, hsDlgInit);
-		ASSERT(hDlgInit != NULL);
-
-		// lock it
-		lpDlgInit = ::LockResource(hDlgInit);
-		ASSERT(lpDlgInit != NULL);
-
-		dlg.CreateIndirect(pTemplate, NULL, lpDlgInit);
-	} else {
-		dlg.CreateIndirect(pTemplate, NULL);
+	LONG dlgBaseUnits = GetDialogBaseUnits();
+	int baseunitX = LOWORD(dlgBaseUnits), baseunitY = HIWORD(dlgBaseUnits);
+	if (pTemplate->style & DS_SETFONT) {
+		const wchar_t* sz = &pTemplate->menu;
+		// skip menu, windowClass, title
+		for (int i = 0; i < 3; i++) {
+			if (*sz == 0) {
+				sz++;
+			}
+			else if (*sz == 0xFFFF) {
+				sz += 2;
+			}
+			else {
+				sz += wcslen(sz) + 1;
+			}
+		}
+		CDC* dc = this->GetDC();
+		const DLGTEMPLATEEX_FONT* font = (const DLGTEMPLATEEX_FONT*)sz;
+		const wchar_t* face = &font->typeface;
+		int mapMode = dc->GetMapMode();
+		ASSERT(mapMode == MM_TEXT);
+		HFONT gdiFont = CreateFontW(-MulDiv(font->pointsize, GetDeviceCaps(*dc, LOGPIXELSY), 72),
+			0, 0, 0, FW_NORMAL, font->italic, 0, 0, font->charset, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+			CLEARTYPE_QUALITY, DEFAULT_PITCH, face);
+		HGDIOBJ old = dc->SelectObject(gdiFont);
+		TEXTMETRICW metrics;
+		if (::GetTextMetrics(*dc, &metrics)) {
+			baseunitY = metrics.tmHeight;
+		}
+		else {
+			ASSERT(FALSE);
+		}
+		CSize extent;
+		if (::GetTextExtentPoint32W(*dc, L"ABCDEFGHIJLKMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 52, &extent)) {
+			baseunitX = MulDiv(1, extent.cx, 52);
+		}
+		else {
+			ASSERT(FALSE);
+		}
+		dc->SelectObject(old);
+		DeleteObject(gdiFont);
+		this->ReleaseDC(dc);
 	}
-
-	CRect rect;
-	dlg.GetClientRect(rectSize);
-
-	dlg.DestroyWindow();
-
-	::UnlockResource(hTemplate);
-	::FreeResource(hTemplate);
-	if (hDlgInit) {
-		::UnlockResource(hDlgInit);
-		::FreeResource(hDlgInit);
-	}
+	rectSize.right = MulDiv(pTemplate->cx, baseunitX, 4);
+	rectSize.bottom = MulDiv(pTemplate->cy, baseunitY, 8);
 
 	return rectSize;
 }
