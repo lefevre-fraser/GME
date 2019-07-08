@@ -434,13 +434,23 @@ int CConsoleCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	m_edit.ModifyStyleEx(WS_EX_CLIENTEDGE, WS_EX_STATICEDGE);
 
+	HDC hdc = ::GetDC(NULL);
+	int _dpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+	::ReleaseDC(NULL, hdc);
+	if (m_inputEditFont.CreateFontW(-MulDiv(12, _dpiY, 72), 0, 0, 0, FW_NORMAL, false, false,
+		0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+		FIXED_PITCH | FF_MODERN, L"Courier New"))
+	{
+		m_edit.SetFont(&m_inputEditFont);
+	}
 
-	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
-	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
-	m_hIco3 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_CLEANCON),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
-	m_hIcou = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNUP),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
-	m_hIcod = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNDN),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
-	m_hIcor = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNRET),	IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+	int iconSize = MulDiv(16, _dpiY, 96);
+	m_hIco1 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_LOADSCR),	IMAGE_ICON, iconSize, iconSize, LR_DEFAULTCOLOR);
+	m_hIco2 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_EXECSCR),	IMAGE_ICON, iconSize, iconSize, LR_DEFAULTCOLOR);
+	m_hIco3 = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_CLEANCON),	IMAGE_ICON, iconSize, iconSize, LR_DEFAULTCOLOR);
+	m_hIcou = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNUP),	IMAGE_ICON, iconSize, iconSize, LR_DEFAULTCOLOR);
+	m_hIcod = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNDN),	IMAGE_ICON, iconSize, iconSize, LR_DEFAULTCOLOR);
+	m_hIcor = (HICON)::LoadImage(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_BTNRET),	IMAGE_ICON, iconSize, iconSize, LR_DEFAULTCOLOR);
 
 	rect.bottom = rect.right = 100;
 	rect.left = rect.right - BUTTON_ICON_SIZE;

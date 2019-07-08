@@ -37,6 +37,7 @@ public:
 
 	CHtmlCtrl   m_browser;
 	CScriptEdit	m_edit;
+	CFont m_inputEditFont;
 	CButton	    m_cmdButton;
 	CButton	    m_exeButton;
 	CButton     m_clrButton;
