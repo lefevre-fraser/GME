@@ -48,6 +48,7 @@ public:
 		, m_dumpRelids( true)
 		, m_dumpLibraryStubs(false) 
 		, m_dumpGuids( false)
+		, m_dtdVersion(version1)
 	{ }
 
 DECLARE_REGISTRY_RESOURCEID(IDR_MGADUMPER)
@@ -78,6 +79,7 @@ public:
 	void StartElem(const TCHAR *name);
 	void Attr(const TCHAR *name, const TCHAR *value);
 	void Attr(const TCHAR *name, const TCHAR *value, int len);
+	void AttrId(const TCHAR *name, IMgaObject *o);
 	static bool HasMarkup(const TCHAR *value, int len);
 	void Data(const TCHAR *value, int len);
 	void EndElem();
@@ -231,6 +233,10 @@ public:
 	long fco_count;
 	int dumpversion;// >=1 means new xme format, ==2 means do not dump relids
 	bool m_dumpGuids;
+	enum dtdVersion {
+		version1,
+		version2
+	} m_dtdVersion;
 
 	bool m_closureDump;
 	bool m_dumpRelids;

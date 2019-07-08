@@ -142,6 +142,8 @@ STDMETHODIMP CMgaDumper::DumpProject(IMgaProject *p, BSTR xmlfile)
 STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hwndParent_)
 {
 	CHECK_IN(p);
+
+	// TODO: m_dtdVersion = version2;
 	m_dumpGuids = true; // dump GUIDs with the whole project
 	m_closureDump = false;
 	m_v2          = false;
@@ -160,7 +162,11 @@ STDMETHODIMP CMgaDumper::DumpProject2(IMgaProject *p, BSTR xmlfile, ULONGLONG hw
 		}
 		InitDump(p, xmlfile, _bstr_t(L"UTF-8"));
 
-		ofs << L"<!DOCTYPE project SYSTEM \"mga.dtd\">\n\n";
+		ofs << L"<!DOCTYPE project SYSTEM \"mga";
+		if (m_dtdVersion == version2) {
+			ofs << L"2";
+		}
+		ofs << L".dtd\">\n\n";
 
 		Dump(p);
 
@@ -321,6 +327,16 @@ inline void CMgaDumper::StartElem(const TCHAR *name)
 
 	Indent((int)elems.size()-1);
 	ofs << L'<' << name;
+}
+
+inline void CMgaDumper::AttrId(const TCHAR *name, IMgaObject *o)
+{
+	if (m_dtdVersion == version1) {
+		Attr(name, o, &IMgaFCO::get_ID);
+	}
+	else {
+		Attr(name, o, &IMgaFCO::GetGuidDisp);
+	}
 }
 
 inline void CMgaDumper::Attr(const TCHAR *name, const TCHAR *value)
@@ -554,7 +570,9 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 
 	StartElem(_T("folder"));
 
-	Attr(_T("id"), folder, &IMgaFolder::get_ID);
+	if (m_dtdVersion == version1) {
+		Attr(_T("id"), folder, &IMgaFolder::get_ID);
+	}
 
 	if( m_closureDump && m_v2)
 	{
@@ -598,16 +616,10 @@ void CMgaDumper::Dump(IMgaFolder *folder)
 
 	if( m_dumpGuids) // this is true if Project is dumped and mgaversion of project is 2
 	{
-		try 
-		{
-			CComBstrObj bs;
-			HRESULT hr = folder->GetGuidDisp( PutOut( bs));
-			if( SUCCEEDED( hr) && bs && bs.Length() == 38) // {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} <-- dumping that form (38 chars long including braces)
-				Attr( _T("guid"), bs);//Attr( _T("guid"), IMgaObject::GetGuidDisp);
-
-		} catch( hresult_exception& )
-		{
-		}
+		CComBstrObj bs;
+		HRESULT hr = folder->GetGuidDisp( PutOut( bs));
+		ASSERT(SUCCEEDED(hr) && bs && bs.Length() == 38); // {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} <-- dumping that form (38 chars long including braces)
+		Attr(_T("guid"), bs);//Attr( _T("guid"), IMgaObject::GetGuidDisp);
 	}
 
 	StartElem(_T("name"));
@@ -768,7 +780,9 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 
 	if( dump_attrs )
 	{
-		Attr(_T("id"), fco, &IMgaFCO::get_ID);
+		if (m_dtdVersion == version1) {
+			Attr(_T("id"), fco, &IMgaFCO::get_ID);
+		}
 
 		CComObjPtr<IMgaMetaFCO> metafco;
 		COMTHROW( fco->get_Meta(PutOut(metafco)) );
@@ -781,16 +795,10 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 
 		if( m_dumpGuids) // this is true if Project is dumped and mgaversion of project is 2
 		{
-			try 
-			{
-				CComBstrObj bs;
-				HRESULT hr = fco->GetGuidDisp( PutOut( bs));
-				if( SUCCEEDED( hr) && bs && bs.Length() == 38) // {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} <-- dumping that form (38 chars long including braces)
-					Attr( _T("guid"), bs);//Attr( _T("guid"), IMgaFCO::GetGuidDisp);
-
-			} catch( hresult_exception& )
-			{
-			}
+			CComBstrObj bs;
+			HRESULT hr = fco->GetGuidDisp( PutOut( bs));
+			ASSERT(SUCCEEDED(hr) && bs && bs.Length() == 38); // {%08lX-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X} <-- dumping that form (38 chars long including braces)
+			Attr(_T("guid"), bs);//Attr( _T("guid"), IMgaFCO::GetGuidDisp);
 		}
 
 		if( m_closureDump && m_v2)
@@ -812,7 +820,7 @@ void CMgaDumper::DumpFCO(IMgaFCO *fco, bool dump_attrs, bool dump_name, bool dum
 		if(derivedfrom != NULL )
 		{
 			if (CheckInClosure(derivedfrom)) {
-				Attr(_T("derivedfrom"), derivedfrom, &IMgaFCO::get_ID);
+				AttrId(_T("derivedfrom"), derivedfrom);
 
 				VARIANT_BOOL b;
 
@@ -1049,7 +1057,13 @@ void CMgaDumper::Dump(IMgaAttribute *attribute)
 			if( (fco != NULL) && (CheckInClosure(fco)) )
 			{
 				CComBstrObj bstr;
-				COMTHROW( fco->get_ID(PutOut(bstr)) );
+				if (m_dtdVersion == version1) {
+					COMTHROW(fco->get_ID(PutOut(bstr)));
+				}
+				else {
+					COMTHROW(fco->GetGuidDisp(&bstr.p));
+				}
+				
 				CopyTo(bstr, data);
 			}
 			break;
@@ -1092,7 +1106,7 @@ void CMgaDumper::Dump(IMgaReference *reference)
 	if( fco != NULL)
 	{
 		if( CheckInClosure( fco)) // regular dump or the fco is really in the closure
-			Attr(_T("referred"), fco, &IMgaFCO::get_ID);
+			AttrId(_T("referred"), fco);
 		
 		if( m_closureDump)
 		{
@@ -1263,7 +1277,7 @@ void CMgaDumper::Dump(IMgaConnPoint *connpoint)
 		}
 	}
 
-	Attr(_T("target"), target, &IMgaFCO::get_ID);
+	AttrId(_T("target"), target);
 
 	if( m_closureDump)
 	{
@@ -1329,7 +1343,13 @@ void CMgaDumper::DumpIDRefs(const TCHAR *name, CComObjPtrVector<IMgaFCO> &fcos)
 				continue;
 			}
 			CComBstrObj bstr;
-			COMTHROW( (*i)->get_ID(PutOut(bstr)) );
+			if (m_dtdVersion == version1) {
+				COMTHROW((*i)->get_ID(PutOut(bstr)));
+			}
+			else {
+				COMTHROW((*i)->GetGuidDisp(&bstr.p));
+			}
+
 
 			std::tstring id;
 			CopyTo(bstr, id);
@@ -1543,7 +1563,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFolder> *v)
 	
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
-	//to call the get_ID function each time we look at a Folder
+	//to call the GetGuidDisp function each time we look at a Folder
 	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
@@ -1583,7 +1603,7 @@ void CMgaDumper::Sort(CComObjPtrVector<IMgaFCO> *v)
 	
 	//small speed up, build a vector of strings first, then sort the strings
 	//while doing the sort operations on the original vector, so we don't have
-	//to call the get_ID function each time we look at an FCO
+	//to call the GetGuidDisp function each time we look at an FCO
 	std::vector<std::tstring> vPrime;
 	for (int i=0; i<n; i++)
 	{
