@@ -113,6 +113,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_VIEW_FULLSCREEN, OnViewFullScreen)
 	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, OnToolbarCreateNew)
 //}}AFX_MSG_MAP
+	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
+
 	// By making the Menu IDs that same as the ToolBar IDs
 	// we can leverage off of code that is already provided
 	// in MFCs implementation of CFrameWnd to check, uncheck
@@ -1635,4 +1637,17 @@ void CMainFrame::CheckForOffscreenPanes()
 		pane++;
 	}
 	return;
+}
+
+LRESULT CMainFrame::OnDisplayChange(WPARAM wParam, LPARAM lParam) {
+	CDocument* pDocument = CGMEDoc::theInstance;
+	POSITION pos = pDocument->GetFirstViewPosition();
+	if (pos) {
+		while (pos != NULL) {
+			CGMEChildFrame* pView = (CGMEChildFrame*)pDocument->GetNextView(pos);
+			pView->SendMessage(WM_DISPLAYCHANGE, wParam, lParam);
+		}
+	}
+
+	return TRUE;
 }

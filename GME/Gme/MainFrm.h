@@ -209,6 +209,8 @@ protected:
 	afx_msg LRESULT OnGetTabTooltip(WPARAM wp, LPARAM lp);
 
 	//}}AFX_MSG
+	LRESULT OnDisplayChange(WPARAM wParam, LPARAM lParam);
+
 	DECLARE_MESSAGE_MAP()
 private:
 	BOOL InitStatusBar(UINT *pIndicators, int nSize, int nSeconds);

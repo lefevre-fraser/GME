@@ -37,8 +37,10 @@ public:
 		const RECT& rect, CWnd* pParentWnd, UINT nID,
 		CFile* pPersist = NULL, BOOL bStorage = FALSE,
 		BSTR bstrLicKey = NULL)
-	{ return CreateControl(GetClsid(), lpszWindowName, dwStyle, rect, pParentWnd, nID,
-		pPersist, bStorage, bstrLicKey); }
+	{
+		return CreateControl(GetClsid(), lpszWindowName, dwStyle, rect, pParentWnd, nID,
+			pPersist, bStorage, bstrLicKey);
+	}
 
 // Attributes
 public:

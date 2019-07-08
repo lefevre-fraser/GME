@@ -1450,7 +1450,7 @@ END
 STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "GME"
-    IDR_GMETYPE             "\nGME\nGME\n\n\nGME.Project\nGME Project"
+    IDR_GMETYPE             "GMEChildFrame\nGME\nGME\n\n\nGME.Project\nGME Project"
     ID_WINDOW_MANAGER       """Manages the currently open windows\nWindow List"""
 END
 

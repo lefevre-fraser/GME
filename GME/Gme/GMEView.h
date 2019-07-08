@@ -275,6 +275,7 @@ public:
 	void					ResetParent(bool doInvalidate = false);
 	void					InitSets();
 	void					CreateOffScreen(CDC* dc);
+	void					DeleteOffScreen();
 	void					Invalidate(bool thorough = false);
 	void					SetProperties();
 	void					SetTypeNameProperty();
@@ -433,6 +434,7 @@ public:
 	virtual void OnActivateFrame( UINT nState, CFrameWnd* pFrameWnd );
 	//}}AFX_VIRTUAL
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
+	LRESULT OnDisplayChange(WPARAM wParam, LPARAM lParam);
 
 // Implementation
 public:

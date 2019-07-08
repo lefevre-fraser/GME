@@ -564,6 +564,7 @@ BEGIN_MESSAGE_MAP(CGMEView, CScrollZoomView)
 	ON_COMMAND(ID_MULTIUSER_SHOWOWNER, OnViewMultiUserShowObjectOwner)
 	ON_UPDATE_COMMAND_UI( ID_MULTIUSER_SHOWOWNER, OnUpdateViewMultiUserShowObjectOwner)
 	ON_WM_KILLFOCUS()
+	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
 
 	ON_COMMAND(ID_VIEW_SHOWCONNECTEDPORTSONLY, &CGMEView::OnViewShowconnectedportsonly)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWCONNECTEDPORTSONLY, &CGMEView::OnUpdateViewShowconnectedportsonly)
@@ -698,10 +699,7 @@ CGMEView::~CGMEView()
 		// update & disable some components
 		theApp.UpdateCompList4CurrentKind( CGMEApp::m_no_model_open_string);
 
-        ::RestoreDC(*offScreen, offScreenCreated);
-		delete offScreen;
-		delete ofsbmp;
-		offScreenCreated = 0;
+		DeleteOffScreen();
 		if( CMainFrame::theInstance != NULL ) {
 			CMainFrame::theInstance->SetPartBrowserMetaModel(NULL);
 			CMainFrame::theInstance->SetPartBrowserBg(::GetSysColor(COLOR_APPWORKSPACE));
@@ -837,6 +835,7 @@ void CGMEView::OnDraw(CDC* pDC)
 		onScreen->GetClipBox(&onScreenClipBox);
 		if (onScreenClipBox.IsRectEmpty()) // empty check is enough: windows may never overlap, since they don't float
 			return;
+		CreateOffScreen(pDC);
 		pDC = offScreen;
 		OnPrepareDC(pDC);
 	}
@@ -2928,10 +2927,8 @@ void CGMEView::CreateOffScreen(CDC *dc)
 	offScreen = new CDC;
 	BOOL success = offScreen->CreateCompatibleDC(dc);
 	ASSERT(success);
-	ASSERT(::GetSystemMetrics(SM_SAMEDISPLAYFORMAT));
 	// In multi-monitor systems a window can bigger than just one screen, monitor resolutions can be different, etc.
 	// TODO: Maybe we should calculate with SM_CXMAXTRACK,SM_CYMAXTRACK? A window can be larger than the displays!!!
-	// TODO: handle run-time resolution changes!
 	int offScreenWidth = GetSystemMetrics(SM_CXMAXTRACK);
 	int offScreenHeight = GetSystemMetrics(SM_CYMAXTRACK);
 //	int offScreenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -2943,6 +2940,15 @@ void CGMEView::CreateOffScreen(CDC *dc)
     offScreenCreated = SaveDC(*offScreen);
     ASSERT(offScreenCreated);
     offScreen->SelectObject(ofsbmp);
+}
+
+void CGMEView::DeleteOffScreen() {
+	if (offScreenCreated) {
+		::RestoreDC(*offScreen, offScreenCreated);
+		delete offScreen;
+		delete ofsbmp;
+		offScreenCreated = 0;
+	}
 }
 
 void CGMEView::SetScroll()
@@ -4639,6 +4645,7 @@ CGMEView *CGMEView::GetActiveView()
 BOOL CGMEView::OnEraseBkgnd(CDC* pDC)
 {
 	if (!pDC->IsPrinting() && !IsPreview()) {
+		CreateOffScreen(pDC);
 		OnPrepareDC(offScreen);
 		CRect r;
 		GetClientRect(&r);
@@ -11085,4 +11092,10 @@ void CGMEView::OnViewShowconnectedportsonly()
 void CGMEView::OnUpdateViewShowconnectedportsonly(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(showConnectedPortsOnly);
+}
+
+LRESULT CGMEView::OnDisplayChange(WPARAM wParam, LPARAM lParam)
+{
+	DeleteOffScreen();
+	return TRUE;
 }
