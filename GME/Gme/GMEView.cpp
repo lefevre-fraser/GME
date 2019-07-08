@@ -2178,7 +2178,11 @@ void CGMEView::Reset(bool doInvalidate)
 
 		m_lstSelect.clear(); // clear the contents of these buffers [will be refilled soon] 
 		m_lstUnselect.clear();
-		contextAnnotation = 0; contextSelection = 0; contextPort = 0;// these will be recalculated also
+		// these will be recalculated also
+		contextAnnotation = nullptr;
+		contextSelection = nullptr;
+		contextPort = nullptr;
+		selectedContextConnection = nullptr;
 		children.RemoveAll();
 		annotators.RemoveAll();
 		connections.RemoveAll();
