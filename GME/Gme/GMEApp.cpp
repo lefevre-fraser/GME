@@ -1353,8 +1353,8 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 				for (int i = 0; i < min(plugins.GetSize() + interpreters.GetSize() + addons.GetSize(), ID_HELP_COMPONENTHELP_LAST - ID_HELP_COMPONENTHELP_FIRST);) {
 					int index = i / 2;
 					CString componentName = (index < plugins.GetSize() ? 
-							plugins[index] : (index < plugins.GetSize() + interpreters.GetSize() ? 
-								interpreters[index - plugins.GetSize()] : addons[index - plugins.GetSize() - interpreters.GetSize()]));
+						pluginTooltips[index] : (index < plugins.GetSize() + interpreters.GetSize() ?
+						interpreterTooltips[index - plugins.GetSize()] : addons[index - plugins.GetSize() - interpreters.GetSize()]));
 					CString onlineHelpLocation = (index < plugins.GetSize() ? 
 							pluginOnlineHelp[index] : (index < plugins.GetSize() + interpreters.GetSize() ? 
 								interpreterOnlineHelp[index - plugins.GetSize()] : addonOnlineHelp[index - plugins.GetSize() - interpreters.GetSize()]));
