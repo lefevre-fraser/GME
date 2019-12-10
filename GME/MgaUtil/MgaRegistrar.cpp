@@ -2508,7 +2508,7 @@ STDMETHODIMP CMgaRegistrar::get_ParadigmExtraInfo(regaccessmode_enum mode, BSTR 
 		HKEY hive = (mode & RM_SYS ? HKEY_LOCAL_MACHINE : (mode & RM_USER ? HKEY_CURRENT_USER : NULL));
 		CRegKey para;
 		LPCTSTR regpath = rootreg + _T("\\Paradigms\\") + paradigmNameStr + _T("\\") + paradigmGuidStr;
-		LONG res = para.Open(HKEY_LOCAL_MACHINE, regpath, KEY_READ);
+		LONG res = para.Open(hive, regpath, KEY_READ);
 		
 		if (res != ERROR_SUCCESS && res != ERROR_ACCESS_DENIED && res != ERROR_FILE_NOT_FOUND) ERRTHROW(res);
 		if (res == ERROR_SUCCESS) {
