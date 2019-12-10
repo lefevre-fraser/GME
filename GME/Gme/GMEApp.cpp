@@ -144,7 +144,7 @@ CGMEApp theApp;
 
 /*static*/ const TCHAR * CGMEApp::m_no_model_open_string = _T("_NO_MODEL_IS_OPEN_");
 
-static CComBSTR StringFromGUID2(const CComVariant& guid)
+CComBSTR StringFromGUID2(const CComVariant& guid)
 {
 	ASSERT(guid.vt == (VT_UI1 | VT_ARRAY));
 	GUID guid2;
@@ -1398,24 +1398,14 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 		{
 			if (dynmenus_need_refresh && mgaProject) {
 				toolmenu->DeleteMenu(idx, MF_BYPOSITION);
-				CComBSTR pname;
-				CComVariant pguid;
-				CComBSTR pguidstr;
-				{
-					CComPtr<IMgaTerritory> t;
-					COMTHROW(mgaProject->CreateTerritory(NULL, &t, NULL));
-					COMTHROW(mgaProject->BeginTransaction(t, TRANSACTION_READ_ONLY));
-					COMTHROW(mgaProject->get_MetaName(&pname));
-					COMTHROW(mgaProject->get_MetaGUID(&pguid));
-					pguidstr = StringFromGUID2(pguid);
-					COMTHROW(mgaProject->CommitTransaction());
-				}
+				CComBSTR pname = guiMetaProject->name;
+				CComBSTR pguidstr = guiMetaProject->guid;
 
 				CMenu help;
 				help.CreatePopupMenu();
 				CComPtr<IMgaRegistrar2> reg;
 				HRESULT hr = reg.CoCreateInstance(CComBSTR(L"Mga.MgaRegistrar"));
-				if (hr == S_OK)
+				if (SUCCEEDED(hr))
 				{
 					reg->GetParadigmExtraInfoDisp(pname, pguidstr, CComBSTR(L"OnlineHelp"), PutOut(this->paradigmOnlineHelp));
 					reg->GetParadigmExtraInfoDisp(pname, pguidstr, CComBSTR(L"OfflineHelp"), PutOut(this->paradigmOfflineHelp));
@@ -3134,14 +3124,7 @@ void CGMEApp::OnRunComponentHelp(UINT nID) {
 
 void CGMEApp::OnRunParadigmHelp(UINT nID)
 {
-	CComBSTR pname;
-	{
-		CComPtr<IMgaTerritory> t;
-		COMTHROW(mgaProject->CreateTerritory(NULL, &t, NULL));
-		COMTHROW(mgaProject->BeginTransaction(t, TRANSACTION_READ_ONLY));
-		COMTHROW(mgaProject->get_MetaName(&pname));
-		COMTHROW(mgaProject->CommitTransaction());
-	}
+	CComBSTR pname = guiMetaProject->name;
 
 	CGMEEventLogger::LogGMEEvent((_T("CGMEApp::OnRunParadigmHelp ") +
 		std::wstring(static_cast<const wchar_t*>(pname)) + _T("\r\n")).c_str());
