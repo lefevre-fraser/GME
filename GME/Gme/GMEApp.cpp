@@ -1269,7 +1269,7 @@ void CGMEApp::UpdateDynMenus(CMenu *toolmenu)
 		for(UINT idx = 0; idx < toolmenu->GetMenuItemCount(); idx++) {
 			toolmenu->GetMenuString(idx, label, MF_BYPOSITION);
 			UINT menuID = toolmenu->GetMenuItemID(idx);
-			if (menuID == ID_TOOLS_RUNPLUG || menuID == ID_FILE_RUNINTERPRETER || menuID == ID_HELP_COMPONENTHELP) {
+			if (menuID == ID_TOOLS_RUNPLUG || menuID == ID_FILE_RUNINTERPRETER || menuID == ID_HELP_COMPONENTHELP || menuID == ID_HELP_PARADIGMHELP) {
 				dynmenus_need_refresh = true;
 				break;
 			}
@@ -3128,7 +3128,7 @@ void CGMEApp::OnRunParadigmHelp(UINT nID)
 
 	CGMEEventLogger::LogGMEEvent((_T("CGMEApp::OnRunParadigmHelp ") +
 		std::wstring(static_cast<const wchar_t*>(pname)) + _T("\r\n")).c_str());
-
+  
 	CString help = (nID == ID_HELP_PARADIGMHELP_FIRST ? this->paradigmOnlineHelp : this->paradigmOfflineHelp);
 	if (!help.IsEmpty())
 	{
