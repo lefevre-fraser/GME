@@ -2423,7 +2423,7 @@ STDMETHODIMP CMgaRegistrar::UnregisterComponentLibrary(BSTR path, regaccessmode_
 		{
 			--index;
 			CComObjPtr<ITypeInfo> typeinfo;
-			COMTHROW( typelib->GetTypeInfo(index, PutOut(typeinfo)) );// index parameter with the range of 0 to GetTypeInfoCount() –1.
+			COMTHROW( typelib->GetTypeInfo(index, PutOut(typeinfo)) );// index parameter with the range of 0 to GetTypeInfoCount() Â–1.
 
 			TYPEATTR *typeattr = NULL;
 			COMTHROW( typeinfo->GetTypeAttr(&typeattr) );

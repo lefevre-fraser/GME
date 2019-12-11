@@ -533,7 +533,7 @@ interface IMgaRegistrar2 : IMgaRegistrar
 	HRESULT ParadigmExtraInfo([in] regaccessmode_enum mode, [in] BSTR ParadigmName, [in] BSTR ParadigmVersionGUID, [in] BSTR name, [out, retval] BSTR *pVal);
 
 	[helpstring("setter for property ParadigmExtraInfo")]
-	HRESULT SetParadigmExtraInfoDisp([in] BSTR ParadigmName, [in] BSTR ParadigmVersionGUID, [in] BSTR name, [in] BSTR newVal, [in, defaultvalue(REGACCESS_BOTH)] regaccessmode_enum mode);
+	HRESULT SetParadigmExtraInfoDisp([in] BSTR ParadigmName, [in] BSTR ParadigmVersionGUID, [in] BSTR name, [in] BSTR newVal, [in, defaultvalue(REGACCESS_SYSTEM)] regaccessmode_enum mode);
 
 	[helpstring("getter for property ParadigmExtraInfo")]
 	HRESULT GetParadigmExtraInfoDisp([in] BSTR ParadigmName, [in] BSTR ParadigmVersionGUID, [in] BSTR name, [out, retval] BSTR *pVal);
