@@ -50,7 +50,7 @@ public:
 	CComPtr<IMgaMetaProject> mgaMetaProject;
 //  dynamic menus
 	CStringArray plugins, interpreters, addons;
-  CStringArray pluginTooltips, interpreterTooltips, addonToolTips;
+	CStringArray pluginTooltips, interpreterTooltips, addonToolTips;
 	CStringArray pluginOnlineHelp, interpreterOnlineHelp, addonOnlineHelp;
 	CStringArray pluginOfflineHelp, interpreterOfflineHelp, addonOfflineHelp;
 	CString paradigmOnlineHelp, paradigmOfflineHelp;
